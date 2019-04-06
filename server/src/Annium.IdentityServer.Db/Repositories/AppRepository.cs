@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using LinqToDB;
@@ -33,7 +34,14 @@ namespace Annium.IdentityServer.Db
             return mapper.Map<App>(entity);
         }
 
-        public async Task<App> GetById(Guid id)
+        public async Task<App[]> GetAllAsync()
+        {
+            var apps = await context.Apps.ToArrayAsync();
+
+            return apps.Select(mapper.Map<App>).ToArray();
+        }
+
+        public async Task<App> GetByIdAsync(Guid id)
         {
             var app = await context.Apps
                 .FirstOrDefaultAsync(u => u.Id == id);

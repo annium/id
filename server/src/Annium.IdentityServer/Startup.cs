@@ -1,5 +1,6 @@
 using System;
 using Annium.Extensions.DependencyInjection;
+using Annium.IdentityServer.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,6 +25,8 @@ namespace Annium.IdentityServer
 
         public void Configure(IApplicationBuilder app, IApplicationLifetime lifetime)
         {
+            app.UseExceptionMiddleware();
+
             app.UseCors(builder => builder
                 .SetIsOriginAllowed(o => true)
                 .AllowAnyMethod()

@@ -7,7 +7,9 @@ namespace Annium.IdentityServer.Db
     {
         Task<App> CreateAsync(App app);
 
-        Task<App> GetById(Guid id);
+        Task<App[]> GetAllAsync();
+
+        Task<App> GetByIdAsync(Guid id);
 
         Task<App> FindByNameAsync(string name);
 

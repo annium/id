@@ -1,5 +1,7 @@
 using System;
+using System.Threading.Tasks;
 using Annium.AspNetCore.Extensions;
+using Annium.IdentityServer.Db;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Annium.IdentityServer.Controllers
@@ -7,15 +9,21 @@ namespace Annium.IdentityServer.Controllers
     [Route("app")]
     public class AppController : ServerController
     {
-        public AppController()
-        {
+        private readonly IAppRepository appRepository;
 
+        public AppController(
+            IAppRepository appRepository
+        )
+        {
+            this.appRepository = appRepository;
         }
 
         [HttpGet]
-        public IActionResult ListAsync()
+        public async Task<IActionResult> ListAsync()
         {
-            return Ok("get list of apps");
+            var apps = await appRepository.GetAllAsync();
+
+            return Ok(apps);
         }
 
         [HttpPut]
