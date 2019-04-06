@@ -12,7 +12,7 @@ db-log api-log:
 
 
 db-drop db-update migrations-add migrations-list migrations-remove:
-	cd server && tools/ef-$@.sh
+	@cd server && tools/ef-$@.sh
 
 publish-api:
 	@cp $$(find $$(dirname $$(realpath $$(which dotnet)))/sdk -type f -name ef.dll | grep netcoreapp2.2) server/src
