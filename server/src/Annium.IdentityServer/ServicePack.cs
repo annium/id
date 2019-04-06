@@ -6,6 +6,11 @@ namespace Annium.IdentityServer
 {
     internal class ServicePack : ServicePackBase
     {
+        public ServicePack()
+        {
+            Add<Db.ServicePack>();
+        }
+
         public override void Configure(IServiceCollection services)
         {
             // register configurations
