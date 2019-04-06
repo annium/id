@@ -1,0 +1,17 @@
+version: "3.6"
+services:
+  db:
+    image: "postgres:10-alpine"
+    container_name: id_db
+    restart: always
+    ports:
+      - "9591:5432"
+    volumes:
+      - "db:/var/lib/postgresql/data"
+    env_file: ../run/db.env
+networks:
+  default:
+    external:
+      name: id_net
+volumes:
+  db:
