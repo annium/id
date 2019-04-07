@@ -1,7 +1,10 @@
 using System;
 using System.Threading.Tasks;
 using Annium.AspNetCore.Extensions;
+using Annium.Data.Operations;
 using Annium.IdentityServer.Db;
+using Annium.IdentityServer.Payloads;
+using Annium.IdentityServer.Tools;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Annium.IdentityServer.Controllers
@@ -10,12 +13,15 @@ namespace Annium.IdentityServer.Controllers
     public class AppController : ServerController
     {
         private readonly IAppRepository appRepository;
+        private readonly ISecurityManager securityManager;
 
         public AppController(
-            IAppRepository appRepository
+            IAppRepository appRepository,
+            ISecurityManager securityManager
         )
         {
             this.appRepository = appRepository;
+            this.securityManager = securityManager;
         }
 
         [HttpGet]
@@ -27,9 +33,26 @@ namespace Annium.IdentityServer.Controllers
         }
 
         [HttpPut]
-        public IActionResult CreateAsync()
+        public async Task<IActionResult> CreateAsync([FromBody] AppPayload appPayload)
         {
-            return Ok("create app");
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var current = await appRepository.FindByLoginAsync(appPayload.Login);
+            if (current != null)
+                return Conflict(Result.Failure().Error("Application already exists"));
+
+            var app = new App(
+                appPayload.Login,
+                securityManager.Hash(appPayload.Password),
+                Guid.NewGuid(),
+                appPayload.Name,
+                appPayload.Email
+            );
+
+            app = await appRepository.CreateAsync(app);
+
+            return Ok(app);
         }
 
         [HttpPost("{id:guid}")]

@@ -3,6 +3,8 @@ using System.Net;
 using System.Threading.Tasks;
 using Annium.AspNetCore.IntegrationTesting;
 using Annium.Extensions.Net.Http;
+using Annium.IdentityServer.Db;
+using Annium.IdentityServer.Payloads;
 using Annium.Testing;
 using Microsoft.EntityFrameworkCore;
 
@@ -29,11 +31,20 @@ namespace Annium.IdentityServer.IntegrationTests
         [Fact]
         public async Task CreateAsync_Works()
         {
+            // arrange
+            var payload = new AppPayload() { Login = "demo", Password = "demodemode", Name = "demo", Email = "demo@demo.xx" };
+
             // act
-            var response = await http.Put("/app").RunAsync();
+            var app = await http.Put("/app").JsonContent(payload).AsAsync<App>();
+            var apps = await http.Get("/app").AsAsync<App[]>();
 
             // assert
-            response.StatusCode.IsEqual(HttpStatusCode.OK);
+            apps.Has(1);
+            app.Login.IsEqual(payload.Login);
+            app.PasswordHash.IsNotDefault().IsNotEqual(payload.Password);
+            app.ApiToken.IsNotDefault();
+            app.Name.IsEqual(payload.Name);
+            app.Email.IsEqual(payload.Email);
         }
 
         [Fact]
