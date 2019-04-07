@@ -1,4 +1,5 @@
 using System;
+using Annium.Data.Operations.Serialization;
 using Annium.Extensions.DependencyInjection;
 using Annium.IdentityServer.Helpers;
 using Microsoft.AspNetCore.Builder;
@@ -16,7 +17,10 @@ namespace Annium.IdentityServer
             services.AddCors();
 
             services.AddMvc()
-                .AddJsonOptions(opts => opts.SerializerSettings.ConfigureForNodaTime(DateTimeZoneProviders.Serialization));
+                .AddJsonOptions(opts => opts.SerializerSettings
+                    .ConfigureForNodaTime(DateTimeZoneProviders.Serialization)
+                    .ConfigureForOperations()
+                );
 
             return new ServiceProviderBuilder(services)
                 .UseServicePack<TServicePack>()
