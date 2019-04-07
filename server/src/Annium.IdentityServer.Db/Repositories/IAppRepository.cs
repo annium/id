@@ -11,7 +11,7 @@ namespace Annium.IdentityServer.Db
 
         Task<App> GetByIdAsync(Guid id);
 
-        Task<App> FindByNameAsync(string name);
+        Task<App> FindByLoginAsync(string login);
 
         Task<App> FindByApiTokenAsync(Guid token);
 

@@ -49,10 +49,10 @@ namespace Annium.IdentityServer.Db
             return mapper.Map<App>(app);
         }
 
-        public async Task<App> FindByNameAsync(string name)
+        public async Task<App> FindByLoginAsync(string login)
         {
             var app = await context.Apps
-                .FirstOrDefaultAsync(u => u.Login == name);
+                .FirstOrDefaultAsync(u => u.Login == login);
 
             return mapper.Map<App>(app);
         }
