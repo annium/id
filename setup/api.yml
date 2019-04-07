@@ -3,7 +3,7 @@ services:
   api:
     build:
       context: ../server/src
-      dockerfile: Annium.IdentityServer/Dockerfile
+      dockerfile: Annium.Id/Dockerfile
     image: id_api
     container_name: id_api
     restart: always
