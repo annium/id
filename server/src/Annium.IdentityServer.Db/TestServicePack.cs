@@ -1,9 +1,8 @@
 using System;
 using System.Diagnostics;
 using Annium.Extensions.DependencyInjection;
+using Annium.Extensions.EntityFrameworkCore;
 using LinqToDB.Data;
-using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Annium.IdentityServer.Db
@@ -17,16 +16,7 @@ namespace Annium.IdentityServer.Db
 
         public override void Configure(IServiceCollection services)
         {
-            var cn = new SqliteConnection("Data Source=:memory:");
-            cn.Open();
-            // register context itself
-            services
-                .AddEntityFrameworkSqlite()
-                .AddDbContext<Context>(builder =>
-                {
-                    var opts = builder.UseSqlite(cn).Options;
-                    using(var ctx = new Context(opts)) ctx.Database.EnsureCreated();
-                });
+            services.AddEntityFrameworkSqliteInMemory<Context>();
 
             // log queries
             DataConnection.TurnTraceSwitchOn(TraceLevel.Verbose);

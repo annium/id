@@ -1,6 +1,6 @@
 using System;
 using Annium.Extensions.DependencyInjection;
-using Annium.IdentityServer.Helpers;
+using Annium.Extensions.Mapper;
 using Annium.IdentityServer.Tools;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,7 +20,7 @@ namespace Annium.IdentityServer
             // tools
             services.AddSingleton<ISecurityManager, SecurityManager>();
 
-            services.AddAutoMapper(provider);
+            services.AddMapper(provider);
         }
     }
 }

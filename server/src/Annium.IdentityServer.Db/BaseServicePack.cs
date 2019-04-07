@@ -1,5 +1,6 @@
 using System;
 using Annium.Extensions.DependencyInjection;
+using Annium.Extensions.Mapper;
 using AutoMapper.Configuration;
 using LinqToDB.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,7 +15,7 @@ namespace Annium.IdentityServer.Db
             LinqToDBForEFTools.Initialize();
             LinqToDB.Common.Configuration.Linq.AllowMultipleQuery = true;
 
-            services.AddSingleton<MapperConfigurationExpression>(ConfigureMapping());
+            services.AddMapperConfiguration(ConfigureMapping);
         }
 
         public override void Register(IServiceCollection services, IServiceProvider provider)
