@@ -17,13 +17,13 @@ namespace Annium.IdentityServer.Db
 
         public override void Configure(IServiceCollection services)
         {
+            var cn = new SqliteConnection("Data Source=:memory:");
+            cn.Open();
             // register context itself
             services
                 .AddEntityFrameworkSqlite()
                 .AddDbContext<Context>(builder =>
                 {
-                    var cn = new SqliteConnection("Data Source=:memory:");
-                    cn.Open();
                     var opts = builder.UseSqlite(cn).Options;
                     using(var ctx = new Context(opts)) ctx.Database.EnsureCreated();
                 });
