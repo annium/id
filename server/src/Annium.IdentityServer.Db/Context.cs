@@ -11,7 +11,7 @@ namespace Annium.IdentityServer.Db
 
         public ITable<Entities.App> Apps => AppsSet.ToLinqToDBTable();
 
-        public Context(DbContextOptions<Context> contextOptions) : base(contextOptions) { }
+        public Context(DbContextOptions contextOptions) : base(contextOptions) { }
 
         public DataConnection GetDataConnection() => this.CreateLinqToDbConnection();
 

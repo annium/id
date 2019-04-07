@@ -4,7 +4,6 @@ using System.Net.Mime;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 
 namespace Annium.IdentityServer.Helpers
 {
@@ -12,15 +11,11 @@ namespace Annium.IdentityServer.Helpers
     {
         private readonly RequestDelegate next;
 
-        private readonly ILogger<ExceptionMiddleware> logger;
-
         public ExceptionMiddleware(
-            RequestDelegate next,
-            ILogger<ExceptionMiddleware> logger
+            RequestDelegate next
         )
         {
             this.next = next;
-            this.logger = logger;
         }
 
         public async Task Invoke(HttpContext context)
@@ -31,7 +26,7 @@ namespace Annium.IdentityServer.Helpers
             }
             catch (Exception exception)
             {
-                logger.LogCritical($"FAILURE: {exception}");
+                Console.WriteLine($"FAILURE: {exception}");
                 context.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
                 context.Response.ContentType = MediaTypeNames.Text.Plain;
 

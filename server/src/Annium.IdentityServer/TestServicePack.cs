@@ -2,12 +2,12 @@ using Annium.Extensions.DependencyInjection;
 
 namespace Annium.IdentityServer
 {
-    public class ServicePack : ServicePackBase
+    public class TestServicePack : ServicePackBase
     {
-        public ServicePack()
+        public TestServicePack()
         {
             Add<BaseServicePack>();
-            Add<Db.ServicePack>();
+            Add<Db.TestServicePack>();
         }
     }
 }

@@ -4,10 +4,11 @@ using System.Threading.Tasks;
 using Annium.AspNetCore.IntegrationTesting;
 using Annium.Extensions.Net.Http;
 using Annium.Testing;
+using Microsoft.EntityFrameworkCore;
 
 namespace Annium.IdentityServer.IntegrationTests
 {
-    public class AppControllerTest : IntegrationTest<Startup<ServicePack>>
+    public class AppControllerTest : IntegrationTest<Startup<TestServicePack>>
     {
         public AppControllerTest()
         {
@@ -22,6 +23,7 @@ namespace Annium.IdentityServer.IntegrationTests
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.OK);
+            (await response.Content.ReadAsStringAsync()).IsEqual("[]");
         }
 
         [Fact]
