@@ -1,6 +1,7 @@
 using System;
 using Annium.Extensions.DependencyInjection;
 using Annium.Extensions.Mapper;
+using Annium.Logging.Abstractions;
 using AutoMapper.Configuration;
 using LinqToDB.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,6 +25,8 @@ namespace Annium.Id.Db
 
             // repositories
             services.AddScoped<IAppRepository, AppRepository>();
+
+            services.AddConsole(new LoggerConfiguration(LogLevel.Trace));
         }
 
         private MapperConfigurationExpression ConfigureMapping()
