@@ -3,14 +3,15 @@ using System.Net;
 using System.Threading.Tasks;
 using Annium.AspNetCore.IntegrationTesting;
 using Annium.Extensions.Net.Http;
+using Annium.Id.Api;
+using Annium.Id.Api.Payloads;
 using Annium.Id.Db;
-using Annium.Id.Payloads;
 using Annium.Testing;
 using Microsoft.EntityFrameworkCore;
 
-namespace Annium.Id.IntegrationTests
+namespace Annium.Id.Api.IntegrationTests
 {
-    public class AppControllerTest : IntegrationTest<Startup<TestServicePack>>
+    public class AppControllerTest : IntegrationTest<Startup<Api.TestServicePack>>
     {
         public AppControllerTest()
         {

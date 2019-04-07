@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 
-namespace Annium.Id.Helpers
+namespace Annium.Id.Api.Helpers
 {
     public class ExceptionMiddleware
     {

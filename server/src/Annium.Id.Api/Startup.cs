@@ -1,14 +1,14 @@
 using System;
 using Annium.Data.Operations.Serialization;
 using Annium.Extensions.DependencyInjection;
-using Annium.Id.Helpers;
+using Annium.Id.Api.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
 using NodaTime.Serialization.JsonNet;
 
-namespace Annium.Id
+namespace Annium.Id.Api
 {
     public class Startup<TServicePack> where TServicePack : ServicePackBase, new()
     {

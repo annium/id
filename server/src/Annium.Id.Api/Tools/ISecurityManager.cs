@@ -1,4 +1,4 @@
-namespace Annium.Id.Tools
+namespace Annium.Id.Api.Tools
 {
     public interface ISecurityManager
     {

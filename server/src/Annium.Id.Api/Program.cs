@@ -2,7 +2,7 @@ using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 
-namespace Annium.Id
+namespace Annium.Id.Api
 {
     internal class Program
     {

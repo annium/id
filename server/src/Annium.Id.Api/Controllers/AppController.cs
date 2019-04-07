@@ -2,12 +2,12 @@ using System;
 using System.Threading.Tasks;
 using Annium.AspNetCore.Extensions;
 using Annium.Data.Operations;
+using Annium.Id.Api.Payloads;
+using Annium.Id.Api.Tools;
 using Annium.Id.Db;
-using Annium.Id.Payloads;
-using Annium.Id.Tools;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Annium.Id.Controllers
+namespace Annium.Id.Api.Controllers
 {
     [Route("app")]
     public class AppController : ServerController

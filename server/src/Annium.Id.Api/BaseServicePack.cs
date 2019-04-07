@@ -1,12 +1,12 @@
 using System;
 using Annium.Extensions.DependencyInjection;
 using Annium.Extensions.Mapper;
-using Annium.Id.Tools;
+using Annium.Id.Api.Tools;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
 
-namespace Annium.Id
+namespace Annium.Id.Api
 {
     public class BaseServicePack : ServicePackBase
     {

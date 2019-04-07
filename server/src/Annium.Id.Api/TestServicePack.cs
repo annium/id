@@ -1,6 +1,6 @@
 using Annium.Extensions.DependencyInjection;
 
-namespace Annium.Id
+namespace Annium.Id.Api
 {
     public class TestServicePack : ServicePackBase
     {

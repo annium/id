@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Annium.Id.Payloads
+namespace Annium.Id.Api.Payloads
 {
     public class AppPayload
     {
