@@ -1,0 +1,54 @@
+using System;
+using NodaTime;
+
+namespace Annium.Id.Db
+{
+    public class UserLogin
+    {
+        public Guid Id { get; }
+
+        public Guid UserId { get; }
+
+        public Instant LoginTime { get; }
+
+        public string IPAddress { get; }
+
+        public string Client { get; }
+
+        public Guid RefreshToken { get; }
+
+        public Instant RefreshTokenExpires { get; }
+
+        public UserLogin(
+            Guid userId,
+            Instant loginTime,
+            string ipAddress,
+            string client,
+            Guid refreshToken,
+            Instant refreshTokenExpires
+        )
+        {
+            UserId = userId;
+            LoginTime = loginTime;
+            IPAddress = ipAddress;
+            Client = client;
+            RefreshToken = refreshToken;
+            RefreshTokenExpires = refreshTokenExpires;
+        }
+
+        internal UserLogin(
+            Guid id,
+            Guid userId,
+            Instant loginTime,
+            string ipAddress,
+            string client,
+            Guid refreshToken,
+            Instant refreshTokenExpires
+        ) : this(userId, loginTime, ipAddress, client, refreshToken, refreshTokenExpires)
+        {
+            Id = id;
+        }
+
+        // TODO: perhaps, separate method for refresh token update
+    }
+}

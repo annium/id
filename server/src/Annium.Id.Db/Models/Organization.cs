@@ -2,37 +2,38 @@ using System;
 
 namespace Annium.Id.Db
 {
-    public class App
+    public class Organization
     {
         public Guid Id { get; }
 
         public Guid OwnerId { get; }
 
+        public Guid ParentId { get; }
+
         public string Key { get; set; }
 
         public string Name { get; set; }
 
-        public Guid ApiToken { get; set; }
-
-        public App(
+        public Organization(
             Guid ownerId,
+            Guid parentId,
             string key,
-            string name,
-            Guid apiToken
+            string name
         )
         {
+            OwnerId = ownerId;
+            ParentId = parentId;
             Key = key;
             Name = name;
-            ApiToken = apiToken;
         }
 
-        internal App(
+        internal Organization(
             Guid id,
             Guid ownerId,
-            string key,
-            string name,
-            Guid apiToken
-        ) : this(ownerId, key, name, apiToken)
+            Guid parentId,
+            string login,
+            string name
+        ) : this(ownerId, parentId, login, name)
         {
             Id = id;
         }
