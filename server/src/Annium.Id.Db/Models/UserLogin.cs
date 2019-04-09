@@ -9,7 +9,7 @@ namespace Annium.Id.Db
 
         public Guid UserId { get; }
 
-        public Instant LoginTime { get; }
+        public Instant LoggedAt { get; }
 
         public string IPAddress { get; }
 
@@ -21,7 +21,7 @@ namespace Annium.Id.Db
 
         public UserLogin(
             Guid userId,
-            Instant loginTime,
+            Instant loggedAt,
             string ipAddress,
             string client,
             Guid refreshToken,
@@ -29,7 +29,7 @@ namespace Annium.Id.Db
         )
         {
             UserId = userId;
-            LoginTime = loginTime;
+            LoggedAt = loggedAt;
             IPAddress = ipAddress;
             Client = client;
             RefreshToken = refreshToken;
@@ -39,12 +39,12 @@ namespace Annium.Id.Db
         internal UserLogin(
             Guid id,
             Guid userId,
-            Instant loginTime,
+            Instant loggedAt,
             string ipAddress,
             string client,
             Guid refreshToken,
             Instant refreshTokenExpires
-        ) : this(userId, loginTime, ipAddress, client, refreshToken, refreshTokenExpires)
+        ) : this(userId, loggedAt, ipAddress, client, refreshToken, refreshTokenExpires)
         {
             Id = id;
         }
