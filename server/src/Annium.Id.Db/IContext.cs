@@ -11,6 +11,18 @@ namespace Annium.Id.Db
 
         ITable<Entities.Organization> Organizations { get; }
 
+        ITable<Entities.OrganizationClaim> OrganizationClaims { get; }
+
+        ITable<Entities.OrganizationRole> OrganizationRoles { get; }
+
+        ITable<Entities.OrganizationRoleClaim> OrganizationRoleClaims { get; }
+
+        ITable<Entities.OrganizationUser> OrganizationUsers { get; }
+
+        ITable<Entities.OrganizationUserClaim> OrganizationUserClaims { get; }
+
+        ITable<Entities.OrganizationUserRole> OrganizationUserRoles { get; }
+
         ITable<Entities.Role> Roles { get; }
 
         ITable<Entities.RoleClaim> RoleClaims { get; }
@@ -20,8 +32,6 @@ namespace Annium.Id.Db
         ITable<Entities.UserClaim> UserClaims { get; }
 
         ITable<Entities.UserLogin> UserLogins { get; }
-
-        ITable<Entities.UserOrganization> UserOrganizations { get; }
 
         ITable<Entities.UserRole> UserRoles { get; }
 

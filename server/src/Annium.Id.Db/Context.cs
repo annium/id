@@ -19,6 +19,30 @@ namespace Annium.Id.Db
 
         public ITable<Entities.Organization> Organizations => OrganizationsSet.ToLinqToDBTable();
 
+        public virtual DbSet<Entities.OrganizationClaim> OrganizationClaimsSet { get; set; }
+
+        public ITable<Entities.OrganizationClaim> OrganizationClaims => OrganizationClaimsSet.ToLinqToDBTable();
+
+        public virtual DbSet<Entities.OrganizationRole> OrganizationRolesSet { get; set; }
+
+        public ITable<Entities.OrganizationRole> OrganizationRoles => OrganizationRolesSet.ToLinqToDBTable();
+
+        public virtual DbSet<Entities.OrganizationRoleClaim> OrganizationRoleClaimsSet { get; set; }
+
+        public ITable<Entities.OrganizationRoleClaim> OrganizationRoleClaims => OrganizationRoleClaimsSet.ToLinqToDBTable();
+
+        public virtual DbSet<Entities.OrganizationUser> OrganizationUsersSet { get; set; }
+
+        public ITable<Entities.OrganizationUser> OrganizationUsers => OrganizationUsersSet.ToLinqToDBTable();
+
+        public virtual DbSet<Entities.OrganizationUserRole> OrganizationUserRolesSet { get; set; }
+
+        public ITable<Entities.OrganizationUserRole> OrganizationUserRoles => OrganizationUserRolesSet.ToLinqToDBTable();
+
+        public virtual DbSet<Entities.OrganizationUserClaim> OrganizationUserClaimsSet { get; set; }
+
+        public ITable<Entities.OrganizationUserClaim> OrganizationUserClaims => OrganizationUserClaimsSet.ToLinqToDBTable();
+
         public virtual DbSet<Entities.Role> RolesSet { get; set; }
 
         public ITable<Entities.Role> Roles => RolesSet.ToLinqToDBTable();
@@ -38,10 +62,6 @@ namespace Annium.Id.Db
         public virtual DbSet<Entities.UserLogin> UserLoginsSet { get; set; }
 
         public ITable<Entities.UserLogin> UserLogins => UserLoginsSet.ToLinqToDBTable();
-
-        public virtual DbSet<Entities.UserOrganization> UserOrganizationsSet { get; set; }
-
-        public ITable<Entities.UserOrganization> UserOrganizations => UserOrganizationsSet.ToLinqToDBTable();
 
         public virtual DbSet<Entities.UserRole> UserRolesSet { get; set; }
 
