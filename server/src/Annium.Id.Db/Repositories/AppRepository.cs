@@ -49,10 +49,10 @@ namespace Annium.Id.Db
             return mapper.Map<App>(app);
         }
 
-        public async Task<App> FindByLoginAsync(string login)
+        public async Task<App> FindByKeyAsync(string key)
         {
             var app = await context.Apps
-                .FirstOrDefaultAsync(u => u.Login == login);
+                .FirstOrDefaultAsync(u => u.Key == key);
 
             return mapper.Map<App>(app);
         }
@@ -73,11 +73,9 @@ namespace Annium.Id.Db
                     u => u.Id == entity.Id,
                     u => new Entities.App
                     {
-                        Login = entity.Login,
-                            PasswordHash = entity.PasswordHash,
-                            ApiToken = entity.ApiToken,
+                        Key = entity.Key,
                             Name = entity.Name,
-                            Email = entity.Email,
+                            ApiToken = entity.ApiToken,
                     }
                 );
         }

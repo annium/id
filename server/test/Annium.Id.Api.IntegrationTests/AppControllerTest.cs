@@ -3,7 +3,6 @@ using System.Net;
 using System.Threading.Tasks;
 using Annium.AspNetCore.IntegrationTesting;
 using Annium.Extensions.Net.Http;
-using Annium.Id.Api;
 using Annium.Id.Api.Payloads;
 using Annium.Id.Db;
 using Annium.Testing;
@@ -33,7 +32,7 @@ namespace Annium.Id.Api.IntegrationTests
         public async Task CreateAsync_Works()
         {
             // arrange
-            var payload = new AppPayload() { Login = "demo", Password = "demodemode", Name = "demo", Email = "demo@demo.xx" };
+            var payload = new AppPayload() { Key = "demo", Name = "Demo App" };
 
             // act
             var app = await http.Put("/app").JsonContent(payload).AsAsync<App>();
@@ -41,11 +40,9 @@ namespace Annium.Id.Api.IntegrationTests
 
             // assert
             apps.Has(1);
-            app.Login.IsEqual(payload.Login);
-            app.PasswordHash.IsNotDefault().IsNotEqual(payload.Password);
-            app.ApiToken.IsNotDefault();
+            app.Key.IsEqual(payload.Key);
             app.Name.IsEqual(payload.Name);
-            app.Email.IsEqual(payload.Email);
+            app.ApiToken.IsNotDefault();
         }
 
         [Fact]

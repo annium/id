@@ -6,18 +6,10 @@ namespace Annium.Id.Api.Payloads
     {
         [Required]
         [MinLength(3)]
-        public string Login { get; set; }
-
-        [Required]
-        [MinLength(10)]
-        public string Password { get; set; }
+        public string Key { get; set; }
 
         [Required]
         [MinLength(3)]
         public string Name { get; set; }
-
-        [Required]
-        [EmailAddress]
-        public string Email { get; set; }
     }
 }

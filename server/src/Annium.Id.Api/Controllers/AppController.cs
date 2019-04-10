@@ -13,6 +13,7 @@ namespace Annium.Id.Api.Controllers
     public class AppController : ServerController
     {
         private readonly IAppRepository appRepository;
+
         private readonly ISecurityManager securityManager;
 
         public AppController(
@@ -38,16 +39,15 @@ namespace Annium.Id.Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var current = await appRepository.FindByLoginAsync(appPayload.Login);
+            var current = await appRepository.FindByKeyAsync(appPayload.Key);
             if (current != null)
                 return Conflict(Result.Failure().Error("Application already exists"));
 
             var app = new App(
-                appPayload.Login,
-                securityManager.Hash(appPayload.Password),
-                Guid.NewGuid(),
+                Guid.NewGuid(), // TODO: real user id
+                appPayload.Key,
                 appPayload.Name,
-                appPayload.Email
+                Guid.NewGuid()
             );
 
             app = await appRepository.CreateAsync(app);
