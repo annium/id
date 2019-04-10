@@ -2,23 +2,19 @@ using System;
 
 namespace Annium.Id.Db
 {
-    public class UserRole
+    public class UserOrganization
     {
         public Guid UserId { get; }
 
         public Guid OrganizationId { get; }
 
-        public Guid RoleId { get; }
-
-        internal UserRole(
+        internal UserOrganization(
             Guid userId,
-            Guid organizationId,
-            Guid roleId
+            Guid organizationId
         )
         {
             UserId = userId;
             OrganizationId = organizationId;
-            RoleId = roleId;
         }
     }
 }

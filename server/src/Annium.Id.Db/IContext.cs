@@ -21,6 +21,8 @@ namespace Annium.Id.Db
 
         ITable<Entities.UserLogin> UserLogins { get; }
 
+        ITable<Entities.UserOrganization> UserOrganizations { get; }
+
         ITable<Entities.UserRole> UserRoles { get; }
 
         DataConnection GetDataConnection();

@@ -39,6 +39,10 @@ namespace Annium.Id.Db
 
         public ITable<Entities.UserLogin> UserLogins => UserLoginsSet.ToLinqToDBTable();
 
+        public virtual DbSet<Entities.UserOrganization> UserOrganizationsSet { get; set; }
+
+        public ITable<Entities.UserOrganization> UserOrganizations => UserOrganizationsSet.ToLinqToDBTable();
+
         public virtual DbSet<Entities.UserRole> UserRolesSet { get; set; }
 
         public ITable<Entities.UserRole> UserRoles => UserRolesSet.ToLinqToDBTable();
