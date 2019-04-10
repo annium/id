@@ -1,6 +1,7 @@
 using System;
 using Annium.Extensions.DependencyInjection;
 using Annium.Extensions.Mapper;
+using Annium.Id.Api.Auth;
 using Annium.Id.Api.Tools;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,6 +14,9 @@ namespace Annium.Id.Api
         public override void Register(IServiceCollection services, IServiceProvider provider)
         {
             services.AddSingleton<Func<Instant>>(() => SystemClock.Instance.GetCurrentInstant());
+
+            // app auth
+            // services.AddPolicyAuthorization();
 
             // helpers
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

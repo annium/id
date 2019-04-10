@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Annium.Id.Api.Controllers
 {
-    [Route("app")]
+    [Route("apps")]
     public class AppController : ServerController
     {
         private readonly IAppRepository appRepository;
@@ -25,16 +25,8 @@ namespace Annium.Id.Api.Controllers
             this.securityManager = securityManager;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> ListAsync()
-        {
-            var apps = await appRepository.GetAllAsync();
-
-            return Ok(apps);
-        }
-
         [HttpPut]
-        public async Task<IActionResult> CreateAsync([FromBody] AppPayload appPayload)
+        public async Task<IActionResult> CreateAppAsync([FromBody] AppPayload appPayload)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -55,16 +47,31 @@ namespace Annium.Id.Api.Controllers
             return Ok(app);
         }
 
-        [HttpPost("{id:guid}")]
-        public IActionResult UpdateAsync(Guid id)
+        [HttpGet]
+        public async Task<IActionResult> ListAppsAsync()
         {
-            return Ok($"update app {id}");
+            var apps = await appRepository.GetAllAsync();
+
+            return Ok(apps);
         }
 
-        [HttpDelete("{id:guid}")]
-        public IActionResult DeleteAsync(Guid id)
+        [HttpPost("{appId:guid}")]
+        public IActionResult UpdateAppAsync(Guid appId)
         {
-            return Ok($"delete app {id}");
+            return Ok($"update app {appId}");
+        }
+
+        [HttpPost("{appId:guid}/set-owner/{userId:guid}")]
+        // TODO: Auth
+        public IActionResult SetAppOwnerAsync(Guid appId, Guid userId)
+        {
+            return NoContent();
+        }
+
+        [HttpDelete("{appId:guid}")]
+        public IActionResult DeleteAppAsync(Guid appId)
+        {
+            return Ok($"delete app {appId}");
         }
     }
 }
