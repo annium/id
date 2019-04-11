@@ -1,7 +1,7 @@
 using System;
 using Annium.Extensions.DependencyInjection;
 using Annium.Extensions.Mapper;
-using Annium.Id.Api.Auth;
+using Annium.Id.Api.AppAuth;
 using Annium.Id.Api.Tools;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,7 +16,7 @@ namespace Annium.Id.Api
             services.AddSingleton<Func<Instant>>(() => SystemClock.Instance.GetCurrentInstant());
 
             // app auth
-            // services.AddPolicyAuthorization();
+            services.AddAppAuthorization();
 
             // helpers
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

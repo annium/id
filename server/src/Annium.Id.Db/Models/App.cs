@@ -21,6 +21,7 @@ namespace Annium.Id.Db
             Guid apiToken
         )
         {
+            OwnerId = ownerId;
             Key = key;
             Name = name;
             ApiToken = apiToken;
