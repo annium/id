@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Annium.Id.Db.Entities
 {
-    [Table(nameof(IContext.Claims))]
+    [Table(nameof(IContext.OrganizationClaims))]
     internal class OrganizationClaim
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]

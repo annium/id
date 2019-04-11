@@ -16,7 +16,10 @@ namespace Annium.Id.Db
 
         public override void Configure(IServiceCollection services)
         {
-            services.AddEntityFrameworkSqliteInMemory<Context>();
+            services.AddEntityFrameworkSqliteInMemory<Entities.Context>();
+
+            // set environment variable to notify context in hackery mode, that it's test environment
+            Environment.SetEnvironmentVariable("ENVIRONMENT", "TEST");
 
             // log queries
             DataConnection.TurnTraceSwitchOn(TraceLevel.Verbose);

@@ -21,7 +21,7 @@ namespace Annium.Id.Db
 
         public override void Register(IServiceCollection services, IServiceProvider provider)
         {
-            services.AddScoped<IContext>(p => p.GetRequiredService<Context>());
+            services.AddScoped<Entities.IContext>(p => p.GetRequiredService<Entities.Context>());
 
             // repositories
             services.AddScoped<IAppRepository, AppRepository>();

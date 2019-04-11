@@ -25,7 +25,7 @@ namespace Annium.Id.Db
             // register context
             services
                 .AddEntityFrameworkNpgsqlNodaTime()
-                .AddDbContext<Context>(builder =>
+                .AddDbContext<Entities.Context>(builder =>
                 {
                     builder.UseNpgsql(string.Join(';', new string[]
                     {

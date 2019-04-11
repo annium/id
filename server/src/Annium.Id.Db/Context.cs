@@ -1,71 +1,74 @@
+using System;
 using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using NodaTime;
 
-namespace Annium.Id.Db
+namespace Annium.Id.Db.Entities
 {
     internal class Context : DbContext, IContext
     {
-        public virtual DbSet<Entities.App> AppsSet { get; set; }
+        public virtual DbSet<App> AppsSet { get; set; }
 
-        public ITable<Entities.App> Apps => AppsSet.ToLinqToDBTable();
+        public ITable<App> Apps => AppsSet.ToLinqToDBTable();
 
-        public virtual DbSet<Entities.Claim> ClaimsSet { get; set; }
+        public virtual DbSet<Claim> ClaimsSet { get; set; }
 
-        public ITable<Entities.Claim> Claims => ClaimsSet.ToLinqToDBTable();
+        public ITable<Claim> Claims => ClaimsSet.ToLinqToDBTable();
 
-        public virtual DbSet<Entities.Organization> OrganizationsSet { get; set; }
+        public virtual DbSet<Organization> OrganizationsSet { get; set; }
 
-        public ITable<Entities.Organization> Organizations => OrganizationsSet.ToLinqToDBTable();
+        public ITable<Organization> Organizations => OrganizationsSet.ToLinqToDBTable();
 
-        public virtual DbSet<Entities.OrganizationClaim> OrganizationClaimsSet { get; set; }
+        public virtual DbSet<OrganizationClaim> OrganizationClaimsSet { get; set; }
 
-        public ITable<Entities.OrganizationClaim> OrganizationClaims => OrganizationClaimsSet.ToLinqToDBTable();
+        public ITable<OrganizationClaim> OrganizationClaims => OrganizationClaimsSet.ToLinqToDBTable();
 
-        public virtual DbSet<Entities.OrganizationRole> OrganizationRolesSet { get; set; }
+        public virtual DbSet<OrganizationRole> OrganizationRolesSet { get; set; }
 
-        public ITable<Entities.OrganizationRole> OrganizationRoles => OrganizationRolesSet.ToLinqToDBTable();
+        public ITable<OrganizationRole> OrganizationRoles => OrganizationRolesSet.ToLinqToDBTable();
 
-        public virtual DbSet<Entities.OrganizationRoleClaim> OrganizationRoleClaimsSet { get; set; }
+        public virtual DbSet<OrganizationRoleClaim> OrganizationRoleClaimsSet { get; set; }
 
-        public ITable<Entities.OrganizationRoleClaim> OrganizationRoleClaims => OrganizationRoleClaimsSet.ToLinqToDBTable();
+        public ITable<OrganizationRoleClaim> OrganizationRoleClaims => OrganizationRoleClaimsSet.ToLinqToDBTable();
 
-        public virtual DbSet<Entities.OrganizationUser> OrganizationUsersSet { get; set; }
+        public virtual DbSet<OrganizationUser> OrganizationUsersSet { get; set; }
 
-        public ITable<Entities.OrganizationUser> OrganizationUsers => OrganizationUsersSet.ToLinqToDBTable();
+        public ITable<OrganizationUser> OrganizationUsers => OrganizationUsersSet.ToLinqToDBTable();
 
-        public virtual DbSet<Entities.OrganizationUserRole> OrganizationUserRolesSet { get; set; }
+        public virtual DbSet<OrganizationUserClaim> OrganizationUserClaimsSet { get; set; }
 
-        public ITable<Entities.OrganizationUserRole> OrganizationUserRoles => OrganizationUserRolesSet.ToLinqToDBTable();
+        public ITable<OrganizationUserClaim> OrganizationUserClaims => OrganizationUserClaimsSet.ToLinqToDBTable();
 
-        public virtual DbSet<Entities.OrganizationUserClaim> OrganizationUserClaimsSet { get; set; }
+        public virtual DbSet<OrganizationUserRole> OrganizationUserRolesSet { get; set; }
 
-        public ITable<Entities.OrganizationUserClaim> OrganizationUserClaims => OrganizationUserClaimsSet.ToLinqToDBTable();
+        public ITable<OrganizationUserRole> OrganizationUserRoles => OrganizationUserRolesSet.ToLinqToDBTable();
 
-        public virtual DbSet<Entities.Role> RolesSet { get; set; }
+        public virtual DbSet<Role> RolesSet { get; set; }
 
-        public ITable<Entities.Role> Roles => RolesSet.ToLinqToDBTable();
+        public ITable<Role> Roles => RolesSet.ToLinqToDBTable();
 
-        public virtual DbSet<Entities.RoleClaim> RoleClaimsSet { get; set; }
+        public virtual DbSet<RoleClaim> RoleClaimsSet { get; set; }
 
-        public ITable<Entities.RoleClaim> RoleClaims => RoleClaimsSet.ToLinqToDBTable();
+        public ITable<RoleClaim> RoleClaims => RoleClaimsSet.ToLinqToDBTable();
 
-        public virtual DbSet<Entities.User> UsersSet { get; set; }
+        public virtual DbSet<User> UsersSet { get; set; }
 
-        public ITable<Entities.User> Users => UsersSet.ToLinqToDBTable();
+        public ITable<User> Users => UsersSet.ToLinqToDBTable();
 
-        public virtual DbSet<Entities.UserClaim> UserClaimsSet { get; set; }
+        public virtual DbSet<UserClaim> UserClaimsSet { get; set; }
 
-        public ITable<Entities.UserClaim> UserClaims => UserClaimsSet.ToLinqToDBTable();
+        public ITable<UserClaim> UserClaims => UserClaimsSet.ToLinqToDBTable();
 
-        public virtual DbSet<Entities.UserLogin> UserLoginsSet { get; set; }
+        public virtual DbSet<UserLogin> UserLoginsSet { get; set; }
 
-        public ITable<Entities.UserLogin> UserLogins => UserLoginsSet.ToLinqToDBTable();
+        public ITable<UserLogin> UserLogins => UserLoginsSet.ToLinqToDBTable();
 
-        public virtual DbSet<Entities.UserRole> UserRolesSet { get; set; }
+        public virtual DbSet<UserRole> UserRolesSet { get; set; }
 
-        public ITable<Entities.UserRole> UserRoles => UserRolesSet.ToLinqToDBTable();
+        public ITable<UserRole> UserRoles => UserRolesSet.ToLinqToDBTable();
 
         public Context(DbContextOptions contextOptions) : base(contextOptions) { }
 
@@ -130,6 +133,18 @@ namespace Annium.Id.Db
                 .HasOne<User>().WithMany().IsRequired()
                 .HasForeignKey(m => m.UserId).OnDelete(DeleteBehavior.Restrict);
 
+            builder.Entity<OrganizationUserClaim>()
+                .HasKey(p => new { p.OrganizationId, p.UserId, p.ClaimId });
+            builder.Entity<OrganizationUserClaim>()
+                .HasOne<Organization>().WithMany().IsRequired()
+                .HasForeignKey(m => m.OrganizationId).OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<OrganizationUserClaim>()
+                .HasOne<User>().WithMany().IsRequired()
+                .HasForeignKey(m => m.UserId).OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<OrganizationUserClaim>()
+                .HasOne<OrganizationClaim>().WithMany().IsRequired()
+                .HasForeignKey(m => m.ClaimId).OnDelete(DeleteBehavior.Restrict);
+
             builder.Entity<OrganizationUserRole>()
                 .HasKey(p => new { p.OrganizationId, p.UserId, p.RoleId });
             builder.Entity<OrganizationUserRole>()
@@ -181,6 +196,20 @@ namespace Annium.Id.Db
             builder.Entity<UserRole>()
                 .HasOne<Role>().WithMany().IsRequired()
                 .HasForeignKey(m => m.RoleId).OnDelete(DeleteBehavior.Restrict);
+
+
+            if (Environment.GetEnvironmentVariable("ENVIRONMENT") == "TEST")
+                ConfigureForTesting(builder);
+        }
+
+        private void ConfigureForTesting(ModelBuilder builder)
+        {
+            var localDateConverter = new ValueConverter<Instant, long>(v => v.ToUnixTimeSeconds(), v => Instant.FromUnixTimeSeconds(v));
+
+            builder.Entity<UserLogin>().Property(e => e.LoggedAt).HasConversion(localDateConverter);
+            builder.Entity<UserLogin>().Property(e => e.RefreshTokenExpires).HasConversion(localDateConverter);
+
+            builder.Entity<User>().Property(e => e.LockedUntil).HasConversion(localDateConverter);
         }
     }
 }
