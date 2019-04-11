@@ -11,9 +11,6 @@ namespace Annium.Id.Db.Entities
         public Guid UserId { get; set; }
 
         [Required]
-        public Guid OrganizationId { get; set; }
-
-        [Required]
         public Guid RoleId { get; set; }
     }
 }

@@ -34,7 +34,7 @@ namespace Annium.Id.Db
                         $"Database={cfg.Name}",
                         $"Username={cfg.User}",
                         $"Password={cfg.Password}",
-                    }));
+                    }), options => options.UseNodaTime());
                 });
 
             // log queries if needed
