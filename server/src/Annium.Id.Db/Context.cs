@@ -208,8 +208,6 @@ namespace Annium.Id.Db.Entities
 
             builder.Entity<UserLogin>().Property(e => e.LoggedAt).HasConversion(localDateConverter);
             builder.Entity<UserLogin>().Property(e => e.RefreshTokenExpires).HasConversion(localDateConverter);
-
-            builder.Entity<User>().Property(e => e.LockedUntil).HasConversion(localDateConverter);
         }
     }
 }

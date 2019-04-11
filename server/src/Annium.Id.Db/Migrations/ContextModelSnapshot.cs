@@ -247,15 +247,11 @@ namespace Annium.Id.Db.Migrations
                     b.Property<string>("LastName")
                         .IsRequired();
 
-                    b.Property<Instant>("LockedUntil");
-
                     b.Property<string>("Login")
                         .IsRequired();
 
                     b.Property<string>("PasswordHash")
                         .IsRequired();
-
-                    b.Property<int>("TryCount");
 
                     b.HasKey("Id");
 

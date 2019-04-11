@@ -1,5 +1,4 @@
 using System;
-using NodaTime;
 
 namespace Annium.Id.Db
 {
@@ -16,10 +15,6 @@ namespace Annium.Id.Db
         public string LastName { get; set; }
 
         public string Email { get; set; }
-
-        public int TryCount { get; set; }
-
-        public Instant LockedUntil { get; set; }
 
         public User(
             string login,
@@ -42,14 +37,10 @@ namespace Annium.Id.Db
             string passwordHash,
             string firstName,
             string lastName,
-            string email,
-            int tryCount,
-            Instant lockedUntil
+            string email
         ) : this(login, passwordHash, firstName, lastName, email)
         {
             Id = id;
-            TryCount = tryCount;
-            LockedUntil = lockedUntil;
         }
     }
 }

@@ -1,7 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using NodaTime;
 
 namespace Annium.Id.Db.Entities
 {
@@ -25,11 +24,5 @@ namespace Annium.Id.Db.Entities
 
         [Required]
         public string Email { get; set; }
-
-        [Required]
-        public int TryCount { get; set; }
-
-        [Required]
-        public Instant LockedUntil { get; set; }
     }
 }

@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Annium.Id.Db.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20190411105614_init")]
+    [Migration("20190411205232_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -249,15 +249,11 @@ namespace Annium.Id.Db.Migrations
                     b.Property<string>("LastName")
                         .IsRequired();
 
-                    b.Property<Instant>("LockedUntil");
-
                     b.Property<string>("Login")
                         .IsRequired();
 
                     b.Property<string>("PasswordHash")
                         .IsRequired();
-
-                    b.Property<int>("TryCount");
 
                     b.HasKey("Id");
 

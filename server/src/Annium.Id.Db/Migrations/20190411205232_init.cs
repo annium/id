@@ -17,9 +17,7 @@ namespace Annium.Id.Db.Migrations
                     PasswordHash = table.Column<string>(nullable: false),
                     FirstName = table.Column<string>(nullable: false),
                     LastName = table.Column<string>(nullable: false),
-                    Email = table.Column<string>(nullable: false),
-                    TryCount = table.Column<int>(nullable: false),
-                    LockedUntil = table.Column<Instant>(nullable: false)
+                    Email = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
