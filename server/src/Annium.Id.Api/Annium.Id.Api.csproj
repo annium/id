@@ -9,6 +9,7 @@
         <WarningsAsErrors>true</WarningsAsErrors>
     </PropertyGroup>
     <ItemGroup>
+        <ProjectReference Include="../Annium.Id.AspNetCore/Annium.Id.AspNetCore.csproj" />
         <ProjectReference Include="../Annium.Id.Db/Annium.Id.Db.csproj" />
     </ItemGroup>
     <ItemGroup>
