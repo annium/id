@@ -7,15 +7,6 @@ namespace Annium.Id.Api.Controllers
     [Route("users")]
     public class UserController : ServerController
     {
-        // register user - by user
-        // get own info - authorized
-        // get user info - open
-        // login user - by user
-        // logout user - by user
-        // update user token - by user
-        // update user info - by user
-        // unregister user - by user
-
         public UserController() { }
 
         [HttpPut]

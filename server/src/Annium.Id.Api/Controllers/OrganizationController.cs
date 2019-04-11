@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace Annium.Id.Api.Controllers
 {
     [Route("organizations")]
-    public class OrganizationControlller : ServerController
+    public class OrganizationController : ServerController
     {
-        public OrganizationControlller() { }
+        public OrganizationController() { }
 
         [HttpPut]
         public IActionResult RegisterOrganizationAsync()

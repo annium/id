@@ -3,47 +3,47 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Annium.Id.Api.Controllers
 {
-    [Route("organizations/{organizationId:guid}")]
+    [Route("organizations/{organizationId:guid}/users/{userId:guid}")]
     public class OrganizationUserController : ServerController
     {
         public OrganizationUserController() { }
 
-        [HttpPut("users/{userId:guid}")]
+        [HttpPut]
         // TODO: Auth
         public IActionResult AddUserToOrganizationAsync()
         {
             return NoContent();
         }
 
-        [HttpPut("users/{userId:guid}/roles/{roleId:guid}")]
+        [HttpPut("roles/{roleId:guid}")]
         // TODO: Auth
         public IActionResult AddRoleToOrganizationUserAsync()
         {
             return NoContent();
         }
 
-        [HttpDelete("users/{userId:guid}/roles/{roleId:guid}")]
+        [HttpDelete("roles/{roleId:guid}")]
         // TODO: Auth
         public IActionResult DeleteRoleFromOrganizationUserAsync()
         {
             return NoContent();
         }
 
-        [HttpPut("users/{userId:guid}/claims/{claimId:guid}")]
+        [HttpPut("claims/{claimId:guid}")]
         // TODO: Auth
         public IActionResult AddClaimToOrganizationUserAsync()
         {
             return NoContent();
         }
 
-        [HttpDelete("users/{userId:guid}/claims/{claimId:guid}")]
+        [HttpDelete("claims/{claimId:guid}")]
         // TODO: Auth
         public IActionResult DeleteClaimFromOrganizationUserAsync()
         {
             return NoContent();
         }
 
-        [HttpDelete("users/{userId:guid}")]
+        [HttpDelete]
         // TODO: Auth
         public IActionResult DeleteUserFromOrganizationAsync()
         {

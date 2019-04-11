@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Annium.Id.Api.Controllers
 {
-    [Route("app/{appId:guid}/roles")]
+    [Route("apps/{appId:guid}/roles")]
     public class RoleController : ServerController
     {
         public RoleController() { }

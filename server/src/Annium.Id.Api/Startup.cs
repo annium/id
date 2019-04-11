@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
 using NodaTime.Serialization.JsonNet;
+using NSwag.AspNetCore;
 
 namespace Annium.Id.Api
 {
@@ -22,14 +23,23 @@ namespace Annium.Id.Api
                     .ConfigureForOperations()
                 );
 
+            services.AddSwaggerDocument();
+
             return new ServiceProviderBuilder(services)
                 .UseServicePack<TServicePack>()
                 .Build();
         }
 
-        public void Configure(IApplicationBuilder app, IApplicationLifetime lifetime)
+        public void Configure(IApplicationBuilder app, IApplicationLifetime lifetime, IHostingEnvironment env)
         {
             app.UseExceptionMiddleware();
+
+            if (env.IsDevelopment())
+            {
+                app.UseStaticFiles();
+                app.UseSwagger();
+                app.UseSwaggerUi3();
+            }
 
             app.UseCors(builder => builder
                 .SetIsOriginAllowed(o => true)
