@@ -11,6 +11,11 @@ namespace Annium.Id.Api
 {
     public class BaseServicePack : ServicePackBase
     {
+        public BaseServicePack()
+        {
+            Add<AspNetCore.ServicePack>();
+        }
+
         public override void Register(IServiceCollection services, IServiceProvider provider)
         {
             services.AddSingleton<Func<Instant>>(() => SystemClock.Instance.GetCurrentInstant());
@@ -23,6 +28,7 @@ namespace Annium.Id.Api
 
             // tools
             services.AddSingleton<ISecurityManager, SecurityManager>();
+            services.AddSingleton<ITokenGenerator, TokenGenerator>();
 
             services.AddMapper(provider);
         }
