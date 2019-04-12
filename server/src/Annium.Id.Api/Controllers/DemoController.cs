@@ -59,8 +59,8 @@ namespace Annium.Id.Api.Controllers
             }
         }
 
-        [HttpGet]
-        public IActionResult ListAsync()
+        [HttpGet("jwt")]
+        public IActionResult GetJwtAsync()
         {
             const string signingSecurityKey = "0d5b3235a8b403c3dab9c3f4f65c07fcalskd234n1k41230";
             var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(signingSecurityKey));
@@ -81,7 +81,7 @@ namespace Annium.Id.Api.Controllers
             return Ok(new JwtSecurityTokenHandler().WriteToken(token));
         }
 
-        [HttpPost]
+        [HttpPost("jwt")]
         public IActionResult TestAsync([FromBody] string tokenString)
         {
             const string signingSecurityKey = "0d5b3235a8b403c3dab9c3f4f65c07fcalskd234n1k41230";
