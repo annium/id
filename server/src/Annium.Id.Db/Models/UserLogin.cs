@@ -1,4 +1,5 @@
 using System;
+using Newtonsoft.Json;
 using NodaTime;
 
 namespace Annium.Id.Db
@@ -36,6 +37,7 @@ namespace Annium.Id.Db
             RefreshTokenExpires = refreshTokenExpires;
         }
 
+        [JsonConstructor]
         internal UserLogin(
             Guid id,
             Guid userId,
