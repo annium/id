@@ -174,6 +174,8 @@ namespace Annium.Id.Db.Entities
 
             builder.Entity<User>()
                 .HasAlternateKey(m => m.Login);
+            builder.Entity<User>()
+                .HasAlternateKey(m => m.Email);
 
             builder.Entity<UserClaim>()
                 .HasKey(p => new { p.UserId, p.ClaimId });

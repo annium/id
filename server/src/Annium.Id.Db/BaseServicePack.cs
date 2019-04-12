@@ -25,6 +25,8 @@ namespace Annium.Id.Db
 
             // repositories
             services.AddScoped<IAppRepository, AppRepository>();
+            services.AddScoped<IUserLoginRepository, UserLoginRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
 
             services.AddConsole(new LoggerConfiguration(LogLevel.Trace));
         }
