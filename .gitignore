@@ -2,7 +2,8 @@
 .vscode/
 
 # artifacts
-/run
+/keys/
+/run/
 
 # configuration
 configuration/
