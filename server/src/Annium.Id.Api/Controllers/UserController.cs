@@ -7,12 +7,13 @@ using Annium.Id.Api.Views;
 using Annium.Id.AspNetCore;
 using Annium.Id.Db;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using NodaTime;
 
 namespace Annium.Id.Api.Controllers
 {
     [Route("users")]
-    public class UserController : ServerController
+    public class UserController : LocalizedServerController
     {
         private static readonly Duration refreshTokenLifeTime = Duration.FromDays(1);
 
@@ -34,8 +35,9 @@ namespace Annium.Id.Api.Controllers
             IIdentityDataAccessor identityDataAccessor,
             ISecurityManager securityManager,
             ITokenGenerator tokenGenerator,
-            Func<Instant> getInstant
-        )
+            Func<Instant> getInstant,
+            IStringLocalizer<UserController> localizer
+        ) : base(localizer)
         {
             this.userRepository = userRepository;
             this.userLoginRepository = userLoginRepository;

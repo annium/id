@@ -4,11 +4,11 @@ namespace Annium.Id.Api.Payloads
 {
     public class AppPayload
     {
-        [Required]
+        [Required(ErrorMessage = Annotations.Required)]
         [MinLength(3)]
         public string Key { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = Annotations.Required)]
         [MinLength(3)]
         public string Name { get; set; }
     }

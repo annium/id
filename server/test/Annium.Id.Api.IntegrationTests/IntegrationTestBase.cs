@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using Annium.AspNetCore.IntegrationTesting;
 using Annium.Extensions.Net.Http;
 using Annium.Id.Api.Payloads;
-using Annium.Id.Db;
+using Annium.Id.Api.Views;
 
 namespace Annium.Id.Api.IntegrationTests
 {
@@ -13,11 +13,11 @@ namespace Annium.Id.Api.IntegrationTests
             Configure(request => request);
         }
 
-        protected async Task<User> CreateTestUserAsync()
+        protected async Task<UserView> CreateTestUserAsync()
         {
             var payload = new UserPayload { Login = "demo", Password = "testtest", FirstName = "demo", LastName = "medo", Email = "demo@demo.com" };
 
-            return await http.Put("/users").JsonContent(payload).AsAsync<User>();
+            return await http.Put("/users").JsonContent(payload).AsAsync<UserView>();
         }
     }
 }

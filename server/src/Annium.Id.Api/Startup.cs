@@ -2,6 +2,7 @@ using System;
 using Annium.AspNetCore.Extensions;
 using Annium.Data.Operations.Serialization;
 using Annium.Extensions.DependencyInjection;
+using Annium.Id.Api.Payloads;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,6 +19,8 @@ namespace Annium.Id.Api
             services.AddCors();
 
             services.AddMvc()
+                .AddDataAnnotationsLocalization(opts =>
+                    opts.DataAnnotationLocalizerProvider = (_, factory) => factory.Create(typeof(Annotations)))
                 .AddJsonOptions(opts => opts.SerializerSettings
                     .ConfigureForNodaTime(DateTimeZoneProviders.Serialization)
                     .ConfigureForOperations()
@@ -46,6 +49,8 @@ namespace Annium.Id.Api
                 .AllowAnyMethod()
                 .AllowAnyHeader()
                 .AllowCredentials());
+
+            app.UseRequestLocalization("en", "ru");
 
             app.UseMvc();
         }

@@ -4,12 +4,12 @@ namespace Annium.Id.Api.Payloads
 {
     public class UserLoginPayload
     {
-        [Required]
+        [Required(ErrorMessage = Annotations.Required)]
         [MinLength(3)]
         [StringLength(50)]
         public string Login { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = Annotations.Required)]
         [MinLength(8)]
         [StringLength(50)]
         public string Password { get; set; }
