@@ -1,6 +1,6 @@
 using System.Net;
 
-namespace Annium.Id.AspNetCore.Tools
+namespace Annium.Id.Api.Tools
 {
     public interface IIdentityDataAccessor
     {

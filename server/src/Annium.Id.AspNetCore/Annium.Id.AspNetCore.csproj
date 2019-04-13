@@ -13,5 +13,6 @@
         <PackageReference Include="Annium.Security.Cryptography" Version="0.1.0" />
         <PackageReference Include="MessagePack" Version="1.7.3" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.4.0" />
     </ItemGroup>
 </Project>

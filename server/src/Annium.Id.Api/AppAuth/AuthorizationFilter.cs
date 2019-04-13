@@ -40,12 +40,12 @@ namespace Annium.Id.Api.AppAuth
         {
             using(var scope = serviceProvider.CreateScope())
             {
-                var appRepository = scope.ServiceProvider.GetRequiredService<IAppRepository>();
-
                 // try get token
                 var(token, result) = tokenAccessor.GetToken(context.HttpContext.Request);
                 if (result != null)
                     return result;
+
+                var appRepository = scope.ServiceProvider.GetRequiredService<IAppRepository>();
 
                 // try to find app
                 var app = await appRepository.FindByApiTokenAsync(token);

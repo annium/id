@@ -32,19 +32,17 @@ namespace Annium.Id.Api.Tools
         )
         {
             var token = new IdToken(
-                login.UserId,
-                login.IPAddress,
-                login.Client
+                login.UserId
             );
 
-            var claims = new [] { new SystemClaim("id", Convert.ToBase64String(LZ4MessagePackSerializer.Serialize(token))) };
+            var claims = new [] { new SystemClaim(Constants.IdClaim, Convert.ToBase64String(LZ4MessagePackSerializer.Serialize(token))) };
 
             var jwt = new JwtSecurityToken(
-                issuer: "annium.id",
-                audience: "api",
-                claims : claims,
-                expires : DateTime.Now + tokenLifeTime,
-                signingCredentials : new SigningCredentials(signingKey, SecurityAlgorithms.RsaSha256)
+                issuer: Constants.Issuer,
+                audience: Constants.Audience,
+                claims: claims,
+                expires: DateTime.Now + tokenLifeTime,
+                signingCredentials: new SigningCredentials(signingKey, SecurityAlgorithms.RsaSha256)
             );
 
             return new JwtSecurityTokenHandler().WriteToken(jwt);

@@ -2,7 +2,7 @@ using System.Linq;
 using System.Net;
 using Microsoft.AspNetCore.Http;
 
-namespace Annium.Id.AspNetCore.Tools
+namespace Annium.Id.Api.Tools
 {
     internal class IdentityDataAccessor : IIdentityDataAccessor
     {
