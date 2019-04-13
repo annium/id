@@ -9,6 +9,9 @@
         <WarningsAsErrors>true</WarningsAsErrors>
     </PropertyGroup>
     <ItemGroup>
+        <None Update="keys/*.key" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
+    <ItemGroup>
         <ProjectReference Include="../../src/Annium.Id.Api/Annium.Id.Api.csproj" />
     </ItemGroup>
     <ItemGroup>
