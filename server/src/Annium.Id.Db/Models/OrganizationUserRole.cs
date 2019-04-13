@@ -1,5 +1,4 @@
 using System;
-using Newtonsoft.Json;
 
 namespace Annium.Id.Db
 {
@@ -11,7 +10,6 @@ namespace Annium.Id.Db
 
         public Guid RoleId { get; }
 
-        [JsonConstructor]
         internal OrganizationUserRole(
             Guid organizationId,
             Guid userId,

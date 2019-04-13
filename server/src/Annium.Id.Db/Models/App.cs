@@ -1,5 +1,4 @@
 using System;
-using Newtonsoft.Json;
 
 namespace Annium.Id.Db
 {
@@ -28,7 +27,6 @@ namespace Annium.Id.Db
             ApiToken = apiToken;
         }
 
-        [JsonConstructor]
         internal App(
             Guid id,
             Guid ownerId,

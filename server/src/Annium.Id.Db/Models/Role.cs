@@ -1,5 +1,4 @@
 using System;
-using Newtonsoft.Json;
 
 namespace Annium.Id.Db
 {
@@ -24,7 +23,6 @@ namespace Annium.Id.Db
             Name = name;
         }
 
-        [JsonConstructor]
         internal Role(
             Guid id,
             Guid appId,
