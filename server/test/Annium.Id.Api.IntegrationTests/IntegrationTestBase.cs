@@ -19,7 +19,7 @@ namespace Annium.Id.Api.IntegrationTests
         {
             var payload = new UserPayload { Login = "demo", Password = "testtest", FirstName = "demo", LastName = "medo", Email = "demo@demo.com" };
 
-            return await http.Put("/users").JsonContent(payload).AsAsync<UserView>();
+            return await http.Put("/me").JsonContent(payload).AsAsync<UserView>();
         }
 
         protected async Task<UserView> LoginAsync()
@@ -27,7 +27,7 @@ namespace Annium.Id.Api.IntegrationTests
             var user = await CreateTestUserAsync();
             var payload = new UserLoginPayload { Login = user.Login, Password = "testtest" };
 
-            token = await http.Post("/users/login").JsonContent(payload).AsStringAsync();
+            token = await http.Post("/me/login").JsonContent(payload).AsStringAsync();
 
             return user;
         }
