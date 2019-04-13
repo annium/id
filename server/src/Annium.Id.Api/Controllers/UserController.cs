@@ -3,7 +3,8 @@ using System.Threading.Tasks;
 using Annium.AspNetCore.Extensions;
 using Annium.Id.Api.Payloads;
 using Annium.Id.Api.Tools;
-using Annium.Id.AspNetCore.Tools;
+using Annium.Id.Api.Views;
+using Annium.Id.AspNetCore;
 using Annium.Id.Db;
 using Microsoft.AspNetCore.Mvc;
 using NodaTime;
@@ -71,12 +72,16 @@ namespace Annium.Id.Api.Controllers
             return Ok(user);
         }
 
-        [HttpGet]
-        // TODO: Auth
-        public IActionResult GetUserAsync()
+        [HttpGet("me")]
+        [AuthorizeId]
+        public async Task<IActionResult> GetUserAsync()
         {
-            // add info about organizations, user is member of
-            return NoContent();
+            var user = await userRepository.GetById(this.GetUserId());
+            if (user == null)
+                return NotFound();
+
+            // TODO: perhaps, add info about organizations, user is member of
+            return Ok(new UserView(user));
         }
 
         [HttpGet("{userId:guid}")]
@@ -87,7 +92,7 @@ namespace Annium.Id.Api.Controllers
                 return NotFound();
 
             // TODO: perhaps, add info about organizations, user is member of
-            return Ok(user);
+            return Ok(new UserView(user));
         }
 
         [HttpPost("login")]
@@ -115,8 +120,8 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpPost("logout")]
-        // TODO: Auth
-        public IActionResult LogoutAsync()
+        [AuthorizeId]
+        public IActionResult LogoutAsync([FromQuery] int secret)
         {
             return NoContent();
         }

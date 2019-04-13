@@ -3,7 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Annium.Extensions.Net.Http;
 using Annium.Id.Api.Payloads;
-using Annium.Id.Db;
+using Annium.Id.Api.Views;
 using Annium.Testing;
 
 namespace Annium.Id.Api.IntegrationTests
@@ -84,7 +84,7 @@ namespace Annium.Id.Api.IntegrationTests
             var user = await CreateTestUserAsync();
 
             // act
-            var response = await http.Get($"/users/{user.Id}").AsAsync<User>();
+            var response = await http.Get($"/users/{user.Id}").AsAsync<UserView>();
 
             // assert
             response.Id.IsEqual(user.Id);
