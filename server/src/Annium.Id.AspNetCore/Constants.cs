@@ -8,8 +8,6 @@ namespace Annium.Id.AspNetCore
 
         public const string Audience = "api";
 
-        internal const string IdAttributeProperty = "idAttribute";
-
         internal const string IdTokenProperty = "idToken";
     }
 }

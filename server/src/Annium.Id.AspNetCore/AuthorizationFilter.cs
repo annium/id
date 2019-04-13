@@ -1,30 +1,22 @@
-using System;
 using Annium.Id.AspNetCore.Tools;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Annium.Id.AspNetCore
 {
     internal class AuthorizationFilter : IAuthorizationFilter
     {
-        private readonly IServiceProvider serviceProvider;
+        private readonly TokenAccessor tokenAccessor;
 
-        private readonly AuthorizeIdAttribute attribute;
-
-        private readonly ITokenAccessor tokenAccessor;
-
-        private readonly ITokenParser tokenParser;
+        private readonly TokenParser tokenParser;
 
         public AuthorizationFilter(
-            IServiceProvider serviceProvider,
-            AuthorizeIdAttribute attribute
+            TokenAccessor tokenAccessor,
+            TokenParser tokenParser
         )
         {
-            this.serviceProvider = serviceProvider;
-            this.attribute = attribute;
-            this.tokenAccessor = serviceProvider.GetRequiredService<ITokenAccessor>();
-            this.tokenParser = serviceProvider.GetRequiredService<ITokenParser>();
+            this.tokenAccessor = tokenAccessor;
+            this.tokenParser = tokenParser;
         }
 
         public void OnAuthorization(AuthorizationFilterContext context)
@@ -44,7 +36,6 @@ namespace Annium.Id.AspNetCore
             if (parseResult != null)
                 return parseResult;
 
-            context.ActionDescriptor.Properties[Constants.IdAttributeProperty] = attribute;
             context.ActionDescriptor.Properties[Constants.IdTokenProperty] = token;
 
             return null;

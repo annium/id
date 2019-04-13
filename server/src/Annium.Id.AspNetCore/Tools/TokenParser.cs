@@ -12,7 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Annium.Id.AspNetCore.Tools
 {
-    internal class TokenParser : ITokenParser
+    internal class TokenParser
     {
         private readonly RsaSecurityKey signingKey;
 

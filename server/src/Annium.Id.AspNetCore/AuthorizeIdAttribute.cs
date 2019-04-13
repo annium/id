@@ -7,14 +7,11 @@ namespace Annium.Id.AspNetCore
     {
         public string PolicyName { get; }
 
-        public string[] Parameters { get; }
-
         public AuthorizeIdAttribute() { }
 
-        public AuthorizeIdAttribute(string policyName, params string[] parameters)
+        public AuthorizeIdAttribute(string policyName)
         {
             PolicyName = policyName;
-            Parameters = parameters;
         }
     }
 }

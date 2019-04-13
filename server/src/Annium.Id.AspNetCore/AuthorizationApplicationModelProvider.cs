@@ -1,26 +1,37 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using Annium.Id.AspNetCore.Tools;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 
 namespace Annium.Id.AspNetCore
 {
     internal class AuthorizationApplicationModelProvider : IApplicationModelProvider
     {
-        private readonly Func<AuthorizeIdAttribute, AuthorizationFilter> createAuthorizationFilter;
+        private readonly AuthorizationFilter authorizationFilter;
+
+        private readonly Func<Policy, PolicyFilter> createPolicyFilter;
+
+        private readonly IEnumerable<Policy> policies;
+
+        private readonly PolicyMapper mapper;
 
         public int Order { get; } = -990;
 
         public AuthorizationApplicationModelProvider(
-            Func<AuthorizeIdAttribute, AuthorizationFilter> createAuthorizationFilter
+            AuthorizationFilter authorizationFilter,
+            Func<Policy, PolicyFilter> createPolicyFilter,
+            IEnumerable<Policy> policies,
+            PolicyMapper mapper
         )
         {
-            this.createAuthorizationFilter = createAuthorizationFilter;
+            this.authorizationFilter = authorizationFilter;
+            this.createPolicyFilter = createPolicyFilter;
+            this.policies = policies;
+            this.mapper = mapper;
         }
 
-        public void OnProvidersExecuted(ApplicationModelProviderContext context)
-        {
-            //Intentionally empty
-        }
+        public void OnProvidersExecuted(ApplicationModelProviderContext context) { }
 
         public void OnProvidersExecuting(ApplicationModelProviderContext context)
         {
@@ -42,7 +53,17 @@ namespace Annium.Id.AspNetCore
             if (attribute == null)
                 return;
 
-            actionModel.Filters.Add(createAuthorizationFilter(attribute));
+            actionModel.Filters.Add(authorizationFilter);
+            if (attribute.PolicyName == null)
+                return;
+
+            var policy = policies.FirstOrDefault(p => p.Name == attribute.PolicyName);
+            if (policy == null)
+                throw new ArgumentException($"Policy {attribute.PolicyName}, requested by {actionModel.DisplayName} is not registered");
+
+            mapper.EnsureMappable(policy, actionModel);
+
+            actionModel.Filters.Add(createPolicyFilter(policy));
         }
     }
 }
