@@ -78,7 +78,7 @@ namespace Annium.Id.Api.Controllers
         [AuthorizeId]
         public async Task<IActionResult> GetUserAsync()
         {
-            var user = await userRepository.GetById(this.GetUserId());
+            var user = await userRepository.GetById(this.GetId().UserId);
             if (user == null)
                 return NotFound();
 
@@ -107,34 +107,72 @@ namespace Annium.Id.Api.Controllers
 
             var token = tokenGenerator.Generate(login);
 
-            return Ok(token);
+            return Ok(new UserTokenView(token, login));
         }
 
         [HttpPost("logout")]
         [AuthorizeId]
-        public IActionResult LogoutAsync([FromQuery] int secret)
+        public async Task<IActionResult> LogoutAsync()
         {
+            var loginId = this.GetId().LoginId;
+
+            await userLoginRepository.DeleteByIdAsync(loginId);
+
             return NoContent();
         }
 
         [HttpPost("token")]
-        // TODO: Auth
-        public IActionResult UpdateTokenAsync()
+        public async Task<IActionResult> UpdateTokenAsync(Guid refreshToken)
         {
-            return NoContent();
+            var login = await userLoginRepository.FindByRefreshTokenAsync(refreshToken);
+            if (login == null)
+                return Forbidden("Invalid refresh token");
+
+            login.RefreshToken = Guid.NewGuid();
+            login.RefreshTokenExpires = getInstant();
+
+            login = await userLoginRepository.UpdateRefreshTokenAsync(login);
+
+            var token = tokenGenerator.Generate(login);
+
+            return Ok(new UserTokenView(token, login));
         }
 
         [HttpPost]
-        // TODO: Auth
-        public IActionResult UpdateUserAsync()
+        [AuthorizeId]
+        public async Task<IActionResult> UpdateUserAsync([FromBody] UserPayload userPayload)
         {
-            return NoContent();
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var user = await userRepository.GetById(this.GetId().UserId);
+
+            if (userPayload.Login != user.Login && (await userRepository.FindByLoginAsync(userPayload.Login)) != null)
+                return Conflict($"Login {userPayload.Login} is already used");
+
+            if (userPayload.Email != user.Email && (await userRepository.FindByEmailAsync(userPayload.Email)) != null)
+                return Conflict($"Email {userPayload.Email} is already used");
+
+            user.Login = userPayload.Login;
+            user.PasswordHash = securityManager.Hash(userPayload.Password);
+            user.FirstName = userPayload.FirstName;
+            user.LastName = userPayload.LastName;
+            user.Email = userPayload.Email;
+
+            user = await userRepository.UpdateAsync(user);
+
+            return Ok(new UserView(user));
         }
 
         [HttpDelete]
-        // TODO: Auth
-        public IActionResult UnregisterUserAsync()
+        [AuthorizeId]
+        public async Task<IActionResult> UnregisterUserAsync()
         {
+            var userId = this.GetId().UserId;
+
+            await userLoginRepository.DeleteAllByUserIdAsync(userId);
+            await userRepository.DeleteByIdAsync(userId);
+
             return NoContent();
         }
     }

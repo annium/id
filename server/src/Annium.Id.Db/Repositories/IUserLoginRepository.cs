@@ -8,7 +8,9 @@ namespace Annium.Id.Db
     {
         Task<UserLogin> CreateAsync(UserLogin login);
 
-        Task<ValueTuple<Guid, Instant>> UpdateRefreshTokenAsync(Guid token, Instant expires);
+        Task<UserLogin> FindByRefreshTokenAsync(Guid token);
+
+        Task<UserLogin> UpdateRefreshTokenAsync(UserLogin login);
 
         Task DeleteByIdAsync(Guid id);
 

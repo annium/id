@@ -15,9 +15,9 @@ namespace Annium.Id.Db
 
         public string Client { get; }
 
-        public Guid RefreshToken { get; }
+        public Guid RefreshToken { get; set; }
 
-        public Instant RefreshTokenExpires { get; }
+        public Instant RefreshTokenExpires { get; set; }
 
         public UserLogin(
             Guid userId,

@@ -56,11 +56,11 @@ namespace Annium.Id.Db
             return mapper.Map<User>(user);
         }
 
-        public Task UpdateAsync(User user)
+        public async Task<User> UpdateAsync(User user)
         {
             var entity = mapper.Map<Entities.User>(user);
 
-            return context.Users
+            await context.Users
                 .UpdateAsync(
                     u => u.Id == entity.Id,
                     u => new Entities.User
@@ -72,6 +72,8 @@ namespace Annium.Id.Db
                             Email = entity.Email,
                     }
                 );
+
+            return mapper.Map<User>(entity);
         }
 
         public Task DeleteByIdAsync(Guid id)

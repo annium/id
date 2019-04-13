@@ -9,11 +9,16 @@ namespace Annium.Id.AspNetCore
         [Key(0)]
         public Guid UserId { get; }
 
+        [Key(1)]
+        public Guid LoginId { get; }
+
         public IdToken(
-            Guid userId
+            Guid userId,
+            Guid loginId
         )
         {
             UserId = userId;
+            LoginId = loginId;
         }
     }
 }

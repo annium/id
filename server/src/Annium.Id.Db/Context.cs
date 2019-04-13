@@ -186,6 +186,8 @@ namespace Annium.Id.Db.Entities
             builder.Entity<UserLogin>()
                 .HasOne<User>().WithMany().IsRequired()
                 .HasForeignKey(m => m.UserId).OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<UserLogin>()
+                .HasAlternateKey(m => m.RefreshToken);
 
             builder.Entity<UserRole>()
                 .HasKey(p => new { p.UserId, p.RoleId });

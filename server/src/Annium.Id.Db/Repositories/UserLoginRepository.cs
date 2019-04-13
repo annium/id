@@ -34,28 +34,29 @@ namespace Annium.Id.Db
             return mapper.Map<UserLogin>(entity);
         }
 
-        public async Task<ValueTuple<Guid, Instant>> UpdateRefreshTokenAsync(Guid token, Instant expires)
+        public async Task<UserLogin> FindByRefreshTokenAsync(Guid token)
         {
             var entity = await context.UserLogins
                 .FirstOrDefaultAsync(l => l.RefreshToken == token);
 
-            if (entity == null)
-                return (Guid.Empty, Instant.MinValue);
+            return mapper.Map<UserLogin>(entity);
+        }
 
-            token = Guid.NewGuid();
-            var expiresTime = expires.ToDateTimeUtc();
+        public async Task<UserLogin> UpdateRefreshTokenAsync(UserLogin login)
+        {
+            var entity = mapper.Map<Entities.UserLogin>(login);
 
             await context.UserLogins
                 .UpdateAsync(
-                    l => l.Id == entity.Id,
+                    l => l.Id == login.Id,
                     l => new Entities.UserLogin
                     {
-                        RefreshToken = token,
-                            RefreshTokenExpires = expiresTime,
+                        RefreshToken = entity.RefreshToken,
+                            RefreshTokenExpires = entity.RefreshTokenExpires,
                     }
                 );
 
-            return (token, expires);
+            return mapper.Map<UserLogin>(entity);
         }
 
         public Task DeleteByIdAsync(Guid id)

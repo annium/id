@@ -32,7 +32,8 @@ namespace Annium.Id.Api.Tools
         )
         {
             var token = new IdToken(
-                login.UserId
+                login.UserId,
+                login.Id
             );
 
             var claims = new [] { new SystemClaim(Constants.IdClaim, Convert.ToBase64String(LZ4MessagePackSerializer.Serialize(token))) };

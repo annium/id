@@ -1,8 +1,5 @@
-using System;
-using System.Diagnostics;
 using Annium.Extensions.DependencyInjection;
 using Annium.Extensions.EntityFrameworkCore;
-using LinqToDB.Data;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Annium.Id.Db
@@ -19,8 +16,8 @@ namespace Annium.Id.Db
             services.AddEntityFrameworkSqliteInMemory<Entities.Context>();
 
             // log queries
-            DataConnection.TurnTraceSwitchOn(TraceLevel.Verbose);
-            DataConnection.WriteTraceLine = (message, context) => Console.WriteLine($"{context}: {message}");
+            // DataConnection.TurnTraceSwitchOn(TraceLevel.Verbose);
+            // DataConnection.WriteTraceLine = (message, context) => Console.WriteLine($"{context}: {message}");
         }
     }
 }

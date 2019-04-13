@@ -38,7 +38,7 @@ namespace Annium.Id.Db
 
             cfg.CreateMap<App, Entities.App>().ReverseMap();
             cfg.CreateMap<Instant, DateTime>().ConvertUsing(i => i.ToDateTimeUtc());
-            cfg.CreateMap<DateTime, Instant>().ConvertUsing(d => Instant.FromDateTimeUtc(d));
+            cfg.CreateMap<DateTime, Instant>().ConvertUsing(d => Instant.FromDateTimeUtc(d.ToUniversalTime()));
 
             return cfg;
         }

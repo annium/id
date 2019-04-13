@@ -13,7 +13,7 @@ namespace Annium.Id.Db
 
         Task<User> FindByEmailAsync(string email);
 
-        Task UpdateAsync(User user);
+        Task<User> UpdateAsync(User user);
 
         Task DeleteByIdAsync(Guid id);
     }
