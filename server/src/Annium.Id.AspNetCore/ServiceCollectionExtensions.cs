@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 using Annium.Id.AspNetCore.Tools;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,7 +11,8 @@ namespace Annium.Id.AspNetCore
 {
     public static class AuthorizationExtensions
     {
-        private static readonly IList<Policy> policies = new List<Policy>();
+        private static readonly ConditionalWeakTable<IServiceCollection, List<string>> policiesContainer =
+            new ConditionalWeakTable<IServiceCollection, List<string>>();
 
         public static IServiceCollection AddIdAuthorization(this IServiceCollection services)
         {
@@ -52,14 +54,16 @@ namespace Annium.Id.AspNetCore
             LambdaExpression expression
         )
         {
-            if (policies.Any(p => p.Name == name))
+            var policies = policiesContainer.GetOrCreateValue(services);
+
+            if (policies.Contains(name))
                 throw new ArgumentException($"Policy {name} is already registered");
 
             var parameters = expression.Parameters.ToDictionary(p => p.Name, p => p.Type);
             var handle = expression.Compile();
 
             var policy = new Policy(name, parameters, handle);
-            policies.Add(policy);
+            policies.Add(policy.Name);
             services.AddSingleton(policy);
 
             return services;
