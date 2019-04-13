@@ -4,7 +4,6 @@ using Annium.Id.Db.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using NodaTime;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Annium.Id.Db.Migrations
@@ -288,11 +287,11 @@ namespace Annium.Id.Db.Migrations
                     b.Property<string>("IPAddress")
                         .IsRequired();
 
-                    b.Property<Instant>("LoggedAt");
+                    b.Property<DateTime>("LoggedAt");
 
                     b.Property<Guid>("RefreshToken");
 
-                    b.Property<Instant>("RefreshTokenExpires");
+                    b.Property<DateTime>("RefreshTokenExpires");
 
                     b.Property<Guid>("UserId");
 

@@ -135,14 +135,14 @@ namespace Annium.Id.Api.Controllers
             return NoContent();
         }
 
-        [HttpPost]
+        [HttpPost("me")]
         // TODO: Auth
         public IActionResult UpdateUserAsync()
         {
             return NoContent();
         }
 
-        [HttpDelete]
+        [HttpDelete("me")]
         // TODO: Auth
         public IActionResult UnregisterUserAsync()
         {

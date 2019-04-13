@@ -43,6 +43,7 @@ namespace Annium.Id.Db
                 return (Guid.Empty, Instant.MinValue);
 
             token = Guid.NewGuid();
+            var expiresTime = expires.ToDateTimeUtc();
 
             await context.UserLogins
                 .UpdateAsync(
@@ -50,7 +51,7 @@ namespace Annium.Id.Db
                     l => new Entities.UserLogin
                     {
                         RefreshToken = token,
-                            RefreshTokenExpires = expires,
+                            RefreshTokenExpires = expiresTime,
                     }
                 );
 
@@ -64,7 +65,9 @@ namespace Annium.Id.Db
 
         public Task DeleteExpiredByUserIdAsync(Guid userId, Instant instant)
         {
-            return context.UserLogins.DeleteAsync(l => l.UserId == userId && l.RefreshTokenExpires <= instant);
+            var instantTime = instant.ToDateTimeUtc();
+
+            return context.UserLogins.DeleteAsync(l => l.UserId == userId && l.RefreshTokenExpires <= instantTime);
         }
 
         public Task DeleteAllByUserIdAsync(Guid userId)

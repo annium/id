@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-using NodaTime;
 
 namespace Annium.Id.Db.Migrations
 {
@@ -82,11 +81,11 @@ namespace Annium.Id.Db.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     UserId = table.Column<Guid>(nullable: false),
-                    LoggedAt = table.Column<Instant>(nullable: false),
+                    LoggedAt = table.Column<DateTime>(nullable: false),
                     IPAddress = table.Column<string>(nullable: false),
                     Client = table.Column<string>(nullable: false),
                     RefreshToken = table.Column<Guid>(nullable: false),
-                    RefreshTokenExpires = table.Column<Instant>(nullable: false)
+                    RefreshTokenExpires = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {

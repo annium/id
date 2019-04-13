@@ -18,9 +18,6 @@ namespace Annium.Id.Db
         {
             services.AddEntityFrameworkSqliteInMemory<Entities.Context>();
 
-            // set environment variable to notify context in hackery mode, that it's test environment
-            Environment.SetEnvironmentVariable("ENVIRONMENT", "TEST");
-
             // log queries
             DataConnection.TurnTraceSwitchOn(TraceLevel.Verbose);
             DataConnection.WriteTraceLine = (message, context) => Console.WriteLine($"{context}: {message}");

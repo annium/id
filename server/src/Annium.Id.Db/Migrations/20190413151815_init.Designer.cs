@@ -5,13 +5,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using NodaTime;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Annium.Id.Db.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20190412180728_init")]
+    [Migration("20190413151815_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -290,11 +289,11 @@ namespace Annium.Id.Db.Migrations
                     b.Property<string>("IPAddress")
                         .IsRequired();
 
-                    b.Property<Instant>("LoggedAt");
+                    b.Property<DateTime>("LoggedAt");
 
                     b.Property<Guid>("RefreshToken");
 
-                    b.Property<Instant>("RefreshTokenExpires");
+                    b.Property<DateTime>("RefreshTokenExpires");
 
                     b.Property<Guid>("UserId");
 

@@ -5,6 +5,7 @@ using Annium.Logging.Abstractions;
 using AutoMapper.Configuration;
 using LinqToDB.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using NodaTime;
 
 namespace Annium.Id.Db
 {
@@ -36,6 +37,8 @@ namespace Annium.Id.Db
             var cfg = new MapperConfigurationExpression();
 
             cfg.CreateMap<App, Entities.App>().ReverseMap();
+            cfg.CreateMap<Instant, DateTime>().ConvertUsing(i => i.ToDateTimeUtc());
+            cfg.CreateMap<DateTime, Instant>().ConvertUsing(d => Instant.FromDateTimeUtc(d));
 
             return cfg;
         }

@@ -1,10 +1,7 @@
-using System;
 using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using NodaTime;
 
 namespace Annium.Id.Db.Entities
 {
@@ -198,18 +195,6 @@ namespace Annium.Id.Db.Entities
             builder.Entity<UserRole>()
                 .HasOne<Role>().WithMany().IsRequired()
                 .HasForeignKey(m => m.RoleId).OnDelete(DeleteBehavior.Restrict);
-
-
-            if (Environment.GetEnvironmentVariable("ENVIRONMENT") == "TEST")
-                ConfigureForTesting(builder);
-        }
-
-        private void ConfigureForTesting(ModelBuilder builder)
-        {
-            var localDateConverter = new ValueConverter<Instant, long>(v => v.ToUnixTimeSeconds(), v => Instant.FromUnixTimeSeconds(v));
-
-            builder.Entity<UserLogin>().Property(e => e.LoggedAt).HasConversion(localDateConverter);
-            builder.Entity<UserLogin>().Property(e => e.RefreshTokenExpires).HasConversion(localDateConverter);
         }
     }
 }

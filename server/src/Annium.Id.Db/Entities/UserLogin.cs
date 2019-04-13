@@ -1,7 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using NodaTime;
 
 namespace Annium.Id.Db.Entities
 {
@@ -15,7 +14,7 @@ namespace Annium.Id.Db.Entities
         public Guid UserId { get; set; }
 
         [Required]
-        public Instant LoggedAt { get; set; }
+        public DateTime LoggedAt { get; set; }
 
         [Required]
         public string IPAddress { get; set; }
@@ -27,6 +26,6 @@ namespace Annium.Id.Db.Entities
         public Guid RefreshToken { get; set; }
 
         [Required]
-        public Instant RefreshTokenExpires { get; set; }
+        public DateTime RefreshTokenExpires { get; set; }
     }
 }

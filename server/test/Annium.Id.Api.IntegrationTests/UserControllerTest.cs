@@ -65,6 +65,19 @@ namespace Annium.Id.Api.IntegrationTests
         }
 
         [Fact]
+        public async Task GetUser_ReturnsAuthenticatedUser()
+        {
+            // arrange
+            var user = await LoginAsync();
+
+            // act
+            var response = await http.Get("/users/me").BearerAuthorization(token).AsAsync<UserView>();
+
+            // assert
+            response.Id.IsEqual(user.Id);
+        }
+
+        [Fact]
         public async Task GetUserById_ReturnsNotFoundIfUserIsMissing()
         {
             // arrange
