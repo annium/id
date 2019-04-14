@@ -6,13 +6,13 @@ using LinqToDB;
 
 namespace Annium.Id.Db
 {
-    internal class RoleRepository : IRoleRepository
+    internal class OrganizationRoleRepository : IOrganizationRoleRepository
     {
         private readonly Entities.IContext context;
 
         private readonly IMapper mapper;
 
-        public RoleRepository(
+        public OrganizationRoleRepository(
             Entities.IContext context,
             IMapper mapper
         )
@@ -21,9 +21,9 @@ namespace Annium.Id.Db
             this.mapper = mapper;
         }
 
-        public async Task<Role> CreateAsync(Role role)
+        public async Task<OrganizationRole> CreateAsync(OrganizationRole role)
         {
-            var entity = mapper.Map<Entities.Role>(role);
+            var entity = mapper.Map<Entities.OrganizationRole>(role);
             entity.Id = Guid.NewGuid();
 
             using(var db = context.GetDataConnection())
@@ -31,14 +31,14 @@ namespace Annium.Id.Db
                 await db.InsertAsync(entity);
             }
 
-            return mapper.Map<Role>(entity);
+            return mapper.Map<OrganizationRole>(entity);
         }
 
-        public async Task<Role[]> GetAllAsync(Guid appId)
+        public async Task<OrganizationRole[]> GetAllAsync(Guid appId)
         {
-            var raw = await context.Roles
-                .LeftJoin(context.RoleClaims, (r, rc) => rc.RoleId == r.Id, (r, rc) => new { r, rc })
-                .LeftJoin(context.Claims, (rc, c) => rc.rc.ClaimId == c.Id, (rc, c) => new { r = rc.r, rc = rc.rc, c })
+            var raw = await context.OrganizationRoles
+                .LeftJoin(context.OrganizationRoleClaims, (r, rc) => rc.RoleId == r.Id, (r, rc) => new { r, rc })
+                .LeftJoin(context.OrganizationClaims, (rc, c) => rc.rc.ClaimId == c.Id, (rc, c) => new { r = rc.r, rc = rc.rc, c })
                 .Where(rc => rc.r.AppId == appId)
                 .ToArrayAsync();
 
@@ -55,53 +55,53 @@ namespace Annium.Id.Db
                 })
                 .ToArray();
 
-            return roles.Select(mapper.Map<Role>).ToArray();
+            return roles.Select(mapper.Map<OrganizationRole>).ToArray();
         }
 
-        public async Task<Role> GetByIdAsync(Guid id)
+        public async Task<OrganizationRole> GetByIdAsync(Guid id)
         {
-            var role = await context.Roles
+            var role = await context.OrganizationRoles
                 .FirstOrDefaultAsync(c => c.Id == id);
 
-            return mapper.Map<Role>(role);
+            return mapper.Map<OrganizationRole>(role);
         }
 
-        public async Task<Role> FindByKeyAsync(Guid appId, string key)
+        public async Task<OrganizationRole> FindByKeyAsync(Guid appId, string key)
         {
-            var role = await context.Roles
+            var role = await context.OrganizationRoles
                 .FirstOrDefaultAsync(c => c.AppId == appId && c.Key == key);
 
-            return mapper.Map<Role>(role);
+            return mapper.Map<OrganizationRole>(role);
         }
 
-        public async Task<Role> UpdateAsync(Role role)
+        public async Task<OrganizationRole> UpdateAsync(OrganizationRole role)
         {
-            var entity = mapper.Map<Entities.Role>(role);
+            var entity = mapper.Map<Entities.OrganizationRole>(role);
 
-            await context.Roles
+            await context.OrganizationRoles
                 .UpdateAsync(
                     c => c.Id == entity.Id,
-                    u => new Entities.Role
+                    u => new Entities.OrganizationRole
                     {
                         Key = entity.Key,
                             Name = entity.Name,
                     }
                 );
 
-            entity.Claims = await context.RoleClaims
+            entity.Claims = await context.OrganizationRoleClaims
                 .Where(rc => rc.RoleId == entity.Id)
-                .InnerJoin(context.Claims, (rc, c) => rc.ClaimId == c.Id, (rc, c) => new { rc, c })
+                .InnerJoin(context.OrganizationClaims, (rc, c) => rc.ClaimId == c.Id, (rc, c) => new { rc, c })
                 .Select(
                     rc => new Entities.ClaimValue { Id = rc.c.Id, Key = rc.c.Key, Name = rc.c.Name, Value = rc.rc.Value }
                 )
                 .ToListAsync();
 
-            return mapper.Map<Role>(entity);
+            return mapper.Map<OrganizationRole>(entity);
         }
 
         public Task DeleteByIdAsync(Guid id)
         {
-            return context.Roles.DeleteAsync(u => u.Id == id);
+            return context.OrganizationRoles.DeleteAsync(u => u.Id == id);
         }
     }
 }
