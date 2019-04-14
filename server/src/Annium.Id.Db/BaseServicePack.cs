@@ -32,8 +32,10 @@ namespace Annium.Id.Db
             services.AddScoped<IOrganizationRoleRepository, OrganizationRoleRepository>();
             services.AddScoped<IRoleClaimRepository, RoleClaimRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
+            services.AddScoped<IUserClaimRepository, UserClaimRepository>();
             services.AddScoped<IUserLoginRepository, UserLoginRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IUserRoleRepository, UserRoleRepository>();
 
             services.AddConsole(new LoggerConfiguration(LogLevel.Trace));
         }
