@@ -78,7 +78,7 @@ namespace Annium.Id.Api.Controllers
         [AuthorizeId]
         public async Task<IActionResult> GetUserAsync()
         {
-            var user = await userRepository.GetById(this.GetId().UserId);
+            var user = await userRepository.GetByIdAsync(this.GetId().UserId);
             if (user == null)
                 return NotFound();
 
@@ -145,7 +145,7 @@ namespace Annium.Id.Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var user = await userRepository.GetById(this.GetId().UserId);
+            var user = await userRepository.GetByIdAsync(this.GetId().UserId);
 
             if (userPayload.Login != user.Login && (await userRepository.FindByLoginAsync(userPayload.Login)) != null)
                 return Conflict($"Login {userPayload.Login} is already used");

@@ -7,7 +7,7 @@ namespace Annium.Id.Db
     {
         Task<User> CreateAsync(User user);
 
-        Task<User> GetById(Guid id);
+        Task<User> GetByIdAsync(Guid id);
 
         Task<User> FindByLoginAsync(string login);
 

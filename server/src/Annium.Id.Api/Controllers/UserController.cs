@@ -24,7 +24,7 @@ namespace Annium.Id.Api.Controllers
         [HttpGet("{userId:guid}")]
         public async Task<IActionResult> GetUserAsync(Guid userId)
         {
-            var user = await userRepository.GetById(userId);
+            var user = await userRepository.GetByIdAsync(userId);
             if (user == null)
                 return NotFound();
 

@@ -125,7 +125,7 @@ namespace Annium.Id.Api.Controllers
             if (this.GetId().UserId != app.OwnerId)
                 return Forbidden("Need to be owner to change app owner");
 
-            var user = await userRepository.GetById(userId);
+            var user = await userRepository.GetByIdAsync(userId);
             if (user == null)
                 return NotFound();
 

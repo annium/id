@@ -33,7 +33,7 @@ namespace Annium.Id.Db
             return mapper.Map<User>(entity);
         }
 
-        public async Task<User> GetById(Guid id)
+        public async Task<User> GetByIdAsync(Guid id)
         {
             var user = await context.Users
                 .FirstOrDefaultAsync(u => u.Id == id);
