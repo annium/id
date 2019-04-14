@@ -64,20 +64,21 @@ namespace Annium.Id.Db
             return mapper.Map<App>(app);
         }
 
-        public Task UpdateAsync(App app)
+        public async Task<App> UpdateAsync(App app)
         {
             var entity = mapper.Map<Entities.App>(app);
 
-            return context.Apps
+            await context.Apps
                 .UpdateAsync(
                     u => u.Id == entity.Id,
                     u => new Entities.App
                     {
                         Key = entity.Key,
                             Name = entity.Name,
-                            ApiToken = entity.ApiToken,
                     }
                 );
+
+            return mapper.Map<App>(entity);
         }
 
         public Task UpdateApiTokenAsync(Guid appId, Guid apiToken)

@@ -15,7 +15,7 @@ namespace Annium.Id.Db
 
         Task<App> FindByApiTokenAsync(Guid token);
 
-        Task UpdateAsync(App app);
+        Task<App> UpdateAsync(App app);
 
         Task UpdateApiTokenAsync(Guid appId, Guid apiToken);
 

@@ -26,7 +26,7 @@ namespace Annium.Id.Api.IntegrationTests
         public async Task GetUserById_ReturnsUserIfUserIsFound()
         {
             // arrange
-            var user = await CreateTestUserAsync();
+            var user = await RegisterAsync();
 
             // act
             var response = await http.Get($"/users/{user.Id}").AsAsync<UserView>();

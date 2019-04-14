@@ -27,7 +27,7 @@ namespace Annium.Id.Api.IntegrationTests
         public async Task Register_LoginIsNotUnique_Conflict()
         {
             // arrange
-            var user = await CreateTestUserAsync();
+            var user = await RegisterAsync();
             var payload = new UserPayload { Login = user.Login, Password = "asdasdsdd", FirstName = "a123", LastName = "adsudq", Email = "asd1@demo.com" };
 
             // act
@@ -41,7 +41,7 @@ namespace Annium.Id.Api.IntegrationTests
         public async Task Register_EmailIsNotUnique_Conflict()
         {
             // arrange
-            var user = await CreateTestUserAsync();
+            var user = await RegisterAsync();
             var payload = new UserPayload { Login = "uniquelogin", Password = "asdasdsdd", FirstName = "a123", LastName = "adsudq", Email = user.Email };
 
             // act
@@ -68,7 +68,7 @@ namespace Annium.Id.Api.IntegrationTests
         public async Task GetUser_AuthenticatedUser_Ok()
         {
             // arrange
-            var user = await LoginAsync();
+            var(user, tokens) = await LoginAsync();
 
             // act
             var response = await http.Get("/me").BearerAuthorization(tokens.AccessToken).AsAsync<UserView>();
@@ -81,7 +81,7 @@ namespace Annium.Id.Api.IntegrationTests
         public async Task LoginAsync_BadPayload_BadRequest()
         {
             // arrange
-            var user = await CreateTestUserAsync();
+            var user = await RegisterAsync();
             var payload = new UserLoginPayload { Login = "uniquelogin", Password = "asda" };
 
             // act
@@ -95,7 +95,7 @@ namespace Annium.Id.Api.IntegrationTests
         public async Task LoginAsync_InvalidLogin_Forbidden()
         {
             // arrange
-            var user = await CreateTestUserAsync();
+            var user = await RegisterAsync();
             var payload = new UserLoginPayload { Login = "uniquelogin", Password = "asdaasda" };
 
             // act
@@ -109,7 +109,7 @@ namespace Annium.Id.Api.IntegrationTests
         public async Task LoginAsync_InvalidPassword_Forbidden()
         {
             // arrange
-            var user = await CreateTestUserAsync();
+            var user = await RegisterAsync();
             var payload = new UserLoginPayload { Login = "demo", Password = "asdaasda" };
 
             // act
@@ -123,7 +123,7 @@ namespace Annium.Id.Api.IntegrationTests
         public async Task LoginAsync_Valid_Ok()
         {
             // arrange
-            var user = await CreateTestUserAsync();
+            var user = await RegisterAsync();
             var payload = new UserLoginPayload { Login = "demo", Password = "testtest" };
 
             // act
@@ -137,7 +137,7 @@ namespace Annium.Id.Api.IntegrationTests
         public async Task Logout_Ok()
         {
             // arrange
-            var user = await LoginAsync();
+            var(user, tokens) = await LoginAsync();
 
             // act
             var response = await http.Post("/me/logout").BearerAuthorization(tokens.AccessToken).RunAsync();
@@ -150,7 +150,7 @@ namespace Annium.Id.Api.IntegrationTests
         public async Task UpdateToken_InvalidToken_Forbidden()
         {
             // arrange
-            var user = await LoginAsync();
+            var(user, tokens) = await LoginAsync();
 
             // act
             var response = await http.Post("/me/token").Param("refreshToken", Guid.NewGuid()).RunAsync();
@@ -163,7 +163,7 @@ namespace Annium.Id.Api.IntegrationTests
         public async Task UpdateToken_ValidToken_Ok()
         {
             // arrange
-            var user = await LoginAsync();
+            var(user, tokens) = await LoginAsync();
 
             // act
             var response = await http.Post("/me/token").Param("refreshToken", tokens.RefreshToken).AsAsync<UserTokenView>();
@@ -177,7 +177,7 @@ namespace Annium.Id.Api.IntegrationTests
         public async Task Update_IncorrectPayload_BadRequest()
         {
             // arrange
-            var user = await LoginAsync();
+            var(user, tokens) = await LoginAsync();
             var payload = new UserPayload { Login = "demo" };
 
             // act
@@ -191,7 +191,7 @@ namespace Annium.Id.Api.IntegrationTests
         public async Task Update_LoginIsNotUnique_Conflict()
         {
             // arrange
-            var user = await LoginAsync();
+            var(user, tokens) = await LoginAsync();
             var p = new UserPayload { Login = "uniquelogin", Password = "asdasdsdd", FirstName = "a123", LastName = "adsudq", Email = "asd1@demo.com" };
             await http.Put("/me").JsonContent(p).RunAsync();
             var u = new UserPayload { Login = p.Login, Password = "a96as9da", FirstName = "a123", LastName = "adsudq", Email = "asd2@demo.com" };
@@ -207,7 +207,7 @@ namespace Annium.Id.Api.IntegrationTests
         public async Task Update_EmailIsNotUnique_Conflict()
         {
             // arrange
-            var user = await LoginAsync();
+            var(user, tokens) = await LoginAsync();
             var p = new UserPayload { Login = "uniquelogin", Password = "asdasdsdd", FirstName = "a123", LastName = "adsudq", Email = "asd1@demo.com" };
             await http.Put("/me").JsonContent(p).RunAsync();
             var u = new UserPayload { Login = "otherlogin", Password = "a96as9da", FirstName = "a123", LastName = "adsudq", Email = p.Email };
@@ -223,7 +223,7 @@ namespace Annium.Id.Api.IntegrationTests
         public async Task Update_ValidData_Ok()
         {
             // arrange
-            var user = await LoginAsync();
+            var(user, tokens) = await LoginAsync();
             var payload = new UserPayload { Login = "medo", Password = "setsetset", FirstName = "medo", LastName = "demo", Email = "medo@medo.com" };
 
             // act
@@ -241,7 +241,7 @@ namespace Annium.Id.Api.IntegrationTests
         public async Task Unregister_ValidData_Ok()
         {
             // arrange
-            var user = await LoginAsync();
+            var(user, tokens) = await LoginAsync();
 
             // act
             var response = await http.Delete("/me").BearerAuthorization(tokens.AccessToken).RunAsync();

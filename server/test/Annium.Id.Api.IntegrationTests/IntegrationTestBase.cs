@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Annium.AspNetCore.IntegrationTesting;
 using Annium.Extensions.Net.Http;
@@ -8,28 +9,34 @@ namespace Annium.Id.Api.IntegrationTests
 {
     public class IntegrationTestBase : IntegrationTest<Startup<Api.TestServicePack>>
     {
-        protected UserTokenView tokens;
-
         public IntegrationTestBase()
         {
             Configure(request => request);
         }
 
-        protected async Task<UserView> CreateTestUserAsync()
+        protected async Task<UserView> RegisterAsync(
+            string login = "demo",
+            string password = "testtest",
+            string email = "demo@demo.com"
+        )
         {
-            var payload = new UserPayload { Login = "demo", Password = "testtest", FirstName = "demo", LastName = "medo", Email = "demo@demo.com" };
+            var payload = new UserPayload { Login = login, Password = password, FirstName = "demo", LastName = "medo", Email = email };
 
             return await http.Put("/me").JsonContent(payload).AsAsync<UserView>();
         }
 
-        protected async Task<UserView> LoginAsync()
+        protected async Task<ValueTuple<UserView, UserTokenView>> LoginAsync(
+            string login = "demo",
+            string password = "testtest",
+            string email = "demo@demo.com"
+        )
         {
-            var user = await CreateTestUserAsync();
-            var payload = new UserLoginPayload { Login = user.Login, Password = "testtest" };
+            var user = await RegisterAsync(login, password, email);
+            var payload = new UserLoginPayload { Login = login, Password = password };
 
-            tokens = await http.Post("/me/login").JsonContent(payload).AsAsync<UserTokenView>();
+            var tokens = await http.Post("/me/login").JsonContent(payload).AsAsync<UserTokenView>();
 
-            return user;
+            return (user, tokens);
         }
     }
 }
