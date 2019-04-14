@@ -8,7 +8,7 @@ namespace Annium.Id.Db
 
         public Guid RoleId { get; }
 
-        internal UserRole(
+        public UserRole(
             Guid userId,
             Guid roleId
         )

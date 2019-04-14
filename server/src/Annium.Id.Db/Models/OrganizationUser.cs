@@ -8,7 +8,7 @@ namespace Annium.Id.Db
 
         public Guid UserId { get; }
 
-        internal OrganizationUser(
+        public OrganizationUser(
             Guid organizationId,
             Guid userId
         )

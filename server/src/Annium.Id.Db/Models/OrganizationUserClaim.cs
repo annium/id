@@ -12,7 +12,7 @@ namespace Annium.Id.Db
 
         public string Value { get; set; }
 
-        internal OrganizationUserClaim(
+        public OrganizationUserClaim(
             Guid organizationId,
             Guid userId,
             Guid claimId,
