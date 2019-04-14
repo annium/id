@@ -31,16 +31,16 @@ namespace Annium.Id.Api.Controllers
             return NoContent();
         }
 
-        [HttpPut("{roleId:guid}/claims/{claimId:guid}")]
+        [HttpPost("{roleId:guid}/claims/{claimId:guid}")]
         // TODO: Auth
-        public IActionResult AddOrganizationRoleClaimAsync(Guid appId, Guid roleId, Guid claimId)
+        public IActionResult AddClaimToOrganizationRoleAsync(Guid appId, Guid roleId, Guid claimId)
         {
             return NoContent();
         }
 
         [HttpDelete("{roleId:guid}/claims/{claimId:guid}")]
         // TODO: Auth
-        public IActionResult DeleteOrganizationRoleClaimAsync(Guid appId, Guid roleId, Guid claimId)
+        public IActionResult DeleteClaimFromOrganizationRoleAsync(Guid appId, Guid roleId, Guid claimId)
         {
             return NoContent();
         }
