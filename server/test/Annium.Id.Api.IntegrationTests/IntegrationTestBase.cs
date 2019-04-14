@@ -38,5 +38,16 @@ namespace Annium.Id.Api.IntegrationTests
 
             return (user, tokens);
         }
+
+        protected Task<AppView> CreateAppAsync(
+            string accessToken,
+            string key = "demo",
+            string name = "Demo App"
+        )
+        {
+            var payload = new AppPayload { Key = key, Name = name };
+
+            return http.Put("/apps").BearerAuthorization(accessToken).JsonContent(payload).AsAsync<AppView>();
+        }
     }
 }
