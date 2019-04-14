@@ -83,7 +83,7 @@ namespace Annium.Id.Db.Entities
                 .HasOne<App>().WithMany().IsRequired()
                 .HasForeignKey(m => m.AppId).OnDelete(DeleteBehavior.Restrict);
             builder.Entity<Claim>()
-                .HasAlternateKey(m => m.Key);
+                .HasAlternateKey(m => new { m.AppId, m.Key });
 
             builder.Entity<Organization>()
                 .HasOne<User>().WithMany().IsRequired()
@@ -98,19 +98,13 @@ namespace Annium.Id.Db.Entities
                 .HasOne<App>().WithMany().IsRequired()
                 .HasForeignKey(m => m.AppId).OnDelete(DeleteBehavior.Restrict);
             builder.Entity<OrganizationClaim>()
-                .HasAlternateKey(m => m.Key);
+                .HasAlternateKey(m => new { m.AppId, m.Key });
 
             builder.Entity<OrganizationRole>()
                 .HasOne<App>().WithMany().IsRequired()
                 .HasForeignKey(m => m.AppId).OnDelete(DeleteBehavior.Restrict);
             builder.Entity<OrganizationRole>()
-                .HasAlternateKey(m => m.Key);
-
-            builder.Entity<OrganizationRole>()
-                .HasOne<App>().WithMany().IsRequired()
-                .HasForeignKey(m => m.AppId).OnDelete(DeleteBehavior.Restrict);
-            builder.Entity<OrganizationRole>()
-                .HasAlternateKey(m => m.Key);
+                .HasAlternateKey(m => new { m.AppId, m.Key });
 
             builder.Entity<OrganizationRoleClaim>()
                 .HasKey(p => new { p.RoleId, p.ClaimId });
@@ -158,7 +152,7 @@ namespace Annium.Id.Db.Entities
                 .HasOne<App>().WithMany().IsRequired()
                 .HasForeignKey(m => m.AppId).OnDelete(DeleteBehavior.Restrict);
             builder.Entity<Role>()
-                .HasAlternateKey(m => m.Key);
+                .HasAlternateKey(m => new { m.AppId, m.Key });
 
             builder.Entity<RoleClaim>()
                 .HasKey(p => new { p.RoleId, p.ClaimId });
