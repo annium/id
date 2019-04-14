@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -18,5 +19,7 @@ namespace Annium.Id.Db.Entities
 
         [Required]
         public string Name { get; set; }
+
+        public List<ClaimValue> Claims { get; set; }
     }
 }

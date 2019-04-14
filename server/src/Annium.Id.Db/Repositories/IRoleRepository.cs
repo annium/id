@@ -1,0 +1,20 @@
+using System;
+using System.Threading.Tasks;
+
+namespace Annium.Id.Db
+{
+    public interface IRoleRepository
+    {
+        Task<Role> CreateAsync(Role role);
+
+        Task<Role[]> GetAllAsync(Guid appId);
+
+        Task<Role> GetByIdAsync(Guid id);
+
+        Task<Role> FindByKeyAsync(Guid appId, string key);
+
+        Task<Role> UpdateAsync(Role role);
+
+        Task DeleteByIdAsync(Guid id);
+    }
+}
