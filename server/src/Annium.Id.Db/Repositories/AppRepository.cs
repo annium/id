@@ -75,6 +75,7 @@ namespace Annium.Id.Db
                     {
                         Key = entity.Key,
                             Name = entity.Name,
+                            OwnerId = entity.OwnerId,
                     }
                 );
 

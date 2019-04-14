@@ -13,8 +13,7 @@ namespace Annium.Id.Db.Entities
         [Required]
         public Guid OwnerId { get; set; }
 
-        [Required]
-        public Guid ParentId { get; set; }
+        public Guid? ParentId { get; set; }
 
         [Required]
         public string Key { get; set; }

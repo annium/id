@@ -8,7 +8,7 @@ namespace Annium.Id.Db
 
         public Guid OwnerId { get; set; }
 
-        public Guid ParentId { get; set; }
+        public Guid? ParentId { get; set; }
 
         public string Key { get; set; }
 
@@ -16,7 +16,7 @@ namespace Annium.Id.Db
 
         public Organization(
             Guid ownerId,
-            Guid parentId,
+            Guid? parentId,
             string key,
             string name
         )
@@ -30,10 +30,10 @@ namespace Annium.Id.Db
         internal Organization(
             Guid id,
             Guid ownerId,
-            Guid parentId,
-            string login,
+            Guid? parentId,
+            string key,
             string name
-        ) : this(ownerId, parentId, login, name)
+        ) : this(ownerId, parentId, key, name)
         {
             Id = id;
         }

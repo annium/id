@@ -48,7 +48,5 @@ namespace Annium.Id.Db
         {
             Id = id;
         }
-
-        // TODO: perhaps, separate method for refresh token update
     }
 }

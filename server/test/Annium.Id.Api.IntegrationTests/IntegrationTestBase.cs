@@ -49,5 +49,17 @@ namespace Annium.Id.Api.IntegrationTests
 
             return http.Put("/apps").BearerAuthorization(accessToken).JsonContent(payload).AsAsync<AppView>();
         }
+
+        protected Task<OrganizationView> CreateOrganizationAsync(
+            string accessToken,
+            string key = "demo",
+            string name = "Demo App",
+            Guid? parentId = null
+        )
+        {
+            var payload = new OrganizationPayload { ParentId = parentId, Key = key, Name = name };
+
+            return http.Put("/organizations").BearerAuthorization(accessToken).JsonContent(payload).AsAsync<OrganizationView>();
+        }
     }
 }
