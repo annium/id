@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Annium.AspNetCore.Extensions;
 using Annium.Id.Api.Payloads;
-using Annium.Id.Api.Tools;
 using Annium.Id.Api.Views;
 using Annium.Id.AspNetCore;
 using Annium.Id.Db;
@@ -19,18 +18,14 @@ namespace Annium.Id.Api.Controllers
 
         private readonly IUserRepository userRepository;
 
-        private readonly ISecurityManager securityManager;
-
         public AppController(
             IAppRepository appRepository,
             IUserRepository userRepository,
-            ISecurityManager securityManager,
             IStringLocalizer<AppController> localizer
         ) : base(localizer)
         {
             this.appRepository = appRepository;
             this.userRepository = userRepository;
-            this.securityManager = securityManager;
         }
 
         [HttpPut]
