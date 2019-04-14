@@ -6,9 +6,9 @@ namespace Annium.Id.Db
     {
         public Guid Id { get; }
 
-        public Guid OwnerId { get; }
+        public Guid OwnerId { get; set; }
 
-        public Guid ParentId { get; }
+        public Guid ParentId { get; set; }
 
         public string Key { get; set; }
 
