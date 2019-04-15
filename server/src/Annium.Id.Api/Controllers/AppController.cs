@@ -54,12 +54,9 @@ namespace Annium.Id.Api.Controllers
         [AuthorizeId]
         public async Task<IActionResult> GetAppApiTokenAsync(Guid appId)
         {
-            var app = await appRepository.GetByIdAsync(appId);
-            if (app == null)
-                return NotFound();
-
-            if (this.GetId().UserId != app.OwnerId)
-                return Forbidden("Need to be owner to get api token");
+            var(app, result) = await VerifyAppOwnerAsync(appId, "get api token");
+            if (result != null)
+                return result;
 
             return Ok(app.ApiToken);
         }
@@ -68,12 +65,9 @@ namespace Annium.Id.Api.Controllers
         [AuthorizeId]
         public async Task<IActionResult> UpdateAppApiTokenAsync(Guid appId)
         {
-            var app = await appRepository.GetByIdAsync(appId);
-            if (app == null)
-                return NotFound();
-
-            if (this.GetId().UserId != app.OwnerId)
-                return Forbidden("Need to be owner to update api token");
+            var(app, result) = await VerifyAppOwnerAsync(appId, "update api token");
+            if (result != null)
+                return result;
 
             var apiToken = Guid.NewGuid();
             await appRepository.UpdateApiTokenAsync(app.Id, apiToken);
@@ -96,12 +90,9 @@ namespace Annium.Id.Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var app = await appRepository.GetByIdAsync(appId);
-            if (app == null)
-                return NotFound();
-
-            if (this.GetId().UserId != app.OwnerId)
-                return Forbidden("Need to be owner to update app");
+            var(app, result) = await VerifyAppOwnerAsync(appId, "update application");
+            if (result != null)
+                return result;
 
             if (appPayload.Key != app.Key && (await appRepository.FindByKeyAsync(appPayload.Key)) != null)
                 return Conflict($"Application key {appPayload.Key} is already used");
@@ -118,12 +109,9 @@ namespace Annium.Id.Api.Controllers
         [AuthorizeId]
         public async Task<IActionResult> SetAppOwnerAsync(Guid appId, Guid userId)
         {
-            var app = await appRepository.GetByIdAsync(appId);
-            if (app == null)
-                return NotFound();
-
-            if (this.GetId().UserId != app.OwnerId)
-                return Forbidden("Need to be owner to change app owner");
+            var(app, result) = await VerifyAppOwnerAsync(appId, "set application owner");
+            if (result != null)
+                return result;
 
             var user = await userRepository.GetByIdAsync(userId);
             if (user == null)
@@ -140,16 +128,25 @@ namespace Annium.Id.Api.Controllers
         [AuthorizeId]
         public async Task<IActionResult> DeleteAppAsync(Guid appId)
         {
-            var app = await appRepository.GetByIdAsync(appId);
-            if (app == null)
-                return NotFound();
-
-            if (this.GetId().UserId != app.OwnerId)
-                return Forbidden("Need to be owner to delete app");
+            var(app, result) = await VerifyAppOwnerAsync(appId, "delete application");
+            if (result != null)
+                return result;
 
             await appRepository.DeleteByIdAsync(app.Id);
 
             return NoContent();
+        }
+
+        private async Task<ValueTuple<App, IActionResult>> VerifyAppOwnerAsync(Guid appId, string operation)
+        {
+            var app = await appRepository.GetByIdAsync(appId);
+            if (app == null)
+                return (null, NotFound("Application not found"));
+
+            if (this.GetId().UserId != app.OwnerId)
+                return (null, Forbidden($"Need to be application owner to {operation}"));
+
+            return (app, null);
         }
     }
 }

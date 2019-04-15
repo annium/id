@@ -42,12 +42,9 @@ namespace Annium.Id.Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var app = await appRepository.GetByIdAsync(appId);
-            if (app == null)
-                return NotFound();
-
-            if (this.GetId().UserId != app.OwnerId)
-                return Forbidden("Need to be application owner to create role");
+            var(app, result) = await VerifyAppOwnerAsync(appId, "create role");
+            if (result != null)
+                return result;
 
             if ((await roleRepository.FindByKeyAsync(app.Id, rolePayload.Key)) != null)
                 return Conflict($"Role key {rolePayload.Key} is already used");
@@ -68,9 +65,9 @@ namespace Annium.Id.Api.Controllers
         [AuthorizeId]
         public async Task<IActionResult> ListRolesAsync(Guid appId)
         {
-            var app = await appRepository.GetByIdAsync(appId);
-            if (app == null)
-                return NotFound();
+            var(app, result) = await VerifyAppAsync(appId);
+            if (result != null)
+                return result;
 
             var roles = await roleRepository.GetAllAsync(appId);
 
@@ -84,19 +81,9 @@ namespace Annium.Id.Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var app = await appRepository.GetByIdAsync(appId);
-            if (app == null)
-                return NotFound();
-
-            if (this.GetId().UserId != app.OwnerId)
-                return Forbidden("Need to be application owner to update role");
-
-            var role = await roleRepository.GetByIdAsync(roleId);
-            if (role == null)
-                return NotFound();
-
-            if (role.AppId != app.Id)
-                return Forbidden("Role belongs to another application");
+            var(app, role, result) = await VerifyAppOwnerRoleAsync(appId, roleId, "create role");
+            if (result != null)
+                return result;
 
             if (rolePayload.Key != role.Key && (await roleRepository.FindByKeyAsync(app.Id, rolePayload.Key)) != null)
                 return Conflict($"Role key {rolePayload.Key} is already used");
@@ -116,26 +103,9 @@ namespace Annium.Id.Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var app = await appRepository.GetByIdAsync(appId);
-            if (app == null)
-                return NotFound();
-
-            if (this.GetId().UserId != app.OwnerId)
-                return Forbidden("Need to be application owner to add claim to role");
-
-            var role = await roleRepository.GetByIdAsync(roleId);
-            if (role == null)
-                return NotFound();
-
-            if (role.AppId != app.Id)
-                return Forbidden("Role belongs to another application");
-
-            var claim = await claimRepository.GetByIdAsync(claimId);
-            if (claim == null)
-                return NotFound();
-
-            if (claim.AppId != app.Id)
-                return Forbidden("Claim belongs to another application");
+            var(app, role, claim, result) = await VerifyAppOwnerRoleClaimAsync(appId, roleId, claimId, "add claim to role");
+            if (result != null)
+                return result;
 
             var roleClaim = new RoleClaim(role.Id, claim.Id, valuePayload.Value);
 
@@ -148,26 +118,9 @@ namespace Annium.Id.Api.Controllers
         [AuthorizeId]
         public async Task<IActionResult> DeleteClaimFromRoleAsync(Guid appId, Guid roleId, Guid claimId)
         {
-            var app = await appRepository.GetByIdAsync(appId);
-            if (app == null)
-                return NotFound();
-
-            if (this.GetId().UserId != app.OwnerId)
-                return Forbidden("Need to be application owner to delete claim from role");
-
-            var role = await roleRepository.GetByIdAsync(roleId);
-            if (role == null)
-                return NotFound();
-
-            if (role.AppId != app.Id)
-                return Forbidden("Role belongs to another application");
-
-            var claim = await claimRepository.GetByIdAsync(claimId);
-            if (claim == null)
-                return NotFound();
-
-            if (claim.AppId != app.Id)
-                return Forbidden("Claim belongs to another application");
+            var(app, role, claim, result) = await VerifyAppOwnerRoleClaimAsync(appId, roleId, claimId, "delete claim from role");
+            if (result != null)
+                return result;
 
             await roleClaimRepository.DeleteByIdAsync(role.Id, claim.Id);
 
@@ -178,23 +131,66 @@ namespace Annium.Id.Api.Controllers
         [AuthorizeId]
         public async Task<IActionResult> DeleteRoleAsync(Guid appId, Guid roleId)
         {
-            var app = await appRepository.GetByIdAsync(appId);
-            if (app == null)
-                return NotFound();
-
-            if (this.GetId().UserId != app.OwnerId)
-                return Forbidden("Need to be application owner to delete role");
-
-            var role = await roleRepository.GetByIdAsync(roleId);
-            if (role == null)
-                return NotFound();
-
-            if (role.AppId != app.Id)
-                return Forbidden("Role belongs to another application");
+            var(app, role, result) = await VerifyAppOwnerRoleAsync(appId, roleId, "delete role");
+            if (result != null)
+                return result;
 
             await roleRepository.DeleteByIdAsync(role.Id);
 
             return NoContent();
+        }
+
+        private async Task<ValueTuple<App, Role, Claim, IActionResult>> VerifyAppOwnerRoleClaimAsync(Guid appId, Guid roleId, Guid claimId, string operation)
+        {
+            var(app, role, result) = await VerifyAppOwnerRoleAsync(appId, roleId, operation);
+            if (result != null)
+                return (null, null, null, result);
+
+            var claim = await claimRepository.GetByIdAsync(claimId);
+            if (claim == null)
+                return (null, null, null, NotFound("Claim not found"));
+
+            if (claim.AppId != app.Id)
+                return (null, null, null, Forbidden("Claim belongs to another application"));
+
+            return (app, role, claim, null);
+        }
+
+        private async Task<ValueTuple<App, Role, IActionResult>> VerifyAppOwnerRoleAsync(Guid appId, Guid roleId, string operation)
+        {
+            var(app, result) = await VerifyAppOwnerAsync(appId, operation);
+            if (result != null)
+                return (null, null, result);
+
+            var role = await roleRepository.GetByIdAsync(roleId);
+            if (role == null)
+                return (null, null, NotFound("Role not found"));
+
+            if (role.AppId != app.Id)
+                return (null, null, Forbidden("Role belongs to another application"));
+
+            return (app, role, null);
+        }
+
+        private async Task<ValueTuple<App, IActionResult>> VerifyAppOwnerAsync(Guid appId, string operation)
+        {
+            var(app, result) = await VerifyAppAsync(appId);
+            if (result != null)
+                return (null, result);
+
+            if (this.GetId().UserId != app.OwnerId)
+                return (null, Forbidden($"Need to be application owner to {operation}"));
+
+            return (app, null);
+        }
+
+        private async Task<ValueTuple<App, IActionResult>> VerifyAppAsync(Guid appId)
+        {
+            var app = await appRepository.GetByIdAsync(appId);
+            if (app == null)
+                return (null, NotFound("Application not found"));
+
+            return (app, null);
         }
     }
 }

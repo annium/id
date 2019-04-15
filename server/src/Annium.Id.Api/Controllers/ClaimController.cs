@@ -35,12 +35,9 @@ namespace Annium.Id.Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var app = await appRepository.GetByIdAsync(appId);
-            if (app == null)
-                return NotFound();
-
-            if (this.GetId().UserId != app.OwnerId)
-                return Forbidden("Need to be application owner to create claim");
+            var(app, result) = await VerifyAppOwnerAsync(appId, "create claim");
+            if (result != null)
+                return result;
 
             if ((await claimRepository.FindByKeyAsync(app.Id, claimPayload.Key)) != null)
                 return Conflict($"Claim key {claimPayload.Key} is already used");
@@ -60,9 +57,9 @@ namespace Annium.Id.Api.Controllers
         [AuthorizeId]
         public async Task<IActionResult> ListClaimsAsync(Guid appId)
         {
-            var app = await appRepository.GetByIdAsync(appId);
-            if (app == null)
-                return NotFound();
+            var(app, result) = await VerifyAppAsync(appId);
+            if (result != null)
+                return result;
 
             var claims = await claimRepository.GetAllAsync(appId);
 
@@ -76,19 +73,9 @@ namespace Annium.Id.Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var app = await appRepository.GetByIdAsync(appId);
-            if (app == null)
-                return NotFound();
-
-            if (this.GetId().UserId != app.OwnerId)
-                return Forbidden("Need to be application owner to update claim");
-
-            var claim = await claimRepository.GetByIdAsync(claimId);
-            if (claim == null)
-                return NotFound();
-
-            if (claim.AppId != app.Id)
-                return Forbidden("Claim belongs to another application");
+            var(app, claim, result) = await VerifyAppOwnerClaimAsync(appId, claimId, "update claim");
+            if (result != null)
+                return result;
 
             if (claimPayload.Key != claim.Key && (await claimRepository.FindByKeyAsync(app.Id, claimPayload.Key)) != null)
                 return Conflict($"Claim key {claimPayload.Key} is already used");
@@ -105,23 +92,50 @@ namespace Annium.Id.Api.Controllers
         [AuthorizeId]
         public async Task<IActionResult> DeleteClaimAsync(Guid appId, Guid claimId)
         {
-            var app = await appRepository.GetByIdAsync(appId);
-            if (app == null)
-                return NotFound();
-
-            if (this.GetId().UserId != app.OwnerId)
-                return Forbidden("Need to be application owner to delete claim");
-
-            var claim = await claimRepository.GetByIdAsync(claimId);
-            if (claim == null)
-                return NotFound();
-
-            if (claim.AppId != app.Id)
-                return Forbidden("Claim belongs to another application");
+            var(app, claim, result) = await VerifyAppOwnerClaimAsync(appId, claimId, "delete claim");
+            if (result != null)
+                return result;
 
             await claimRepository.DeleteByIdAsync(claim.Id);
 
             return NoContent();
+        }
+
+        private async Task<ValueTuple<App, Claim, IActionResult>> VerifyAppOwnerClaimAsync(Guid appId, Guid claimId, string operation)
+        {
+            var(app, result) = await VerifyAppOwnerAsync(appId, operation);
+            if (result != null)
+                return (null, null, result);
+
+            var claim = await claimRepository.GetByIdAsync(claimId);
+            if (claim == null)
+                return (null, null, NotFound("Claim not found"));
+
+            if (claim.AppId != app.Id)
+                return (null, null, Forbidden("Claim belongs to another application"));
+
+            return (app, claim, null);
+        }
+
+        private async Task<ValueTuple<App, IActionResult>> VerifyAppOwnerAsync(Guid appId, string operation)
+        {
+            var(app, result) = await VerifyAppAsync(appId);
+            if (result != null)
+                return (null, result);
+
+            if (this.GetId().UserId != app.OwnerId)
+                return (null, Forbidden($"Need to be application owner to {operation}"));
+
+            return (app, null);
+        }
+
+        private async Task<ValueTuple<App, IActionResult>> VerifyAppAsync(Guid appId)
+        {
+            var app = await appRepository.GetByIdAsync(appId);
+            if (app == null)
+                return (null, NotFound("Application not found"));
+
+            return (app, null);
         }
     }
 }

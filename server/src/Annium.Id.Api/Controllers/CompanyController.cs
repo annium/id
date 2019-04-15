@@ -61,9 +61,9 @@ namespace Annium.Id.Api.Controllers
         [HttpGet("{companyId:guid}")]
         public async Task<IActionResult> GetCompanyInfoAsync(Guid companyId)
         {
-            var company = await companyRepository.GetByIdAsync(companyId);
-            if (company == null)
-                return NotFound();
+            var(company, result) = await VerifyCompanyAsync(companyId);
+            if (result != null)
+                return result;
 
             return Ok(new CompanyView(company));
         }
@@ -71,9 +71,9 @@ namespace Annium.Id.Api.Controllers
         [HttpGet("{companyId:guid}/users")]
         public async Task<IActionResult> GetCompanyUsersAsync(Guid companyId)
         {
-            var company = await companyRepository.GetByIdAsync(companyId);
-            if (company == null)
-                return NotFound();
+            var(company, result) = await VerifyCompanyAsync(companyId);
+            if (result != null)
+                return result;
 
             var users = await companyUserRepository.GetAllAsync(companyId);
 
@@ -87,12 +87,9 @@ namespace Annium.Id.Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var company = await companyRepository.GetByIdAsync(companyId);
-            if (company == null)
-                return NotFound();
-
-            if (this.GetId().UserId != company.OwnerId)
-                return Forbidden("Need to be owner to update company");
+            var(company, result) = await VerifyCompanyOwnerAsync(companyId, "update company");
+            if (result != null)
+                return result;
 
             if (companyPayload.ParentId != null &&
                 companyPayload.ParentId != company.ParentId &&
@@ -116,12 +113,9 @@ namespace Annium.Id.Api.Controllers
         [AuthorizeId]
         public async Task<IActionResult> SetCompanyOwnerAsync(Guid companyId, Guid userId)
         {
-            var company = await companyRepository.GetByIdAsync(companyId);
-            if (company == null)
-                return NotFound();
-
-            if (this.GetId().UserId != company.OwnerId)
-                return Forbidden("Need to be owner to change company owner");
+            var(company, result) = await VerifyCompanyOwnerAsync(companyId, "change company owner");
+            if (result != null)
+                return result;
 
             var user = await userRepository.GetByIdAsync(userId);
             if (user == null)
@@ -138,16 +132,34 @@ namespace Annium.Id.Api.Controllers
         [AuthorizeId]
         public async Task<IActionResult> UnregisterCompanyAsync(Guid companyId)
         {
-            var company = await companyRepository.GetByIdAsync(companyId);
-            if (company == null)
-                return NotFound();
-
-            if (this.GetId().UserId != company.OwnerId)
-                return Forbidden("Need to be owner to delete company");
+            var(company, result) = await VerifyCompanyOwnerAsync(companyId, "delete company");
+            if (result != null)
+                return result;
 
             await companyRepository.DeleteByIdAsync(company.Id);
 
             return NoContent();
+        }
+
+        private async Task<ValueTuple<Company, IActionResult>> VerifyCompanyOwnerAsync(Guid companyId, string operation)
+        {
+            var(company, result) = await VerifyCompanyAsync(companyId);
+            if (result != null)
+                return (null, result);
+
+            if (this.GetId().UserId != company.OwnerId)
+                return (null, Forbidden($"Need to be company owner to {operation}"));
+
+            return (company, null);
+        }
+
+        private async Task<ValueTuple<Company, IActionResult>> VerifyCompanyAsync(Guid companyId)
+        {
+            var company = await companyRepository.GetByIdAsync(companyId);
+            if (company == null)
+                return (null, NotFound("Company not found"));
+
+            return (company, null);
         }
     }
 }
