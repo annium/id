@@ -9,7 +9,6 @@ using Annium.Testing;
 
 namespace Annium.Id.Api.IntegrationTests
 {
-    [Skip]
     public class AppUserControllerTest : IntegrationTestBase
     {
         [Fact]
