@@ -119,7 +119,7 @@ namespace Annium.Id.Api.Controllers
 
             var user = await userRepository.GetByIdAsync(userId);
             if (user == null)
-                return NotFound();
+                return NotFound("User not found");
 
             company.OwnerId = user.Id;
 

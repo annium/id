@@ -80,7 +80,7 @@ namespace Annium.Id.Api.Controllers
         {
             var user = await userRepository.GetByIdAsync(this.GetId().UserId);
             if (user == null)
-                return NotFound();
+                return NotFound("User not found");
 
             // TODO: perhaps, add info about companies, user is member of
             return Ok(new UserView(user));
