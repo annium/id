@@ -11,7 +11,7 @@ namespace Annium.Id.Api.IntegrationTests
     public class UserControllerTest : IntegrationTestBase
     {
         [Fact]
-        public async Task GetUserById_ReturnsNotFoundIfUserIsMissing()
+        public async Task GetUserById_Missing_NotFound()
         {
             // arrange
             var userId = Guid.NewGuid();
@@ -24,7 +24,7 @@ namespace Annium.Id.Api.IntegrationTests
         }
 
         [Fact]
-        public async Task GetUserById_ReturnsUserIfUserIsFound()
+        public async Task GetUserById_Valid_Ok()
         {
             // arrange
             var user = await RegisterAsync();

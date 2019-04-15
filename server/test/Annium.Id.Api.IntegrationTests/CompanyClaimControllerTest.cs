@@ -26,7 +26,7 @@ namespace Annium.Id.Api.IntegrationTests
         }
 
         [Fact]
-        public async Task Create_AppMissing_BadRequest()
+        public async Task Create_AppMissing_NotFound()
         {
             // arrange
             var(user, tokens) = await LoginAsync();
