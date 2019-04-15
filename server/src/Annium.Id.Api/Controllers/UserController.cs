@@ -28,7 +28,7 @@ namespace Annium.Id.Api.Controllers
             if (user == null)
                 return NotFound();
 
-            // TODO: perhaps, add info about organizations, user is member of
+            // TODO: perhaps, add info about companies, user is member of
             return Ok(new UserView(user));
         }
     }

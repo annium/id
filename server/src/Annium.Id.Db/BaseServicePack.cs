@@ -27,10 +27,10 @@ namespace Annium.Id.Db
             // repositories
             services.AddScoped<IAppRepository, AppRepository>();
             services.AddScoped<IClaimRepository, ClaimRepository>();
-            services.AddScoped<IOrganizationClaimRepository, OrganizationClaimRepository>();
-            services.AddScoped<IOrganizationRepository, OrganizationRepository>();
-            services.AddScoped<IOrganizationRoleClaimRepository, OrganizationRoleClaimRepository>();
-            services.AddScoped<IOrganizationRoleRepository, OrganizationRoleRepository>();
+            services.AddScoped<ICompanyClaimRepository, CompanyClaimRepository>();
+            services.AddScoped<ICompanyRepository, CompanyRepository>();
+            services.AddScoped<ICompanyRoleClaimRepository, CompanyRoleClaimRepository>();
+            services.AddScoped<ICompanyRoleRepository, CompanyRoleRepository>();
             services.AddScoped<IRoleClaimRepository, RoleClaimRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IUserClaimRepository, UserClaimRepository>();

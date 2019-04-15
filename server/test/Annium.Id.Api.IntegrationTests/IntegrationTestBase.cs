@@ -50,16 +50,16 @@ namespace Annium.Id.Api.IntegrationTests
             return http.Put("/apps").BearerAuthorization(accessToken).JsonContent(payload).AsAsync<AppView>();
         }
 
-        protected Task<OrganizationView> CreateOrganizationAsync(
+        protected Task<CompanyView> CreateCompanyAsync(
             string accessToken,
             string key = "demo",
             string name = "Demo App",
             Guid? parentId = null
         )
         {
-            var payload = new OrganizationPayload { ParentId = parentId, Key = key, Name = name };
+            var payload = new CompanyPayload { ParentId = parentId, Key = key, Name = name };
 
-            return http.Put("/organizations").BearerAuthorization(accessToken).JsonContent(payload).AsAsync<OrganizationView>();
+            return http.Put("/companies").BearerAuthorization(accessToken).JsonContent(payload).AsAsync<CompanyView>();
         }
     }
 }

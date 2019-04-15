@@ -11,7 +11,7 @@ using SystemClaim = System.Security.Claims.Claim;
 
 namespace Annium.Id.Api.Tools
 {
-    internal class TokenGenerator : ITokenGenerator, IDisposable
+    internal class TokenGenerator : ITokenGenerator
     {
         private readonly TimeSpan tokenLifeTime = TimeSpan.FromDays(1);
 
@@ -47,11 +47,6 @@ namespace Annium.Id.Api.Tools
             );
 
             return new JwtSecurityTokenHandler().WriteToken(jwt);
-        }
-
-        public void Dispose()
-        {
-            throw new NotImplementedException();
         }
     }
 }

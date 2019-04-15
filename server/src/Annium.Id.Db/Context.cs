@@ -15,33 +15,33 @@ namespace Annium.Id.Db.Entities
 
         public ITable<Claim> Claims => ClaimsSet.ToLinqToDBTable();
 
-        public virtual DbSet<Organization> OrganizationsSet { get; set; }
+        public virtual DbSet<Company> CompaniesSet { get; set; }
 
-        public ITable<Organization> Organizations => OrganizationsSet.ToLinqToDBTable();
+        public ITable<Company> Companies => CompaniesSet.ToLinqToDBTable();
 
-        public virtual DbSet<OrganizationClaim> OrganizationClaimsSet { get; set; }
+        public virtual DbSet<CompanyClaim> CompanyClaimsSet { get; set; }
 
-        public ITable<OrganizationClaim> OrganizationClaims => OrganizationClaimsSet.ToLinqToDBTable();
+        public ITable<CompanyClaim> CompanyClaims => CompanyClaimsSet.ToLinqToDBTable();
 
-        public virtual DbSet<OrganizationRole> OrganizationRolesSet { get; set; }
+        public virtual DbSet<CompanyRole> CompanyRolesSet { get; set; }
 
-        public ITable<OrganizationRole> OrganizationRoles => OrganizationRolesSet.ToLinqToDBTable();
+        public ITable<CompanyRole> CompanyRoles => CompanyRolesSet.ToLinqToDBTable();
 
-        public virtual DbSet<OrganizationRoleClaim> OrganizationRoleClaimsSet { get; set; }
+        public virtual DbSet<CompanyRoleClaim> CompanyRoleClaimsSet { get; set; }
 
-        public ITable<OrganizationRoleClaim> OrganizationRoleClaims => OrganizationRoleClaimsSet.ToLinqToDBTable();
+        public ITable<CompanyRoleClaim> CompanyRoleClaims => CompanyRoleClaimsSet.ToLinqToDBTable();
 
-        public virtual DbSet<OrganizationUser> OrganizationUsersSet { get; set; }
+        public virtual DbSet<CompanyUser> CompanyUsersSet { get; set; }
 
-        public ITable<OrganizationUser> OrganizationUsers => OrganizationUsersSet.ToLinqToDBTable();
+        public ITable<CompanyUser> CompanyUsers => CompanyUsersSet.ToLinqToDBTable();
 
-        public virtual DbSet<OrganizationUserClaim> OrganizationUserClaimsSet { get; set; }
+        public virtual DbSet<CompanyUserClaim> CompanyUserClaimsSet { get; set; }
 
-        public ITable<OrganizationUserClaim> OrganizationUserClaims => OrganizationUserClaimsSet.ToLinqToDBTable();
+        public ITable<CompanyUserClaim> CompanyUserClaims => CompanyUserClaimsSet.ToLinqToDBTable();
 
-        public virtual DbSet<OrganizationUserRole> OrganizationUserRolesSet { get; set; }
+        public virtual DbSet<CompanyUserRole> CompanyUserRolesSet { get; set; }
 
-        public ITable<OrganizationUserRole> OrganizationUserRoles => OrganizationUserRolesSet.ToLinqToDBTable();
+        public ITable<CompanyUserRole> CompanyUserRoles => CompanyUserRolesSet.ToLinqToDBTable();
 
         public virtual DbSet<Role> RolesSet { get; set; }
 
@@ -85,67 +85,67 @@ namespace Annium.Id.Db.Entities
             builder.Entity<Claim>()
                 .HasAlternateKey(m => new { m.AppId, m.Key });
 
-            builder.Entity<Organization>()
+            builder.Entity<Company>()
                 .HasOne<User>().WithMany().IsRequired()
                 .HasForeignKey(m => m.OwnerId).OnDelete(DeleteBehavior.Restrict);
-            builder.Entity<Organization>()
-                .HasOne<Organization>().WithMany()
+            builder.Entity<Company>()
+                .HasOne<Company>().WithMany()
                 .HasForeignKey(m => m.ParentId).OnDelete(DeleteBehavior.Restrict);
-            builder.Entity<Organization>()
+            builder.Entity<Company>()
                 .HasAlternateKey(m => m.Key);
 
-            builder.Entity<OrganizationClaim>()
+            builder.Entity<CompanyClaim>()
                 .HasOne<App>().WithMany().IsRequired()
                 .HasForeignKey(m => m.AppId).OnDelete(DeleteBehavior.Restrict);
-            builder.Entity<OrganizationClaim>()
+            builder.Entity<CompanyClaim>()
                 .HasAlternateKey(m => new { m.AppId, m.Key });
 
-            builder.Entity<OrganizationRole>()
+            builder.Entity<CompanyRole>()
                 .HasOne<App>().WithMany().IsRequired()
                 .HasForeignKey(m => m.AppId).OnDelete(DeleteBehavior.Restrict);
-            builder.Entity<OrganizationRole>()
+            builder.Entity<CompanyRole>()
                 .HasAlternateKey(m => new { m.AppId, m.Key });
 
-            builder.Entity<OrganizationRoleClaim>()
+            builder.Entity<CompanyRoleClaim>()
                 .HasKey(p => new { p.RoleId, p.ClaimId });
-            builder.Entity<OrganizationRoleClaim>()
-                .HasOne<OrganizationRole>().WithMany().IsRequired()
+            builder.Entity<CompanyRoleClaim>()
+                .HasOne<CompanyRole>().WithMany().IsRequired()
                 .HasForeignKey(m => m.RoleId).OnDelete(DeleteBehavior.Restrict);
-            builder.Entity<OrganizationRoleClaim>()
-                .HasOne<OrganizationClaim>().WithMany().IsRequired()
+            builder.Entity<CompanyRoleClaim>()
+                .HasOne<CompanyClaim>().WithMany().IsRequired()
                 .HasForeignKey(m => m.ClaimId).OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<OrganizationUser>()
-                .HasKey(p => new { p.OrganizationId, p.UserId });
-            builder.Entity<OrganizationUser>()
-                .HasOne<Organization>().WithMany().IsRequired()
-                .HasForeignKey(m => m.OrganizationId).OnDelete(DeleteBehavior.Restrict);
-            builder.Entity<OrganizationUser>()
+            builder.Entity<CompanyUser>()
+                .HasKey(p => new { p.CompanyId, p.UserId });
+            builder.Entity<CompanyUser>()
+                .HasOne<Company>().WithMany().IsRequired()
+                .HasForeignKey(m => m.CompanyId).OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<CompanyUser>()
                 .HasOne<User>().WithMany().IsRequired()
                 .HasForeignKey(m => m.UserId).OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<OrganizationUserClaim>()
-                .HasKey(p => new { p.OrganizationId, p.UserId, p.ClaimId });
-            builder.Entity<OrganizationUserClaim>()
-                .HasOne<Organization>().WithMany().IsRequired()
-                .HasForeignKey(m => m.OrganizationId).OnDelete(DeleteBehavior.Restrict);
-            builder.Entity<OrganizationUserClaim>()
+            builder.Entity<CompanyUserClaim>()
+                .HasKey(p => new { p.CompanyId, p.UserId, p.ClaimId });
+            builder.Entity<CompanyUserClaim>()
+                .HasOne<Company>().WithMany().IsRequired()
+                .HasForeignKey(m => m.CompanyId).OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<CompanyUserClaim>()
                 .HasOne<User>().WithMany().IsRequired()
                 .HasForeignKey(m => m.UserId).OnDelete(DeleteBehavior.Restrict);
-            builder.Entity<OrganizationUserClaim>()
-                .HasOne<OrganizationClaim>().WithMany().IsRequired()
+            builder.Entity<CompanyUserClaim>()
+                .HasOne<CompanyClaim>().WithMany().IsRequired()
                 .HasForeignKey(m => m.ClaimId).OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<OrganizationUserRole>()
-                .HasKey(p => new { p.OrganizationId, p.UserId, p.RoleId });
-            builder.Entity<OrganizationUserRole>()
-                .HasOne<Organization>().WithMany().IsRequired()
-                .HasForeignKey(m => m.OrganizationId).OnDelete(DeleteBehavior.Restrict);
-            builder.Entity<OrganizationUserRole>()
+            builder.Entity<CompanyUserRole>()
+                .HasKey(p => new { p.CompanyId, p.UserId, p.RoleId });
+            builder.Entity<CompanyUserRole>()
+                .HasOne<Company>().WithMany().IsRequired()
+                .HasForeignKey(m => m.CompanyId).OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<CompanyUserRole>()
                 .HasOne<User>().WithMany().IsRequired()
                 .HasForeignKey(m => m.UserId).OnDelete(DeleteBehavior.Restrict);
-            builder.Entity<OrganizationUserRole>()
-                .HasOne<OrganizationRole>().WithMany().IsRequired()
+            builder.Entity<CompanyUserRole>()
+                .HasOne<CompanyRole>().WithMany().IsRequired()
                 .HasForeignKey(m => m.RoleId).OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<Role>()

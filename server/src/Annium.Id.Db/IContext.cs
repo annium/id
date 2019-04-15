@@ -9,19 +9,19 @@ namespace Annium.Id.Db.Entities
 
         ITable<Claim> Claims { get; }
 
-        ITable<Organization> Organizations { get; }
+        ITable<Company> Companies { get; }
 
-        ITable<OrganizationClaim> OrganizationClaims { get; }
+        ITable<CompanyClaim> CompanyClaims { get; }
 
-        ITable<OrganizationRole> OrganizationRoles { get; }
+        ITable<CompanyRole> CompanyRoles { get; }
 
-        ITable<OrganizationRoleClaim> OrganizationRoleClaims { get; }
+        ITable<CompanyRoleClaim> CompanyRoleClaims { get; }
 
-        ITable<OrganizationUser> OrganizationUsers { get; }
+        ITable<CompanyUser> CompanyUsers { get; }
 
-        ITable<OrganizationUserClaim> OrganizationUserClaims { get; }
+        ITable<CompanyUserClaim> CompanyUserClaims { get; }
 
-        ITable<OrganizationUserRole> OrganizationUserRoles { get; }
+        ITable<CompanyUserRole> CompanyUserRoles { get; }
 
         ITable<Role> Roles { get; }
 
