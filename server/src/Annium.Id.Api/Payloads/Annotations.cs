@@ -3,5 +3,7 @@ namespace Annium.Id.Api.Payloads
     internal class Annotations
     {
         public const string Required = "required";
+
+        public const string StringLength = "string length";
     }
 }
