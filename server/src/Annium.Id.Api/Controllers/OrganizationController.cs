@@ -20,7 +20,7 @@ namespace Annium.Id.Api.Controllers
         public OrganizationController(
             IOrganizationRepository organizationRepository,
             IUserRepository userRepository,
-            IStringLocalizer<AppController> localizer
+            IStringLocalizer<OrganizationController> localizer
         ) : base(localizer)
         {
             this.organizationRepository = organizationRepository;
