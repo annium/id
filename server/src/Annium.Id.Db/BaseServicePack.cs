@@ -31,6 +31,9 @@ namespace Annium.Id.Db
             services.AddScoped<ICompanyRepository, CompanyRepository>();
             services.AddScoped<ICompanyRoleClaimRepository, CompanyRoleClaimRepository>();
             services.AddScoped<ICompanyRoleRepository, CompanyRoleRepository>();
+            services.AddScoped<ICompanyUserClaimRepository, CompanyUserClaimRepository>();
+            services.AddScoped<ICompanyUserRepository, CompanyUserRepository>();
+            services.AddScoped<ICompanyUserRoleRepository, CompanyUserRoleRepository>();
             services.AddScoped<IRoleClaimRepository, RoleClaimRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IUserClaimRepository, UserClaimRepository>();

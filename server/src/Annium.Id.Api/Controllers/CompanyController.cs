@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Annium.AspNetCore.Extensions;
 using Annium.Id.Api.Payloads;
@@ -17,14 +18,18 @@ namespace Annium.Id.Api.Controllers
 
         private readonly IUserRepository userRepository;
 
+        private readonly ICompanyUserRepository companyUserRepository;
+
         public CompanyController(
             ICompanyRepository companyRepository,
             IUserRepository userRepository,
+            ICompanyUserRepository companyUserRepository,
             IStringLocalizer<CompanyController> localizer
         ) : base(localizer)
         {
             this.companyRepository = companyRepository;
             this.userRepository = userRepository;
+            this.companyUserRepository = companyUserRepository;
         }
 
         [HttpPut]
@@ -61,6 +66,18 @@ namespace Annium.Id.Api.Controllers
                 return NotFound();
 
             return Ok(new CompanyView(company));
+        }
+
+        [HttpGet("{companyId:guid}/users")]
+        public async Task<IActionResult> GetCompanyUsersAsync(Guid companyId)
+        {
+            var company = await companyRepository.GetByIdAsync(companyId);
+            if (company == null)
+                return NotFound();
+
+            var users = await companyUserRepository.GetAllAsync(companyId);
+
+            return Ok(users.Select(u => new UserView(u)).ToArray());
         }
 
         [HttpPost("{companyId:guid}")]

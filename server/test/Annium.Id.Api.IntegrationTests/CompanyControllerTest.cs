@@ -26,7 +26,7 @@ namespace Annium.Id.Api.IntegrationTests
         }
 
         [Fact]
-        public async Task Create_MissingParent_Conflict()
+        public async Task Create_MissingParent_NotFound()
         {
             // arrange
             var(user, tokens) = await LoginAsync();
@@ -99,6 +99,33 @@ namespace Annium.Id.Api.IntegrationTests
         }
 
         [Fact]
+        public async Task GetUsers_MissingCompany_NotFound()
+        {
+            // arrange
+            var(user, tokens) = await LoginAsync();
+
+            // act
+            var response = await http.Get($"/companies/{Guid.NewGuid()}/users").RunAsync();
+
+            // assert
+            response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        }
+
+        [Fact]
+        public async Task GetUsers_Valid_Ok()
+        {
+            // arrange
+            var(user, tokens) = await LoginAsync();
+            var company = await CreateCompanyAsync(tokens.AccessToken);
+
+            // act
+            var response = await http.Get($"/companies/{company.Id}/users").BearerAuthorization(tokens.AccessToken).AsAsync<UserView[]>();
+
+            // assert
+            response.IsEmpty();
+        }
+
+        [Fact]
         public async Task Update_IncorrectPayload_BadRequest()
         {
             // arrange
@@ -114,7 +141,7 @@ namespace Annium.Id.Api.IntegrationTests
         }
 
         [Fact]
-        public async Task Update_MissingCompany_BadRequest()
+        public async Task Update_MissingCompany_NotFound()
         {
             // arrange
             var(user, tokens) = await LoginAsync();
@@ -144,7 +171,7 @@ namespace Annium.Id.Api.IntegrationTests
         }
 
         [Fact]
-        public async Task Update_MissingParent_BadRequest()
+        public async Task Update_MissingParent_NotFound()
         {
             // arrange
             var(user, tokens) = await LoginAsync();
