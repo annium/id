@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Net;
 using Annium.Data.Operations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -27,7 +28,7 @@ namespace Annium.Id.AspNetCore
 
             var result = (bool) policy.Handle.DynamicInvoke(arguments);
             if (!result)
-                context.Result = new ObjectResult(Result.Failure().Error("Access policy violation"));
+                context.Result = new ObjectResult(Result.Failure().Error("Access policy violation")) { StatusCode = (int) HttpStatusCode.Forbidden };
         }
 
         public void OnActionExecuted(ActionExecutedContext context) { }
