@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Annium.Extensions.Net.Http;
 using Annium.Id.Api.Payloads;
 using Annium.Id.Api.Views;
-using Annium.Id.Db;
+
 using Annium.Testing;
 
 namespace Annium.Id.Api.IntegrationTests

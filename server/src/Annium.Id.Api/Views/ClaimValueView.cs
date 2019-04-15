@@ -1,7 +1,8 @@
 using System;
+using Annium.Id.Db;
 using Newtonsoft.Json;
 
-namespace Annium.Id.Db
+namespace Annium.Id.Api.Views
 {
     public class ClaimValueView
     {
