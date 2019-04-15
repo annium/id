@@ -11,7 +11,7 @@ services:
       - "9501:5000"
     volumes:
       - "../run/configuration:/app/configuration"
-      - "../run/data:/app/data"
+      - "../run/keys:/app/keys"
     logging:
       driver: json-file
       options:

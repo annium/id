@@ -2,11 +2,7 @@
 .vscode/
 
 # artifacts
-/keys/
 /run/
-
-# configuration
-configuration/
 
 # xs ignore patterns
 .xs.ignore
