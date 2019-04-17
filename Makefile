@@ -38,7 +38,8 @@ endef
 define down
 	@$(eval components := $(1))
 	@$(eval files := $(foreach component,$(components),-f setup/$(env)/$(component).yml))
-	@COMPOSE_IGNORE_ORPHANS=true docker-compose -p $(PROJECT_NAME) $(files) down
+	@COMPOSE_IGNORE_ORPHANS=true docker-compose -p $(PROJECT_NAME) $(files) stop
+	@COMPOSE_IGNORE_ORPHANS=true docker-compose -p $(PROJECT_NAME) $(files) rm -f -v
 	$(call net-down)
 endef
 
