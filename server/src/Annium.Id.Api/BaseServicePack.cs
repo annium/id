@@ -31,7 +31,7 @@ namespace Annium.Id.Api
 
             services.AddYamlLocalization();
 
-            services.AddMapper(provider);
+            services.AddMapper(provider, statically : true);
         }
     }
 }

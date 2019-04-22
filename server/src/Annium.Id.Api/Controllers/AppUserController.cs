@@ -44,7 +44,7 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPut("roles/{roleId:guid}")]
         [AuthorizeId]
-        public async Task<IActionResult> AddRoleToUserRAsync(Guid appId, Guid userId, Guid roleId)
+        public async Task<IActionResult> AddRoleToUserAsync(Guid appId, Guid userId, Guid roleId)
         {
             var(app, user, role, result) = await VerifyAppOwnerUserRoleAsync(appId, userId, roleId, "add role to user");
             if (result != null)
@@ -72,7 +72,7 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPost("claims/{claimId:guid}")]
         [AuthorizeId]
-        public async Task<IActionResult> AddClaimToUserRAsync(Guid appId, Guid userId, Guid claimId, [FromBody] ClaimValuePayload valuePayload)
+        public async Task<IActionResult> AddClaimToUserAsync(Guid appId, Guid userId, Guid claimId, [FromBody] ClaimValuePayload valuePayload)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
