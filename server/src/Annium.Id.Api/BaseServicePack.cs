@@ -1,7 +1,5 @@
 using System;
 using Annium.Extensions.DependencyInjection;
-using Annium.Extensions.Localization;
-using Annium.Extensions.Mapper;
 using Annium.Id.Api.AppAuth;
 using Annium.Id.Api.Tools;
 using Annium.Id.AspNetCore;
@@ -31,7 +29,7 @@ namespace Annium.Id.Api
 
             services.AddYamlLocalization();
 
-            services.AddMapper(provider, statically : true);
+            services.AddMapper(provider);
         }
     }
 }

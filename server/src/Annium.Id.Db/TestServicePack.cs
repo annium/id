@@ -1,4 +1,3 @@
-using Annium.EntityFrameworkCore.Extensions;
 using Annium.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 
