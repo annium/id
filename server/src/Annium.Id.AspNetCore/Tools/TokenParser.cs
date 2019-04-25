@@ -57,7 +57,7 @@ namespace Annium.Id.AspNetCore.Tools
             }
             catch
             {
-                return fail(HttpStatusCode.Forbidden, "Token is invalid");
+                return fail(HttpStatusCode.BadRequest, "Token is invalid");
             }
         }
 
