@@ -1,5 +1,6 @@
 # artifacts
 /configuration/
+/keys/
 
 # build
 /bin/
