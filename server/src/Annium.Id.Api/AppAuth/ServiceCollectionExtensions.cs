@@ -1,7 +1,8 @@
+using Annium.Id.Api.AppAuth;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Annium.Id.Api.AppAuth
+namespace Annium.Extensions.DependencyInjection
 {
     internal static class AuthorizationExtensions
     {

@@ -1,8 +1,6 @@
 using System;
 using Annium.Extensions.DependencyInjection;
-using Annium.Id.Api.AppAuth;
 using Annium.Id.Api.Tools;
-using Annium.Id.AspNetCore;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
