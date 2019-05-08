@@ -1,5 +1,5 @@
 PROJECT_NAME := id
-TAG_PREFIX := brutallord.ddns.net:5000/$(PROJECT_NAME)
+TAG_PREFIX := registry.annium.com/$(PROJECT_NAME)
 
 db-up api-up:
 	$(call up,$(subst -up,,$@))
