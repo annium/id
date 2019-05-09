@@ -27,14 +27,22 @@ namespace Annium.Id.Db
                 .AddEntityFrameworkNpgsql()
                 .AddDbContext<Entities.Context>(builder =>
                 {
-                    builder.UseNpgsql(string.Join(';', new string[]
-                    {
-                        $"Host={cfg.Host}",
-                        $"Port={cfg.Port}",
-                        $"Database={cfg.Name}",
-                        $"Username={cfg.User}",
-                        $"Password={cfg.Password}",
-                    }));
+                    builder.UseNpgsql(
+                        string.Join(';', new string[]
+                        {
+                            $"Host={cfg.Host}",
+                            $"Port={cfg.Port}",
+                            $"Database={cfg.Name}",
+                            $"Username={cfg.User}",
+                            $"Password={cfg.Password}",
+                            $"SSL Mode=Prefer",
+                            $"Trust Server Certificate=true",
+                        }),
+                        options =>
+                        {
+                            options.UseNodaTime(); // is needed, cause not enabled by default
+                        }
+                    );
                 });
 
             // log queries if needed
