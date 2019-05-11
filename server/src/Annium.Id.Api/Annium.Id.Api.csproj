@@ -25,8 +25,8 @@
         <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
-        <PackageReference Include="NodaTime" Version="2.4.4" />
-        <PackageReference Include="NodaTime.Serialization.JsonNet" Version="2.1.0" />
+        <PackageReference Include="NodaTime" Version="2.4.5" />
+        <PackageReference Include="NodaTime.Serialization.JsonNet" Version="2.2.0" />
         <PackageReference Include="NSwag.AspNetCore" Version="12.1.0" />
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.4.0" />
     </ItemGroup>
