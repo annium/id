@@ -46,7 +46,7 @@ namespace Annium.Extensions.DependencyInjection
         public static IServiceCollection AddIdPolicy<T1, T2, T3, T4>(this IServiceCollection services, string name, Expression<Func<T1, T2, T3, T4, bool>> expression) =>
             AddPolicy(services, name, expression);
 
-        public static IServiceCollection AddIdPolicy<T1, T2, T3, T4, T5>(this IServiceCollection services, string name, Expression<Func<T1, T2, T3, T5, bool>> expression) =>
+        public static IServiceCollection AddIdPolicy<T1, T2, T3, T4, T5>(this IServiceCollection services, string name, Expression<Func<T1, T2, T3, T4, T5, bool>> expression) =>
             AddPolicy(services, name, expression);
 
         private static IServiceCollection AddPolicy(
