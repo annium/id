@@ -21,6 +21,12 @@ namespace Annium.Id.Db
             var cfg = new ConfigurationBuilder()
                 .AddJsonFile(Path.Combine("configuration", "db.json"))
                 .Build<Configuration>();
+            services.AddSingleton(cfg);
+        }
+
+        public override void Register(IServiceCollection services, IServiceProvider provider)
+        {
+            var cfg = provider.GetRequiredService<Configuration>();
 
             // register context
             services

@@ -10,7 +10,7 @@ namespace Annium.Id.Db
             Add<BaseServicePack>();
         }
 
-        public override void Configure(IServiceCollection services)
+        public override void Register(IServiceCollection services, System.IServiceProvider provider)
         {
             services.AddEntityFrameworkSqliteInMemory<Entities.Context>();
 

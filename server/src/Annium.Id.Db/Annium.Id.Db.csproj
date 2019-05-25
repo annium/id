@@ -15,7 +15,7 @@
         <PackageReference Include="Annium.Extensions.DependencyInjection" Version="0.1.0" />
         <PackageReference Include="Annium.Extensions.Mapper" Version="0.1.0" />
         <PackageReference Include="Annium.Logging.Console" Version="0.1.0" />
-        <PackageReference Include="linq2db.EntityFrameworkCore" Version="1.6.0" />
+        <PackageReference Include="linq2db.EntityFrameworkCore" Version="1.5.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.4" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.4" />
         <PackageReference Include="NodaTime" Version="2.4.5" />
