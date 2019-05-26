@@ -14,5 +14,6 @@ msgstr ""
 "Plural-Forms: \n"
 
 #: src/pages/HomePage/index.tsx:8
+#: src/pages/LoginPage/index.tsx:10
 msgid "Started at {0}{1}"
 msgstr "Started at {0}{1}"
