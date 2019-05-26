@@ -1,13 +1,37 @@
 import React, { ReactNode, useEffect } from 'react'
 import { RouteComponentProps } from 'react-router-dom'
 
-import { startupActions } from './data/startup'
+import { Loader } from './components/Loader'
+import { authActions } from './data/auth'
+import { connect, Store } from './store'
 
 
-type Props = RouteComponentProps & { children?: ReactNode }
+const log = console.log.bind(console, 'App')
 
-export const App = ({ location, children }: Props) => {
-  useEffect(() => startupActions.setLocation(location), [location])
+type OwnProps = RouteComponentProps & { children?: ReactNode }
+type SelectorProps = Pick<Store, 'startup'>
+  & {
+    isLoading: boolean
+  }
 
-  return <>{children}</>
-}
+export const App = connect<OwnProps, SelectorProps>(
+  ({ auth, startup }) => ({ startup, isLoading: auth.user.isLoading }),
+  function App(props: OwnProps & SelectorProps) {
+    const { location, children, startup, isLoading } = props
+
+    useEffect(
+      () => {
+        startup.location = location
+        log('mount', 'load user')
+        authActions.load({})
+      },
+      // eslint-disable-next-line
+      [],
+    )
+
+    if (isLoading)
+      return <Loader isLoading={isLoading} />
+
+    return children as JSX.Element
+  },
+)
