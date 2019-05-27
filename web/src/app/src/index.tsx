@@ -1,4 +1,5 @@
 import { I18nProvider } from '@lingui/react'
+import CssBaseline from '@material-ui/core/CssBaseline'
 import React from 'react'
 import ReactDOM from 'react-dom'
 
@@ -12,6 +13,7 @@ import './styles/layout.scss'
 ReactDOM.render(
   (
     <I18nProvider i18n={i18n} language={i18n.language}>
+      <CssBaseline />
       <Routes />
     </I18nProvider>
   ),
