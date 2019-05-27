@@ -1,7 +1,7 @@
 import cx from 'classnames'
 import React, { Children, ReactNode } from 'react'
 
-import styles from './index.module.scss'
+import { useStyles } from './styles'
 
 
 export type Props = {
@@ -10,7 +10,8 @@ export type Props = {
 } & { children?: ReactNode }
 
 export const Loader = ({ isLoading, className, children }: Props) => {
-  const cls = cx(styles.loader, className)
+  const classes = useStyles()
+  const cls = cx(classes.loader, className)
   const childrenResult = Children.count(children) ? children : <span>LOADING</span>
 
   if (!isLoading)

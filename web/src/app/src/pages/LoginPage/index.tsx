@@ -1,10 +1,9 @@
 import { Trans } from '@lingui/macro'
 import React from 'react'
-// import { RouteComponentProps } from 'react-router'
 
 import { connect, Store } from '../../store'
 
-import styles from './index.module.scss'
+import { useStyles } from './styles'
 
 
 const log = console.log.bind(console, 'LoginPage')
@@ -15,10 +14,11 @@ type SelectorProps = Pick<Store['startup'], 'location'>
 export const LoginPage = connect<OwnProps, SelectorProps>(
   ({ startup }) => ({ location: startup.location }),
   ({ location }: OwnProps & SelectorProps) => {
+    const classes = useStyles()
     log('render', location)
 
     return (
-      <div className={styles.page}>
+      <div className={classes.page}>
         <Trans>Started at {`${location.pathname}${location.search}`}</Trans>
       </div>
     )
