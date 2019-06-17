@@ -32,8 +32,8 @@
 
 "@annium/env-tslint@0.1.0":
   version "0.1.0"
-  resolved "https://node.pkg.annium.com/%40annium%2fenv-tslint/0.1.0.tgz#85cb05cb2d150d81446752b46ed9c61d2aaba99d"
-  integrity sha512-8VCo/i5dRejEMIjuCVL847IEw50kds+X/Zozl80kvI/zKMBdKjr/xVycogF68ralT/fRBVhJeSMD+b8Xne0vxA==
+  resolved "https://node.pkg.annium.com/%40annium%2fenv-tslint/0.1.0.tgz#097f01f9ce49303e4d576a14db053b124f652fb5"
+  integrity sha512-sf8nxGg6De3u2Hj5tK00Q2j7CYKRU3K6jgCTCQivC6nbpGoD2OsE+UrRZPf8Y/FOOIgi0Mbxpi4hQgeptWmNdg==
 
 "@annium/forms@0.1.0":
   version "0.1.0"
@@ -56,8 +56,8 @@
 
 "@annium/utils@0.1.0":
   version "0.1.0"
-  resolved "https://node.pkg.annium.com/%40annium%2futils/0.1.0.tgz#4486174c13fa03165d555d41c47757453f579c58"
-  integrity sha512-GEc1bb92QOs4GNZcAkTZxSj4TCvT9yk0R1aSIno9+rRRddrjB246lj687GlR67u0bPNdVCC+HyfEb6FHmCBWyw==
+  resolved "https://node.pkg.annium.com/%40annium%2futils/0.1.0.tgz#5b7e68750e4ddd19836c1bd4b2e1dd86fc1c2407"
+  integrity sha512-tOSAiEXLtzkx/4VB+1brY0tlYAvWWs+7LiX39m519CWadTDWrTVqxzm2VWH8URbXukwPu8K/BvMN7EkAXef0hg==
   dependencies:
     "@annium/store" "0.1.0"
     history "4.9.0"

@@ -34,7 +34,7 @@ export const LoginPage = connect<OwnProps, SelectorProps>(
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Annium ID Sign in
         </Typography>
           <form className={classes.form} noValidate>
             <TextField
@@ -87,13 +87,9 @@ export const LoginPage = connect<OwnProps, SelectorProps>(
           </form>
         </div>
         <Box mt={5}>
-        <Typography variant="body2" color="textSecondary" align="center">
-        {'Built with love by the '}
-        <Link color="inherit" href="https://material-ui.com/">
-          Material-UI
-        </Link>
-        {' team.'}
-      </Typography>
+          <Typography variant="body2" color="textSecondary" align="center">
+            Built with love by the <Link color="inherit" href="https://annium.com/">Annium</Link> team.
+          </Typography>
         </Box>
       </Container>
     )
