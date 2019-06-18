@@ -1,3 +1,4 @@
+import { Field, Form, pattern, required, useForm } from '@annium/forms'
 import Avatar from '@material-ui/core/Avatar'
 import Box from '@material-ui/core/Box'
 import Button from '@material-ui/core/Button'
@@ -16,6 +17,8 @@ import { connect, Store } from '../../store'
 import { useStyles } from './styles'
 
 
+type LoginData = { email: string; password: string; remember: boolean }
+
 const log = console.log.bind(console, 'LoginPage')
 
 type OwnProps = {}
@@ -24,8 +27,13 @@ type SelectorProps = Pick<Store['startup'], 'location'>
 export const LoginPage = connect<OwnProps, SelectorProps>(
   ({ startup }) => ({ location: startup.location }),
   ({ location }: OwnProps & SelectorProps) => {
+    const form = useForm<LoginData>({ email: '', password: '', remember: false })
     const classes = useStyles()
+
     log('render', location)
+    const isDataValid = form.isValid &&
+      !form.untouchedFields.includes('email') &&
+      !form.untouchedFields.includes('password')
 
     return (
       <Container component="main" maxWidth="xs">
@@ -35,40 +43,61 @@ export const LoginPage = connect<OwnProps, SelectorProps>(
           </Avatar>
           <Typography component="h1" variant="h5">
             Annium ID Sign in
-        </Typography>
-          <form className={classes.form} noValidate={true}>
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required={true}
-              fullWidth={true}
-              id="email"
-              label="Email Address"
+          </Typography>
+          <Form state={form}>
+            <Field
               name="email"
-              autoComplete="email"
-              autoFocus={true}
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required={true}
-              fullWidth={true}
+              validators={[
+                required({ message: 'Specify email' }),
+                pattern({ pattern: /.+@.+/, message: 'Specify valid email' }),
+              ]}
+              hasMessage={true}
+            >
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required={true}
+                fullWidth={true}
+                id="email"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+                autoFocus={true}
+              />
+            </Field>
+            <Field
               name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-            />
+              validators={[
+                required({ message: 'Specify password' }),
+              ]}
+              hasMessage={true}
+            >
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required={true}
+                fullWidth={true}
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+              />
+            </Field>
             <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
+              control={
+                <Field name="remember">
+                  <Checkbox value="remember" color="primary" />
+                </Field>
+              }
               label="Remember me"
             />
             <Button
-              type="submit"
               fullWidth={true}
               variant="contained"
               color="primary"
               className={classes.submit}
+              disabled={!isDataValid}
             >
               Sign In
             </Button>
@@ -84,14 +113,14 @@ export const LoginPage = connect<OwnProps, SelectorProps>(
                 </Link>
               </Grid>
             </Grid>
-          </form>
+          </Form>
         </div>
         <Box mt={5}>
           <Typography variant="body2" color="textSecondary" align="center">
             Built with love by the <Link color="inherit" href="https://annium.com/">Annium</Link> team.
           </Typography>
         </Box>
-      </Container>
+      </Container >
     )
   },
 )

@@ -9,10 +9,7 @@ import { connect, Store } from './store'
 const log = console.log.bind(console, 'App')
 
 type OwnProps = RouteComponentProps & { children?: ReactNode }
-type SelectorProps = Pick<Store, 'startup'>
-  & {
-    isLoading: boolean
-  }
+type SelectorProps = Pick<Store, 'startup'> & { isLoading: boolean }
 
 export const App = connect<OwnProps, SelectorProps>(
   ({ auth, startup }) => ({ startup, isLoading: auth.user.isLoading }),
