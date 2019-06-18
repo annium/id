@@ -6,8 +6,8 @@ db-up api-up:
 	@pwsh setup/scripts/up.ps1 -project $(PROJECT_NAME) -component $(subst -up,,$@)
 
 db-down api-down:
-	@pwsh scripts/down.ps1 -project $(PROJECT_NAME) -component $(subst -down,,$@)
-	@pwsh scripts/net-down.ps1 -project $(PROJECT_NAME)
+	@pwsh setup/scripts/down.ps1 -project $(PROJECT_NAME) -component $(subst -down,,$@)
+	@pwsh setup/scripts/net-down.ps1 -project $(PROJECT_NAME)
 
 db-log api-log:
 	@docker logs -f $(PROJECT_NAME)_$(subst -log,,$@)
