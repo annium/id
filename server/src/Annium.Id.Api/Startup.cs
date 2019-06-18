@@ -39,7 +39,7 @@ namespace Annium.Id.Api
             if (env.IsDevelopment())
             {
                 app.UseStaticFiles();
-                app.UseSwagger();
+                app.UseOpenApi();
                 app.UseSwaggerUi3();
             }
 

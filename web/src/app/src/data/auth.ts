@@ -66,7 +66,7 @@ const raw = reducerFactory(context, false)
   })
   .function('updateToken', ({ setAccess }) => async () => {
     user.actions.start({})
-    const updateResult = await userApi.updateToken('') //TODO: real refresh token needed
+    const updateResult = await userApi.updateToken('') // TODO: real refresh token needed
     if (updateResult.isFailure) {
       user.actions.failure(updateResult)
 

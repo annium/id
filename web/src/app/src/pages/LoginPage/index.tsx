@@ -1,14 +1,14 @@
 import Avatar from '@material-ui/core/Avatar'
 import Box from '@material-ui/core/Box'
 import Button from '@material-ui/core/Button'
+import Checkbox from '@material-ui/core/Checkbox'
 import Container from '@material-ui/core/Container'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
-import Checkbox from '@material-ui/core/Checkbox'
-import Link from '@material-ui/core/Link'
 import Grid from '@material-ui/core/Grid'
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
+import Link from '@material-ui/core/Link'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import React from 'react'
 
 import { connect, Store } from '../../store'
@@ -36,23 +36,23 @@ export const LoginPage = connect<OwnProps, SelectorProps>(
           <Typography component="h1" variant="h5">
             Annium ID Sign in
         </Typography>
-          <form className={classes.form} noValidate>
+          <form className={classes.form} noValidate={true}>
             <TextField
               variant="outlined"
               margin="normal"
-              required
-              fullWidth
+              required={true}
+              fullWidth={true}
               id="email"
               label="Email Address"
               name="email"
               autoComplete="email"
-              autoFocus
+              autoFocus={true}
             />
             <TextField
               variant="outlined"
               margin="normal"
-              required
-              fullWidth
+              required={true}
+              fullWidth={true}
               name="password"
               label="Password"
               type="password"
@@ -65,22 +65,22 @@ export const LoginPage = connect<OwnProps, SelectorProps>(
             />
             <Button
               type="submit"
-              fullWidth
+              fullWidth={true}
               variant="contained"
               color="primary"
               className={classes.submit}
             >
               Sign In
-          </Button>
-            <Grid container>
-              <Grid item xs>
+            </Button>
+            <Grid container={true}>
+              <Grid item={true} xs={true}>
                 <Link href="#" variant="body2">
                   Forgot password?
               </Link>
               </Grid>
-              <Grid item>
+              <Grid item={true}>
                 <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
+                  Don't have an account? Sign Up
                 </Link>
               </Grid>
             </Grid>
