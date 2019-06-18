@@ -7,7 +7,7 @@ import ReactDOM from 'react-dom'
 import { context } from './context'
 import { i18n } from './i18n'
 import { Routes } from './routes'
-import { theme } from './theme'
+import { theme } from './styles'
 
 
 ReactDOM.render(

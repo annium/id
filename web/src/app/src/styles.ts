@@ -1,7 +1,7 @@
 import blue from '@material-ui/core/colors/blue'
 import pink from '@material-ui/core/colors/pink'
 import red from '@material-ui/core/colors/red'
-import { createMuiTheme } from '@material-ui/core/styles'
+import { createMuiTheme, makeStyles } from '@material-ui/core/styles'
 
 export const theme = createMuiTheme({
     palette: {
@@ -10,3 +10,11 @@ export const theme = createMuiTheme({
         error: red,
     },
 })
+
+export const useStyles = makeStyles(th => ({
+    '@global': {
+        body: {
+            backgroundColor: th.palette.common.white,
+        },
+    },
+}))

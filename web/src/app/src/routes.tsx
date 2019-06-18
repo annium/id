@@ -6,6 +6,7 @@ import { App } from './App'
 import { HomePage } from './pages/HomePage'
 import { LoginPage } from './pages/LoginPage'
 import { PersonalArea } from './PersonalArea'
+import { useStyles } from './styles'
 
 const navHistory = createBrowserHistory()
 
@@ -34,8 +35,12 @@ const renderApp = (props: any) => (
   </App>
 )
 
-export const Routes = () => (
-  <Router history={navHistory}>
-    <Route render={renderApp} />
-  </Router>
-)
+export const Routes = () => {
+  useStyles()
+
+  return (
+    <Router history={navHistory}>
+      <Route render={renderApp} />
+    </Router>
+  )
+}
