@@ -43,11 +43,7 @@ namespace Annium.Id.Db
                             $"Password={cfg.Password}",
                             $"SSL Mode=Prefer",
                             $"Trust Server Certificate=true",
-                        }),
-                        options =>
-                        {
-                            options.UseNodaTime(); // is needed, cause not enabled by default
-                        }
+                        })
                     );
                 });
 
