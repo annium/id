@@ -1,30 +1,25 @@
 import { Response } from '@annium/server-http'
 
 import { User } from '../models/User'
+import { UserToken } from '../models/UserToken'
 
-import { api } from './api'
+import { privateApi, publicApi } from './api'
 import { UserPayload } from './payloads/UserPayload'
 
 
 export const userApi = {
-  register: (user: UserPayload): Promise<Response> =>
-    api.put('me', undefined, user),
-
-  login: (name: string, password: string): Promise<Response> =>
-    api.post('me/login', undefined, { name, password }),
-
+  register: (user: UserPayload): Promise<Response<User>> =>
+    publicApi.put('me', undefined, user),
   load: (): Promise<Response<User>> =>
-    api.get<User>('me'),
-
+    privateApi.get<User>('me'),
+  login: (login: string, password: string): Promise<Response<UserToken>> =>
+    publicApi.post('me/login', undefined, { login, password }),
   logout: (): Promise<Response> =>
-    api.post('me/logout'),
-
-  updateToken: (refreshToken: string): Promise<Response> =>
-    api.post('me/token', undefined, { refreshToken }),
-
-  update: (user: UserPayload): Promise<Response> =>
-    api.post('me', undefined, user),
-
+    privateApi.post('me/logout'),
+  updateToken: (refreshToken: string): Promise<Response<UserToken>> =>
+    publicApi.post('me/token', undefined, { refreshToken }),
+  update: (user: UserPayload): Promise<Response<User>> =>
+    privateApi.post('me', undefined, user),
   unregister: (): Promise<Response> =>
-    api.delete('me'),
+    privateApi.delete('me'),
 }

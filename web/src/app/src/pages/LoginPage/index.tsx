@@ -1,38 +1,48 @@
-import { Field, Form, pattern, required, useForm } from '@annium/forms'
+import { Field, Form, required, useForm } from '@annium/forms'
 import Avatar from '@material-ui/core/Avatar'
 import Box from '@material-ui/core/Box'
 import Button from '@material-ui/core/Button'
-import Checkbox from '@material-ui/core/Checkbox'
 import Container from '@material-ui/core/Container'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Grid from '@material-ui/core/Grid'
 import Link from '@material-ui/core/Link'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
-import React from 'react'
+import { Location, LocationDescriptorObject } from 'history'
+import React, { useEffect } from 'react'
+import { RouteComponentProps } from 'react-router-dom'
 
+import { authActions } from '../../data/auth'
 import { connect, Store } from '../../store'
 
 import { useStyles } from './styles'
 
-
-type LoginData = { email: string; password: string; remember: boolean }
+type LoginData = { login: string; password: string }
 
 const log = console.log.bind(console, 'LoginPage')
 
-type OwnProps = {}
-type SelectorProps = Pick<Store['startup'], 'location'>
+type OwnProps = RouteComponentProps
+type SelectorProps = {
+  auth: Store['auth']
+  location: Store['startup']['location']
+}
 
 export const LoginPage = connect<OwnProps, SelectorProps>(
-  ({ startup }) => ({ location: startup.location }),
-  ({ location }: OwnProps & SelectorProps) => {
-    const form = useForm<LoginData>({ email: '', password: '', remember: false })
+  ({ auth, startup }) => ({ auth, location: startup.location }),
+  ({ auth, location, history }: OwnProps & SelectorProps) => {
+    useEffect(
+      () => {
+        log('update', 'ensure access')
+        ensureAccess(auth, location, history)
+      },
+      [auth, location, history],
+    )
+
+    const form = useForm<LoginData>({ login: '', password: '' })
     const classes = useStyles()
 
-    log('render', location)
     const isDataValid = form.isValid &&
-      !form.untouchedFields.includes('email') &&
+      !form.untouchedFields.includes('login') &&
       !form.untouchedFields.includes('password')
 
     return (
@@ -46,10 +56,9 @@ export const LoginPage = connect<OwnProps, SelectorProps>(
           </Typography>
           <Form state={form}>
             <Field
-              name="email"
+              name="login"
               validators={[
-                required({ message: 'Specify email' }),
-                pattern({ pattern: /.+@.+/, message: 'Specify valid email' }),
+                required({ message: 'Specify login' }),
               ]}
               hasMessage={true}
             >
@@ -58,10 +67,9 @@ export const LoginPage = connect<OwnProps, SelectorProps>(
                 margin="normal"
                 required={true}
                 fullWidth={true}
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
+                label="Login"
+                name="login"
+                autoComplete="login"
                 autoFocus={true}
               />
             </Field>
@@ -80,24 +88,16 @@ export const LoginPage = connect<OwnProps, SelectorProps>(
                 name="password"
                 label="Password"
                 type="password"
-                id="password"
                 autoComplete="current-password"
               />
             </Field>
-            <FormControlLabel
-              control={
-                <Field name="remember">
-                  <Checkbox value="remember" color="primary" />
-                </Field>
-              }
-              label="Remember me"
-            />
             <Button
               fullWidth={true}
               variant="contained"
               color="primary"
               className={classes.submit}
               disabled={!isDataValid}
+              onClick={handleLogin(form.data)}
             >
               Sign In
             </Button>
@@ -124,3 +124,27 @@ export const LoginPage = connect<OwnProps, SelectorProps>(
     )
   },
 )
+
+const handleLogin = ({ login, password }: LoginData) => () =>
+  authActions
+    .login({ login, password })
+    .catch(error => alert(`login failed: ${error}`))
+
+const ensureAccess = (
+  auth: SelectorProps['auth'],
+  location: Location,
+  history: OwnProps['history'],
+) => {
+  log('checkAccess', auth.hasAccess)
+  // if has no access - nothing to do
+  if (!auth.hasAccess)
+    return
+
+  // go to personal area, if:
+  // - user load is finished
+  if (auth.user.isSuccess || auth.user.isFailure) {
+    const target: LocationDescriptorObject = location.pathname.startsWith('/login') ? { pathname: '/' } : location
+    log('checkAccess', 'go to', target)
+    history.replace(target)
+  }
+}

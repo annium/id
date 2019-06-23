@@ -8,20 +8,26 @@ import { connect, Store } from './store'
 const log = console.log.bind(console, 'PersonalArea')
 
 type OwnProps = RouteComponentProps & { children?: ReactNode }
-type SelectorProps = Pick<Store, 'auth'>
+type SelectorProps = {
+  auth: Store['auth']
+  hasTokens: boolean
+}
 
 export const PersonalArea = connect<OwnProps, SelectorProps>(
-  ({ auth }) => ({ auth }),
-  ({ auth, history, children }: OwnProps & SelectorProps) => {
+  ({ auth }) => ({
+    auth,
+    hasTokens: Boolean(auth.token.data),
+  }),
+  ({ auth, hasTokens, history, children }: OwnProps & SelectorProps) => {
     useEffect(
       () => {
         log('update', 'ensure access')
-        ensureAccess(auth, history)
+        ensureAccess(auth, hasTokens, history)
       },
-      [auth, history],
+      [auth, hasTokens, history],
     )
 
-    if (!auth.access)
+    if (!auth.hasAccess)
       return null
 
     log('render')
@@ -34,9 +40,21 @@ export const PersonalArea = connect<OwnProps, SelectorProps>(
   },
 )
 
-const ensureAccess = (auth: SelectorProps['auth'], history: OwnProps['history']) => {
-  log('checkAccess', auth.access)
-  if ((auth.user.isSuccess || auth.user.isFailure) && !auth.access)
-    history.replace('/login')
-}
+const ensureAccess = (
+  auth: SelectorProps['auth'],
+  hasTokens: boolean,
+  history: OwnProps['history'],
+) => {
+  log('checkAccess', auth.hasAccess)
+  // if has access - nothing to do
+  if (auth.hasAccess)
+    return
 
+  // go to login page, if:
+  // - no tokens (won't start loading)
+  // - user load is finished
+  if (!hasTokens || auth.user.isSuccess || auth.user.isFailure) {
+    log('checkAccess', 'go to /login')
+    history.replace('/login')
+  }
+}

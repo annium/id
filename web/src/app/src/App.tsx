@@ -9,18 +9,28 @@ import { connect, Store } from './store'
 const log = console.log.bind(console, 'App')
 
 type OwnProps = RouteComponentProps & { children?: ReactNode }
-type SelectorProps = Pick<Store, 'startup'> & { isLoading: boolean }
+type SelectorProps = {
+  startup: Store['startup']
+  isLoading: boolean
+  hasTokens: boolean
+}
 
 export const App = connect<OwnProps, SelectorProps>(
-  ({ auth, startup }) => ({ startup, isLoading: auth.user.isLoading }),
+  ({ auth, startup }) => ({
+    startup,
+    isLoading: auth.user.isLoading,
+    hasTokens: Boolean(auth.token.data),
+  }),
   function App(props: OwnProps & SelectorProps) {
-    const { location, children, startup, isLoading } = props
+    const { location, children, startup, isLoading, hasTokens } = props
 
     useEffect(
       () => {
         startup.location = location
-        log('mount', 'load user')
-        authActions.load({})
+        if (hasTokens) {
+          authActions.load({})
+          log('mount', 'load user')
+        }
       },
       // eslint-disable-next-line
       [],
