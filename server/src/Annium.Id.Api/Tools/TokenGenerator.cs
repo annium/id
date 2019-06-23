@@ -13,7 +13,7 @@ namespace Annium.Id.Api.Tools
 {
     internal class TokenGenerator : ITokenGenerator
     {
-        private readonly TimeSpan tokenLifeTime = TimeSpan.FromDays(1);
+        private readonly TimeSpan tokenLifeTime = TimeSpan.FromMinutes(10);
 
         private readonly RsaSecurityKey signingKey;
 
