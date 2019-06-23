@@ -103,6 +103,7 @@ namespace Annium.Id.Api.Controllers
             var(ipAddress, client) = identityDataAccessor.GetIdentityData();
             var login = new UserLogin(user.Id, instant, ipAddress.ToString(), client, Guid.NewGuid(), instant + refreshTokenLifeTime);
 
+            await userLoginRepository.DeleteExpiredByUserIdAsync(user.Id, instant);
             login = await userLoginRepository.CreateAsync(login);
 
             var token = tokenGenerator.Generate(login);
