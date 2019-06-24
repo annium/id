@@ -16,11 +16,11 @@ export type Auth = {
   token: AsyncState<UserToken | null>
 }
 
-const storageKeys = {
-  login: 'login',
+export const storageKeys = {
+  token: 'token',
 }
 const user = createAsync<User | null>(context, null)
-const token = createAsync<UserToken | null>(context, storage.get<UserToken>(storageKeys.login))
+const token = createAsync<UserToken | null>(context, storage.get<UserToken>(storageKeys.token))
 
 const raw = reducerFactory(context, false)
   .action('setAccess', (_, hasAccess: boolean) => hasAccess)
@@ -56,12 +56,12 @@ const raw = reducerFactory(context, false)
     const loginResult = await userApi.login(login, password)
     if (loginResult.isSuccess) {
       token.actions.success(loginResult)
-      storage.set(storageKeys.login, loginResult.data)
+      storage.set(storageKeys.token, loginResult.data)
     } else {
       token.actions.failure(loginResult)
       user.actions.reset({})
       setAccess(false)
-      storage.remove(storageKeys.login)
+      storage.remove(storageKeys.token)
 
       return
     }
@@ -74,7 +74,7 @@ const raw = reducerFactory(context, false)
     user.actions.reset({})
     token.actions.reset({})
     setAccess(false)
-    storage.remove(storageKeys.login)
+    storage.remove(storageKeys.token)
   })
   .function('update', ({ setAccess }) => async (payload: UserPayload) => {
     user.actions.start({})
@@ -102,10 +102,13 @@ const raw = reducerFactory(context, false)
 
     token.actions.start({})
     const updateResult = await userApi.updateToken(tokens.refreshToken)
-    if (updateResult.isSuccess)
+    if (updateResult.isSuccess) {
       token.actions.success(updateResult)
-    else
+      storage.set(storageKeys.token, updateResult.data)
+    } else {
       token.actions.failure(updateResult)
+      storage.remove(storageKeys.token)
+    }
   })
   .function('unregister', ({ setAccess }, getState) => async () => {
     user.actions.start({})
@@ -115,7 +118,7 @@ const raw = reducerFactory(context, false)
       user.actions.reset({})
       token.actions.reset({})
       setAccess(false)
-      storage.remove(storageKeys.login)
+      storage.remove(storageKeys.token)
     }
     else
       user.actions.success({ data: getState().auth.user.data })

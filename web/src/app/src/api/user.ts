@@ -1,4 +1,4 @@
-import { Response } from '@annium/server-http'
+import { HttpResponse } from '@annium/client-http'
 
 import { User } from '../models/User'
 import { UserToken } from '../models/UserToken'
@@ -8,18 +8,18 @@ import { UserPayload } from './payloads/UserPayload'
 
 
 export const userApi = {
-  register: (user: UserPayload): Promise<Response<User>> =>
+  register: (user: UserPayload): Promise<HttpResponse<User>> =>
     publicApi.put('me', undefined, user),
-  load: (): Promise<Response<User>> =>
+  load: (): Promise<HttpResponse<User>> =>
     privateApi.get<User>('me'),
-  login: (login: string, password: string): Promise<Response<UserToken>> =>
+  login: (login: string, password: string): Promise<HttpResponse<UserToken>> =>
     publicApi.post('me/login', undefined, { login, password }),
-  logout: (): Promise<Response> =>
+  logout: (): Promise<HttpResponse> =>
     privateApi.post('me/logout'),
-  updateToken: (refreshToken: string): Promise<Response<UserToken>> =>
-    publicApi.post('me/token', undefined, { refreshToken }),
-  update: (user: UserPayload): Promise<Response<User>> =>
+  updateToken: (refreshToken: string): Promise<HttpResponse<UserToken>> =>
+    publicApi.post('me/token', { refreshToken }),
+  update: (user: UserPayload): Promise<HttpResponse<User>> =>
     privateApi.post('me', undefined, user),
-  unregister: (): Promise<Response> =>
+  unregister: (): Promise<HttpResponse> =>
     privateApi.delete('me'),
 }
