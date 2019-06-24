@@ -129,10 +129,8 @@ namespace Annium.Id.Api.Controllers
             if (login == null)
                 return Forbidden("Invalid refresh token");
 
-            login.RefreshToken = Guid.NewGuid();
-            login.RefreshTokenExpires = getInstant();
-
-            login = await userLoginRepository.UpdateRefreshTokenAsync(login);
+            if (login.RefreshTokenExpires < getInstant())
+                return Forbidden("Refresh token expired");
 
             var token = tokenGenerator.Generate(login);
 

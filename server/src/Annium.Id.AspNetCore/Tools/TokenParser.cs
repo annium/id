@@ -55,6 +55,10 @@ namespace Annium.Id.AspNetCore.Tools
 
                 return (idToken, null);
             }
+            catch (SecurityTokenExpiredException)
+            {
+                return fail(HttpStatusCode.Unauthorized, "Token is expired");
+            }
             catch
             {
                 return fail(HttpStatusCode.BadRequest, "Token is invalid");
