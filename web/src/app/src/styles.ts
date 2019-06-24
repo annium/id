@@ -13,8 +13,21 @@ export const theme = createMuiTheme({
 
 export const useStyles = makeStyles(th => ({
     '@global': {
+        html: {
+            display: 'flex',
+            flexDirection: 'column',
+            minHeight: '100vh',
+        },
         body: {
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
             backgroundColor: th.palette.common.white,
         },
+    },
+    '@global #root': {
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
     },
 }))

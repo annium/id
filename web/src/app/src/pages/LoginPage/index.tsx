@@ -71,6 +71,7 @@ export const LoginPage = connect<OwnProps, SelectorProps>(
                 name="login"
                 autoComplete="login"
                 autoFocus={true}
+                onKeyDown={handleChangeSubmit(form.data)}
               />
             </Field>
             <Field
@@ -89,6 +90,7 @@ export const LoginPage = connect<OwnProps, SelectorProps>(
                 label="Password"
                 type="password"
                 autoComplete="current-password"
+                onKeyDown={handleChangeSubmit(form.data)}
               />
             </Field>
             <Button
@@ -124,6 +126,12 @@ export const LoginPage = connect<OwnProps, SelectorProps>(
     )
   },
 )
+
+const handleChangeSubmit = (loginData: LoginData) => (e: React.KeyboardEvent<HTMLInputElement>) => {
+  if (e.key === 'Enter') {
+    handleLogin(loginData)()
+  }
+}
 
 const handleLogin = ({ login, password }: LoginData) => () =>
   authActions
