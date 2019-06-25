@@ -1,29 +1,15 @@
 using System;
-using Annium.Id.Db;
-using Newtonsoft.Json;
 
 namespace Annium.Id.Api.Views
 {
-    public class AppView
+    public class AppPrivateView
     {
         public Guid Id { get; }
-
         public Guid OwnerId { get; }
-
         public string Key { get; }
-
         public string Name { get; }
 
-        public AppView(App app)
-        {
-            Id = app.Id;
-            OwnerId = app.OwnerId;
-            Key = app.Key;
-            Name = app.Name;
-        }
-
-        [JsonConstructor]
-        public AppView(
+        public AppPrivateView(
             Guid id,
             Guid ownerId,
             string key,

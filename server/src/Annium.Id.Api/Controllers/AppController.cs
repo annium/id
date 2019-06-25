@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Annium.AspNetCore.Extensions;
+using Annium.Extensions.Mapper;
 using Annium.Id.Api.Payloads;
 using Annium.Id.Api.Views;
 using Annium.Id.AspNetCore;
@@ -15,17 +16,19 @@ namespace Annium.Id.Api.Controllers
     public class AppController : LocalizedServerController
     {
         private readonly IAppRepository appRepository;
-
         private readonly IUserRepository userRepository;
+        private readonly IMapper mapper;
 
         public AppController(
             IAppRepository appRepository,
             IUserRepository userRepository,
+            IMapper mapper,
             IStringLocalizer<AppController> localizer
         ) : base(localizer)
         {
             this.appRepository = appRepository;
             this.userRepository = userRepository;
+            this.mapper = mapper;
         }
 
         [HttpPut]
@@ -47,7 +50,7 @@ namespace Annium.Id.Api.Controllers
 
             app = await appRepository.CreateAsync(app);
 
-            return Ok(new AppView(app));
+            return Ok(mapper.Map<AppPrivateView>(app));
         }
 
         [HttpGet("{appId:guid}/token")]
@@ -80,7 +83,7 @@ namespace Annium.Id.Api.Controllers
         {
             var apps = await appRepository.GetAllAsync();
 
-            return Ok(apps.Select(a => new AppView(a)).ToArray());
+            return Ok(apps.Select(mapper.Map<AppPublicView>).ToArray());
         }
 
         [HttpPost("{appId:guid}")]
@@ -102,7 +105,7 @@ namespace Annium.Id.Api.Controllers
 
             app = await appRepository.UpdateAsync(app);
 
-            return Ok(new AppView(app));
+            return Ok(mapper.Map<AppPrivateView>(app));
         }
 
         [HttpPost("{appId:guid}/owner/{userId:guid}")]
@@ -121,7 +124,7 @@ namespace Annium.Id.Api.Controllers
 
             app = await appRepository.UpdateAsync(app);
 
-            return Ok(new AppView(app));
+            return Ok(mapper.Map<AppPrivateView>(app));
         }
 
         [HttpDelete("{appId:guid}")]

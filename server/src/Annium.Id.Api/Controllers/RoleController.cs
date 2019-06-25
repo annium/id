@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Annium.AspNetCore.Extensions;
+using Annium.Extensions.Mapper;
 using Annium.Id.Api.Payloads;
 using Annium.Id.Api.Views;
 using Annium.Id.AspNetCore;
@@ -14,18 +15,17 @@ namespace Annium.Id.Api.Controllers
     public class RoleController : LocalizedServerController
     {
         private readonly IAppRepository appRepository;
-
         private readonly IRoleRepository roleRepository;
-
         private readonly IRoleClaimRepository roleClaimRepository;
-
         private readonly IClaimRepository claimRepository;
+        private readonly IMapper mapper;
 
         public RoleController(
             IAppRepository appRepository,
             IRoleRepository roleRepository,
             IRoleClaimRepository roleClaimRepository,
             IClaimRepository claimRepository,
+            IMapper mapper,
             IStringLocalizer<RoleController> localizer
         ) : base(localizer)
         {
@@ -33,6 +33,7 @@ namespace Annium.Id.Api.Controllers
             this.roleRepository = roleRepository;
             this.roleClaimRepository = roleClaimRepository;
             this.claimRepository = claimRepository;
+            this.mapper = mapper;
         }
 
         [HttpPut]
@@ -58,7 +59,7 @@ namespace Annium.Id.Api.Controllers
 
             role = await roleRepository.CreateAsync(role);
 
-            return Ok(new RoleView(role));
+            return Ok(mapper.Map<RoleView>(role));
         }
 
         [HttpGet]
@@ -93,7 +94,7 @@ namespace Annium.Id.Api.Controllers
 
             role = await roleRepository.UpdateAsync(role);
 
-            return Ok(new RoleView(role));
+            return Ok(mapper.Map<RoleView>(role));
         }
 
         [HttpPost("{roleId:guid}/claims/{claimId:guid}")]

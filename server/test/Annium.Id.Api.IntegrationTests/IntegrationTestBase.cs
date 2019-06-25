@@ -14,7 +14,7 @@ namespace Annium.Id.Api.IntegrationTests
             Configure(request => request);
         }
 
-        protected async Task<UserView> RegisterAsync(
+        protected async Task<UserPrivateView> RegisterAsync(
             string login = "demo",
             string password = "testtest",
             string email = "demo@demo.com"
@@ -22,10 +22,10 @@ namespace Annium.Id.Api.IntegrationTests
         {
             var payload = new UserPayload { Login = login, Password = password, Email = email };
 
-            return await http.Put("/me").JsonContent(payload).AsAsync<UserView>();
+            return await http.Put("/me").JsonContent(payload).AsAsync<UserPrivateView>();
         }
 
-        protected async Task<ValueTuple<UserView, UserTokenView>> LoginAsync(
+        protected async Task<ValueTuple<UserPrivateView, UserTokenView>> LoginAsync(
             string login = "demo",
             string password = "testtest",
             string email = "demo@demo.com"
@@ -39,7 +39,7 @@ namespace Annium.Id.Api.IntegrationTests
             return (user, tokens);
         }
 
-        protected Task<AppView> CreateAppAsync(
+        protected Task<AppPrivateView> CreateAppAsync(
             string accessToken,
             string key = "demo",
             string name = "Demo App"
@@ -47,10 +47,10 @@ namespace Annium.Id.Api.IntegrationTests
         {
             var payload = new AppPayload { Key = key, Name = name };
 
-            return http.Put("/apps").BearerAuthorization(accessToken).JsonContent(payload).AsAsync<AppView>();
+            return http.Put("/apps").BearerAuthorization(accessToken).JsonContent(payload).AsAsync<AppPrivateView>();
         }
 
-        protected Task<CompanyView> CreateCompanyAsync(
+        protected Task<CompanyPrivateView> CreateCompanyAsync(
             string accessToken,
             string key = "demo",
             string name = "Demo App",
@@ -59,7 +59,7 @@ namespace Annium.Id.Api.IntegrationTests
         {
             var payload = new CompanyPayload { ParentId = parentId, Key = key, Name = name };
 
-            return http.Put("/companies").BearerAuthorization(accessToken).JsonContent(payload).AsAsync<CompanyView>();
+            return http.Put("/companies").BearerAuthorization(accessToken).JsonContent(payload).AsAsync<CompanyPrivateView>();
         }
     }
 }

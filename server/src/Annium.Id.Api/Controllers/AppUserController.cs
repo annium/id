@@ -1,7 +1,9 @@
 using System;
 using System.Threading.Tasks;
 using Annium.AspNetCore.Extensions;
+using Annium.Extensions.Mapper;
 using Annium.Id.Api.Payloads;
+using Annium.Id.Api.Views;
 using Annium.Id.AspNetCore;
 using Annium.Id.Db;
 using Microsoft.AspNetCore.Mvc;
@@ -13,16 +15,12 @@ namespace Annium.Id.Api.Controllers
     public class AppUserController : LocalizedServerController
     {
         private readonly IAppRepository appRepository;
-
         private readonly IUserRepository userRepository;
-
         private readonly IRoleRepository roleRepository;
-
         private readonly IClaimRepository claimRepository;
-
         private readonly IUserRoleRepository userRoleRepository;
-
         private readonly IUserClaimRepository userClaimRepository;
+        private readonly IMapper mapper;
 
         public AppUserController(
             IAppRepository appRepository,
@@ -31,6 +29,7 @@ namespace Annium.Id.Api.Controllers
             IClaimRepository claimRepository,
             IUserRoleRepository userRoleRepository,
             IUserClaimRepository userClaimRepository,
+            IMapper mapper,
             IStringLocalizer<AppUserController> localizer
         ) : base(localizer)
         {
@@ -40,6 +39,7 @@ namespace Annium.Id.Api.Controllers
             this.claimRepository = claimRepository;
             this.userRoleRepository = userRoleRepository;
             this.userClaimRepository = userClaimRepository;
+            this.mapper = mapper;
         }
 
         [HttpPut("roles/{roleId:guid}")]
@@ -82,10 +82,10 @@ namespace Annium.Id.Api.Controllers
                 return result;
 
             var userClaim = new UserClaim(user.Id, claim.Id, valuePayload.Value);
-
             userClaim = await userClaimRepository.SaveAsync(userClaim);
+            var claimValue = new ClaimValue(claim.Id, claim.Key, claim.Name, userClaim.Value);
 
-            return Ok(new ClaimValue(claim.Id, claim.Key, claim.Name, userClaim.Value));
+            return Ok(mapper.Map<ClaimValueView>(claimValue));
         }
 
         [HttpDelete("claims/{claimId:guid}")]

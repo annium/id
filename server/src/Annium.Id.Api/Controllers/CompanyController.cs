@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Annium.AspNetCore.Extensions;
+using Annium.Extensions.Mapper;
 using Annium.Id.Api.Payloads;
 using Annium.Id.Api.Views;
 using Annium.Id.AspNetCore;
@@ -15,21 +16,22 @@ namespace Annium.Id.Api.Controllers
     public class CompanyController : LocalizedServerController
     {
         private readonly ICompanyRepository companyRepository;
-
         private readonly IUserRepository userRepository;
-
         private readonly ICompanyUserRepository companyUserRepository;
+        private readonly IMapper mapper;
 
         public CompanyController(
             ICompanyRepository companyRepository,
             IUserRepository userRepository,
             ICompanyUserRepository companyUserRepository,
+            IMapper mapper,
             IStringLocalizer<CompanyController> localizer
         ) : base(localizer)
         {
             this.companyRepository = companyRepository;
             this.userRepository = userRepository;
             this.companyUserRepository = companyUserRepository;
+            this.mapper = mapper;
         }
 
         [HttpPut]
@@ -55,7 +57,7 @@ namespace Annium.Id.Api.Controllers
 
             company = await companyRepository.CreateAsync(company);
 
-            return Ok(new CompanyView(company));
+            return Ok(mapper.Map<CompanyPrivateView>(company));
         }
 
         [HttpGet("{companyId:guid}")]
@@ -65,7 +67,7 @@ namespace Annium.Id.Api.Controllers
             if (result != null)
                 return result;
 
-            return Ok(new CompanyView(company));
+            return Ok(mapper.Map<CompanyPublicView>(company));
         }
 
         [HttpGet("{companyId:guid}/users")]
@@ -77,7 +79,7 @@ namespace Annium.Id.Api.Controllers
 
             var users = await companyUserRepository.GetAllAsync(companyId);
 
-            return Ok(users.Select(u => new UserView(u)).ToArray());
+            return Ok(users.Select(mapper.Map<UserPublicView>).ToArray());
         }
 
         [HttpPost("{companyId:guid}")]
@@ -106,7 +108,7 @@ namespace Annium.Id.Api.Controllers
 
             company = await companyRepository.UpdateAsync(company);
 
-            return Ok(new CompanyView(company));
+            return Ok(mapper.Map<CompanyPrivateView>(company));
         }
 
         [HttpPost("{companyId:guid}/owner/{userId:guid}")]
@@ -125,7 +127,7 @@ namespace Annium.Id.Api.Controllers
 
             company = await companyRepository.UpdateAsync(company);
 
-            return Ok(new CompanyView(company));
+            return Ok(mapper.Map<CompanyPrivateView>(company));
         }
 
         [HttpDelete("{companyId:guid}")]

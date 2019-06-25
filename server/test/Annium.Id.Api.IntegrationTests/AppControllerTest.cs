@@ -47,8 +47,8 @@ namespace Annium.Id.Api.IntegrationTests
             var payload = new AppPayload() { Key = "demo", Name = "Demo App" };
 
             // act
-            var app = await http.Put("/apps").BearerAuthorization(tokens.AccessToken).JsonContent(payload).AsAsync<AppView>();
-            var apps = await http.Get("/apps").AsAsync<AppView[]>();
+            var app = await http.Put("/apps").BearerAuthorization(tokens.AccessToken).JsonContent(payload).AsAsync<AppPrivateView>();
+            var apps = await http.Get("/apps").AsAsync<AppPrivateView[]>();
 
             // assert
             apps.Has(1);
@@ -75,7 +75,7 @@ namespace Annium.Id.Api.IntegrationTests
             // arrange
             var(_, ownerTokens) = await LoginAsync("owner", "superpass", "some@email.com");
             var p = new AppPayload() { Key = "demo", Name = "Demo App" };
-            var app = await http.Put("/apps").BearerAuthorization(ownerTokens.AccessToken).JsonContent(p).AsAsync<AppView>();
+            var app = await http.Put("/apps").BearerAuthorization(ownerTokens.AccessToken).JsonContent(p).AsAsync<AppPrivateView>();
             var(_, tokens) = await LoginAsync();
 
             // act
@@ -91,7 +91,7 @@ namespace Annium.Id.Api.IntegrationTests
             // arrange
             var(_, tokens) = await LoginAsync();
             var p = new AppPayload() { Key = "demo", Name = "Demo App" };
-            var app = await http.Put("/apps").BearerAuthorization(tokens.AccessToken).JsonContent(p).AsAsync<AppView>();
+            var app = await http.Put("/apps").BearerAuthorization(tokens.AccessToken).JsonContent(p).AsAsync<AppPrivateView>();
 
             // act
             var response = await http.Get($"/apps/{app.Id}/token").BearerAuthorization(tokens.AccessToken).AsAsync<Guid>();
@@ -119,7 +119,7 @@ namespace Annium.Id.Api.IntegrationTests
             // arrange
             var(_, ownerTokens) = await LoginAsync("owner", "superpass", "some@email.com");
             var p = new AppPayload() { Key = "demo", Name = "Demo App" };
-            var app = await http.Put("/apps").BearerAuthorization(ownerTokens.AccessToken).JsonContent(p).AsAsync<AppView>();
+            var app = await http.Put("/apps").BearerAuthorization(ownerTokens.AccessToken).JsonContent(p).AsAsync<AppPrivateView>();
             var(_, tokens) = await LoginAsync();
 
             // act
@@ -135,7 +135,7 @@ namespace Annium.Id.Api.IntegrationTests
             // arrange
             var(_, tokens) = await LoginAsync();
             var p = new AppPayload() { Key = "demo", Name = "Demo App" };
-            var app = await http.Put("/apps").BearerAuthorization(tokens.AccessToken).JsonContent(p).AsAsync<AppView>();
+            var app = await http.Put("/apps").BearerAuthorization(tokens.AccessToken).JsonContent(p).AsAsync<AppPrivateView>();
             var token = await http.Get($"/apps/{app.Id}/token").BearerAuthorization(tokens.AccessToken).AsAsync<Guid>();
 
             // act
@@ -149,11 +149,10 @@ namespace Annium.Id.Api.IntegrationTests
         public async Task List_Ok()
         {
             // act
-            var response = await http.Get("/apps").RunAsync();
+            var response = await http.Get("/apps").AsAsync<AppPublicView[]>();
 
             // assert
-            response.StatusCode.IsEqual(HttpStatusCode.OK);
-            (await response.Content.ReadAsStringAsync()).IsEqual("[]");
+            response.IsEmpty();
         }
 
         [Fact]
@@ -162,7 +161,7 @@ namespace Annium.Id.Api.IntegrationTests
             // arrange
             var(user, tokens) = await LoginAsync();
             var p = new AppPayload() { Key = "demo", Name = "Demo App" };
-            var app = await http.Put("/apps").BearerAuthorization(tokens.AccessToken).JsonContent(p).AsAsync<AppView>();
+            var app = await http.Put("/apps").BearerAuthorization(tokens.AccessToken).JsonContent(p).AsAsync<AppPrivateView>();
             var u = new AppPayload { Key = "demo" };
 
             // act
@@ -192,7 +191,7 @@ namespace Annium.Id.Api.IntegrationTests
             // arrange
             var(owner, ownerTokens) = await LoginAsync("owner", "superpass", "some@email.com");
             var p = new AppPayload() { Key = "demo", Name = "Demo App" };
-            var app = await http.Put("/apps").BearerAuthorization(ownerTokens.AccessToken).JsonContent(p).AsAsync<AppView>();
+            var app = await http.Put("/apps").BearerAuthorization(ownerTokens.AccessToken).JsonContent(p).AsAsync<AppPrivateView>();
             var(user, tokens) = await LoginAsync();
             var u = new AppPayload { Key = "demo", Name = "Demo App" };
 
@@ -209,9 +208,9 @@ namespace Annium.Id.Api.IntegrationTests
             // arrange
             var(user, tokens) = await LoginAsync();
             var p1 = new AppPayload() { Key = "demo", Name = "Demo App" };
-            var app1 = await http.Put("/apps").BearerAuthorization(tokens.AccessToken).JsonContent(p1).AsAsync<AppView>();
+            var app1 = await http.Put("/apps").BearerAuthorization(tokens.AccessToken).JsonContent(p1).AsAsync<AppPrivateView>();
             var p2 = new AppPayload() { Key = "medo", Name = "Medo App" };
-            var app2 = await http.Put("/apps").BearerAuthorization(tokens.AccessToken).JsonContent(p2).AsAsync<AppView>();
+            var app2 = await http.Put("/apps").BearerAuthorization(tokens.AccessToken).JsonContent(p2).AsAsync<AppPrivateView>();
             var u = new AppPayload { Key = p1.Key, Name = p2.Name };
 
             // act
@@ -227,11 +226,11 @@ namespace Annium.Id.Api.IntegrationTests
             // arrange
             var(user, tokens) = await LoginAsync();
             var p = new AppPayload() { Key = "demo", Name = "Demo App" };
-            var app = await http.Put("/apps").BearerAuthorization(tokens.AccessToken).JsonContent(p).AsAsync<AppView>();
+            var app = await http.Put("/apps").BearerAuthorization(tokens.AccessToken).JsonContent(p).AsAsync<AppPrivateView>();
             var u = new AppPayload { Key = "medo", Name = "Medo App" };
 
             // act
-            var response = await http.Post($"/apps/{app.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).AsAsync<AppView>();
+            var response = await http.Post($"/apps/{app.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).AsAsync<AppPrivateView>();
 
             // assert
             response.Id.IsEqual(app.Id);
@@ -258,7 +257,7 @@ namespace Annium.Id.Api.IntegrationTests
             // arrange
             var(owner, ownerTokens) = await LoginAsync("owner", "superpass", "some@email.com");
             var p = new AppPayload { Key = "demo", Name = "Demo App" };
-            var app = await http.Put("/apps").BearerAuthorization(ownerTokens.AccessToken).JsonContent(p).AsAsync<AppView>();
+            var app = await http.Put("/apps").BearerAuthorization(ownerTokens.AccessToken).JsonContent(p).AsAsync<AppPrivateView>();
             var(user, tokens) = await LoginAsync();
 
             // act
@@ -274,7 +273,7 @@ namespace Annium.Id.Api.IntegrationTests
             // arrange
             var(owner, ownerTokens) = await LoginAsync("owner", "superpass", "some@email.com");
             var p = new AppPayload { Key = "demo", Name = "Demo App" };
-            var app = await http.Put("/apps").BearerAuthorization(ownerTokens.AccessToken).JsonContent(p).AsAsync<AppView>();
+            var app = await http.Put("/apps").BearerAuthorization(ownerTokens.AccessToken).JsonContent(p).AsAsync<AppPrivateView>();
 
             // act
             var response = await http.Post($"/apps/{app.Id}/owner/{Guid.NewGuid()}").BearerAuthorization(ownerTokens.AccessToken).RunAsync();
@@ -289,11 +288,11 @@ namespace Annium.Id.Api.IntegrationTests
             // arrange
             var(owner, ownerTokens) = await LoginAsync("owner", "superpass", "some@email.com");
             var p = new AppPayload { Key = "demo", Name = "Demo App" };
-            var app = await http.Put("/apps").BearerAuthorization(ownerTokens.AccessToken).JsonContent(p).AsAsync<AppView>();
+            var app = await http.Put("/apps").BearerAuthorization(ownerTokens.AccessToken).JsonContent(p).AsAsync<AppPrivateView>();
             var(user, tokens) = await LoginAsync();
 
             // act
-            app = await http.Post($"/apps/{app.Id}/owner/{user.Id}").BearerAuthorization(ownerTokens.AccessToken).AsAsync<AppView>();
+            app = await http.Post($"/apps/{app.Id}/owner/{user.Id}").BearerAuthorization(ownerTokens.AccessToken).AsAsync<AppPrivateView>();
 
             // assert
             app.OwnerId.IsEqual(user.Id);
@@ -318,7 +317,7 @@ namespace Annium.Id.Api.IntegrationTests
             // arrange
             var(owner, ownerTokens) = await LoginAsync("owner", "superpass", "some@email.com");
             var p = new AppPayload { Key = "demo", Name = "Demo App" };
-            var app = await http.Put("/apps").BearerAuthorization(ownerTokens.AccessToken).JsonContent(p).AsAsync<AppView>();
+            var app = await http.Put("/apps").BearerAuthorization(ownerTokens.AccessToken).JsonContent(p).AsAsync<AppPrivateView>();
             var(user, tokens) = await LoginAsync();
 
             // act
@@ -334,7 +333,7 @@ namespace Annium.Id.Api.IntegrationTests
             // arrange
             var(user, tokens) = await LoginAsync();
             var p = new AppPayload { Key = "demo", Name = "Demo App" };
-            var app = await http.Put("/apps").BearerAuthorization(tokens.AccessToken).JsonContent(p).AsAsync<AppView>();
+            var app = await http.Put("/apps").BearerAuthorization(tokens.AccessToken).JsonContent(p).AsAsync<AppPrivateView>();
 
             // act
             var response = await http.Delete($"/apps/{app.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();

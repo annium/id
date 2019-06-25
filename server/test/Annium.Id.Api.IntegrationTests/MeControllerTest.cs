@@ -58,7 +58,7 @@ namespace Annium.Id.Api.IntegrationTests
             var payload = new UserPayload { Login = "demo", Password = "testtest", Email = "demo@demo.com" };
 
             // act
-            var response = await http.Put("/me").JsonContent(payload).AsAsync<UserView>();
+            var response = await http.Put("/me").JsonContent(payload).AsAsync<UserPrivateView>();
 
             // assert
             response.Id.IsNotDefault();
@@ -73,7 +73,7 @@ namespace Annium.Id.Api.IntegrationTests
             var(user, tokens) = await LoginAsync();
 
             // act
-            var response = await http.Get("/me").BearerAuthorization(tokens.AccessToken).AsAsync<UserView>();
+            var response = await http.Get("/me").BearerAuthorization(tokens.AccessToken).AsAsync<UserPrivateView>();
 
             // assert
             response.Id.IsEqual(user.Id);
@@ -229,7 +229,7 @@ namespace Annium.Id.Api.IntegrationTests
             var payload = new UserPayload { Login = "medo", Password = "setsetset", Email = "medo@medo.com" };
 
             // act
-            var response = await http.Post("/me").BearerAuthorization(tokens.AccessToken).JsonContent(payload).AsAsync<UserView>();
+            var response = await http.Post("/me").BearerAuthorization(tokens.AccessToken).JsonContent(payload).AsAsync<UserPrivateView>();
 
             // assert
             response.Id.IsEqual(user.Id);

@@ -62,7 +62,7 @@ namespace Annium.Id.Api.IntegrationTests
             var payload = new CompanyPayload() { Key = "demo", Name = "Demo Company" };
 
             // act
-            var company = await http.Put("/companies").BearerAuthorization(tokens.AccessToken).JsonContent(payload).AsAsync<CompanyView>();
+            var company = await http.Put("/companies").BearerAuthorization(tokens.AccessToken).JsonContent(payload).AsAsync<CompanyPrivateView>();
 
             // assert
             company.Id.IsNotDefault();
@@ -91,7 +91,7 @@ namespace Annium.Id.Api.IntegrationTests
             var company = await CreateCompanyAsync(tokens.AccessToken);
 
             // act
-            var response = await http.Get($"/companies/{company.Id}").BearerAuthorization(tokens.AccessToken).AsAsync<CompanyView>();
+            var response = await http.Get($"/companies/{company.Id}").BearerAuthorization(tokens.AccessToken).AsAsync<CompanyPublicView>();
 
             // assert
             response.Id.IsEqual(company.Id);
@@ -118,7 +118,7 @@ namespace Annium.Id.Api.IntegrationTests
             var company = await CreateCompanyAsync(tokens.AccessToken);
 
             // act
-            var response = await http.Get($"/companies/{company.Id}/users").BearerAuthorization(tokens.AccessToken).AsAsync<UserView[]>();
+            var response = await http.Get($"/companies/{company.Id}/users").BearerAuthorization(tokens.AccessToken).AsAsync<UserPublicView[]>();
 
             // assert
             response.IsEmpty();
@@ -209,7 +209,7 @@ namespace Annium.Id.Api.IntegrationTests
             var u = new CompanyPayload { Key = "medo", Name = "Medo Company" };
 
             // act
-            var response = await http.Post($"/companies/{company.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).AsAsync<CompanyView>();
+            var response = await http.Post($"/companies/{company.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).AsAsync<CompanyPrivateView>();
 
             // assert
             response.Id.IsEqual(company.Id);
@@ -268,7 +268,7 @@ namespace Annium.Id.Api.IntegrationTests
             var(user, tokens) = await LoginAsync();
 
             // act
-            company = await http.Post($"/companies/{company.Id}/owner/{user.Id}").BearerAuthorization(ownerTokens.AccessToken).AsAsync<CompanyView>();
+            company = await http.Post($"/companies/{company.Id}/owner/{user.Id}").BearerAuthorization(ownerTokens.AccessToken).AsAsync<CompanyPrivateView>();
 
             // assert
             company.OwnerId.IsEqual(user.Id);

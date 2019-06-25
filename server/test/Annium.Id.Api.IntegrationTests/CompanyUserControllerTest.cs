@@ -63,7 +63,7 @@ namespace Annium.Id.Api.IntegrationTests
 
             // act
             var response = await http.Put($"/companies/{company.Id}/users/{user.Id}").BearerAuthorization(ownerTokens.AccessToken).RunAsync();
-            var members = await http.Get($"/companies/{company.Id}/users").BearerAuthorization(ownerTokens.AccessToken).AsAsync<UserView[]>();
+            var members = await http.Get($"/companies/{company.Id}/users").AsAsync<UserPublicView[]>();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NoContent);

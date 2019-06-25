@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Annium.AspNetCore.Extensions;
+using Annium.Extensions.Mapper;
 using Annium.Id.Api.Payloads;
 using Annium.Id.Api.Views;
 using Annium.Id.AspNetCore;
@@ -15,17 +16,19 @@ namespace Annium.Id.Api.Controllers
     public class CompanyClaimController : LocalizedServerController
     {
         private readonly IAppRepository appRepository;
-
         private readonly ICompanyClaimRepository claimRepository;
+        private readonly IMapper mapper;
 
         public CompanyClaimController(
             IAppRepository appRepository,
             ICompanyClaimRepository claimRepository,
+            IMapper mapper,
             IStringLocalizer<CompanyClaimController> localizer
         ) : base(localizer)
         {
             this.appRepository = appRepository;
             this.claimRepository = claimRepository;
+            this.mapper = mapper;
         }
 
         [HttpPut]
@@ -42,15 +45,10 @@ namespace Annium.Id.Api.Controllers
             if ((await claimRepository.FindByKeyAsync(app.Id, claimPayload.Key)) != null)
                 return Conflict($"Claim key {claimPayload.Key} is already used");
 
-            var claim = new CompanyClaim(
-                app.Id,
-                claimPayload.Key,
-                claimPayload.Name
-            );
-
+            var claim = new CompanyClaim(app.Id, claimPayload.Key, claimPayload.Name);
             claim = await claimRepository.CreateAsync(claim);
 
-            return Ok(new CompanyClaimView(claim));
+            return Ok(mapper.Map<CompanyClaimView>(claim));
         }
 
         [HttpGet]
@@ -63,7 +61,7 @@ namespace Annium.Id.Api.Controllers
 
             var claims = await claimRepository.GetAllAsync(appId);
 
-            return Ok(claims.Select(c => new CompanyClaimView(c)).ToArray());
+            return Ok(claims.Select(mapper.Map<CompanyClaimView>).ToArray());
         }
 
         [HttpPost("{claimId:guid}")]
@@ -85,7 +83,7 @@ namespace Annium.Id.Api.Controllers
 
             claim = await claimRepository.UpdateAsync(claim);
 
-            return Ok(new CompanyClaimView(claim));
+            return Ok(mapper.Map<CompanyClaimView>(claim));
         }
 
         [HttpDelete("{claimId:guid}")]

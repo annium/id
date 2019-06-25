@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Annium.AspNetCore.Extensions;
+using Annium.Extensions.Mapper;
 using Annium.Id.Api.Payloads;
 using Annium.Id.Api.Tools;
 using Annium.Id.Api.Views;
@@ -16,18 +17,13 @@ namespace Annium.Id.Api.Controllers
     public class MeController : LocalizedServerController
     {
         private static readonly Duration refreshTokenLifeTime = Duration.FromDays(1);
-
         private readonly IUserRepository userRepository;
-
         private readonly IUserLoginRepository userLoginRepository;
-
         private readonly IIdentityDataAccessor identityDataAccessor;
-
         private readonly ISecurityManager securityManager;
-
         private readonly ITokenGenerator tokenGenerator;
-
         private readonly Func<Instant> getInstant;
+        private readonly IMapper mapper;
 
         public MeController(
             IUserRepository userRepository,
@@ -36,6 +32,7 @@ namespace Annium.Id.Api.Controllers
             ISecurityManager securityManager,
             ITokenGenerator tokenGenerator,
             Func<Instant> getInstant,
+            IMapper mapper,
             IStringLocalizer<MeController> localizer
         ) : base(localizer)
         {
@@ -45,6 +42,7 @@ namespace Annium.Id.Api.Controllers
             this.securityManager = securityManager;
             this.tokenGenerator = tokenGenerator;
             this.getInstant = getInstant;
+            this.mapper = mapper;
         }
 
         [HttpPut]
@@ -81,7 +79,7 @@ namespace Annium.Id.Api.Controllers
                 return NotFound("User not found");
 
             // TODO: perhaps, add info about companies, user is member of
-            return Ok(new UserView(user));
+            return Ok(mapper.Map<UserPrivateView>(user));
         }
 
         [HttpPost("login")]
@@ -106,7 +104,7 @@ namespace Annium.Id.Api.Controllers
 
             var token = tokenGenerator.Generate(login);
 
-            return Ok(new UserTokenView(token, login));
+            return Ok(new UserTokenView(token, login.RefreshToken, login.RefreshTokenExpires));
         }
 
         [HttpPost("logout")]
@@ -132,7 +130,7 @@ namespace Annium.Id.Api.Controllers
 
             var token = tokenGenerator.Generate(login);
 
-            return Ok(new UserTokenView(token, login));
+            return Ok(new UserTokenView(token, login.RefreshToken, login.RefreshTokenExpires));
         }
 
         [HttpPost]
@@ -156,7 +154,7 @@ namespace Annium.Id.Api.Controllers
 
             user = await userRepository.UpdateAsync(user);
 
-            return Ok(new UserView(user));
+            return Ok(mapper.Map<UserPrivateView>(user));
         }
 
         [HttpDelete]

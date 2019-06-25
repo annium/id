@@ -1,28 +1,14 @@
 using System;
-using Annium.Id.Db;
-using Newtonsoft.Json;
 
 namespace Annium.Id.Api.Views
 {
     public class ClaimValueView
     {
         public Guid Id { get; }
-
         public string Key { get; }
-
         public string Name { get; }
-
         public string Value { get; }
 
-        public ClaimValueView(ClaimValue claim)
-        {
-            Id = claim.Id;
-            Key = claim.Key;
-            Name = claim.Name;
-            Value = claim.Value;
-        }
-
-        [JsonConstructor]
         public ClaimValueView(
             Guid id,
             string key,

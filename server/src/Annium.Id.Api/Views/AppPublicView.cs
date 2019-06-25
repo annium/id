@@ -2,27 +2,21 @@ using System;
 
 namespace Annium.Id.Api.Views
 {
-    public class RoleView
+    public class AppPublicView
     {
         public Guid Id { get; }
-        public Guid AppId { get; }
         public string Key { get; }
         public string Name { get; }
-        public ClaimValueView[] Claims { get; }
 
-        public RoleView(
+        public AppPublicView(
             Guid id,
-            Guid appId,
             string key,
-            string name,
-            ClaimValueView[] claims
+            string name
         )
         {
             Id = id;
-            AppId = appId;
             Key = key;
             Name = name;
-            Claims = claims;
         }
     }
 }

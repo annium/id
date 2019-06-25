@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Annium.AspNetCore.Extensions;
+using Annium.Extensions.Mapper;
 using Annium.Id.Api.Payloads;
 using Annium.Id.Api.Views;
 using Annium.Id.AspNetCore;
@@ -15,17 +16,19 @@ namespace Annium.Id.Api.Controllers
     public class ClaimController : LocalizedServerController
     {
         private readonly IAppRepository appRepository;
-
         private readonly IClaimRepository claimRepository;
+        private readonly IMapper mapper;
 
         public ClaimController(
             IAppRepository appRepository,
             IClaimRepository claimRepository,
+            IMapper mapper,
             IStringLocalizer<ClaimController> localizer
         ) : base(localizer)
         {
             this.appRepository = appRepository;
             this.claimRepository = claimRepository;
+            this.mapper = mapper;
         }
 
         [HttpPut]
@@ -50,7 +53,7 @@ namespace Annium.Id.Api.Controllers
 
             claim = await claimRepository.CreateAsync(claim);
 
-            return Ok(new ClaimView(claim));
+            return Ok(mapper.Map<ClaimView>(claim));
         }
 
         [HttpGet]
@@ -63,7 +66,7 @@ namespace Annium.Id.Api.Controllers
 
             var claims = await claimRepository.GetAllAsync(appId);
 
-            return Ok(claims.Select(c => new ClaimView(c)).ToArray());
+            return Ok(claims.Select(mapper.Map<ClaimView>).ToArray());
         }
 
         [HttpPost("{claimId:guid}")]
@@ -85,7 +88,7 @@ namespace Annium.Id.Api.Controllers
 
             claim = await claimRepository.UpdateAsync(claim);
 
-            return Ok(new ClaimView(claim));
+            return Ok(mapper.Map<ClaimView>(claim));
         }
 
         [HttpDelete("{claimId:guid}")]
