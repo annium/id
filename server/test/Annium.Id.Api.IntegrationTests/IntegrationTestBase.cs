@@ -20,7 +20,7 @@ namespace Annium.Id.Api.IntegrationTests
             string email = "demo@demo.com"
         )
         {
-            var payload = new UserPayload { Login = login, Password = password, FirstName = "demo", LastName = "medo", Email = email };
+            var payload = new UserPayload { Login = login, Password = password, Email = email };
 
             return await http.Put("/me").JsonContent(payload).AsAsync<UserView>();
         }

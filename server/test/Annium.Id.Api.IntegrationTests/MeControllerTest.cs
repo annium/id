@@ -28,7 +28,7 @@ namespace Annium.Id.Api.IntegrationTests
         {
             // arrange
             var user = await RegisterAsync();
-            var payload = new UserPayload { Login = user.Login, Password = "asdasdsdd", FirstName = "a123", LastName = "adsudq", Email = "asd1@demo.com" };
+            var payload = new UserPayload { Login = user.Login, Password = "asdasdsdd", Email = "asd1@demo.com" };
 
             // act
             var response = await http.Put("/me").JsonContent(payload).RunAsync();
@@ -42,7 +42,7 @@ namespace Annium.Id.Api.IntegrationTests
         {
             // arrange
             var user = await RegisterAsync();
-            var payload = new UserPayload { Login = "uniquelogin", Password = "asdasdsdd", FirstName = "a123", LastName = "adsudq", Email = user.Email };
+            var payload = new UserPayload { Login = "uniquelogin", Password = "asdasdsdd", Email = user.Email };
 
             // act
             var response = await http.Put("/me").JsonContent(payload).RunAsync();
@@ -55,13 +55,15 @@ namespace Annium.Id.Api.IntegrationTests
         public async Task Register_ValidData_Ok()
         {
             // arrange
-            var payload = new UserPayload { Login = "demo", Password = "testtest", FirstName = "demo", LastName = "medo", Email = "demo@demo.com" };
+            var payload = new UserPayload { Login = "demo", Password = "testtest", Email = "demo@demo.com" };
 
             // act
-            var response = await http.Put("/me").JsonContent(payload).RunAsync();
+            var response = await http.Put("/me").JsonContent(payload).AsAsync<UserView>();
 
             // assert
-            response.StatusCode.IsEqual(HttpStatusCode.OK);
+            response.Id.IsNotDefault();
+            response.Login.IsEqual(payload.Login);
+            response.Email.IsEqual(payload.Email);
         }
 
         [Fact]
@@ -192,9 +194,9 @@ namespace Annium.Id.Api.IntegrationTests
         {
             // arrange
             var(user, tokens) = await LoginAsync();
-            var p = new UserPayload { Login = "uniquelogin", Password = "asdasdsdd", FirstName = "a123", LastName = "adsudq", Email = "asd1@demo.com" };
+            var p = new UserPayload { Login = "uniquelogin", Password = "asdasdsdd", Email = "asd1@demo.com" };
             await http.Put("/me").JsonContent(p).RunAsync();
-            var u = new UserPayload { Login = p.Login, Password = "a96as9da", FirstName = "a123", LastName = "adsudq", Email = "asd2@demo.com" };
+            var u = new UserPayload { Login = p.Login, Password = "a96as9da", Email = "asd2@demo.com" };
 
             // act
             var response = await http.Post("/me").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
@@ -208,9 +210,9 @@ namespace Annium.Id.Api.IntegrationTests
         {
             // arrange
             var(user, tokens) = await LoginAsync();
-            var p = new UserPayload { Login = "uniquelogin", Password = "asdasdsdd", FirstName = "a123", LastName = "adsudq", Email = "asd1@demo.com" };
+            var p = new UserPayload { Login = "uniquelogin", Password = "asdasdsdd", Email = "asd1@demo.com" };
             await http.Put("/me").JsonContent(p).RunAsync();
-            var u = new UserPayload { Login = "otherlogin", Password = "a96as9da", FirstName = "a123", LastName = "adsudq", Email = p.Email };
+            var u = new UserPayload { Login = "otherlogin", Password = "a96as9da", Email = p.Email };
 
             // act
             var response = await http.Post("/me").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
@@ -224,7 +226,7 @@ namespace Annium.Id.Api.IntegrationTests
         {
             // arrange
             var(user, tokens) = await LoginAsync();
-            var payload = new UserPayload { Login = "medo", Password = "setsetset", FirstName = "medo", LastName = "demo", Email = "medo@medo.com" };
+            var payload = new UserPayload { Login = "medo", Password = "setsetset", Email = "medo@medo.com" };
 
             // act
             var response = await http.Post("/me").BearerAuthorization(tokens.AccessToken).JsonContent(payload).AsAsync<UserView>();
@@ -232,8 +234,6 @@ namespace Annium.Id.Api.IntegrationTests
             // assert
             response.Id.IsEqual(user.Id);
             response.Login.IsEqual(payload.Login);
-            response.FirstName.IsEqual(payload.FirstName);
-            response.LastName.IsEqual(payload.LastName);
             response.Email.IsEqual(payload.Email);
         }
 

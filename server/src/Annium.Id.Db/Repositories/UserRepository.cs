@@ -67,8 +67,6 @@ namespace Annium.Id.Db
                     {
                         Login = entity.Login,
                             PasswordHash = entity.PasswordHash,
-                            FirstName = entity.FirstName,
-                            LastName = entity.LastName,
                             Email = entity.Email,
                     }
                 );

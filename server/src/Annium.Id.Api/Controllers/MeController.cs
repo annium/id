@@ -64,8 +64,6 @@ namespace Annium.Id.Api.Controllers
             var user = new User(
                 userPayload.Login,
                 passwordHash,
-                userPayload.FirstName,
-                userPayload.LastName,
                 userPayload.Email
             );
 
@@ -154,8 +152,6 @@ namespace Annium.Id.Api.Controllers
 
             user.Login = userPayload.Login;
             user.PasswordHash = securityManager.Hash(userPayload.Password);
-            user.FirstName = userPayload.FirstName;
-            user.LastName = userPayload.LastName;
             user.Email = userPayload.Email;
 
             user = await userRepository.UpdateAsync(user);

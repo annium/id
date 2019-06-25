@@ -10,24 +10,16 @@ namespace Annium.Id.Db
 
         public string PasswordHash { get; set; }
 
-        public string FirstName { get; set; }
-
-        public string LastName { get; set; }
-
         public string Email { get; set; }
 
         public User(
             string login,
             string passwordHash,
-            string firstName,
-            string lastName,
             string email
         )
         {
             Login = login;
             PasswordHash = passwordHash;
-            FirstName = firstName;
-            LastName = lastName;
             Email = email;
         }
 
@@ -35,10 +27,8 @@ namespace Annium.Id.Db
             Guid id,
             string login,
             string passwordHash,
-            string firstName,
-            string lastName,
             string email
-        ) : this(login, passwordHash, firstName, lastName, email)
+        ) : this(login, passwordHash, email)
         {
             Id = id;
         }

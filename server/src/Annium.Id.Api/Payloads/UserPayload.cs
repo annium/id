@@ -14,14 +14,6 @@ namespace Annium.Id.Api.Payloads
 
         [Required(ErrorMessage = Annotations.Required)]
         [StringLength(100, MinimumLength = 3, ErrorMessage = Annotations.StringLength)]
-        public string FirstName { get; set; }
-
-        [Required(ErrorMessage = Annotations.Required)]
-        [StringLength(100, MinimumLength = 3, ErrorMessage = Annotations.StringLength)]
-        public string LastName { get; set; }
-
-        [Required(ErrorMessage = Annotations.Required)]
-        [StringLength(100, MinimumLength = 3, ErrorMessage = Annotations.StringLength)]
         public string Email { get; set; }
     }
 }
