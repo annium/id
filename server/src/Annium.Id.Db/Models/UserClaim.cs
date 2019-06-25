@@ -5,9 +5,7 @@ namespace Annium.Id.Db
     public class UserClaim
     {
         public Guid UserId { get; }
-
         public Guid ClaimId { get; }
-
         public string Value { get; set; }
 
         public UserClaim(

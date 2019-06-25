@@ -8,69 +8,37 @@ namespace Annium.Id.Db.Entities
     internal class Context : DbContext, IContext
     {
         public virtual DbSet<App> AppsSet { get; set; }
-
         public ITable<App> Apps => AppsSet.ToLinqToDBTable();
-
         public virtual DbSet<Claim> ClaimsSet { get; set; }
-
         public ITable<Claim> Claims => ClaimsSet.ToLinqToDBTable();
-
         public virtual DbSet<Company> CompaniesSet { get; set; }
-
         public ITable<Company> Companies => CompaniesSet.ToLinqToDBTable();
-
         public virtual DbSet<CompanyClaim> CompanyClaimsSet { get; set; }
-
         public ITable<CompanyClaim> CompanyClaims => CompanyClaimsSet.ToLinqToDBTable();
-
         public virtual DbSet<CompanyRole> CompanyRolesSet { get; set; }
-
         public ITable<CompanyRole> CompanyRoles => CompanyRolesSet.ToLinqToDBTable();
-
         public virtual DbSet<CompanyRoleClaim> CompanyRoleClaimsSet { get; set; }
-
         public ITable<CompanyRoleClaim> CompanyRoleClaims => CompanyRoleClaimsSet.ToLinqToDBTable();
-
         public virtual DbSet<CompanyUser> CompanyUsersSet { get; set; }
-
         public ITable<CompanyUser> CompanyUsers => CompanyUsersSet.ToLinqToDBTable();
-
         public virtual DbSet<CompanyUserClaim> CompanyUserClaimsSet { get; set; }
-
         public ITable<CompanyUserClaim> CompanyUserClaims => CompanyUserClaimsSet.ToLinqToDBTable();
-
         public virtual DbSet<CompanyUserRole> CompanyUserRolesSet { get; set; }
-
         public ITable<CompanyUserRole> CompanyUserRoles => CompanyUserRolesSet.ToLinqToDBTable();
-
         public virtual DbSet<Role> RolesSet { get; set; }
-
         public ITable<Role> Roles => RolesSet.ToLinqToDBTable();
-
         public virtual DbSet<RoleClaim> RoleClaimsSet { get; set; }
-
         public ITable<RoleClaim> RoleClaims => RoleClaimsSet.ToLinqToDBTable();
-
         public virtual DbSet<User> UsersSet { get; set; }
-
         public ITable<User> Users => UsersSet.ToLinqToDBTable();
-
         public virtual DbSet<UserClaim> UserClaimsSet { get; set; }
-
         public ITable<UserClaim> UserClaims => UserClaimsSet.ToLinqToDBTable();
-
         public virtual DbSet<UserLogin> UserLoginsSet { get; set; }
-
         public ITable<UserLogin> UserLogins => UserLoginsSet.ToLinqToDBTable();
-
         public virtual DbSet<UserRole> UserRolesSet { get; set; }
-
         public ITable<UserRole> UserRoles => UserRolesSet.ToLinqToDBTable();
-
         public Context(DbContextOptions contextOptions) : base(contextOptions) { }
-
         public DataConnection GetDataConnection() => this.CreateLinqToDbConnection();
-
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<App>()

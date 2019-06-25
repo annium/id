@@ -9,7 +9,6 @@ namespace Annium.Id.Db
     internal class CompanyRepository : ICompanyRepository
     {
         private readonly Entities.IContext context;
-
         private readonly IMapper mapper;
 
         public CompanyRepository(

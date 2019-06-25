@@ -5,11 +5,8 @@ namespace Annium.Id.Db
     public class User
     {
         public Guid Id { get; }
-
         public string Login { get; set; }
-
         public string PasswordHash { get; set; }
-
         public string Email { get; set; }
 
         public User(

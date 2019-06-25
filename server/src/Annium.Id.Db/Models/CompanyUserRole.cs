@@ -5,9 +5,7 @@ namespace Annium.Id.Db
     public class CompanyUserRole
     {
         public Guid CompanyId { get; }
-
         public Guid UserId { get; }
-
         public Guid RoleId { get; }
 
         public CompanyUserRole(

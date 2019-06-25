@@ -6,13 +6,9 @@ namespace Annium.Id.Db
     public class CompanyRole
     {
         public Guid Id { get; }
-
         public Guid AppId { get; }
-
         public string Key { get; set; }
-
         public string Name { get; set; }
-
         public IEnumerable<ClaimValue> Claims { get; }
 
         public CompanyRole(

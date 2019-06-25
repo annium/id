@@ -9,13 +9,10 @@ namespace Annium.Id.Db.Entities
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
         public Guid Id { get; set; }
-
         [Required]
         public string Login { get; set; }
-
         [Required]
         public string PasswordHash { get; set; }
-
         [Required]
         public string Email { get; set; }
     }

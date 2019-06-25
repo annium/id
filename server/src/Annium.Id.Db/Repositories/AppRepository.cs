@@ -9,7 +9,6 @@ namespace Annium.Id.Db
     internal class AppRepository : IAppRepository
     {
         private readonly Entities.IContext context;
-
         private readonly IMapper mapper;
 
         public AppRepository(

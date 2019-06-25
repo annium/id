@@ -6,17 +6,11 @@ namespace Annium.Id.Db
     public class UserLogin
     {
         public Guid Id { get; }
-
         public Guid UserId { get; }
-
         public Instant LoggedAt { get; }
-
         public string IPAddress { get; }
-
         public string Client { get; }
-
         public Guid RefreshToken { get; set; }
-
         public Instant RefreshTokenExpires { get; set; }
 
         public UserLogin(

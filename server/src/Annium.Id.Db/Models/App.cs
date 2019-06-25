@@ -5,13 +5,9 @@ namespace Annium.Id.Db
     public class App
     {
         public Guid Id { get; }
-
         public Guid OwnerId { get; set; }
-
         public string Key { get; set; }
-
         public string Name { get; set; }
-
         public Guid ApiToken { get; set; }
 
         public App(

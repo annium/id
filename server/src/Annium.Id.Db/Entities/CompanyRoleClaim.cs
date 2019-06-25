@@ -9,10 +9,8 @@ namespace Annium.Id.Db.Entities
     {
         [Required]
         public Guid RoleId { get; set; }
-
         [Required]
         public Guid ClaimId { get; set; }
-
         [Required]
         public string Value { get; set; }
     }

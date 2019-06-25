@@ -5,11 +5,8 @@ namespace Annium.Id.Db
     public class ClaimValue
     {
         public Guid Id { get; }
-
         public string Key { get; }
-
         public string Name { get; }
-
         public string Value { get; }
 
         public ClaimValue(

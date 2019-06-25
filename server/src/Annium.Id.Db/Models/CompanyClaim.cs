@@ -5,11 +5,8 @@ namespace Annium.Id.Db
     public class CompanyClaim
     {
         public Guid Id { get; }
-
         public Guid AppId { get; }
-
         public string Key { get; set; }
-
         public string Name { get; set; }
 
         public CompanyClaim(

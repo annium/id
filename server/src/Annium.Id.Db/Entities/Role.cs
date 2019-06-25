@@ -10,16 +10,12 @@ namespace Annium.Id.Db.Entities
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
         public Guid Id { get; set; }
-
         [Required]
         public Guid AppId { get; set; }
-
         [Required]
         public string Key { get; set; }
-
         [Required]
         public string Name { get; set; }
-
         public List<ClaimValue> Claims { get; set; }
     }
 }

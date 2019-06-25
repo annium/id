@@ -9,7 +9,6 @@ namespace Annium.Id.Db
     internal class UserLoginRepository : IUserLoginRepository
     {
         private readonly Entities.IContext context;
-
         private readonly IMapper mapper;
 
         public UserLoginRepository(

@@ -8,7 +8,6 @@ namespace Annium.Id.Db
     internal class UserRoleRepository : IUserRoleRepository
     {
         private readonly Entities.IContext context;
-
         private readonly IMapper mapper;
 
         public UserRoleRepository(
