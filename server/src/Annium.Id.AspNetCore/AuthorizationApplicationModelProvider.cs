@@ -47,7 +47,7 @@ namespace Annium.Id.AspNetCore
 
         private void ProcessActionModel(ActionModel actionModel)
         {
-            var attribute = actionModel.Attributes.OfType<AuthorizeIdAttribute>().FirstOrDefault();
+            var attribute = actionModel.Attributes.OfType<AuthorizeAttribute>().FirstOrDefault();
 
             //if no Authorize attribute - no filter needed
             if (attribute == null)

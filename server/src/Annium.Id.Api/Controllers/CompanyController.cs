@@ -35,7 +35,7 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpPut]
-        [AuthorizeId]
+        [Authorize]
         public async Task<IActionResult> RegisterCompanyAsync([FromBody] CompanyPayload companyPayload)
         {
             if (!ModelState.IsValid)
@@ -83,7 +83,7 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpPost("{companyId:guid}")]
-        [AuthorizeId]
+        [Authorize]
         public async Task<IActionResult> UpdateCompanyAsync(Guid companyId, [FromBody] CompanyPayload companyPayload)
         {
             if (!ModelState.IsValid)
@@ -112,7 +112,7 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpPost("{companyId:guid}/owner/{userId:guid}")]
-        [AuthorizeId]
+        [Authorize]
         public async Task<IActionResult> SetCompanyOwnerAsync(Guid companyId, Guid userId)
         {
             var(company, result) = await VerifyCompanyOwnerAsync(companyId, "change company owner");
@@ -131,7 +131,7 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpDelete("{companyId:guid}")]
-        [AuthorizeId]
+        [Authorize]
         public async Task<IActionResult> UnregisterCompanyAsync(Guid companyId)
         {
             var(company, result) = await VerifyCompanyOwnerAsync(companyId, "delete company");

@@ -32,7 +32,7 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpPut]
-        [AuthorizeId]
+        [Authorize]
         public async Task<IActionResult> CreateClaimAsync(Guid appId, [FromBody] ClaimPayload claimPayload)
         {
             if (!ModelState.IsValid)
@@ -57,7 +57,7 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpGet]
-        [AuthorizeId]
+        [Authorize]
         public async Task<IActionResult> ListClaimsAsync(Guid appId)
         {
             var(app, result) = await VerifyAppAsync(appId);
@@ -70,7 +70,7 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpPost("{claimId:guid}")]
-        [AuthorizeId]
+        [Authorize]
         public async Task<IActionResult> UpdateClaimAsync(Guid appId, Guid claimId, [FromBody] ClaimPayload claimPayload)
         {
             if (!ModelState.IsValid)
@@ -92,7 +92,7 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpDelete("{claimId:guid}")]
-        [AuthorizeId]
+        [Authorize]
         public async Task<IActionResult> DeleteClaimAsync(Guid appId, Guid claimId)
         {
             var(app, claim, result) = await VerifyAppOwnerClaimAsync(appId, claimId, "delete claim");

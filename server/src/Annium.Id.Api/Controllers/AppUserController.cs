@@ -43,7 +43,7 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpPut("roles/{roleId:guid}")]
-        [AuthorizeId]
+        [Authorize]
         public async Task<IActionResult> AddRoleToUserAsync(Guid appId, Guid userId, Guid roleId)
         {
             var(app, user, role, result) = await VerifyAppOwnerUserRoleAsync(appId, userId, roleId, "add role to user");
@@ -58,7 +58,7 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpDelete("roles/{roleId:guid}")]
-        [AuthorizeId]
+        [Authorize]
         public async Task<IActionResult> DeleteRoleFromUserAsync(Guid appId, Guid userId, Guid roleId)
         {
             var(app, user, role, result) = await VerifyAppOwnerUserRoleAsync(appId, userId, roleId, "delete role from user");
@@ -71,7 +71,7 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpPost("claims/{claimId:guid}")]
-        [AuthorizeId]
+        [Authorize]
         public async Task<IActionResult> AddClaimToUserAsync(Guid appId, Guid userId, Guid claimId, [FromBody] ClaimValuePayload valuePayload)
         {
             if (!ModelState.IsValid)
@@ -89,7 +89,7 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpDelete("claims/{claimId:guid}")]
-        [AuthorizeId]
+        [Authorize]
         public async Task<IActionResult> DeleteClaimFromUserAsync(Guid appId, Guid userId, Guid claimId)
         {
             var(app, user, claim, result) = await VerifyAppOwnerUserClaimAsync(appId, userId, claimId, "delete claim from user");

@@ -71,7 +71,7 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpGet]
-        [AuthorizeId]
+        [Authorize]
         public async Task<IActionResult> GetUserAsync()
         {
             var user = await userRepository.GetByIdAsync(this.GetId().UserId);
@@ -108,7 +108,7 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpPost("logout")]
-        [AuthorizeId]
+        [Authorize]
         public async Task<IActionResult> LogoutAsync()
         {
             var loginId = this.GetId().LoginId;
@@ -134,7 +134,7 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpPost]
-        [AuthorizeId]
+        [Authorize]
         public async Task<IActionResult> UpdateUserAsync([FromBody] UserPayload userPayload)
         {
             if (!ModelState.IsValid)
@@ -158,7 +158,7 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpDelete]
-        [AuthorizeId]
+        [Authorize]
         public async Task<IActionResult> UnregisterUserAsync()
         {
             var userId = this.GetId().UserId;

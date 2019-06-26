@@ -32,7 +32,7 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpPut]
-        [AuthorizeId]
+        [Authorize]
         public async Task<IActionResult> CreateAppAsync([FromBody] AppPayload appPayload)
         {
             if (!ModelState.IsValid)
@@ -54,7 +54,7 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpGet("{appId:guid}/token")]
-        [AuthorizeId]
+        [Authorize]
         public async Task<IActionResult> GetAppApiTokenAsync(Guid appId)
         {
             var(app, result) = await VerifyAppOwnerAsync(appId, "get api token");
@@ -65,7 +65,7 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpPost("{appId:guid}/token")]
-        [AuthorizeId]
+        [Authorize]
         public async Task<IActionResult> UpdateAppApiTokenAsync(Guid appId)
         {
             var(app, result) = await VerifyAppOwnerAsync(appId, "update api token");
@@ -87,7 +87,7 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpPost("{appId:guid}")]
-        [AuthorizeId]
+        [Authorize]
         public async Task<IActionResult> UpdateAppAsync(Guid appId, [FromBody] AppPayload appPayload)
         {
             if (!ModelState.IsValid)
@@ -109,7 +109,7 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpPost("{appId:guid}/owner/{userId:guid}")]
-        [AuthorizeId]
+        [Authorize]
         public async Task<IActionResult> SetAppOwnerAsync(Guid appId, Guid userId)
         {
             var(app, result) = await VerifyAppOwnerAsync(appId, "set application owner");
@@ -128,7 +128,7 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpDelete("{appId:guid}")]
-        [AuthorizeId]
+        [Authorize]
         public async Task<IActionResult> DeleteAppAsync(Guid appId)
         {
             var(app, result) = await VerifyAppOwnerAsync(appId, "delete application");

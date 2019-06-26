@@ -47,7 +47,7 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpPut]
-        [AuthorizeId]
+        [Authorize]
         public async Task<IActionResult> AddUserToCompanyAsync(Guid companyId, Guid userId)
         {
             var(company, user, result) = await VerifyCompanyOwnerUserAsync(companyId, userId, "add user to company");
@@ -60,7 +60,7 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpPost("roles/{roleId:guid}")]
-        [AuthorizeId]
+        [Authorize]
         public async Task<IActionResult> AddRoleToCompanyUserAsync(Guid companyId, Guid userId, Guid roleId)
         {
             var(company, user, role, result) = await VerifyCompanyOwnerMemberRoleAsync(companyId, userId, roleId, "add role to company member");
@@ -73,7 +73,7 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpDelete("roles/{roleId:guid}")]
-        [AuthorizeId]
+        [Authorize]
         public async Task<IActionResult> DeleteRoleFromCompanyUserAsync(Guid companyId, Guid userId, Guid roleId)
         {
             var(company, user, role, result) = await VerifyCompanyOwnerMemberRoleAsync(companyId, userId, roleId, "delete role from company member");
@@ -86,7 +86,7 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpPost("claims/{claimId:guid}")]
-        [AuthorizeId]
+        [Authorize]
         public async Task<IActionResult> AddClaimToCompanyUserAsync(Guid companyId, Guid userId, Guid claimId, [FromBody] ClaimValuePayload claimValuePayload)
         {
             if (!ModelState.IsValid)
@@ -102,7 +102,7 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpDelete("claims/{claimId:guid}")]
-        [AuthorizeId]
+        [Authorize]
         public async Task<IActionResult> DeleteClaimFromCompanyUserAsync(Guid companyId, Guid userId, Guid claimId)
         {
             var(company, user, claim, result) = await VerifyCompanyOwnerMemberClaimAsync(companyId, userId, claimId, "delete claim from company member");
@@ -115,7 +115,7 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpDelete]
-        [AuthorizeId]
+        [Authorize]
         public async Task<IActionResult> DeleteUserFromCompanyAsync(Guid companyId, Guid userId)
         {
             var(company, user, result) = await VerifyCompanyOwnerUserAsync(companyId, userId, "delete user from company");

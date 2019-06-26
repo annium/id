@@ -3,13 +3,13 @@ using System;
 namespace Annium.Id.AspNetCore
 {
     [AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public class AuthorizeIdAttribute : Attribute
+    public class AuthorizeAttribute : Attribute
     {
         public string PolicyName { get; }
 
-        public AuthorizeIdAttribute() { }
+        public AuthorizeAttribute() { }
 
-        public AuthorizeIdAttribute(string policyName)
+        public AuthorizeAttribute(string policyName)
         {
             PolicyName = policyName;
         }
