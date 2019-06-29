@@ -7,12 +7,9 @@ using Annium.Id.Api.Views;
 
 namespace Annium.Id.Api.IntegrationTests
 {
-    public class IntegrationTestBase : IntegrationTest<Startup<Api.TestServicePack>>
+    public class IntegrationTestBase : IntegrationTest
     {
-        public IntegrationTestBase()
-        {
-            Configure(request => request);
-        }
+        protected IRequest http => GetRequest<Startup<Api.TestServicePack>>();
 
         protected async Task<UserPrivateView> RegisterAsync(
             string login = "demo",

@@ -18,17 +18,10 @@
         <ProjectReference Include="../Annium.Id.Db/Annium.Id.Db.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Annium.AspNetCore.Extensions" Version="0.1.0" />
-        <PackageReference Include="Annium.Extensions.Configuration" Version="0.1.0" />
-        <PackageReference Include="Annium.Extensions.DependencyInjection" Version="0.1.0" />
         <PackageReference Include="Annium.Extensions.Localization" Version="0.1.0" />
-        <PackageReference Include="MessagePack" Version="1.7.3" />
-        <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
-        <PackageReference Include="NodaTime" Version="2.4.5" />
         <PackageReference Include="NodaTime.Serialization.JsonNet" Version="2.2.0" />
         <PackageReference Include="NSwag.AspNetCore" Version="13.0.2" />
-        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.4.0" />
     </ItemGroup>
 </Project>
