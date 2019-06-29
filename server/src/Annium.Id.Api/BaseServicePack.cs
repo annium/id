@@ -14,7 +14,6 @@ namespace Annium.Id.Api
             services.AddSingleton<Func<Instant>>(() => SystemClock.Instance.GetCurrentInstant());
 
             // auth
-            services.AddAppAuthorization();
             services.AddIdAuthorization();
 
             // helpers
