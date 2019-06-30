@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using NodaTime;
 
-namespace Annium.Id.Db
+namespace Annium.Id.Db.Repositories
 {
     public interface IUserLoginRepository
     {

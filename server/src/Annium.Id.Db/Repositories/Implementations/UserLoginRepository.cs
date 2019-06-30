@@ -4,7 +4,7 @@ using Annium.Extensions.Mapper;
 using LinqToDB;
 using NodaTime;
 
-namespace Annium.Id.Db
+namespace Annium.Id.Db.Repositories.Implementations
 {
     internal class UserLoginRepository : IUserLoginRepository
     {

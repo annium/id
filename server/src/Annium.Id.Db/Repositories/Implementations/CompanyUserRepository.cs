@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Annium.Extensions.Mapper;
 using LinqToDB;
 
-namespace Annium.Id.Db
+namespace Annium.Id.Db.Repositories.Implementations
 {
     internal class CompanyUserRepository : ICompanyUserRepository
     {

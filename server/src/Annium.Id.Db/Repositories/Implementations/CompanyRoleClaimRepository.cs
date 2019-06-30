@@ -3,14 +3,14 @@ using System.Threading.Tasks;
 using Annium.Extensions.Mapper;
 using LinqToDB;
 
-namespace Annium.Id.Db
+namespace Annium.Id.Db.Repositories.Implementations
 {
-    internal class RoleClaimRepository : IRoleClaimRepository
+    internal class CompanyRoleClaimRepository : ICompanyRoleClaimRepository
     {
         private readonly Entities.IContext context;
         private readonly IMapper mapper;
 
-        public RoleClaimRepository(
+        public CompanyRoleClaimRepository(
             Entities.IContext context,
             IMapper mapper
         )
@@ -19,21 +19,21 @@ namespace Annium.Id.Db
             this.mapper = mapper;
         }
 
-        public async Task<RoleClaim> SaveAsync(RoleClaim claim)
+        public async Task<CompanyRoleClaim> SaveAsync(CompanyRoleClaim claim)
         {
-            var entity = mapper.Map<Entities.RoleClaim>(claim);
+            var entity = mapper.Map<Entities.CompanyRoleClaim>(claim);
 
             using(var db = context.GetDataConnection())
             {
                 await db.InsertOrReplaceAsync(entity);
             }
 
-            return mapper.Map<RoleClaim>(entity);
+            return mapper.Map<CompanyRoleClaim>(entity);
         }
 
         public Task DeleteByIdAsync(Guid roleId, Guid claimId)
         {
-            return context.RoleClaims.DeleteAsync(rc => rc.RoleId == roleId && rc.ClaimId == claimId);
+            return context.CompanyRoleClaims.DeleteAsync(rc => rc.RoleId == roleId && rc.ClaimId == claimId);
         }
     }
 }

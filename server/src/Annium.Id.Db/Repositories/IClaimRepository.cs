@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Annium.Id.Db
+namespace Annium.Id.Db.Repositories
 {
     public interface IClaimRepository
     {
