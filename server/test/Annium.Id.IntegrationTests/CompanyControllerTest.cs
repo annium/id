@@ -14,7 +14,7 @@ namespace Annium.Id.IntegrationTests
         public async Task Create_InvalidPayload_BadRequest()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
             var payload = new CompanyPayload() { Key = "de", Name = "Demo Company" };
 
             // act
@@ -28,7 +28,7 @@ namespace Annium.Id.IntegrationTests
         public async Task Create_MissingParent_NotFound()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
             var payload = new CompanyPayload() { ParentId = Guid.NewGuid(), Key = "demo", Name = "Demo Company" };
             await id.Put("/companies").BearerAuthorization(tokens.AccessToken).JsonContent(payload).RunAsync();
 
@@ -43,7 +43,7 @@ namespace Annium.Id.IntegrationTests
         public async Task Create_NonUniqueKey_Conflict()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
             var payload = new CompanyPayload() { Key = "demo", Name = "Demo Company" };
             await id.Put("/companies").BearerAuthorization(tokens.AccessToken).JsonContent(payload).RunAsync();
 
@@ -58,23 +58,24 @@ namespace Annium.Id.IntegrationTests
         public async Task Create_ValidPayload_Ok()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
-            var payload = new CompanyPayload() { Key = "demo", Name = "Demo Company" };
+            var(user, tokens) = await LoginUserAsync();
+            var companyKey = "demo";
+            var companyName = "Demo Company";
 
             // act
-            var company = await id.Put("/companies").BearerAuthorization(tokens.AccessToken).JsonContent(payload).AsAsync<CompanyPrivateView>();
+            var company = await CreateCompanyAsync(tokens.AccessToken, companyKey, companyName);
 
             // assert
             company.Id.IsNotDefault();
-            company.Key.IsEqual(payload.Key);
-            company.Name.IsEqual(payload.Name);
+            company.Key.IsEqual(companyKey);
+            company.Name.IsEqual(companyName);
         }
 
         [Fact]
         public async Task GetInfo_MissingCompany_NotFound()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
 
             // act
             var response = await id.Get($"/companies/{Guid.NewGuid()}").RunAsync();
@@ -87,7 +88,7 @@ namespace Annium.Id.IntegrationTests
         public async Task GetInfo_Valid_Ok()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
             var company = await CreateCompanyAsync(tokens.AccessToken);
 
             // act
@@ -101,7 +102,7 @@ namespace Annium.Id.IntegrationTests
         public async Task GetUsers_MissingCompany_NotFound()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
 
             // act
             var response = await id.Get($"/companies/{Guid.NewGuid()}/users").RunAsync();
@@ -114,21 +115,24 @@ namespace Annium.Id.IntegrationTests
         public async Task GetUsers_Valid_Ok()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
             var company = await CreateCompanyAsync(tokens.AccessToken);
+            await AddUserToCompanyAsync(tokens.AccessToken, company.Id, user.Id);
 
             // act
             var response = await id.Get($"/companies/{company.Id}/users").BearerAuthorization(tokens.AccessToken).AsAsync<UserPublicView[]>();
 
             // assert
-            response.IsEmpty();
+            response.Has(1);
+            response.At(0).Id.IsEqual(user.Id);
+            response.At(0).Login.IsEqual(user.Login);
         }
 
         [Fact]
         public async Task Update_IncorrectPayload_BadRequest()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
             var company = await CreateCompanyAsync(tokens.AccessToken);
             var u = new CompanyPayload { Key = "demo" };
 
@@ -143,7 +147,7 @@ namespace Annium.Id.IntegrationTests
         public async Task Update_MissingCompany_NotFound()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
             var u = new CompanyPayload { Key = "demo", Name = "Demo Company" };
 
             // act
@@ -157,9 +161,9 @@ namespace Annium.Id.IntegrationTests
         public async Task Update_NotOwner_Forbidden()
         {
             // arrange
-            var(owner, ownerTokens) = await LoginAsync("owner", "superpass", "some@email.com");
+            var(owner, ownerTokens) = await LoginUserAsync("owner", "superpass", "some@email.com");
             var company = await CreateCompanyAsync(ownerTokens.AccessToken);
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
             var u = new CompanyPayload { Key = "demo", Name = "Demo Company" };
 
             // act
@@ -173,7 +177,7 @@ namespace Annium.Id.IntegrationTests
         public async Task Update_MissingParent_NotFound()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
             var company = await CreateCompanyAsync(tokens.AccessToken);
             var u = new CompanyPayload { ParentId = Guid.NewGuid(), Key = "demo", Name = "Demo Company" };
 
@@ -188,7 +192,7 @@ namespace Annium.Id.IntegrationTests
         public async Task Update_KeyIsNotUnique_Conflict()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
             var company1 = await CreateCompanyAsync(tokens.AccessToken);
             var company2 = await CreateCompanyAsync(tokens.AccessToken, "medo");
             var u = new CompanyPayload { Key = "demo", Name = "Some" };
@@ -204,7 +208,7 @@ namespace Annium.Id.IntegrationTests
         public async Task Update_Valid_Ok()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
             var company = await CreateCompanyAsync(tokens.AccessToken);
             var u = new CompanyPayload { Key = "medo", Name = "Medo Company" };
 
@@ -221,7 +225,7 @@ namespace Annium.Id.IntegrationTests
         public async Task SetOwner_MissingCompany_NotFound()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
 
             // act
             var response = await id.Post($"/companies/{Guid.NewGuid()}/owner/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
@@ -234,9 +238,9 @@ namespace Annium.Id.IntegrationTests
         public async Task SetOwner_NotOwner_Forbidden()
         {
             // arrange
-            var(owner, ownerTokens) = await LoginAsync("owner", "superpass", "some@email.com");
+            var(owner, ownerTokens) = await LoginUserAsync("owner", "superpass", "some@email.com");
             var company = await CreateCompanyAsync(ownerTokens.AccessToken);
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
 
             // act
             var response = await id.Post($"/companies/{company.Id}/owner/{user.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
@@ -249,7 +253,7 @@ namespace Annium.Id.IntegrationTests
         public async Task SetOwner_MissingSuccessor_NotFound()
         {
             // arrange
-            var(owner, ownerTokens) = await LoginAsync("owner", "superpass", "some@email.com");
+            var(owner, ownerTokens) = await LoginUserAsync("owner", "superpass", "some@email.com");
             var company = await CreateCompanyAsync(ownerTokens.AccessToken);
 
             // act
@@ -263,9 +267,9 @@ namespace Annium.Id.IntegrationTests
         public async Task SetOwner_Valid_Ok()
         {
             // arrange
-            var(owner, ownerTokens) = await LoginAsync("owner", "superpass", "some@email.com");
+            var(owner, ownerTokens) = await LoginUserAsync("owner", "superpass", "some@email.com");
             var company = await CreateCompanyAsync(ownerTokens.AccessToken);
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
 
             // act
             company = await id.Post($"/companies/{company.Id}/owner/{user.Id}").BearerAuthorization(ownerTokens.AccessToken).AsAsync<CompanyPrivateView>();
@@ -278,7 +282,7 @@ namespace Annium.Id.IntegrationTests
         public async Task Delete_MissingCompany_NotFound()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
 
             // act
             var response = await id.Delete($"/companies/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
@@ -291,9 +295,9 @@ namespace Annium.Id.IntegrationTests
         public async Task Delete_NotOwner_Forbidden()
         {
             // arrange
-            var(owner, ownerTokens) = await LoginAsync("owner", "superpass", "some@email.com");
+            var(owner, ownerTokens) = await LoginUserAsync("owner", "superpass", "some@email.com");
             var company = await CreateCompanyAsync(ownerTokens.AccessToken);
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
 
             // act
             var response = await id.Delete($"/companies/{company.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
@@ -306,7 +310,7 @@ namespace Annium.Id.IntegrationTests
         public async Task Delete_Valid_Ok()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
             var company = await CreateCompanyAsync(tokens.AccessToken);
 
             // act

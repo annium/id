@@ -27,10 +27,8 @@ namespace Annium.Id.AspNetCore.Pipeline
 
         public void OnActionExecuting(ActionExecutingContext context)
         {
-            Console.WriteLine($"Executing policy");
             if (!context.ActionDescriptor.Properties.ContainsKey(Constants.IdAppTokenProperty))
             {
-                Console.WriteLine($"Context misses id app token");
                 context.Result = new ObjectResult(Result.Failure().Error("Access policy violation")) { StatusCode = (int) HttpStatusCode.Forbidden };
                 return;
             }
@@ -39,14 +37,12 @@ namespace Annium.Id.AspNetCore.Pipeline
 
             try
             {
-                Console.WriteLine($"Execute policy with: {Environment.NewLine}{string.Join(Environment.NewLine,arguments.Select(a=>JsonConvert.SerializeObject(a)))}");
                 var result = (bool) policy.Handle.DynamicInvoke(arguments);
                 if (!result)
                     context.Result = new ObjectResult(Result.Failure().Error("Access policy violation")) { StatusCode = (int) HttpStatusCode.Forbidden };
             }
             catch (TargetInvocationException ex)
             {
-                Console.WriteLine($"Policy execution failed");
                 throw ex.InnerException;
             }
         }

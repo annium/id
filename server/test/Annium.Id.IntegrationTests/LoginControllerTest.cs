@@ -14,7 +14,7 @@ namespace Annium.Id.IntegrationTests
         public async Task LoginAsync_BadPayload_BadRequest()
         {
             // arrange
-            var user = await RegisterAsync();
+            var user = await RegisterUserAsync();
             var payload = new UserLoginPayload { Login = "uniquelogin", Password = "asda" };
 
             // act
@@ -28,7 +28,7 @@ namespace Annium.Id.IntegrationTests
         public async Task LoginAsync_InvalidLogin_Forbidden()
         {
             // arrange
-            var user = await RegisterAsync();
+            var user = await RegisterUserAsync();
             var payload = new UserLoginPayload { Login = "uniquelogin", Password = "asdaasda" };
 
             // act
@@ -42,7 +42,7 @@ namespace Annium.Id.IntegrationTests
         public async Task LoginAsync_InvalidPassword_Forbidden()
         {
             // arrange
-            var user = await RegisterAsync();
+            var user = await RegisterUserAsync();
             var payload = new UserLoginPayload { Login = "demo", Password = "asdaasda" };
 
             // act
@@ -56,7 +56,7 @@ namespace Annium.Id.IntegrationTests
         public async Task LoginAsync_Valid_Ok()
         {
             // arrange
-            var user = await RegisterAsync();
+            var user = await RegisterUserAsync();
             var payload = new UserLoginPayload { Login = "demo", Password = "testtest" };
 
             // act
@@ -70,7 +70,7 @@ namespace Annium.Id.IntegrationTests
         public async Task Logout_Ok()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
 
             // act
             var response = await id.Post("/me/logout").BearerAuthorization(tokens.AccessToken).RunAsync();
@@ -83,7 +83,7 @@ namespace Annium.Id.IntegrationTests
         public async Task UpdateToken_InvalidToken_Forbidden()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
 
             // act
             var response = await id.Post("/me/token").Param("refreshToken", Guid.NewGuid()).RunAsync();
@@ -96,7 +96,7 @@ namespace Annium.Id.IntegrationTests
         public async Task UpdateToken_ValidToken_Ok()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
 
             // act
             var response = await id.Post("/me/token").Param("refreshToken", tokens.RefreshToken).AsAsync<UserTokenView>();
@@ -110,7 +110,7 @@ namespace Annium.Id.IntegrationTests
         public async Task LoginAppAsync_BadPayload_BadRequest()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
             var payload = new UserLoginPayload { Login = "uniquelogin", Password = "asda" };
 
@@ -125,7 +125,7 @@ namespace Annium.Id.IntegrationTests
         public async Task LoginAppAsync_InvalidLogin_Forbidden()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
             var payload = new UserLoginPayload { Login = "uniquelogin", Password = "asdaasda" };
 
@@ -140,7 +140,7 @@ namespace Annium.Id.IntegrationTests
         public async Task LoginAppAsync_InvalidPassword_Forbidden()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
             var payload = new UserLoginPayload { Login = "demo", Password = "asdaasda" };
 
@@ -155,7 +155,7 @@ namespace Annium.Id.IntegrationTests
         public async Task LoginAppAsync_Valid_Ok()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
             var payload = new UserLoginPayload { Login = "demo", Password = "testtest" };
 
@@ -170,7 +170,7 @@ namespace Annium.Id.IntegrationTests
         public async Task LogoutApp_Ok()
         {
             // arrange
-            var(user, app, tokens) = await LoginAppAsync();
+            var(user, app, tokens) = await LoginUserCreateAppLoginAppAsync();
 
             // act
             var response = await id.Post($"/me/apps/{app.Id}/logout").BearerAuthorization(tokens.AccessToken).RunAsync();
@@ -183,7 +183,7 @@ namespace Annium.Id.IntegrationTests
         public async Task UpdateAppToken_InvalidToken_Forbidden()
         {
             // arrange
-            var(user, app, tokens) = await LoginAppAsync();
+            var(user, app, tokens) = await LoginUserCreateAppLoginAppAsync();
 
             // act
             var response = await id.Post($"/me/apps/{app.Id}/token").Param("refreshToken", Guid.NewGuid()).RunAsync();
@@ -196,7 +196,7 @@ namespace Annium.Id.IntegrationTests
         public async Task UpdateAppToken_ValidToken_Ok()
         {
             // arrange
-            var(user, app, tokens) = await LoginAppAsync();
+            var(user, app, tokens) = await LoginUserCreateAppLoginAppAsync();
 
             // act
             var response = await id.Post($"/me/apps/{app.Id}/token").Param("refreshToken", tokens.RefreshToken).AsAsync<UserTokenView>();

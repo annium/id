@@ -27,7 +27,7 @@ namespace Annium.Id.IntegrationTests
         public async Task Register_LoginIsNotUnique_Conflict()
         {
             // arrange
-            var user = await RegisterAsync();
+            var user = await RegisterUserAsync();
             var payload = new UserPayload { Login = user.Login, Password = "asdasdsdd", Email = "asd1@demo.com" };
 
             // act
@@ -41,7 +41,7 @@ namespace Annium.Id.IntegrationTests
         public async Task Register_EmailIsNotUnique_Conflict()
         {
             // arrange
-            var user = await RegisterAsync();
+            var user = await RegisterUserAsync();
             var payload = new UserPayload { Login = "uniquelogin", Password = "asdasdsdd", Email = user.Email };
 
             // act
@@ -55,22 +55,24 @@ namespace Annium.Id.IntegrationTests
         public async Task Register_ValidData_Ok()
         {
             // arrange
-            var payload = new UserPayload { Login = "demo", Password = "testtest", Email = "demo@demo.com" };
+            var login = "demo";
+            var password = "testtest";
+            var email = "demo@demo.com";
 
             // act
-            var response = await id.Put("/me").JsonContent(payload).AsAsync<UserPrivateView>();
+            var response = await RegisterUserAsync(login, password, email);
 
             // assert
             response.Id.IsNotDefault();
-            response.Login.IsEqual(payload.Login);
-            response.Email.IsEqual(payload.Email);
+            response.Login.IsEqual(login);
+            response.Email.IsEqual(email);
         }
 
         [Fact]
         public async Task GetUser_AuthenticatedUser_Ok()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
 
             // act
             var response = await id.Get("/me").BearerAuthorization(tokens.AccessToken).AsAsync<UserPrivateView>();
@@ -83,7 +85,7 @@ namespace Annium.Id.IntegrationTests
         public async Task Update_IncorrectPayload_BadRequest()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
             var payload = new UserPayload { Login = "demo" };
 
             // act
@@ -97,13 +99,12 @@ namespace Annium.Id.IntegrationTests
         public async Task Update_LoginIsNotUnique_Conflict()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
-            var p = new UserPayload { Login = "uniquelogin", Password = "asdasdsdd", Email = "asd1@demo.com" };
-            await id.Put("/me").JsonContent(p).RunAsync();
-            var u = new UserPayload { Login = p.Login, Password = "a96as9da", Email = "asd2@demo.com" };
+            var(user, tokens) = await LoginUserAsync();
+            var other = await RegisterUserAsync("uniquelogin", "asdasdsdd", "asd1@demo.com");
+            var update = new UserPayload { Login = other.Login, Password = "a96as9da", Email = "asd2@demo.com" };
 
             // act
-            var response = await id.Post("/me").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
+            var response = await id.Post("/me").BearerAuthorization(tokens.AccessToken).JsonContent(update).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Conflict);
@@ -113,13 +114,12 @@ namespace Annium.Id.IntegrationTests
         public async Task Update_EmailIsNotUnique_Conflict()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
-            var p = new UserPayload { Login = "uniquelogin", Password = "asdasdsdd", Email = "asd1@demo.com" };
-            await id.Put("/me").JsonContent(p).RunAsync();
-            var u = new UserPayload { Login = "otherlogin", Password = "a96as9da", Email = p.Email };
+            var(user, tokens) = await LoginUserAsync();
+            var other = await RegisterUserAsync("uniquelogin", "asdasdsdd", "asd1@demo.com");
+            var update = new UserPayload { Login = "otherlogin", Password = "a96as9da", Email = other.Email };
 
             // act
-            var response = await id.Post("/me").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
+            var response = await id.Post("/me").BearerAuthorization(tokens.AccessToken).JsonContent(update).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Conflict);
@@ -129,7 +129,7 @@ namespace Annium.Id.IntegrationTests
         public async Task Update_ValidData_Ok()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
             var payload = new UserPayload { Login = "medo", Password = "setsetset", Email = "medo@medo.com" };
 
             // act
@@ -145,7 +145,7 @@ namespace Annium.Id.IntegrationTests
         public async Task Unregister_ValidData_Ok()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
 
             // act
             var response = await id.Delete("/me").BearerAuthorization(tokens.AccessToken).RunAsync();

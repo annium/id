@@ -14,7 +14,7 @@ namespace Annium.Id.IntegrationTests
         public async Task Create_InvalidPayload_BadRequest()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
             var p = new RolePayload() { Key = "one" };
 
             // act
@@ -28,7 +28,7 @@ namespace Annium.Id.IntegrationTests
         public async Task Create_AppMissing_NotFound()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
             var p = new RolePayload() { Key = "one", Name = "First Role" };
 
             // act
@@ -42,9 +42,9 @@ namespace Annium.Id.IntegrationTests
         public async Task Create_NotOwner_Forbidden()
         {
             // arrange
-            var(owner, ownerTokens) = await LoginAsync("owner", "superpass", "some@email.com");
+            var(owner, ownerTokens) = await LoginUserAsync("owner", "superpass", "some@email.com");
             var app = await CreateAppAsync(ownerTokens.AccessToken);
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
             var p = new RolePayload() { Key = "one", Name = "First Role" };
 
             // act
@@ -58,11 +58,12 @@ namespace Annium.Id.IntegrationTests
         public async Task Create_NonUniqueKey_Conflict()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
+            var roleKey = "one";
+            var roleName = "First Role";
+            await CreateCompanyRoleAsync(tokens.AccessToken, app.Id, roleKey, roleName);
             var p = new RolePayload() { Key = "one", Name = "First Role" };
-
-            await id.Put($"/apps/{app.Id}/company-roles").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
 
             // act
             var response = await id.Put($"/apps/{app.Id}/company-roles").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
@@ -75,25 +76,26 @@ namespace Annium.Id.IntegrationTests
         public async Task Create_ValidPayload_Ok()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
-            var p = new RolePayload() { Key = "one", Name = "First Role" };
+            var roleKey = "one";
+            var roleName = "First Role";
 
             // act
-            var role = await id.Put($"/apps/{app.Id}/company-roles").BearerAuthorization(tokens.AccessToken).JsonContent(p).AsAsync<CompanyRoleView>();
+            var role = await CreateCompanyRoleAsync(tokens.AccessToken, app.Id, roleKey, roleName);
 
             // assert
             role.Id.IsNotDefault();
             role.AppId.IsEqual(app.Id);
-            role.Key.IsEqual(p.Key);
-            role.Name.IsEqual(p.Name);
+            role.Key.IsEqual(roleKey);
+            role.Name.IsEqual(roleName);
         }
 
         [Fact]
         public async Task List_MissingApp_NotFound()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
 
             // act
             var response = await id.Get($"/apps/{Guid.NewGuid()}/company-roles").BearerAuthorization(tokens.AccessToken).RunAsync();
@@ -106,13 +108,14 @@ namespace Annium.Id.IntegrationTests
         public async Task List_Ok()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
-            var p = new RolePayload() { Key = "one", Name = "First Role" };
-            var role = await id.Put($"/apps/{app.Id}/company-roles").BearerAuthorization(tokens.AccessToken).JsonContent(p).AsAsync<CompanyRoleView>();
+            var roleKey = "one";
+            var roleName = "First Role";
+            var role = await CreateCompanyRoleAsync(tokens.AccessToken, app.Id, roleKey, roleName);
 
             // act
-            var roles = await id.Get($"/apps/{app.Id}/company-roles").BearerAuthorization(tokens.AccessToken).AsAsync<CompanyRoleView[]>();
+            var roles = await id.Get($"/apps/{app.Id}/company-roles").BearerAuthorization(tokens.AccessToken).AsAsync<RoleView[]>();
 
             // assert
             roles.Has(1);
@@ -124,10 +127,9 @@ namespace Annium.Id.IntegrationTests
         public async Task Update_IncorrectPayload_BadRequest()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
-            var p = new RolePayload() { Key = "one", Name = "First Role" };
-            var role = await id.Put($"/apps/{app.Id}/company-roles").BearerAuthorization(tokens.AccessToken).JsonContent(p).AsAsync<CompanyRoleView>();
+            var role = await CreateCompanyRoleAsync(tokens.AccessToken, app.Id);
             var u = new RolePayload { Key = "one" };
 
             // act
@@ -141,10 +143,9 @@ namespace Annium.Id.IntegrationTests
         public async Task Update_MissingApp_NotFound()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
-            var p = new RolePayload() { Key = "one", Name = "First Role" };
-            var role = await id.Put($"/apps/{app.Id}/company-roles").BearerAuthorization(tokens.AccessToken).JsonContent(p).AsAsync<CompanyRoleView>();
+            var role = await CreateCompanyRoleAsync(tokens.AccessToken, app.Id);
             var u = new RolePayload { Key = "one", Name = "One Role" };
 
             // act
@@ -158,11 +159,10 @@ namespace Annium.Id.IntegrationTests
         public async Task Update_NotOwner_Forbidden()
         {
             // arrange
-            var(owner, ownerTokens) = await LoginAsync("owner", "superpass", "some@email.com");
+            var(owner, ownerTokens) = await LoginUserAsync("owner", "superpass", "some@email.com");
             var app = await CreateAppAsync(ownerTokens.AccessToken);
-            var p = new RolePayload() { Key = "one", Name = "First Role" };
-            var role = await id.Put($"/apps/{app.Id}/company-roles").BearerAuthorization(ownerTokens.AccessToken).JsonContent(p).AsAsync<CompanyRoleView>();
-            var(user, tokens) = await LoginAsync();
+            var role = await CreateCompanyRoleAsync(ownerTokens.AccessToken, app.Id);
+            var(user, tokens) = await LoginUserAsync();
             var u = new RolePayload { Key = "one", Name = "One Role" };
 
             // act
@@ -176,10 +176,8 @@ namespace Annium.Id.IntegrationTests
         public async Task Update_MissingRole_NotFound()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
-            var p = new RolePayload() { Key = "one", Name = "First Role" };
-            var role = await id.Put($"/apps/{app.Id}/company-roles").BearerAuthorization(tokens.AccessToken).JsonContent(p).AsAsync<CompanyRoleView>();
             var u = new RolePayload { Key = "one", Name = "One Role" };
 
             // act
@@ -193,11 +191,10 @@ namespace Annium.Id.IntegrationTests
         public async Task Update_RoleBelongsOtherApp_Forbidden()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
             var app1 = await CreateAppAsync(tokens.AccessToken);
             var app2 = await CreateAppAsync(tokens.AccessToken, "other", "Other App");
-            var p = new RolePayload() { Key = "one", Name = "First Role" };
-            var role = await id.Put($"/apps/{app1.Id}/company-roles").BearerAuthorization(tokens.AccessToken).JsonContent(p).AsAsync<CompanyRoleView>();
+            var role = await CreateCompanyRoleAsync(tokens.AccessToken, app1.Id);
             var u = new RolePayload { Key = "one", Name = "One Role" };
 
             // act
@@ -211,10 +208,9 @@ namespace Annium.Id.IntegrationTests
         public async Task Update_NonUniqueKey_Conflict()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
-            var p = new RolePayload() { Key = "one", Name = "First Role" };
-            var role = await id.Put($"/apps/{app.Id}/company-roles").BearerAuthorization(tokens.AccessToken).JsonContent(p).AsAsync<CompanyRoleView>();
+            var role = await CreateCompanyRoleAsync(tokens.AccessToken, app.Id);
             var u = new RolePayload { Key = "other", Name = "One Role" };
             await id.Put($"/apps/{app.Id}/company-roles").BearerAuthorization(tokens.AccessToken).JsonContent(u).AsAsync<CompanyRoleView>();
 
@@ -229,10 +225,9 @@ namespace Annium.Id.IntegrationTests
         public async Task Update_Valid_Ok()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
-            var p = new RolePayload() { Key = "one", Name = "First Role" };
-            var role = await id.Put($"/apps/{app.Id}/company-roles").BearerAuthorization(tokens.AccessToken).JsonContent(p).AsAsync<CompanyRoleView>();
+            var role = await CreateCompanyRoleAsync(tokens.AccessToken, app.Id);
             var u = new RolePayload { Key = "one", Name = "One Role" };
 
             // act
@@ -247,15 +242,13 @@ namespace Annium.Id.IntegrationTests
         }
 
         [Fact]
-        public async Task AddClaim_IncorrectPayload_BadRequest()
+        public async Task AddClaimToRole_IncorrectPayload_BadRequest()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
-            var role = await id.Put($"/apps/{app.Id}/company-roles").BearerAuthorization(tokens.AccessToken)
-                .JsonContent(new RolePayload() { Key = "one", Name = "First Role" }).AsAsync<CompanyRoleView>();
-            var claim = await id.Put($"/apps/{app.Id}/company-claims").BearerAuthorization(tokens.AccessToken)
-                .JsonContent(new ClaimPayload() { Key = "asdasd", Name = "First Claim" }).AsAsync<CompanyRoleView>();
+            var role = await CreateCompanyRoleAsync(tokens.AccessToken, app.Id);
+            var claim = await CreateCompanyClaimAsync(tokens.AccessToken, app.Id);
             var p = new ClaimValuePayload { Value = "S" };
 
             // act
@@ -266,10 +259,10 @@ namespace Annium.Id.IntegrationTests
         }
 
         [Fact]
-        public async Task AddClaim_MissingApp_NotFound()
+        public async Task AddClaimToRole_MissingApp_NotFound()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
             var p = new ClaimValuePayload { Value = "Some" };
 
             // act
@@ -280,16 +273,14 @@ namespace Annium.Id.IntegrationTests
         }
 
         [Fact]
-        public async Task AddClaim_NotOwner_Forbidden()
+        public async Task AddClaimToRole_NotOwner_Forbidden()
         {
             // arrange
-            var(owner, ownerTokens) = await LoginAsync("owner", "superpass", "some@email.com");
+            var(owner, ownerTokens) = await LoginUserAsync("owner", "superpass", "some@email.com");
             var app = await CreateAppAsync(ownerTokens.AccessToken);
-            var role = await id.Put($"/apps/{app.Id}/company-roles").BearerAuthorization(ownerTokens.AccessToken)
-                .JsonContent(new RolePayload() { Key = "one", Name = "First Role" }).AsAsync<CompanyRoleView>();
-            var claim = await id.Put($"/apps/{app.Id}/company-claims").BearerAuthorization(ownerTokens.AccessToken)
-                .JsonContent(new ClaimPayload() { Key = "asdasd", Name = "First Claim" }).AsAsync<CompanyRoleView>();
-            var(user, tokens) = await LoginAsync();
+            var role = await CreateCompanyRoleAsync(ownerTokens.AccessToken, app.Id);
+            var claim = await CreateCompanyClaimAsync(ownerTokens.AccessToken, app.Id);
+            var(user, tokens) = await LoginUserAsync();
             var p = new ClaimValuePayload { Value = "Some" };
 
             // act
@@ -300,10 +291,10 @@ namespace Annium.Id.IntegrationTests
         }
 
         [Fact]
-        public async Task AddClaim_MissingRole_NotFound()
+        public async Task AddClaimToRole_MissingRole_NotFound()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
             var p = new ClaimValuePayload { Value = "Some" };
 
@@ -315,16 +306,14 @@ namespace Annium.Id.IntegrationTests
         }
 
         [Fact]
-        public async Task AddClaim_RoleBelongsOtherApp_Forbidden()
+        public async Task AddClaimToRole_RoleBelongsOtherApp_Forbidden()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
             var app1 = await CreateAppAsync(tokens.AccessToken);
             var app2 = await CreateAppAsync(tokens.AccessToken, "other", "Other App");
-            var role = await id.Put($"/apps/{app1.Id}/company-roles").BearerAuthorization(tokens.AccessToken)
-                .JsonContent(new RolePayload() { Key = "one", Name = "First Role" }).AsAsync<CompanyRoleView>();
-            var claim = await id.Put($"/apps/{app1.Id}/company-claims").BearerAuthorization(tokens.AccessToken)
-                .JsonContent(new ClaimPayload() { Key = "asdasd", Name = "First Claim" }).AsAsync<CompanyRoleView>();
+            var role = await CreateCompanyRoleAsync(tokens.AccessToken, app1.Id);
+            var claim = await CreateCompanyClaimAsync(tokens.AccessToken, app1.Id);
             var p = new ClaimValuePayload { Value = "Some" };
 
             // act
@@ -335,13 +324,12 @@ namespace Annium.Id.IntegrationTests
         }
 
         [Fact]
-        public async Task AddClaim_MissingClaim_NotFound()
+        public async Task AddClaimToRole_MissingClaim_NotFound()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
-            var role = await id.Put($"/apps/{app.Id}/company-roles").BearerAuthorization(tokens.AccessToken)
-                .JsonContent(new RolePayload() { Key = "one", Name = "First Role" }).AsAsync<CompanyRoleView>();
+            var role = await CreateCompanyRoleAsync(tokens.AccessToken, app.Id);
             var p = new ClaimValuePayload { Value = "Some" };
 
             // act
@@ -352,16 +340,14 @@ namespace Annium.Id.IntegrationTests
         }
 
         [Fact]
-        public async Task AddClaim_ClaimBelongsOtherApp_Forbidden()
+        public async Task AddClaimToRole_ClaimBelongsOtherApp_Forbidden()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
             var app1 = await CreateAppAsync(tokens.AccessToken);
             var app2 = await CreateAppAsync(tokens.AccessToken, "other", "Other App");
-            var role = await id.Put($"/apps/{app2.Id}/company-roles").BearerAuthorization(tokens.AccessToken)
-                .JsonContent(new RolePayload() { Key = "one", Name = "First Role" }).AsAsync<CompanyRoleView>();
-            var claim = await id.Put($"/apps/{app1.Id}/company-claims").BearerAuthorization(tokens.AccessToken)
-                .JsonContent(new ClaimPayload() { Key = "asdasd", Name = "First Claim" }).AsAsync<CompanyRoleView>();
+            var role = await CreateCompanyRoleAsync(tokens.AccessToken, app2.Id);
+            var claim = await CreateCompanyClaimAsync(tokens.AccessToken, app1.Id);
             var p = new ClaimValuePayload { Value = "Some" };
 
             // act
@@ -372,155 +358,137 @@ namespace Annium.Id.IntegrationTests
         }
 
         [Fact]
-        public async Task AddClaim_Valid_Ok()
+        public async Task AddClaimToRole_Valid_Ok()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
-            var role = await id.Put($"/apps/{app.Id}/company-roles").BearerAuthorization(tokens.AccessToken)
-                .JsonContent(new RolePayload() { Key = "one", Name = "First Role" }).AsAsync<CompanyRoleView>();
-            var claim = await id.Put($"/apps/{app.Id}/company-claims").BearerAuthorization(tokens.AccessToken)
-                .JsonContent(new ClaimPayload() { Key = "asdasd", Name = "First Claim" }).AsAsync<CompanyRoleView>();
-            var p = new ClaimValuePayload { Value = "Some" };
+            var role = await CreateCompanyRoleAsync(tokens.AccessToken, app.Id);
+            var claim = await CreateCompanyClaimAsync(tokens.AccessToken, app.Id);
+            var claimValue = "Some";
 
             // act
-            var response = await id.Post($"/apps/{app.Id}/company-roles/{role.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(p).AsAsync<ClaimValueView>();
+            var response = await AddCompanyClaimToCompanyRoleAsync(tokens.AccessToken, app.Id, role.Id, claim.Id, claimValue);
             var roles = await id.Get($"/apps/{app.Id}/company-roles").BearerAuthorization(tokens.AccessToken).AsAsync<CompanyRoleView[]>();
 
             // assert
             response.Id.IsEqual(claim.Id);
             response.Key.IsEqual(claim.Key);
             response.Name.IsEqual(claim.Name);
-            response.Value.IsEqual(p.Value);
+            response.Value.IsEqual(claimValue);
             roles.Has(1);
             roles[0].Id.IsEqual(role.Id);
             var c = roles[0].Claims.At(0);
             c.Id.IsEqual(claim.Id);
             c.Key.IsEqual(claim.Key);
             c.Name.IsEqual(claim.Name);
-            c.Value.IsEqual(p.Value);
+            c.Value.IsEqual(claimValue);
         }
 
         [Fact]
-        public async Task DeleteClaim_MissingApp_NotFound()
+        public async Task DeleteClaimFromRole_MissingApp_NotFound()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
-            var p = new ClaimValuePayload { Value = "Some" };
+            var(user, tokens) = await LoginUserAsync();
 
             // act
-            var response = await id.Delete($"/apps/{Guid.NewGuid()}/company-roles/{Guid.NewGuid()}/claims/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
+            var response = await id.Delete($"/apps/{Guid.NewGuid()}/company-roles/{Guid.NewGuid()}/claims/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
         }
 
         [Fact]
-        public async Task DeleteClaim_NotOwner_Forbidden()
+        public async Task DeleteClaimFromRole_NotOwner_Forbidden()
         {
             // arrange
-            var(owner, ownerTokens) = await LoginAsync("owner", "superpass", "some@email.com");
+            var(owner, ownerTokens) = await LoginUserAsync("owner", "superpass", "some@email.com");
             var app = await CreateAppAsync(ownerTokens.AccessToken);
-            var role = await id.Put($"/apps/{app.Id}/company-roles").BearerAuthorization(ownerTokens.AccessToken)
-                .JsonContent(new RolePayload() { Key = "one", Name = "First Role" }).AsAsync<CompanyRoleView>();
-            var claim = await id.Put($"/apps/{app.Id}/company-claims").BearerAuthorization(ownerTokens.AccessToken)
-                .JsonContent(new ClaimPayload() { Key = "asdasd", Name = "First Claim" }).AsAsync<CompanyRoleView>();
-            var(user, tokens) = await LoginAsync();
-            var p = new ClaimValuePayload { Value = "Some" };
+            var role = await CreateCompanyRoleAsync(ownerTokens.AccessToken, app.Id);
+            var claim = await CreateCompanyClaimAsync(ownerTokens.AccessToken, app.Id);
+            var(user, tokens) = await LoginUserAsync();
 
             // act
-            var response = await id.Delete($"/apps/{app.Id}/company-roles/{role.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
+            var response = await id.Delete($"/apps/{app.Id}/company-roles/{role.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
         }
 
         [Fact]
-        public async Task DeleteClaim_MissingRole_NotFound()
+        public async Task DeleteClaimFromRole_MissingRole_NotFound()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
-            var p = new ClaimValuePayload { Value = "Some" };
 
             // act
-            var response = await id.Delete($"/apps/{app.Id}/company-roles/{Guid.NewGuid()}/claims/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
+            var response = await id.Delete($"/apps/{app.Id}/company-roles/{Guid.NewGuid()}/claims/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
         }
 
         [Fact]
-        public async Task DeleteClaim_RoleBelongsOtherApp_Forbidden()
+        public async Task DeleteClaimFromRole_RoleBelongsOtherApp_Forbidden()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
             var app1 = await CreateAppAsync(tokens.AccessToken);
             var app2 = await CreateAppAsync(tokens.AccessToken, "other", "Other App");
-            var role = await id.Put($"/apps/{app1.Id}/company-roles").BearerAuthorization(tokens.AccessToken)
-                .JsonContent(new RolePayload() { Key = "one", Name = "First Role" }).AsAsync<CompanyRoleView>();
-            var claim = await id.Put($"/apps/{app1.Id}/company-claims").BearerAuthorization(tokens.AccessToken)
-                .JsonContent(new ClaimPayload() { Key = "asdasd", Name = "First Claim" }).AsAsync<CompanyRoleView>();
-            var p = new ClaimValuePayload { Value = "Some" };
+            var role = await CreateCompanyRoleAsync(tokens.AccessToken, app1.Id);
+            var claim = await CreateCompanyClaimAsync(tokens.AccessToken, app1.Id);
 
             // act
-            var response = await id.Delete($"/apps/{app2.Id}/company-roles/{role.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
+            var response = await id.Delete($"/apps/{app2.Id}/company-roles/{role.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
         }
 
         [Fact]
-        public async Task DeleteClaim_MissingClaim_NotFound()
+        public async Task DeleteClaimFromRole_MissingClaim_NotFound()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
-            var role = await id.Put($"/apps/{app.Id}/company-roles").BearerAuthorization(tokens.AccessToken)
-                .JsonContent(new RolePayload() { Key = "one", Name = "First Role" }).AsAsync<CompanyRoleView>();
-            var p = new ClaimValuePayload { Value = "Some" };
+            var role = await CreateCompanyRoleAsync(tokens.AccessToken, app.Id);
 
             // act
-            var response = await id.Delete($"/apps/{app.Id}/company-roles/{role.Id}/claims/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
+            var response = await id.Delete($"/apps/{app.Id}/company-roles/{role.Id}/claims/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
         }
 
         [Fact]
-        public async Task DeleteClaim_ClaimBelongsOtherApp_Forbidden()
+        public async Task DeleteClaimFromRole_ClaimBelongsOtherApp_Forbidden()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
             var app1 = await CreateAppAsync(tokens.AccessToken);
             var app2 = await CreateAppAsync(tokens.AccessToken, "other", "Other App");
-            var role = await id.Put($"/apps/{app2.Id}/company-roles").BearerAuthorization(tokens.AccessToken)
-                .JsonContent(new RolePayload() { Key = "one", Name = "First Role" }).AsAsync<CompanyRoleView>();
-            var claim = await id.Put($"/apps/{app1.Id}/company-claims").BearerAuthorization(tokens.AccessToken)
-                .JsonContent(new ClaimPayload() { Key = "asdasd", Name = "First Claim" }).AsAsync<CompanyRoleView>();
-            var p = new ClaimValuePayload { Value = "Some" };
+            var role = await CreateCompanyRoleAsync(tokens.AccessToken, app2.Id);
+            var claim = await CreateCompanyClaimAsync(tokens.AccessToken, app1.Id);
 
             // act
-            var response = await id.Delete($"/apps/{app2.Id}/company-roles/{role.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
+            var response = await id.Delete($"/apps/{app2.Id}/company-roles/{role.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
         }
 
         [Fact]
-        public async Task DeleteClaim_Valid_Ok()
+        public async Task DeleteClaimFromRole_Valid_Ok()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
-            var role = await id.Put($"/apps/{app.Id}/company-roles").BearerAuthorization(tokens.AccessToken)
-                .JsonContent(new RolePayload() { Key = "one", Name = "First Role" }).AsAsync<CompanyRoleView>();
-            var claim = await id.Put($"/apps/{app.Id}/company-claims").BearerAuthorization(tokens.AccessToken)
-                .JsonContent(new ClaimPayload() { Key = "asdasd", Name = "First Claim" }).AsAsync<CompanyRoleView>();
-            var p = new ClaimValuePayload { Value = "Some" };
+            var role = await CreateCompanyRoleAsync(tokens.AccessToken, app.Id);
+            var claim = await CreateCompanyClaimAsync(tokens.AccessToken, app.Id);
 
             // act
-            var response = await id.Delete($"/apps/{app.Id}/company-roles/{role.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
+            var response = await id.Delete($"/apps/{app.Id}/company-roles/{role.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NoContent);
@@ -530,7 +498,7 @@ namespace Annium.Id.IntegrationTests
         public async Task Delete_MissingApp_NotFound()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
 
             // act
             var response = await id.Delete($"/apps/{Guid.NewGuid()}/company-roles/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
@@ -543,9 +511,9 @@ namespace Annium.Id.IntegrationTests
         public async Task Delete_NotOwner_NotFound()
         {
             // arrange
-            var(owner, ownerTokens) = await LoginAsync("owner", "superpass", "some@email.com");
+            var(owner, ownerTokens) = await LoginUserAsync("owner", "superpass", "some@email.com");
             var app = await CreateAppAsync(ownerTokens.AccessToken);
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
 
             // act
             var response = await id.Delete($"/apps/{app.Id}/company-roles/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
@@ -558,7 +526,7 @@ namespace Annium.Id.IntegrationTests
         public async Task Delete_MissingRole_NotFound()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
 
             // act
@@ -572,11 +540,10 @@ namespace Annium.Id.IntegrationTests
         public async Task Delete_RoleBelongsOtherApp_NotFound()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
             var app1 = await CreateAppAsync(tokens.AccessToken);
             var app2 = await CreateAppAsync(tokens.AccessToken, "other", "Other App");
-            var p = new RolePayload() { Key = "one", Name = "First Role" };
-            var role = await id.Put($"/apps/{app1.Id}/company-roles").BearerAuthorization(tokens.AccessToken).JsonContent(p).AsAsync<CompanyRoleView>();
+            var role = await CreateCompanyRoleAsync(tokens.AccessToken, app1.Id);
 
             // act
             var response = await id.Delete($"/apps/{app2.Id}/company-roles/{role.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
@@ -589,10 +556,9 @@ namespace Annium.Id.IntegrationTests
         public async Task Delete_Valid_Ok()
         {
             // arrange
-            var(user, tokens) = await LoginAsync();
+            var(user, tokens) = await LoginUserAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
-            var p = new RolePayload() { Key = "one", Name = "First Role" };
-            var role = await id.Put($"/apps/{app.Id}/company-roles").BearerAuthorization(tokens.AccessToken).JsonContent(p).AsAsync<CompanyRoleView>();
+            var role = await CreateCompanyRoleAsync(tokens.AccessToken, app.Id);
 
             // act
             var response = await id.Delete($"/apps/{app.Id}/company-roles/{role.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();

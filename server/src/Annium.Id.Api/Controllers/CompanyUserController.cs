@@ -62,7 +62,7 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPost("roles/{roleId:guid}")]
         [Authorize]
-        public async Task<IActionResult> AddRoleToCompanyUserAsync(Guid companyId, Guid userId, Guid roleId)
+        public async Task<IActionResult> AddCompanyRoleToCompanyUserAsync(Guid companyId, Guid userId, Guid roleId)
         {
             var(company, user, role, result) = await VerifyCompanyOwnerMemberRoleAsync(companyId, userId, roleId, "add role to company member");
             if (result != null)
@@ -75,7 +75,7 @@ namespace Annium.Id.Api.Controllers
 
         [HttpDelete("roles/{roleId:guid}")]
         [Authorize]
-        public async Task<IActionResult> DeleteRoleFromCompanyUserAsync(Guid companyId, Guid userId, Guid roleId)
+        public async Task<IActionResult> DeleteCompanyRoleFromCompanyUserAsync(Guid companyId, Guid userId, Guid roleId)
         {
             var(company, user, role, result) = await VerifyCompanyOwnerMemberRoleAsync(companyId, userId, roleId, "delete role from company member");
             if (result != null)
@@ -88,7 +88,7 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPost("claims/{claimId:guid}")]
         [Authorize]
-        public async Task<IActionResult> AddClaimToCompanyUserAsync(Guid companyId, Guid userId, Guid claimId, [FromBody] ClaimValuePayload claimValuePayload)
+        public async Task<IActionResult> AddCompanyClaimToCompanyUserAsync(Guid companyId, Guid userId, Guid claimId, [FromBody] ClaimValuePayload claimValuePayload)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -104,7 +104,7 @@ namespace Annium.Id.Api.Controllers
 
         [HttpDelete("claims/{claimId:guid}")]
         [Authorize]
-        public async Task<IActionResult> DeleteClaimFromCompanyUserAsync(Guid companyId, Guid userId, Guid claimId)
+        public async Task<IActionResult> DeleteCompanyClaimFromCompanyUserAsync(Guid companyId, Guid userId, Guid claimId)
         {
             var(company, user, claim, result) = await VerifyCompanyOwnerMemberClaimAsync(companyId, userId, claimId, "delete claim from company member");
             if (result != null)
@@ -159,6 +159,8 @@ namespace Annium.Id.Api.Controllers
 
             return (company, user, claim, null);
         }
+
+        // TODO: separate test for company membership
 
         private async Task<ValueTuple<Company, User, IActionResult>> VerifyCompanyOwnerUserAsync(Guid companyId, Guid userId, string operation)
         {
