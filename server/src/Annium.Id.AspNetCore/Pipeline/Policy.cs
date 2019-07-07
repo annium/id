@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Annium.Id.AspNetCore
+namespace Annium.Id.AspNetCore.Pipeline
 {
     internal class Policy
     {

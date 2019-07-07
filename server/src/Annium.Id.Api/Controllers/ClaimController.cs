@@ -7,6 +7,7 @@ using Annium.Id.Api.Payloads;
 using Annium.Id.Api.Views;
 using Annium.Id.AspNetCore;
 using Annium.Id.Db;
+using Annium.Id.Db.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 
@@ -126,7 +127,7 @@ namespace Annium.Id.Api.Controllers
             if (result != null)
                 return (null, result);
 
-            if (this.GetId().UserId != app.OwnerId)
+            if (this.GetBaseId().UserId != app.OwnerId)
                 return (null, Forbidden($"Need to be application owner to {operation}"));
 
             return (app, null);

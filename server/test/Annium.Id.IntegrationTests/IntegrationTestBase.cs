@@ -5,11 +5,12 @@ using Annium.Extensions.Net.Http;
 using Annium.Id.Api.Payloads;
 using Annium.Id.Api.Views;
 
-namespace Annium.Id.Api.IntegrationTests
+namespace Annium.Id.IntegrationTests
 {
     public class IntegrationTestBase : IntegrationTest
     {
-        protected IRequest http => GetRequest<Startup<Api.TestServicePack>>();
+        protected IRequest id => GetRequest<Api.Startup<Api.TestServicePack>>();
+        protected IRequest demo => GetRequest<DemoClient.Startup<DemoClient.ServicePack>>();
 
         protected async Task<UserPrivateView> RegisterAsync(
             string login = "demo",
@@ -19,7 +20,7 @@ namespace Annium.Id.Api.IntegrationTests
         {
             var payload = new UserPayload { Login = login, Password = password, Email = email };
 
-            return await http.Put("/me").JsonContent(payload).AsAsync<UserPrivateView>();
+            return await id.Put("/me").JsonContent(payload).AsAsync<UserPrivateView>();
         }
 
         protected async Task<ValueTuple<UserPrivateView, UserTokenView>> LoginAsync(
@@ -31,9 +32,26 @@ namespace Annium.Id.Api.IntegrationTests
             var user = await RegisterAsync(login, password, email);
             var payload = new UserLoginPayload { Login = login, Password = password };
 
-            var tokens = await http.Post("/me/login").JsonContent(payload).AsAsync<UserTokenView>();
+            var tokens = await id.Post("/me/login").JsonContent(payload).AsAsync<UserTokenView>();
 
             return (user, tokens);
+        }
+
+        protected async Task<ValueTuple<UserPrivateView, AppPrivateView, UserTokenView>> LoginAppAsync(
+            string login = "demo",
+            string password = "testtest",
+            string email = "demo@demo.com",
+            string appKey = "demo",
+            string appName = "Demo App"
+        )
+        {
+            var(user, tokens) = await LoginAsync(login, password, email);
+            var app = await CreateAppAsync(tokens.AccessToken);
+            var payload = new UserLoginPayload { Login = login, Password = password };
+
+            tokens = await id.Post($"/me/apps/{app.Id}/login").JsonContent(payload).AsAsync<UserTokenView>();
+
+            return (user, app, tokens);
         }
 
         protected Task<AppPrivateView> CreateAppAsync(
@@ -44,7 +62,7 @@ namespace Annium.Id.Api.IntegrationTests
         {
             var payload = new AppPayload { Key = key, Name = name };
 
-            return http.Put("/apps").BearerAuthorization(accessToken).JsonContent(payload).AsAsync<AppPrivateView>();
+            return id.Put("/apps").BearerAuthorization(accessToken).JsonContent(payload).AsAsync<AppPrivateView>();
         }
 
         protected Task<CompanyPrivateView> CreateCompanyAsync(
@@ -56,7 +74,7 @@ namespace Annium.Id.Api.IntegrationTests
         {
             var payload = new CompanyPayload { ParentId = parentId, Key = key, Name = name };
 
-            return http.Put("/companies").BearerAuthorization(accessToken).JsonContent(payload).AsAsync<CompanyPrivateView>();
+            return id.Put("/companies").BearerAuthorization(accessToken).JsonContent(payload).AsAsync<CompanyPrivateView>();
         }
     }
 }

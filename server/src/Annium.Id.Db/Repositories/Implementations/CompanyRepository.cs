@@ -33,9 +33,11 @@ namespace Annium.Id.Db.Repositories.Implementations
             return mapper.Map<Company>(entity);
         }
 
-        public async Task<Company[]> GetAllAsync()
+        public async Task<Company[]> GetAllByIdsAsync(Guid[] ids)
         {
-            var companies = await context.Companies.ToArrayAsync();
+            var companies = await context.Companies
+                .Where(c => ids.Contains(c.Id))
+                .ToArrayAsync();
 
             return companies.Select(mapper.Map<Company>).ToArray();
         }

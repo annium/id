@@ -232,12 +232,6 @@ namespace Annium.Id.Db.Migrations
                     b.Property<string>("Email")
                         .IsRequired();
 
-                    b.Property<string>("FirstName")
-                        .IsRequired();
-
-                    b.Property<string>("LastName")
-                        .IsRequired();
-
                     b.Property<string>("Login")
                         .IsRequired();
 
@@ -251,6 +245,37 @@ namespace Annium.Id.Db.Migrations
                     b.HasAlternateKey("Login");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Annium.Id.Db.Entities.UserAppLogin", b =>
+                {
+                    b.Property<Guid>("Id");
+
+                    b.Property<Guid>("AppId");
+
+                    b.Property<string>("Client")
+                        .IsRequired();
+
+                    b.Property<string>("IPAddress")
+                        .IsRequired();
+
+                    b.Property<DateTime>("LoggedAt");
+
+                    b.Property<Guid>("RefreshToken");
+
+                    b.Property<DateTime>("RefreshTokenExpires");
+
+                    b.Property<Guid>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasAlternateKey("RefreshToken");
+
+                    b.HasIndex("AppId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserAppLogins");
                 });
 
             modelBuilder.Entity("Annium.Id.Db.Entities.UserClaim", b =>
@@ -434,6 +459,19 @@ namespace Annium.Id.Db.Migrations
                     b.HasOne("Annium.Id.Db.Entities.Role")
                         .WithMany()
                         .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("Annium.Id.Db.Entities.UserAppLogin", b =>
+                {
+                    b.HasOne("Annium.Id.Db.Entities.App")
+                        .WithMany()
+                        .HasForeignKey("AppId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Annium.Id.Db.Entities.User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 

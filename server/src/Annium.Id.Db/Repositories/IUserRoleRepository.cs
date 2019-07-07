@@ -7,6 +7,8 @@ namespace Annium.Id.Db.Repositories
     {
         Task<UserRole> SaveAsync(UserRole userRole);
 
+        Task<Role[]> GetUserRolesAsync(Guid appId, Guid userId);
+
         Task DeleteByIdAsync(Guid userId, Guid roleId);
     }
 }

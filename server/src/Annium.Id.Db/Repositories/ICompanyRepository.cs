@@ -7,7 +7,7 @@ namespace Annium.Id.Db.Repositories
     {
         Task<Company> CreateAsync(Company company);
 
-        Task<Company[]> GetAllAsync();
+        Task<Company[]> GetAllByIdsAsync(Guid[] ids);
 
         Task<Company> GetByIdAsync(Guid id);
 

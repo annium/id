@@ -14,8 +14,6 @@ namespace Annium.Id.Db.Migrations
                     Id = table.Column<Guid>(nullable: false),
                     Login = table.Column<string>(nullable: false),
                     PasswordHash = table.Column<string>(nullable: false),
-                    FirstName = table.Column<string>(nullable: false),
-                    LastName = table.Column<string>(nullable: false),
                     Email = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
@@ -179,6 +177,37 @@ namespace Annium.Id.Db.Migrations
                         name: "FK_Roles_Apps_AppId",
                         column: x => x.AppId,
                         principalTable: "Apps",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserAppLogins",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    AppId = table.Column<Guid>(nullable: false),
+                    UserId = table.Column<Guid>(nullable: false),
+                    LoggedAt = table.Column<DateTime>(nullable: false),
+                    IPAddress = table.Column<string>(nullable: false),
+                    Client = table.Column<string>(nullable: false),
+                    RefreshToken = table.Column<Guid>(nullable: false),
+                    RefreshTokenExpires = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserAppLogins", x => x.Id);
+                    table.UniqueConstraint("AK_UserAppLogins_RefreshToken", x => x.RefreshToken);
+                    table.ForeignKey(
+                        name: "FK_UserAppLogins_Apps_AppId",
+                        column: x => x.AppId,
+                        principalTable: "Apps",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_UserAppLogins_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -420,6 +449,16 @@ namespace Annium.Id.Db.Migrations
                 column: "ClaimId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_UserAppLogins_AppId",
+                table: "UserAppLogins",
+                column: "AppId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserAppLogins_UserId",
+                table: "UserAppLogins",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserClaims_ClaimId",
                 table: "UserClaims",
                 column: "ClaimId");
@@ -451,6 +490,9 @@ namespace Annium.Id.Db.Migrations
 
             migrationBuilder.DropTable(
                 name: "RoleClaims");
+
+            migrationBuilder.DropTable(
+                name: "UserAppLogins");
 
             migrationBuilder.DropTable(
                 name: "UserClaims");

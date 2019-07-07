@@ -2,12 +2,12 @@ namespace Annium.Id.AspNetCore
 {
     public static class Constants
     {
-        public const string IdClaim = "id";
-
         public const string Issuer = "annium.id";
 
-        public const string Audience = "api";
+        public const string BaseAudience = "base";
 
-        internal const string IdTokenProperty = "idToken";
+        internal const string IdBaseTokenProperty = "idBaseToken";
+
+        internal const string IdAppTokenProperty = "idAppToken";
     }
 }

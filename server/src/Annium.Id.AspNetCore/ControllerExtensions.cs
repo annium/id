@@ -5,12 +5,20 @@ namespace Annium.Id.AspNetCore
 {
     public static class ControllerExtensions
     {
-        public static IdToken GetId(this ControllerBase controller)
+        public static IdBaseToken GetBaseId(this ControllerBase controller)
         {
-            if (!controller.ControllerContext.ActionDescriptor.Properties.TryGetValue(Constants.IdTokenProperty, out var raw))
+            if (!controller.ControllerContext.ActionDescriptor.Properties.TryGetValue(Constants.IdBaseTokenProperty, out var raw))
                 throw new InvalidOperationException($"User is not authenticated.");
 
-            return (IdToken) raw;
+            return (IdBaseToken) raw;
+        }
+
+        public static IdAppToken GetAppId(this ControllerBase controller)
+        {
+            if (!controller.ControllerContext.ActionDescriptor.Properties.TryGetValue(Constants.IdAppTokenProperty, out var raw))
+                throw new InvalidOperationException($"User is not authenticated.");
+
+            return (IdAppToken) raw;
         }
     }
 }

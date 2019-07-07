@@ -15,8 +15,8 @@ namespace Annium.Id.Db
             services.AddEntityFrameworkSqliteInMemory<Entities.Context>();
 
             // log queries
-            // DataConnection.TurnTraceSwitchOn(TraceLevel.Verbose);
-            // DataConnection.WriteTraceLine = (message, context) => Console.WriteLine($"{context}: {message}");
+            // LinqToDB.Data.DataConnection.TurnTraceSwitchOn(System.Diagnostics.TraceLevel.Verbose);
+            // LinqToDB.Data.DataConnection.WriteTraceLine = (message, context) => System.Console.WriteLine($"{context}: {message}");
         }
     }
 }

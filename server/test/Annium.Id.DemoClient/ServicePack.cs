@@ -1,10 +1,13 @@
 using System;
+using System.Linq;
 using Annium.Extensions.DependencyInjection;
+using Annium.Logging.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
+using NodaTime;
 
 namespace Annium.Id.DemoClient
 {
-    internal class ServicePack : ServicePackBase
+    public class ServicePack : ServicePackBase
     {
         public override void Configure(IServiceCollection services)
         {
@@ -13,7 +16,34 @@ namespace Annium.Id.DemoClient
 
         public override void Register(IServiceCollection services, IServiceProvider provider)
         {
-            // register and setup services
+            services.AddSingleton<Func<Instant>>(SystemClock.Instance.GetCurrentInstant);
+
+            services.AddIdAuthorization(options =>
+            {
+                options.Audience = "demo";
+            });
+            services.AddConsole(new LoggerConfiguration(LogLevel.Trace));
+            services.AddIdPolicy(
+                "isAdmin",
+                token => token.App.Roles.Contains("admin")
+            );
+            services.AddIdPolicy(
+                "hasPaymentsAccess",
+                token => token.App.Claims.ContainsKey("paymentsAccess") &&
+                token.App.Claims["paymentsAccess"] == "full"
+            );
+            services.AddIdPolicy<Guid>(
+                "isCompanyOwner",
+                (token, companyId) => token.Companies.Any(
+                    c => c.Id == companyId && c.OwnerId == token.UserId
+                )
+            );
+            services.AddIdPolicy<Guid>(
+                "hasCompanyPaymentsAccess",
+                (token, companyId) => token.Companies.Any(
+                    c => c.Id == companyId && c.Claims.ContainsKey("paymentsAccess") && c.Claims["paymentsAccess"] == "full"
+                )
+            );
         }
 
         public override void Setup(System.IServiceProvider provider)

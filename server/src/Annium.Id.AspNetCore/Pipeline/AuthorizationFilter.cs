@@ -2,7 +2,7 @@ using Annium.Id.AspNetCore.Tools;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Annium.Id.AspNetCore
+namespace Annium.Id.AspNetCore.Pipeline
 {
     internal class AuthorizationFilter : IAuthorizationFilter
     {
@@ -36,7 +36,9 @@ namespace Annium.Id.AspNetCore
             if (parseResult != null)
                 return parseResult;
 
-            context.ActionDescriptor.Properties[Constants.IdTokenProperty] = token;
+            context.ActionDescriptor.Properties[Constants.IdBaseTokenProperty] = token;
+            if (token is IdAppToken)
+                context.ActionDescriptor.Properties[Constants.IdAppTokenProperty] = token;
 
             return null;
         }

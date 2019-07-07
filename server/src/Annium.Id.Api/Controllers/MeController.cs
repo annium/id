@@ -7,6 +7,7 @@ using Annium.Id.Api.Tools;
 using Annium.Id.Api.Views;
 using Annium.Id.AspNetCore;
 using Annium.Id.Db;
+using Annium.Id.Db.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using NodaTime;
@@ -16,32 +17,22 @@ namespace Annium.Id.Api.Controllers
     [Route("me")]
     public class MeController : LocalizedServerController
     {
-        private static readonly Duration refreshTokenLifeTime = Duration.FromDays(1);
         private readonly IUserRepository userRepository;
         private readonly IUserLoginRepository userLoginRepository;
-        private readonly IIdentityDataAccessor identityDataAccessor;
         private readonly ISecurityManager securityManager;
-        private readonly ITokenGenerator tokenGenerator;
-        private readonly Func<Instant> getInstant;
         private readonly IMapper mapper;
 
         public MeController(
             IUserRepository userRepository,
             IUserLoginRepository userLoginRepository,
-            IIdentityDataAccessor identityDataAccessor,
             ISecurityManager securityManager,
-            ITokenGenerator tokenGenerator,
-            Func<Instant> getInstant,
             IMapper mapper,
             IStringLocalizer<MeController> localizer
         ) : base(localizer)
         {
             this.userRepository = userRepository;
             this.userLoginRepository = userLoginRepository;
-            this.identityDataAccessor = identityDataAccessor;
             this.securityManager = securityManager;
-            this.tokenGenerator = tokenGenerator;
-            this.getInstant = getInstant;
             this.mapper = mapper;
         }
 
@@ -74,63 +65,12 @@ namespace Annium.Id.Api.Controllers
         [Authorize]
         public async Task<IActionResult> GetUserAsync()
         {
-            var user = await userRepository.GetByIdAsync(this.GetId().UserId);
+            var user = await userRepository.GetByIdAsync(this.GetBaseId().UserId);
             if (user == null)
                 return NotFound("User not found");
 
             // TODO: perhaps, add info about companies, user is member of
             return Ok(mapper.Map<UserPrivateView>(user));
-        }
-
-        [HttpPost("login")]
-        public async Task<IActionResult> LoginAsync([FromBody] UserLoginPayload loginPayload)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var user = await userRepository.FindByLoginAsync(loginPayload.Login);
-            if (user == null)
-                return Forbidden("Invalid login");
-
-            if (securityManager.Hash(loginPayload.Password) != user.PasswordHash)
-                return Forbidden("Invalid password");
-
-            var instant = getInstant();
-            var(ipAddress, client) = identityDataAccessor.GetIdentityData();
-            var login = new UserLogin(user.Id, instant, ipAddress.ToString(), client, Guid.NewGuid(), instant + refreshTokenLifeTime);
-
-            await userLoginRepository.DeleteExpiredByUserIdAsync(user.Id, instant);
-            login = await userLoginRepository.CreateAsync(login);
-
-            var token = tokenGenerator.Generate(login);
-
-            return Ok(new UserTokenView(token, login.RefreshToken, login.RefreshTokenExpires));
-        }
-
-        [HttpPost("logout")]
-        [Authorize]
-        public async Task<IActionResult> LogoutAsync()
-        {
-            var loginId = this.GetId().LoginId;
-
-            await userLoginRepository.DeleteByIdAsync(loginId);
-
-            return NoContent();
-        }
-
-        [HttpPost("token")]
-        public async Task<IActionResult> UpdateTokenAsync(Guid refreshToken)
-        {
-            var login = await userLoginRepository.FindByRefreshTokenAsync(refreshToken);
-            if (login == null)
-                return Forbidden("Invalid refresh token");
-
-            if (login.RefreshTokenExpires < getInstant())
-                return Forbidden("Refresh token expired");
-
-            var token = tokenGenerator.Generate(login);
-
-            return Ok(new UserTokenView(token, login.RefreshToken, login.RefreshTokenExpires));
         }
 
         [HttpPost]
@@ -140,7 +80,7 @@ namespace Annium.Id.Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var user = await userRepository.GetByIdAsync(this.GetId().UserId);
+            var user = await userRepository.GetByIdAsync(this.GetBaseId().UserId);
 
             if (userPayload.Login != user.Login && (await userRepository.FindByLoginAsync(userPayload.Login)) != null)
                 return Conflict($"Login {userPayload.Login} is already used");
@@ -161,7 +101,7 @@ namespace Annium.Id.Api.Controllers
         [Authorize]
         public async Task<IActionResult> UnregisterUserAsync()
         {
-            var userId = this.GetId().UserId;
+            var userId = this.GetBaseId().UserId;
 
             await userLoginRepository.DeleteAllByUserIdAsync(userId);
             await userRepository.DeleteByIdAsync(userId);

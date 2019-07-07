@@ -4,6 +4,7 @@ using Annium.AspNetCore.Extensions;
 using Annium.Id.Api.Payloads;
 using Annium.Id.AspNetCore;
 using Annium.Id.Db;
+using Annium.Id.Db.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 
@@ -178,7 +179,7 @@ namespace Annium.Id.Api.Controllers
             if (company == null)
                 return (null, NotFound("Company not found"));
 
-            if (this.GetId().UserId != company.OwnerId)
+            if (this.GetBaseId().UserId != company.OwnerId)
                 return (null, Forbidden($"Need to be company owner to {operation}"));
 
             return (company, null);

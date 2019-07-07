@@ -7,6 +7,7 @@ using Annium.Id.Api.Payloads;
 using Annium.Id.Api.Views;
 using Annium.Id.AspNetCore;
 using Annium.Id.Db;
+using Annium.Id.Db.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 
@@ -49,7 +50,7 @@ namespace Annium.Id.Api.Controllers
                 return Conflict($"Company key {companyPayload.Key} is already used");
 
             var company = new Company(
-                this.GetId().UserId,
+                this.GetBaseId().UserId,
                 companyPayload.ParentId,
                 companyPayload.Key,
                 companyPayload.Name
@@ -149,7 +150,7 @@ namespace Annium.Id.Api.Controllers
             if (result != null)
                 return (null, result);
 
-            if (this.GetId().UserId != company.OwnerId)
+            if (this.GetBaseId().UserId != company.OwnerId)
                 return (null, Forbidden($"Need to be company owner to {operation}"));
 
             return (company, null);

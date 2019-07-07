@@ -6,9 +6,9 @@ using Annium.Id.Api.Payloads;
 using Annium.Id.Api.Views;
 using Annium.Testing;
 
-namespace Annium.Id.Api.IntegrationTests
+namespace Annium.Id.IntegrationTests
 {
-    public class RoleControllerTest : IntegrationTestBase
+    public class CompanyRoleControllerTest : IntegrationTestBase
     {
         [Fact]
         public async Task Create_InvalidPayload_BadRequest()
@@ -18,7 +18,7 @@ namespace Annium.Id.Api.IntegrationTests
             var p = new RolePayload() { Key = "one" };
 
             // act
-            var response = await http.Put($"/apps/{Guid.NewGuid()}/roles").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
+            var response = await id.Put($"/apps/{Guid.NewGuid()}/company-roles").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
@@ -32,7 +32,7 @@ namespace Annium.Id.Api.IntegrationTests
             var p = new RolePayload() { Key = "one", Name = "First Role" };
 
             // act
-            var response = await http.Put($"/apps/{Guid.NewGuid()}/roles").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
+            var response = await id.Put($"/apps/{Guid.NewGuid()}/company-roles").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -48,7 +48,7 @@ namespace Annium.Id.Api.IntegrationTests
             var p = new RolePayload() { Key = "one", Name = "First Role" };
 
             // act
-            var response = await http.Put($"/apps/{app.Id}/roles").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
+            var response = await id.Put($"/apps/{app.Id}/company-roles").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -62,10 +62,10 @@ namespace Annium.Id.Api.IntegrationTests
             var app = await CreateAppAsync(tokens.AccessToken);
             var p = new RolePayload() { Key = "one", Name = "First Role" };
 
-            await http.Put($"/apps/{app.Id}/roles").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
+            await id.Put($"/apps/{app.Id}/company-roles").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
 
             // act
-            var response = await http.Put($"/apps/{app.Id}/roles").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
+            var response = await id.Put($"/apps/{app.Id}/company-roles").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Conflict);
@@ -80,7 +80,7 @@ namespace Annium.Id.Api.IntegrationTests
             var p = new RolePayload() { Key = "one", Name = "First Role" };
 
             // act
-            var role = await http.Put($"/apps/{app.Id}/roles").BearerAuthorization(tokens.AccessToken).JsonContent(p).AsAsync<RoleView>();
+            var role = await id.Put($"/apps/{app.Id}/company-roles").BearerAuthorization(tokens.AccessToken).JsonContent(p).AsAsync<CompanyRoleView>();
 
             // assert
             role.Id.IsNotDefault();
@@ -96,7 +96,7 @@ namespace Annium.Id.Api.IntegrationTests
             var(user, tokens) = await LoginAsync();
 
             // act
-            var response = await http.Get($"/apps/{Guid.NewGuid()}/roles").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await id.Get($"/apps/{Guid.NewGuid()}/company-roles").BearerAuthorization(tokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -109,10 +109,10 @@ namespace Annium.Id.Api.IntegrationTests
             var(user, tokens) = await LoginAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
             var p = new RolePayload() { Key = "one", Name = "First Role" };
-            var role = await http.Put($"/apps/{app.Id}/roles").BearerAuthorization(tokens.AccessToken).JsonContent(p).AsAsync<RoleView>();
+            var role = await id.Put($"/apps/{app.Id}/company-roles").BearerAuthorization(tokens.AccessToken).JsonContent(p).AsAsync<CompanyRoleView>();
 
             // act
-            var roles = await http.Get($"/apps/{app.Id}/roles").BearerAuthorization(tokens.AccessToken).AsAsync<RoleView[]>();
+            var roles = await id.Get($"/apps/{app.Id}/company-roles").BearerAuthorization(tokens.AccessToken).AsAsync<CompanyRoleView[]>();
 
             // assert
             roles.Has(1);
@@ -127,11 +127,11 @@ namespace Annium.Id.Api.IntegrationTests
             var(user, tokens) = await LoginAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
             var p = new RolePayload() { Key = "one", Name = "First Role" };
-            var role = await http.Put($"/apps/{app.Id}/roles").BearerAuthorization(tokens.AccessToken).JsonContent(p).AsAsync<RoleView>();
+            var role = await id.Put($"/apps/{app.Id}/company-roles").BearerAuthorization(tokens.AccessToken).JsonContent(p).AsAsync<CompanyRoleView>();
             var u = new RolePayload { Key = "one" };
 
             // act
-            var response = await http.Post($"/apps/{app.Id}/roles/{role.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
+            var response = await id.Post($"/apps/{app.Id}/company-roles/{role.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
@@ -144,11 +144,11 @@ namespace Annium.Id.Api.IntegrationTests
             var(user, tokens) = await LoginAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
             var p = new RolePayload() { Key = "one", Name = "First Role" };
-            var role = await http.Put($"/apps/{app.Id}/roles").BearerAuthorization(tokens.AccessToken).JsonContent(p).AsAsync<RoleView>();
+            var role = await id.Put($"/apps/{app.Id}/company-roles").BearerAuthorization(tokens.AccessToken).JsonContent(p).AsAsync<CompanyRoleView>();
             var u = new RolePayload { Key = "one", Name = "One Role" };
 
             // act
-            var response = await http.Post($"/apps/{Guid.NewGuid()}/roles/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
+            var response = await id.Post($"/apps/{Guid.NewGuid()}/company-roles/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -161,12 +161,12 @@ namespace Annium.Id.Api.IntegrationTests
             var(owner, ownerTokens) = await LoginAsync("owner", "superpass", "some@email.com");
             var app = await CreateAppAsync(ownerTokens.AccessToken);
             var p = new RolePayload() { Key = "one", Name = "First Role" };
-            var role = await http.Put($"/apps/{app.Id}/roles").BearerAuthorization(ownerTokens.AccessToken).JsonContent(p).AsAsync<RoleView>();
+            var role = await id.Put($"/apps/{app.Id}/company-roles").BearerAuthorization(ownerTokens.AccessToken).JsonContent(p).AsAsync<CompanyRoleView>();
             var(user, tokens) = await LoginAsync();
             var u = new RolePayload { Key = "one", Name = "One Role" };
 
             // act
-            var response = await http.Post($"/apps/{app.Id}/roles/{role.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
+            var response = await id.Post($"/apps/{app.Id}/company-roles/{role.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -179,11 +179,11 @@ namespace Annium.Id.Api.IntegrationTests
             var(user, tokens) = await LoginAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
             var p = new RolePayload() { Key = "one", Name = "First Role" };
-            var role = await http.Put($"/apps/{app.Id}/roles").BearerAuthorization(tokens.AccessToken).JsonContent(p).AsAsync<RoleView>();
+            var role = await id.Put($"/apps/{app.Id}/company-roles").BearerAuthorization(tokens.AccessToken).JsonContent(p).AsAsync<CompanyRoleView>();
             var u = new RolePayload { Key = "one", Name = "One Role" };
 
             // act
-            var response = await http.Post($"/apps/{app.Id}/roles/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
+            var response = await id.Post($"/apps/{app.Id}/company-roles/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -197,11 +197,11 @@ namespace Annium.Id.Api.IntegrationTests
             var app1 = await CreateAppAsync(tokens.AccessToken);
             var app2 = await CreateAppAsync(tokens.AccessToken, "other", "Other App");
             var p = new RolePayload() { Key = "one", Name = "First Role" };
-            var role = await http.Put($"/apps/{app1.Id}/roles").BearerAuthorization(tokens.AccessToken).JsonContent(p).AsAsync<RoleView>();
+            var role = await id.Put($"/apps/{app1.Id}/company-roles").BearerAuthorization(tokens.AccessToken).JsonContent(p).AsAsync<CompanyRoleView>();
             var u = new RolePayload { Key = "one", Name = "One Role" };
 
             // act
-            var response = await http.Post($"/apps/{app2.Id}/roles/{role.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
+            var response = await id.Post($"/apps/{app2.Id}/company-roles/{role.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -214,12 +214,12 @@ namespace Annium.Id.Api.IntegrationTests
             var(user, tokens) = await LoginAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
             var p = new RolePayload() { Key = "one", Name = "First Role" };
-            var role = await http.Put($"/apps/{app.Id}/roles").BearerAuthorization(tokens.AccessToken).JsonContent(p).AsAsync<RoleView>();
+            var role = await id.Put($"/apps/{app.Id}/company-roles").BearerAuthorization(tokens.AccessToken).JsonContent(p).AsAsync<CompanyRoleView>();
             var u = new RolePayload { Key = "other", Name = "One Role" };
-            await http.Put($"/apps/{app.Id}/roles").BearerAuthorization(tokens.AccessToken).JsonContent(u).AsAsync<RoleView>();
+            await id.Put($"/apps/{app.Id}/company-roles").BearerAuthorization(tokens.AccessToken).JsonContent(u).AsAsync<CompanyRoleView>();
 
             // act
-            var response = await http.Post($"/apps/{app.Id}/roles/{role.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
+            var response = await id.Post($"/apps/{app.Id}/company-roles/{role.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Conflict);
@@ -232,11 +232,11 @@ namespace Annium.Id.Api.IntegrationTests
             var(user, tokens) = await LoginAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
             var p = new RolePayload() { Key = "one", Name = "First Role" };
-            var role = await http.Put($"/apps/{app.Id}/roles").BearerAuthorization(tokens.AccessToken).JsonContent(p).AsAsync<RoleView>();
+            var role = await id.Put($"/apps/{app.Id}/company-roles").BearerAuthorization(tokens.AccessToken).JsonContent(p).AsAsync<CompanyRoleView>();
             var u = new RolePayload { Key = "one", Name = "One Role" };
 
             // act
-            var response = await http.Post($"/apps/{app.Id}/roles/{role.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).AsAsync<RoleView>();
+            var response = await id.Post($"/apps/{app.Id}/company-roles/{role.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).AsAsync<CompanyRoleView>();
 
             // assert
             response.Id.IsEqual(role.Id);
@@ -252,14 +252,14 @@ namespace Annium.Id.Api.IntegrationTests
             // arrange
             var(user, tokens) = await LoginAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
-            var role = await http.Put($"/apps/{app.Id}/roles").BearerAuthorization(tokens.AccessToken)
-                .JsonContent(new RolePayload() { Key = "one", Name = "First Role" }).AsAsync<RoleView>();
-            var claim = await http.Put($"/apps/{app.Id}/claims").BearerAuthorization(tokens.AccessToken)
-                .JsonContent(new ClaimPayload() { Key = "asdasd", Name = "First Claim" }).AsAsync<RoleView>();
+            var role = await id.Put($"/apps/{app.Id}/company-roles").BearerAuthorization(tokens.AccessToken)
+                .JsonContent(new RolePayload() { Key = "one", Name = "First Role" }).AsAsync<CompanyRoleView>();
+            var claim = await id.Put($"/apps/{app.Id}/company-claims").BearerAuthorization(tokens.AccessToken)
+                .JsonContent(new ClaimPayload() { Key = "asdasd", Name = "First Claim" }).AsAsync<CompanyRoleView>();
             var p = new ClaimValuePayload { Value = "S" };
 
             // act
-            var response = await http.Post($"/apps/{app.Id}/roles/{role.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
+            var response = await id.Post($"/apps/{app.Id}/company-roles/{role.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
@@ -273,7 +273,7 @@ namespace Annium.Id.Api.IntegrationTests
             var p = new ClaimValuePayload { Value = "Some" };
 
             // act
-            var response = await http.Post($"/apps/{Guid.NewGuid()}/roles/{Guid.NewGuid()}/claims/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
+            var response = await id.Post($"/apps/{Guid.NewGuid()}/company-roles/{Guid.NewGuid()}/claims/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -285,15 +285,15 @@ namespace Annium.Id.Api.IntegrationTests
             // arrange
             var(owner, ownerTokens) = await LoginAsync("owner", "superpass", "some@email.com");
             var app = await CreateAppAsync(ownerTokens.AccessToken);
-            var role = await http.Put($"/apps/{app.Id}/roles").BearerAuthorization(ownerTokens.AccessToken)
-                .JsonContent(new RolePayload() { Key = "one", Name = "First Role" }).AsAsync<RoleView>();
-            var claim = await http.Put($"/apps/{app.Id}/claims").BearerAuthorization(ownerTokens.AccessToken)
-                .JsonContent(new ClaimPayload() { Key = "asdasd", Name = "First Claim" }).AsAsync<RoleView>();
+            var role = await id.Put($"/apps/{app.Id}/company-roles").BearerAuthorization(ownerTokens.AccessToken)
+                .JsonContent(new RolePayload() { Key = "one", Name = "First Role" }).AsAsync<CompanyRoleView>();
+            var claim = await id.Put($"/apps/{app.Id}/company-claims").BearerAuthorization(ownerTokens.AccessToken)
+                .JsonContent(new ClaimPayload() { Key = "asdasd", Name = "First Claim" }).AsAsync<CompanyRoleView>();
             var(user, tokens) = await LoginAsync();
             var p = new ClaimValuePayload { Value = "Some" };
 
             // act
-            var response = await http.Post($"/apps/{app.Id}/roles/{role.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
+            var response = await id.Post($"/apps/{app.Id}/company-roles/{role.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -308,7 +308,7 @@ namespace Annium.Id.Api.IntegrationTests
             var p = new ClaimValuePayload { Value = "Some" };
 
             // act
-            var response = await http.Post($"/apps/{app.Id}/roles/{Guid.NewGuid()}/claims/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
+            var response = await id.Post($"/apps/{app.Id}/company-roles/{Guid.NewGuid()}/claims/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -321,14 +321,14 @@ namespace Annium.Id.Api.IntegrationTests
             var(user, tokens) = await LoginAsync();
             var app1 = await CreateAppAsync(tokens.AccessToken);
             var app2 = await CreateAppAsync(tokens.AccessToken, "other", "Other App");
-            var role = await http.Put($"/apps/{app1.Id}/roles").BearerAuthorization(tokens.AccessToken)
-                .JsonContent(new RolePayload() { Key = "one", Name = "First Role" }).AsAsync<RoleView>();
-            var claim = await http.Put($"/apps/{app1.Id}/claims").BearerAuthorization(tokens.AccessToken)
-                .JsonContent(new ClaimPayload() { Key = "asdasd", Name = "First Claim" }).AsAsync<RoleView>();
+            var role = await id.Put($"/apps/{app1.Id}/company-roles").BearerAuthorization(tokens.AccessToken)
+                .JsonContent(new RolePayload() { Key = "one", Name = "First Role" }).AsAsync<CompanyRoleView>();
+            var claim = await id.Put($"/apps/{app1.Id}/company-claims").BearerAuthorization(tokens.AccessToken)
+                .JsonContent(new ClaimPayload() { Key = "asdasd", Name = "First Claim" }).AsAsync<CompanyRoleView>();
             var p = new ClaimValuePayload { Value = "Some" };
 
             // act
-            var response = await http.Post($"/apps/{app2.Id}/roles/{role.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
+            var response = await id.Post($"/apps/{app2.Id}/company-roles/{role.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -340,12 +340,12 @@ namespace Annium.Id.Api.IntegrationTests
             // arrange
             var(user, tokens) = await LoginAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
-            var role = await http.Put($"/apps/{app.Id}/roles").BearerAuthorization(tokens.AccessToken)
-                .JsonContent(new RolePayload() { Key = "one", Name = "First Role" }).AsAsync<RoleView>();
+            var role = await id.Put($"/apps/{app.Id}/company-roles").BearerAuthorization(tokens.AccessToken)
+                .JsonContent(new RolePayload() { Key = "one", Name = "First Role" }).AsAsync<CompanyRoleView>();
             var p = new ClaimValuePayload { Value = "Some" };
 
             // act
-            var response = await http.Post($"/apps/{app.Id}/roles/{role.Id}/claims/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
+            var response = await id.Post($"/apps/{app.Id}/company-roles/{role.Id}/claims/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -358,14 +358,14 @@ namespace Annium.Id.Api.IntegrationTests
             var(user, tokens) = await LoginAsync();
             var app1 = await CreateAppAsync(tokens.AccessToken);
             var app2 = await CreateAppAsync(tokens.AccessToken, "other", "Other App");
-            var role = await http.Put($"/apps/{app2.Id}/roles").BearerAuthorization(tokens.AccessToken)
-                .JsonContent(new RolePayload() { Key = "one", Name = "First Role" }).AsAsync<RoleView>();
-            var claim = await http.Put($"/apps/{app1.Id}/claims").BearerAuthorization(tokens.AccessToken)
-                .JsonContent(new ClaimPayload() { Key = "asdasd", Name = "First Claim" }).AsAsync<RoleView>();
+            var role = await id.Put($"/apps/{app2.Id}/company-roles").BearerAuthorization(tokens.AccessToken)
+                .JsonContent(new RolePayload() { Key = "one", Name = "First Role" }).AsAsync<CompanyRoleView>();
+            var claim = await id.Put($"/apps/{app1.Id}/company-claims").BearerAuthorization(tokens.AccessToken)
+                .JsonContent(new ClaimPayload() { Key = "asdasd", Name = "First Claim" }).AsAsync<CompanyRoleView>();
             var p = new ClaimValuePayload { Value = "Some" };
 
             // act
-            var response = await http.Post($"/apps/{app2.Id}/roles/{role.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
+            var response = await id.Post($"/apps/{app2.Id}/company-roles/{role.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -377,15 +377,15 @@ namespace Annium.Id.Api.IntegrationTests
             // arrange
             var(user, tokens) = await LoginAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
-            var role = await http.Put($"/apps/{app.Id}/roles").BearerAuthorization(tokens.AccessToken)
-                .JsonContent(new RolePayload() { Key = "one", Name = "First Role" }).AsAsync<RoleView>();
-            var claim = await http.Put($"/apps/{app.Id}/claims").BearerAuthorization(tokens.AccessToken)
-                .JsonContent(new ClaimPayload() { Key = "asdasd", Name = "First Claim" }).AsAsync<RoleView>();
+            var role = await id.Put($"/apps/{app.Id}/company-roles").BearerAuthorization(tokens.AccessToken)
+                .JsonContent(new RolePayload() { Key = "one", Name = "First Role" }).AsAsync<CompanyRoleView>();
+            var claim = await id.Put($"/apps/{app.Id}/company-claims").BearerAuthorization(tokens.AccessToken)
+                .JsonContent(new ClaimPayload() { Key = "asdasd", Name = "First Claim" }).AsAsync<CompanyRoleView>();
             var p = new ClaimValuePayload { Value = "Some" };
 
             // act
-            var response = await http.Post($"/apps/{app.Id}/roles/{role.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(p).AsAsync<ClaimValueView>();
-            var roles = await http.Get($"/apps/{app.Id}/roles").BearerAuthorization(tokens.AccessToken).AsAsync<RoleView[]>();
+            var response = await id.Post($"/apps/{app.Id}/company-roles/{role.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(p).AsAsync<ClaimValueView>();
+            var roles = await id.Get($"/apps/{app.Id}/company-roles").BearerAuthorization(tokens.AccessToken).AsAsync<CompanyRoleView[]>();
 
             // assert
             response.Id.IsEqual(claim.Id);
@@ -409,7 +409,7 @@ namespace Annium.Id.Api.IntegrationTests
             var p = new ClaimValuePayload { Value = "Some" };
 
             // act
-            var response = await http.Delete($"/apps/{Guid.NewGuid()}/roles/{Guid.NewGuid()}/claims/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
+            var response = await id.Delete($"/apps/{Guid.NewGuid()}/company-roles/{Guid.NewGuid()}/claims/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -421,15 +421,15 @@ namespace Annium.Id.Api.IntegrationTests
             // arrange
             var(owner, ownerTokens) = await LoginAsync("owner", "superpass", "some@email.com");
             var app = await CreateAppAsync(ownerTokens.AccessToken);
-            var role = await http.Put($"/apps/{app.Id}/roles").BearerAuthorization(ownerTokens.AccessToken)
-                .JsonContent(new RolePayload() { Key = "one", Name = "First Role" }).AsAsync<RoleView>();
-            var claim = await http.Put($"/apps/{app.Id}/claims").BearerAuthorization(ownerTokens.AccessToken)
-                .JsonContent(new ClaimPayload() { Key = "asdasd", Name = "First Claim" }).AsAsync<RoleView>();
+            var role = await id.Put($"/apps/{app.Id}/company-roles").BearerAuthorization(ownerTokens.AccessToken)
+                .JsonContent(new RolePayload() { Key = "one", Name = "First Role" }).AsAsync<CompanyRoleView>();
+            var claim = await id.Put($"/apps/{app.Id}/company-claims").BearerAuthorization(ownerTokens.AccessToken)
+                .JsonContent(new ClaimPayload() { Key = "asdasd", Name = "First Claim" }).AsAsync<CompanyRoleView>();
             var(user, tokens) = await LoginAsync();
             var p = new ClaimValuePayload { Value = "Some" };
 
             // act
-            var response = await http.Delete($"/apps/{app.Id}/roles/{role.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
+            var response = await id.Delete($"/apps/{app.Id}/company-roles/{role.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -444,7 +444,7 @@ namespace Annium.Id.Api.IntegrationTests
             var p = new ClaimValuePayload { Value = "Some" };
 
             // act
-            var response = await http.Delete($"/apps/{app.Id}/roles/{Guid.NewGuid()}/claims/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
+            var response = await id.Delete($"/apps/{app.Id}/company-roles/{Guid.NewGuid()}/claims/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -457,14 +457,14 @@ namespace Annium.Id.Api.IntegrationTests
             var(user, tokens) = await LoginAsync();
             var app1 = await CreateAppAsync(tokens.AccessToken);
             var app2 = await CreateAppAsync(tokens.AccessToken, "other", "Other App");
-            var role = await http.Put($"/apps/{app1.Id}/roles").BearerAuthorization(tokens.AccessToken)
-                .JsonContent(new RolePayload() { Key = "one", Name = "First Role" }).AsAsync<RoleView>();
-            var claim = await http.Put($"/apps/{app1.Id}/claims").BearerAuthorization(tokens.AccessToken)
-                .JsonContent(new ClaimPayload() { Key = "asdasd", Name = "First Claim" }).AsAsync<RoleView>();
+            var role = await id.Put($"/apps/{app1.Id}/company-roles").BearerAuthorization(tokens.AccessToken)
+                .JsonContent(new RolePayload() { Key = "one", Name = "First Role" }).AsAsync<CompanyRoleView>();
+            var claim = await id.Put($"/apps/{app1.Id}/company-claims").BearerAuthorization(tokens.AccessToken)
+                .JsonContent(new ClaimPayload() { Key = "asdasd", Name = "First Claim" }).AsAsync<CompanyRoleView>();
             var p = new ClaimValuePayload { Value = "Some" };
 
             // act
-            var response = await http.Delete($"/apps/{app2.Id}/roles/{role.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
+            var response = await id.Delete($"/apps/{app2.Id}/company-roles/{role.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -476,12 +476,12 @@ namespace Annium.Id.Api.IntegrationTests
             // arrange
             var(user, tokens) = await LoginAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
-            var role = await http.Put($"/apps/{app.Id}/roles").BearerAuthorization(tokens.AccessToken)
-                .JsonContent(new RolePayload() { Key = "one", Name = "First Role" }).AsAsync<RoleView>();
+            var role = await id.Put($"/apps/{app.Id}/company-roles").BearerAuthorization(tokens.AccessToken)
+                .JsonContent(new RolePayload() { Key = "one", Name = "First Role" }).AsAsync<CompanyRoleView>();
             var p = new ClaimValuePayload { Value = "Some" };
 
             // act
-            var response = await http.Delete($"/apps/{app.Id}/roles/{role.Id}/claims/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
+            var response = await id.Delete($"/apps/{app.Id}/company-roles/{role.Id}/claims/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -494,14 +494,14 @@ namespace Annium.Id.Api.IntegrationTests
             var(user, tokens) = await LoginAsync();
             var app1 = await CreateAppAsync(tokens.AccessToken);
             var app2 = await CreateAppAsync(tokens.AccessToken, "other", "Other App");
-            var role = await http.Put($"/apps/{app2.Id}/roles").BearerAuthorization(tokens.AccessToken)
-                .JsonContent(new RolePayload() { Key = "one", Name = "First Role" }).AsAsync<RoleView>();
-            var claim = await http.Put($"/apps/{app1.Id}/claims").BearerAuthorization(tokens.AccessToken)
-                .JsonContent(new ClaimPayload() { Key = "asdasd", Name = "First Claim" }).AsAsync<RoleView>();
+            var role = await id.Put($"/apps/{app2.Id}/company-roles").BearerAuthorization(tokens.AccessToken)
+                .JsonContent(new RolePayload() { Key = "one", Name = "First Role" }).AsAsync<CompanyRoleView>();
+            var claim = await id.Put($"/apps/{app1.Id}/company-claims").BearerAuthorization(tokens.AccessToken)
+                .JsonContent(new ClaimPayload() { Key = "asdasd", Name = "First Claim" }).AsAsync<CompanyRoleView>();
             var p = new ClaimValuePayload { Value = "Some" };
 
             // act
-            var response = await http.Delete($"/apps/{app2.Id}/roles/{role.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
+            var response = await id.Delete($"/apps/{app2.Id}/company-roles/{role.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -513,14 +513,14 @@ namespace Annium.Id.Api.IntegrationTests
             // arrange
             var(user, tokens) = await LoginAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
-            var role = await http.Put($"/apps/{app.Id}/roles").BearerAuthorization(tokens.AccessToken)
-                .JsonContent(new RolePayload() { Key = "one", Name = "First Role" }).AsAsync<RoleView>();
-            var claim = await http.Put($"/apps/{app.Id}/claims").BearerAuthorization(tokens.AccessToken)
-                .JsonContent(new ClaimPayload() { Key = "asdasd", Name = "First Claim" }).AsAsync<RoleView>();
+            var role = await id.Put($"/apps/{app.Id}/company-roles").BearerAuthorization(tokens.AccessToken)
+                .JsonContent(new RolePayload() { Key = "one", Name = "First Role" }).AsAsync<CompanyRoleView>();
+            var claim = await id.Put($"/apps/{app.Id}/company-claims").BearerAuthorization(tokens.AccessToken)
+                .JsonContent(new ClaimPayload() { Key = "asdasd", Name = "First Claim" }).AsAsync<CompanyRoleView>();
             var p = new ClaimValuePayload { Value = "Some" };
 
             // act
-            var response = await http.Delete($"/apps/{app.Id}/roles/{role.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
+            var response = await id.Delete($"/apps/{app.Id}/company-roles/{role.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NoContent);
@@ -533,7 +533,7 @@ namespace Annium.Id.Api.IntegrationTests
             var(user, tokens) = await LoginAsync();
 
             // act
-            var response = await http.Delete($"/apps/{Guid.NewGuid()}/roles/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await id.Delete($"/apps/{Guid.NewGuid()}/company-roles/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -548,7 +548,7 @@ namespace Annium.Id.Api.IntegrationTests
             var(user, tokens) = await LoginAsync();
 
             // act
-            var response = await http.Delete($"/apps/{app.Id}/roles/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await id.Delete($"/apps/{app.Id}/company-roles/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -562,7 +562,7 @@ namespace Annium.Id.Api.IntegrationTests
             var app = await CreateAppAsync(tokens.AccessToken);
 
             // act
-            var response = await http.Delete($"/apps/{app.Id}/roles/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await id.Delete($"/apps/{app.Id}/company-roles/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -576,10 +576,10 @@ namespace Annium.Id.Api.IntegrationTests
             var app1 = await CreateAppAsync(tokens.AccessToken);
             var app2 = await CreateAppAsync(tokens.AccessToken, "other", "Other App");
             var p = new RolePayload() { Key = "one", Name = "First Role" };
-            var role = await http.Put($"/apps/{app1.Id}/roles").BearerAuthorization(tokens.AccessToken).JsonContent(p).AsAsync<RoleView>();
+            var role = await id.Put($"/apps/{app1.Id}/company-roles").BearerAuthorization(tokens.AccessToken).JsonContent(p).AsAsync<CompanyRoleView>();
 
             // act
-            var response = await http.Delete($"/apps/{app2.Id}/roles/{role.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await id.Delete($"/apps/{app2.Id}/company-roles/{role.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -592,10 +592,10 @@ namespace Annium.Id.Api.IntegrationTests
             var(user, tokens) = await LoginAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
             var p = new RolePayload() { Key = "one", Name = "First Role" };
-            var role = await http.Put($"/apps/{app.Id}/roles").BearerAuthorization(tokens.AccessToken).JsonContent(p).AsAsync<RoleView>();
+            var role = await id.Put($"/apps/{app.Id}/company-roles").BearerAuthorization(tokens.AccessToken).JsonContent(p).AsAsync<CompanyRoleView>();
 
             // act
-            var response = await http.Delete($"/apps/{app.Id}/roles/{role.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await id.Delete($"/apps/{app.Id}/company-roles/{role.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NoContent);

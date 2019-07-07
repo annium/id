@@ -1,6 +1,7 @@
 using System;
 using Annium.Extensions.DependencyInjection;
 using Annium.Id.Api.Tools;
+using Annium.Logging.Abstractions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
@@ -24,6 +25,7 @@ namespace Annium.Id.Api
             services.AddSingleton<ISecurityManager, SecurityManager>();
             services.AddSingleton<ITokenGenerator, TokenGenerator>();
 
+            services.AddConsole(new LoggerConfiguration(LogLevel.Trace));
             services.AddYamlLocalization();
 
             services.AddMapper(provider);

@@ -1,3 +1,5 @@
+using System;
+using Annium.Id.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Annium.Id.DemoClient.Controllers
@@ -10,10 +12,39 @@ namespace Annium.Id.DemoClient.Controllers
 
         }
 
-        [HttpGet]
-        public IActionResult Index()
+        [HttpGet("base")]
+        [Authorize]
+        public IActionResult Base()
         {
-            return Ok("Hello World from Annium.Id.DemoClient");
+            return new JsonResult(this.GetBaseId());
+        }
+
+        [HttpGet("isAdmin")]
+        [Authorize("isAdmin")]
+        public IActionResult IsAdmin()
+        {
+            return new JsonResult(this.GetAppId());
+        }
+
+        [HttpGet("hasPaymentsAccess")]
+        [Authorize("hasPaymentsAccess")]
+        public IActionResult HasPaymentsAccess()
+        {
+            return new JsonResult(this.GetAppId());
+        }
+
+        [HttpGet("isCompanyOwner/{companyId:guid}")]
+        [Authorize("isCompanyOwner")]
+        public IActionResult IsCompanyOwner(Guid companyId)
+        {
+            return new JsonResult(this.GetAppId());
+        }
+
+        [HttpGet("hasCompanyPaymentsAccess/{companyId:guid}")]
+        [Authorize("hasCompanyPaymentsAccess")]
+        public IActionResult HasCompanyPaymentsAccess(Guid companyId)
+        {
+            return new JsonResult(this.GetAppId());
         }
     }
 }
