@@ -123,6 +123,7 @@ namespace Annium.Id.Api.Controllers
             if (result != null)
                 return result;
 
+            // TODO: remove all user roles and claims
             await companyUserRepository.DeleteByIdAsync(company.Id, user.Id);
 
             return NoContent();
@@ -130,12 +131,9 @@ namespace Annium.Id.Api.Controllers
 
         private async Task<ValueTuple<Company, User, CompanyRole, IActionResult>> VerifyCompanyOwnerMemberRoleAsync(Guid companyId, Guid userId, Guid roleId, string operation)
         {
-            var(company, user, result) = await VerifyCompanyOwnerUserAsync(companyId, userId, operation);
+            var(company, user, result) = await VerifyCompanyOwnerMemberAsync(companyId, userId, operation);
             if (result != null)
                 return (null, null, null, result);
-
-            if ((await companyUserRepository.GetByIdAsync(company.Id, user.Id)) == null)
-                return (null, null, null, Forbidden("User is not company member"));
 
             var role = await companyRoleRepository.GetByIdAsync(roleId);
             if (role == null)
@@ -146,12 +144,9 @@ namespace Annium.Id.Api.Controllers
 
         private async Task<ValueTuple<Company, User, CompanyClaim, IActionResult>> VerifyCompanyOwnerMemberClaimAsync(Guid companyId, Guid userId, Guid claimId, string operation)
         {
-            var(company, user, result) = await VerifyCompanyOwnerUserAsync(companyId, userId, operation);
+            var(company, user, result) = await VerifyCompanyOwnerMemberAsync(companyId, userId, operation);
             if (result != null)
                 return (null, null, null, result);
-
-            if ((await companyUserRepository.GetByIdAsync(company.Id, user.Id)) == null)
-                return (null, null, null, Forbidden("User is not company member"));
 
             var claim = await companyClaimRepository.GetByIdAsync(claimId);
             if (claim == null)
@@ -160,7 +155,17 @@ namespace Annium.Id.Api.Controllers
             return (company, user, claim, null);
         }
 
-        // TODO: separate test for company membership
+        private async Task<ValueTuple<Company, User, IActionResult>> VerifyCompanyOwnerMemberAsync(Guid companyId, Guid userId, string operation)
+        {
+            var(company, user, result) = await VerifyCompanyOwnerUserAsync(companyId, userId, operation);
+            if (result != null)
+                return (null, null, result);
+
+            if ((await companyUserRepository.GetByIdAsync(company.Id, user.Id)) == null)
+                return (null, null, Forbidden("User is not company member"));
+
+            return (company, user, null);
+        }
 
         private async Task<ValueTuple<Company, User, IActionResult>> VerifyCompanyOwnerUserAsync(Guid companyId, Guid userId, string operation)
         {
