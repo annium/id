@@ -39,7 +39,7 @@ namespace Annium.Id.Db
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserRoleRepository, UserRoleRepository>();
 
-            services.AddConsole(new LoggerConfiguration(LogLevel.Trace));
+            services.AddConsoleLogger(new LoggerConfiguration(LogLevel.Trace));
         }
     }
 }

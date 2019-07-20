@@ -22,7 +22,7 @@ namespace Annium.Id.DemoClient
             {
                 options.Audience = "demo";
             });
-            services.AddConsole(new LoggerConfiguration(LogLevel.Trace));
+            services.AddConsoleLogger(new LoggerConfiguration(LogLevel.Trace));
             services.AddIdPolicy(
                 "isAdmin",
                 token => token.App.Roles.Contains("admin")

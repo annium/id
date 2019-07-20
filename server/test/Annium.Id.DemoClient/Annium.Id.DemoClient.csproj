@@ -6,8 +6,9 @@
         <TargetFramework>netcoreapp2.2</TargetFramework>
         <OutputType>Exe</OutputType>
         <DebugType>portable</DebugType>
-        <LangVersion>latest</LangVersion>
         <WarningsAsErrors>true</WarningsAsErrors>
+        <LangVersion>latest</LangVersion>
+        <IsPackable>false</IsPackable>
     </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="../../src/Annium.Id.AspNetCore/Annium.Id.AspNetCore.csproj" />
@@ -19,7 +20,7 @@
         <PackageReference Include="Annium.Extensions.DependencyInjection" Version="0.1.0" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.2.0" />
-        <PackageReference Include="NodaTime" Version="2.4.5" />
+        <PackageReference Include="NodaTime" Version="2.4.6" />
         <PackageReference Include="NodaTime.Serialization.JsonNet" Version="2.2.0" />
     </ItemGroup>
 </Project>

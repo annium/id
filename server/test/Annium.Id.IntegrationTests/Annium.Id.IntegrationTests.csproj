@@ -6,8 +6,8 @@
         <TargetFramework>netcoreapp2.2</TargetFramework>
         <OutputType>Exe</OutputType>
         <DebugType>portable</DebugType>
-        <LangVersion>latest</LangVersion>
         <WarningsAsErrors>true</WarningsAsErrors>
+        <LangVersion>latest</LangVersion>
     </PropertyGroup>
     <ItemGroup>
         <None Update="keys/*.key" CopyToOutputDirectory="PreserveNewest" />
@@ -19,8 +19,8 @@
     <ItemGroup>
         <PackageReference Include="Annium.AspNetCore.IntegrationTesting" Version="0.1.0" />
         <PackageReference Include="Annium.Testing.TestAdapter" Version="0.1.0" />
-        <PackageReference Include="coverlet.msbuild" Version="2.6.2" />
+        <PackageReference Include="coverlet.msbuild" Version="2.6.3" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="2.2.0" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.1.1" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
     </ItemGroup>
 </Project>

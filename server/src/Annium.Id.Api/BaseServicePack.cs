@@ -25,7 +25,7 @@ namespace Annium.Id.Api
             services.AddSingleton<ISecurityManager, SecurityManager>();
             services.AddSingleton<ITokenGenerator, TokenGenerator>();
 
-            services.AddConsole(new LoggerConfiguration(LogLevel.Trace));
+            services.AddConsoleLogger(new LoggerConfiguration(LogLevel.Trace));
             services.AddYamlLocalization();
 
             services.AddMapper(provider);

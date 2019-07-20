@@ -7,8 +7,8 @@
         <OutputType>Exe</OutputType>
         <DebugType>portable</DebugType>
         <WarningsAsErrors>true</WarningsAsErrors>
-        <IsPackable>false</IsPackable>
         <LangVersion>latest</LangVersion>
+        <IsPackable>false</IsPackable>
     </PropertyGroup>
     <ItemGroup>
         <None Update="**/locale/*.yml" CopyToOutputDirectory="PreserveNewest" />
@@ -22,6 +22,6 @@
         <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
         <PackageReference Include="NodaTime.Serialization.JsonNet" Version="2.2.0" />
-        <PackageReference Include="NSwag.AspNetCore" Version="13.0.2" />
+        <PackageReference Include="NSwag.AspNetCore" Version="13.0.4" />
     </ItemGroup>
 </Project>
