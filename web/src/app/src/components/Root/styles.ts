@@ -8,6 +8,9 @@ export const useStyles = makeStyles(theme => ({
         flexDirection: 'column',
         justifyContent: 'flex-start',
     },
+    navigation: {
+        margin: '0 auto',
+    },
     footer: {
         padding: theme.spacing(2),
         marginTop: 'auto',

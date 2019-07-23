@@ -46,8 +46,8 @@ export const LoginPage = connect<OwnProps, SelectorProps>(
       !form.untouchedFields.includes('password')
 
     return (
-      <Container component="main" maxWidth="xs">
-        <div className={classes.paper}>
+      <Container className={classes.page} component="main" maxWidth="xs">
+        <div className={classes.container}>
           <Avatar className={classes.avatar}>
             <LockOutlinedIcon />
           </Avatar>
@@ -128,9 +128,8 @@ export const LoginPage = connect<OwnProps, SelectorProps>(
 )
 
 const handleChangeSubmit = (loginData: LoginData) => (e: React.KeyboardEvent<HTMLInputElement>) => {
-  if (e.key === 'Enter') {
+  if (e.key === 'Enter')
     handleLogin(loginData)()
-  }
 }
 
 const handleLogin = ({ login, password }: LoginData) => () =>

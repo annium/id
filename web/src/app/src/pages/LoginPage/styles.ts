@@ -8,7 +8,7 @@ export const useStyles = makeStyles(theme => ({
         flexDirection: 'column',
         justifyContent: 'flex-start',
     },
-    paper: {
+    container: {
         marginTop: theme.spacing(8),
         display: 'flex',
         flexDirection: 'column',
