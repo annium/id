@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using Annium.AspNetCore.Extensions;
 using Annium.Extensions.Mapper;
@@ -10,7 +9,6 @@ using Annium.Id.Db;
 using Annium.Id.Db.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
-using NodaTime;
 
 namespace Annium.Id.Api.Controllers
 {

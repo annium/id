@@ -3,10 +3,9 @@ using System.Net;
 using System.Threading.Tasks;
 using Annium.Extensions.Net.Http;
 using Annium.Id.Api.Payloads;
-using Annium.Id.Api.Views;
 using Annium.Testing;
 
-namespace Annium.Id.IntegrationTests
+namespace Annium.Id.IntegrationTests.Controllers
 {
     public class AppUserControllerTest : IntegrationTestBase
     {

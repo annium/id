@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using Annium.AspNetCore.Extensions;
-using Annium.Extensions.Mapper;
 using Annium.Id.Api.Payloads;
 using Annium.Id.Api.Tools;
 using Annium.Id.Api.Views;

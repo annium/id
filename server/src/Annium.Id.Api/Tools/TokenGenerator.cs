@@ -19,7 +19,7 @@ namespace Annium.Id.Api.Tools
 {
     internal class TokenGenerator : ITokenGenerator
     {
-        private readonly TimeSpan tokenLifeTime = TimeSpan.FromMinutes(1000);
+        private readonly Duration tokenLifeTime = Duration.FromMinutes(1000);
         private readonly RsaSecurityKey signingKey;
         private readonly IAppRepository appRepository;
         private readonly IUserRoleRepository userRoleRepository;
@@ -127,7 +127,9 @@ namespace Annium.Id.Api.Tools
         {
             var packedToken = Convert.ToBase64String(LZ4MessagePackSerializer.Serialize(token));
 
-            var now = getInstant().ToDateTimeUtc();
+            var instant = getInstant();
+            var now = instant.ToDateTimeUtc();
+            var expires = (instant + tokenLifeTime).ToDateTimeUtc();
 
             var claims = new List<SystemClaim>();
             claims.Add(new SystemClaim(Claims.Id, packedToken));
@@ -138,7 +140,7 @@ namespace Annium.Id.Api.Tools
                 issuer: Constants.Issuer,
                 audience: audience,
                 claims: claims,
-                expires: now + tokenLifeTime,
+                expires: expires,
                 notBefore: now,
                 signingCredentials: new SigningCredentials(signingKey, SecurityAlgorithms.RsaSha256)
             );

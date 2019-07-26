@@ -1,6 +1,5 @@
 using System;
 using MessagePack;
-using Newtonsoft.Json;
 
 namespace Annium.Id.AspNetCore
 {

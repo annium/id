@@ -11,6 +11,7 @@ using Annium.Security.Cryptography;
 using MessagePack;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using NodaTime;
 
 namespace Annium.Id.AspNetCore.Tools
 {
@@ -43,7 +44,7 @@ namespace Annium.Id.AspNetCore.Tools
                 return fail(HttpStatusCode.BadRequest, "Token is not valid JWT");
 
             var tvp = new TokenValidationParameters();
-            tvp.ClockSkew = TimeSpan.FromSeconds(5);
+            tvp.ClockSkew = Duration.FromSeconds(5).ToTimeSpan();
             tvp.IssuerSigningKey = signingKey;
             tvp.RequireExpirationTime = true;
             tvp.RequireSignedTokens = true;

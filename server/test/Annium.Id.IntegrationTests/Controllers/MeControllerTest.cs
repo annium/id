@@ -6,7 +6,7 @@ using Annium.Id.Api.Payloads;
 using Annium.Id.Api.Views;
 using Annium.Testing;
 
-namespace Annium.Id.IntegrationTests
+namespace Annium.Id.IntegrationTests.Controllers
 {
     public class MeControllerTest : IntegrationTestBase
     {

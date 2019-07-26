@@ -5,7 +5,7 @@ using Annium.Id.AspNetCore;
 using Annium.Testing;
 using Newtonsoft.Json;
 
-namespace Annium.Id.IntegrationTests
+namespace Annium.Id.IntegrationTests.DemoClient.Controllers
 {
     public class DemoControllerTest : IntegrationTestBase
     {
