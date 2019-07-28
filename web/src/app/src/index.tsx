@@ -6,6 +6,7 @@ import ReactDOM from 'react-dom'
 
 import { context } from './context'
 import { i18n } from './i18n'
+import { NotificitionsProvider } from './notifications'
 import { Routes } from './routes'
 import { theme } from './styles'
 
@@ -14,8 +15,10 @@ ReactDOM.render(
   (
     <I18nProvider i18n={i18n} language={i18n.language}>
       <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Routes />
+        <NotificitionsProvider>
+          <CssBaseline />
+          <Routes />
+        </NotificitionsProvider>
       </ThemeProvider>
     </I18nProvider>
   ),

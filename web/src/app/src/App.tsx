@@ -3,6 +3,7 @@ import { RouteComponentProps } from 'react-router-dom'
 
 import { Loader } from './components/Loader'
 import { authActions } from './data/auth'
+import { useNotifications } from './notifications'
 import { connect, Store } from './store'
 
 
@@ -24,11 +25,16 @@ export const App = connect<OwnProps, SelectorProps>(
   function App(props: OwnProps & SelectorProps) {
     const { location, children, startup, isLoading, hasTokens } = props
 
+    const { error } = useNotifications()
+
     useEffect(
       () => {
         startup.location = location
         if (hasTokens) {
-          authActions.load({})
+          authActions.load({}).then(response => {
+            if (response.isFailure)
+              error(response.plainErrors[0])
+          })
           log('mount', 'load user')
         }
       },

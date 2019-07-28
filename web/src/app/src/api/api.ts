@@ -1,4 +1,4 @@
-import { httpClientFactory, HttpStatusCode } from '@annium/client-http'
+import { httpClientFactory, HttpStatusCode, HttpResponse } from '@annium/client-http'
 import { storage } from '@annium/utils'
 import moment from 'moment'
 
@@ -44,10 +44,22 @@ privateApi.useMiddleware(async next => {
   // if unauthorized - try refresh token and retry
   const tokens = storage.get<UserToken>(storageKeys.token)
   if (!tokens)
-    throw new Error('No user token available to perform token update')
+    return new HttpResponse(
+      HttpStatusCode.Unauthorized,
+      'No user token available to perform token update',
+      null,
+      ['No user token available to perform token update'],
+      {},
+    )
 
   if (moment(tokens.refreshTokenExpires).isBefore(moment()))
-    throw new Error('Refresh token is expired. Need to login')
+    return new HttpResponse(
+      HttpStatusCode.Unauthorized,
+      'Refresh token is expired. Need to login',
+      null,
+      ['Refresh token is expired. Need to login'],
+      {},
+    )
 
   const updateTokenResult = await userApi.updateToken(tokens.refreshToken)
 

@@ -48,6 +48,8 @@ const raw = reducerFactory(context, false)
       user.actions.success(userResult)
     else
       user.actions.failure(userResult)
+
+    return userResult
   })
   .function('login', ({ setAccess }) => async ({ login, password }: { login: string, password: string }) => {
     token.actions.start({})
