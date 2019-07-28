@@ -1,7 +1,7 @@
 using System;
 using System.Net;
 using System.Threading.Tasks;
-using Annium.Extensions.Net.Http;
+using Annium.Net.Http;
 using Annium.Id.Api.Payloads;
 using Annium.Id.Api.Views;
 using Annium.Testing;

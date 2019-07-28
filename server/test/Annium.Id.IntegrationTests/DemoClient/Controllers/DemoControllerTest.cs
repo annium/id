@@ -1,6 +1,6 @@
 using System.Net;
 using System.Threading.Tasks;
-using Annium.Extensions.Net.Http;
+using Annium.Net.Http;
 using Annium.Id.AspNetCore;
 using Annium.Testing;
 using Newtonsoft.Json;
