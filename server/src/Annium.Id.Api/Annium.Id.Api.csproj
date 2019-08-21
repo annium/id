@@ -6,13 +6,10 @@
         <TargetFramework>netcoreapp2.2</TargetFramework>
         <OutputType>Exe</OutputType>
         <DebugType>portable</DebugType>
-        <WarningsAsErrors>true</WarningsAsErrors>
         <LangVersion>latest</LangVersion>
+        <WarningsAsErrors>true</WarningsAsErrors>
         <IsPackable>false</IsPackable>
     </PropertyGroup>
-    <ItemGroup>
-        <None Update="**/locale/*.yml" CopyToOutputDirectory="PreserveNewest" />
-    </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="../Annium.Id.AspNetCore/Annium.Id.AspNetCore.csproj" />
         <ProjectReference Include="../Annium.Id.Db/Annium.Id.Db.csproj" />
@@ -23,5 +20,8 @@
         <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
         <PackageReference Include="NodaTime.Serialization.JsonNet" Version="2.2.0" />
         <PackageReference Include="NSwag.AspNetCore" Version="13.0.4" />
+    </ItemGroup>
+    <ItemGroup>
+        <None Update="**/locale/*.yml" CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
 </Project>
