@@ -1,4 +1,5 @@
 using System;
+using Annium.Core.DependencyInjection;
 using Annium.Extensions.DependencyInjection;
 using Annium.Id.Api.Tools;
 using Annium.Logging.Abstractions;
@@ -25,10 +26,11 @@ namespace Annium.Id.Api
             services.AddSingleton<ISecurityManager, SecurityManager>();
             services.AddSingleton<ITokenGenerator, TokenGenerator>();
 
-            services.AddConsoleLogger(new LoggerConfiguration(LogLevel.Trace));
+            services.AddSingleton(new LoggerConfiguration(LogLevel.Trace));
+            services.AddConsoleLogger();
             services.AddYamlLocalization();
 
-            services.AddMapper(provider);
+            services.AddMapper();
         }
     }
 }

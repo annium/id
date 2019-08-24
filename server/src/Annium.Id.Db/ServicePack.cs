@@ -1,8 +1,8 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using Annium.Extensions.Configuration;
-using Annium.Extensions.DependencyInjection;
+using Annium.Configuration.Abstractions;
+using Annium.Core.DependencyInjection;
 using LinqToDB.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,7 +19,7 @@ namespace Annium.Id.Db
         public override void Configure(IServiceCollection services)
         {
             var cfg = new ConfigurationBuilder()
-                .AddJsonFile(Path.Combine("configuration", "db.json"))
+                .AddYamlFile(Path.Combine("configuration", "db.yml"))
                 .Build<Configuration>();
             services.AddSingleton(cfg);
         }

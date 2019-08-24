@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Annium.Core.DependencyInjection;
 using Annium.Extensions.DependencyInjection;
 using Annium.Logging.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,7 +23,8 @@ namespace Annium.Id.DemoClient
             {
                 options.Audience = "demo";
             });
-            services.AddConsoleLogger(new LoggerConfiguration(LogLevel.Trace));
+            services.AddSingleton(new LoggerConfiguration(LogLevel.Trace));
+            services.AddConsoleLogger();
             services.AddIdPolicy(
                 "isAdmin",
                 token => token.App.Roles.Contains("admin")

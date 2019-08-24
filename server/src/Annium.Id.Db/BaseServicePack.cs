@@ -1,5 +1,5 @@
 using System;
-using Annium.Extensions.DependencyInjection;
+using Annium.Core.DependencyInjection;
 using Annium.Id.Db.Repositories;
 using Annium.Id.Db.Repositories.Implementations;
 using Annium.Logging.Abstractions;
@@ -39,7 +39,8 @@ namespace Annium.Id.Db
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserRoleRepository, UserRoleRepository>();
 
-            services.AddConsoleLogger(new LoggerConfiguration(LogLevel.Trace));
+            services.AddSingleton(new LoggerConfiguration(LogLevel.Trace));
+            services.AddConsoleLogger();
         }
     }
 }
