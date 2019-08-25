@@ -14,10 +14,8 @@
         <ProjectReference Include="../../src/Annium.Id.AspNetCore/Annium.Id.AspNetCore.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Annium.AspNetCore.Extensions" Version="0.1.0" />
         <PackageReference Include="Annium.Core.DependencyInjection" Version="0.1.0" />
         <PackageReference Include="Annium.Diagnostics.Debug" Version="0.1.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.2.0" />
         <PackageReference Include="NodaTime" Version="2.4.6" />
         <PackageReference Include="NodaTime.Serialization.JsonNet" Version="2.2.0" />

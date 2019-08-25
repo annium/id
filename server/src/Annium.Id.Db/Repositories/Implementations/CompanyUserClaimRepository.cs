@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Annium.Core.Mapper;
+using Annium.Id.Domain.Entities;
 using LinqToDB;
 
 namespace Annium.Id.Db.Repositories.Implementations

@@ -1,11 +1,12 @@
 using System;
 using NodaTime;
 
-namespace Annium.Id.Db
+namespace Annium.Id.Domain.Entities
 {
-    public class UserLogin
+    public class UserAppLogin
     {
         public Guid Id { get; }
+        public Guid AppId { get; }
         public Guid UserId { get; }
         public Instant LoggedAt { get; }
         public string IPAddress { get; }
@@ -13,7 +14,8 @@ namespace Annium.Id.Db
         public Guid RefreshToken { get; set; }
         public Instant RefreshTokenExpires { get; set; }
 
-        public UserLogin(
+        public UserAppLogin(
+            Guid appId,
             Guid userId,
             Instant loggedAt,
             string ipAddress,
@@ -22,6 +24,7 @@ namespace Annium.Id.Db
             Instant refreshTokenExpires
         )
         {
+            AppId = appId;
             UserId = userId;
             LoggedAt = loggedAt;
             IPAddress = ipAddress;
@@ -30,15 +33,16 @@ namespace Annium.Id.Db
             RefreshTokenExpires = refreshTokenExpires;
         }
 
-        internal UserLogin(
+        internal UserAppLogin(
             Guid id,
+            Guid appId,
             Guid userId,
             Instant loggedAt,
             string ipAddress,
             string client,
             Guid refreshToken,
             Instant refreshTokenExpires
-        ) : this(userId, loggedAt, ipAddress, client, refreshToken, refreshTokenExpires)
+        ) : this(appId, userId, loggedAt, ipAddress, client, refreshToken, refreshTokenExpires)
         {
             Id = id;
         }

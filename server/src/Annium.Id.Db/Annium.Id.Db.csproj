@@ -11,6 +11,9 @@
         <IsPackable>false</IsPackable>
     </PropertyGroup>
     <ItemGroup>
+        <ProjectReference Include="../Annium.Id.Domain/Annium.Id.Domain.csproj" />
+    </ItemGroup>
+    <ItemGroup>
         <PackageReference Include="Annium.Configuration.Yaml" Version="0.1.0" />
         <PackageReference Include="Annium.Core.DependencyInjection" Version="0.1.0" />
         <PackageReference Include="Annium.Core.Mapper" Version="0.1.0" />
@@ -19,7 +22,6 @@
         <PackageReference Include="linq2db.EntityFrameworkCore" Version="1.5.2" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.6" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.6" />
-        <PackageReference Include="NodaTime" Version="2.4.6" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.2.4" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.NodaTime" Version="2.2.4" />
     </ItemGroup>

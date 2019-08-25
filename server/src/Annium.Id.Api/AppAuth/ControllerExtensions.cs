@@ -1,5 +1,5 @@
 using System;
-using Annium.Id.Db;
+using Annium.Id.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Annium.Id.Api.AppAuth

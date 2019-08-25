@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 
-namespace Annium.Id.Db
+namespace Annium.Id.Domain.Entities
 {
-    public class CompanyRole
+    public class Role
     {
         public Guid Id { get; }
         public Guid AppId { get; }
@@ -11,7 +11,7 @@ namespace Annium.Id.Db
         public string Name { get; set; }
         public IEnumerable<ClaimValue> Claims { get; }
 
-        public CompanyRole(
+        public Role(
             Guid appId,
             string key,
             string name,
@@ -24,7 +24,7 @@ namespace Annium.Id.Db
             Claims = claims;
         }
 
-        internal CompanyRole(
+        internal Role(
             Guid id,
             Guid appId,
             string key,

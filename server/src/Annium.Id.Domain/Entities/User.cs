@@ -1,6 +1,6 @@
 using System;
 
-namespace Annium.Id.Db
+namespace Annium.Id.Domain.Entities
 {
     public class User
     {

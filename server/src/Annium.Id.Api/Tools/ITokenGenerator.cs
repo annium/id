@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using Annium.Id.Db;
+using Annium.Id.Domain.Entities;
 
 namespace Annium.Id.Api.Tools
 {

@@ -6,8 +6,8 @@ using Annium.Core.Mapper;
 using Annium.Id.Api.Payloads;
 using Annium.Id.Api.Views;
 using Annium.Id.AspNetCore;
-using Annium.Id.Db;
 using Annium.Id.Db.Repositories;
+using Annium.Id.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 

@@ -1,20 +1,20 @@
 using System;
 
-namespace Annium.Id.Db
+namespace Annium.Id.Domain.Entities
 {
-    public class CompanyRoleClaim
+    public class UserClaim
     {
-        public Guid RoleId { get; }
+        public Guid UserId { get; }
         public Guid ClaimId { get; }
         public string Value { get; set; }
 
-        public CompanyRoleClaim(
-            Guid roleId,
+        public UserClaim(
+            Guid userId,
             Guid claimId,
             string value
         )
         {
-            RoleId = roleId;
+            UserId = userId;
             ClaimId = claimId;
             Value = value;
         }

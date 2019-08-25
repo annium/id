@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Annium.Id.Domain.Entities;
 
 namespace Annium.Id.Db.Repositories
 {

@@ -1,35 +1,35 @@
 using System;
 
-namespace Annium.Id.Db
+namespace Annium.Id.Domain.Entities
 {
-    public class Company
+    public class App
     {
         public Guid Id { get; }
         public Guid OwnerId { get; set; }
-        public Guid? ParentId { get; set; }
         public string Key { get; set; }
         public string Name { get; set; }
+        public Guid ApiToken { get; set; }
 
-        public Company(
+        public App(
             Guid ownerId,
-            Guid? parentId,
             string key,
-            string name
+            string name,
+            Guid apiToken
         )
         {
             OwnerId = ownerId;
-            ParentId = parentId;
             Key = key;
             Name = name;
+            ApiToken = apiToken;
         }
 
-        internal Company(
+        internal App(
             Guid id,
             Guid ownerId,
-            Guid? parentId,
             string key,
-            string name
-        ) : this(ownerId, parentId, key, name)
+            string name,
+            Guid apiToken
+        ) : this(ownerId, key, name, apiToken)
         {
             Id = id;
         }
