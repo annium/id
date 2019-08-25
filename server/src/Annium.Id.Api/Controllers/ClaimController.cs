@@ -32,7 +32,7 @@ namespace Annium.Id.Api.Controllers
             this.mapper = mapper;
         }
 
-        [HttpPut]
+        [HttpPost]
         [Authorize]
         public async Task<IActionResult> CreateClaimAsync(Guid appId, [FromBody] ClaimPayload claimPayload)
         {
@@ -70,7 +70,7 @@ namespace Annium.Id.Api.Controllers
             return Ok(claims.Select(mapper.Map<ClaimView>).ToArray());
         }
 
-        [HttpPost("{claimId:guid}")]
+        [HttpPut("{claimId:guid}")]
         [Authorize]
         public async Task<IActionResult> UpdateClaimAsync(Guid appId, Guid claimId, [FromBody] ClaimPayload claimPayload)
         {

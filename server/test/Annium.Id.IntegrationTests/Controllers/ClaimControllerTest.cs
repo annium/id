@@ -18,7 +18,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var p = new ClaimPayload() { Key = "one" };
 
             // act
-            var response = await id.Put($"/apps/{Guid.NewGuid()}/claims").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
+            var response = await id.Post($"/apps/{Guid.NewGuid()}/claims").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
@@ -32,7 +32,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var p = new ClaimPayload() { Key = "one", Name = "First Claim" };
 
             // act
-            var response = await id.Put($"/apps/{Guid.NewGuid()}/claims").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
+            var response = await id.Post($"/apps/{Guid.NewGuid()}/claims").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -48,7 +48,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var p = new ClaimPayload() { Key = "one", Name = "First Claim" };
 
             // act
-            var response = await id.Put($"/apps/{app.Id}/claims").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
+            var response = await id.Post($"/apps/{app.Id}/claims").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -62,10 +62,10 @@ namespace Annium.Id.IntegrationTests.Controllers
             var app = await CreateAppAsync(tokens.AccessToken);
             var p = new ClaimPayload() { Key = "one", Name = "First Claim" };
 
-            await id.Put($"/apps/{app.Id}/claims").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
+            await id.Post($"/apps/{app.Id}/claims").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
 
             // act
-            var response = await id.Put($"/apps/{app.Id}/claims").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
+            var response = await id.Post($"/apps/{app.Id}/claims").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Conflict);
@@ -129,7 +129,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var u = new ClaimPayload { Key = "one" };
 
             // act
-            var response = await id.Post($"/apps/{app.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
+            var response = await id.Put($"/apps/{app.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
@@ -145,7 +145,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var u = new ClaimPayload { Key = "one", Name = "One Claim" };
 
             // act
-            var response = await id.Post($"/apps/{Guid.NewGuid()}/claims/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
+            var response = await id.Put($"/apps/{Guid.NewGuid()}/claims/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -162,7 +162,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var u = new ClaimPayload { Key = "one", Name = "One Claim" };
 
             // act
-            var response = await id.Post($"/apps/{app.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
+            var response = await id.Put($"/apps/{app.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -178,7 +178,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var u = new ClaimPayload { Key = "one", Name = "One Claim" };
 
             // act
-            var response = await id.Post($"/apps/{app.Id}/claims/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
+            var response = await id.Put($"/apps/{app.Id}/claims/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -195,7 +195,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var u = new ClaimPayload { Key = "one", Name = "One Claim" };
 
             // act
-            var response = await id.Post($"/apps/{app2.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
+            var response = await id.Put($"/apps/{app2.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -212,7 +212,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             await CreateClaimAsync(tokens.AccessToken, app.Id, u.Key, u.Name);
 
             // act
-            var response = await id.Post($"/apps/{app.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
+            var response = await id.Put($"/apps/{app.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Conflict);
@@ -228,7 +228,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var u = new ClaimPayload { Key = "one", Name = "One Claim" };
 
             // act
-            var response = await id.Post($"/apps/{app.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).AsAsync<ClaimView>();
+            var response = await id.Put($"/apps/{app.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).AsAsync<ClaimView>();
 
             // assert
             response.Id.IsEqual(claim.Id);

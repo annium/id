@@ -20,7 +20,7 @@ namespace Annium.Id.IntegrationTests
         {
             var payload = new UserPayload { Login = login, Password = password, Email = email };
 
-            return await id.Put("/me").JsonContent(payload).AsAsync<UserPrivateView>();
+            return await id.Post("/me").JsonContent(payload).AsAsync<UserPrivateView>();
         }
 
         protected async Task<ValueTuple<UserPrivateView, UserTokenView>> LoginUserAsync(
@@ -45,7 +45,7 @@ namespace Annium.Id.IntegrationTests
         {
             var payload = new AppPayload { Key = key, Name = name };
 
-            return id.Put("/apps").BearerAuthorization(accessToken).JsonContent(payload).AsAsync<AppPrivateView>();
+            return id.Post("/apps").BearerAuthorization(accessToken).JsonContent(payload).AsAsync<AppPrivateView>();
         }
 
         protected Task<UserTokenView> LoginAppAsync(
@@ -85,7 +85,7 @@ namespace Annium.Id.IntegrationTests
         {
             var payload = new RolePayload { Key = key, Name = name };
 
-            return id.Put($"/apps/{appId}/roles").BearerAuthorization(accessToken).JsonContent(payload).AsAsync<RoleView>();
+            return id.Post($"/apps/{appId}/roles").BearerAuthorization(accessToken).JsonContent(payload).AsAsync<RoleView>();
         }
 
         protected Task<ClaimView> CreateClaimAsync(
@@ -97,7 +97,7 @@ namespace Annium.Id.IntegrationTests
         {
             var payload = new ClaimPayload { Key = key, Name = name };
 
-            return id.Put($"/apps/{appId}/claims").BearerAuthorization(accessToken).JsonContent(payload).AsAsync<ClaimView>();
+            return id.Post($"/apps/{appId}/claims").BearerAuthorization(accessToken).JsonContent(payload).AsAsync<ClaimView>();
         }
 
         protected Task<ClaimValueView> AddClaimToRoleAsync(
@@ -120,7 +120,7 @@ namespace Annium.Id.IntegrationTests
             Guid roleId
         )
         {
-            return id.Put($"/apps/{appId}/users/{userId}/roles/{roleId}").BearerAuthorization(accessToken).RunAsync();
+            return id.Post($"/apps/{appId}/users/{userId}/roles/{roleId}").BearerAuthorization(accessToken).RunAsync();
         }
 
         protected Task<ClaimValueView> AddClaimToUserAsync(
@@ -145,7 +145,7 @@ namespace Annium.Id.IntegrationTests
         {
             var payload = new CompanyPayload { ParentId = parentId, Key = key, Name = name };
 
-            return id.Put("/companies").BearerAuthorization(accessToken).JsonContent(payload).AsAsync<CompanyPrivateView>();
+            return id.Post("/companies").BearerAuthorization(accessToken).JsonContent(payload).AsAsync<CompanyPrivateView>();
         }
 
         protected Task<RoleView> CreateCompanyRoleAsync(
@@ -157,7 +157,7 @@ namespace Annium.Id.IntegrationTests
         {
             var payload = new RolePayload { Key = key, Name = name };
 
-            return id.Put($"/apps/{appId}/company-roles").BearerAuthorization(accessToken).JsonContent(payload).AsAsync<RoleView>();
+            return id.Post($"/apps/{appId}/company-roles").BearerAuthorization(accessToken).JsonContent(payload).AsAsync<RoleView>();
         }
 
         protected Task<CompanyClaimView> CreateCompanyClaimAsync(
@@ -169,7 +169,7 @@ namespace Annium.Id.IntegrationTests
         {
             var payload = new CompanyClaimPayload { Key = key, Name = name };
 
-            return id.Put($"/apps/{appId}/company-claims").BearerAuthorization(accessToken).JsonContent(payload).AsAsync<CompanyClaimView>();
+            return id.Post($"/apps/{appId}/company-claims").BearerAuthorization(accessToken).JsonContent(payload).AsAsync<CompanyClaimView>();
         }
 
         protected Task<ClaimValueView> AddCompanyClaimToCompanyRoleAsync(
@@ -191,7 +191,7 @@ namespace Annium.Id.IntegrationTests
             Guid userId
         )
         {
-            return id.Put($"/companies/{companyId}/users/{userId}").BearerAuthorization(accessToken).RunAsync();
+            return id.Post($"/companies/{companyId}/users/{userId}").BearerAuthorization(accessToken).RunAsync();
         }
 
         protected Task AddCompanyRoleToCompanyUserAsync(
@@ -201,7 +201,7 @@ namespace Annium.Id.IntegrationTests
             Guid roleId
         )
         {
-            return id.Put($"/companies/{companyId}/users/{userId}/roles/{roleId}").BearerAuthorization(accessToken).RunAsync();
+            return id.Post($"/companies/{companyId}/users/{userId}/roles/{roleId}").BearerAuthorization(accessToken).RunAsync();
         }
 
         protected Task AddCompanyClaimToCompanyUserAsync(

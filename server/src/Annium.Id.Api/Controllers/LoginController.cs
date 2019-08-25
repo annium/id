@@ -73,7 +73,7 @@ namespace Annium.Id.Api.Controllers
             return Ok(new UserTokenView(token, login.RefreshToken, login.RefreshTokenExpires));
         }
 
-        [HttpPost("logout")]
+        [HttpDelete("logout")]
         [Authorize]
         public async Task<IActionResult> LogoutAsync()
         {
@@ -84,7 +84,7 @@ namespace Annium.Id.Api.Controllers
             return NoContent();
         }
 
-        [HttpPost("token")]
+        [HttpPut("token")]
         public async Task<IActionResult> UpdateTokenAsync(Guid refreshToken)
         {
             var login = await userLoginRepository.FindByRefreshTokenAsync(refreshToken);
@@ -128,7 +128,7 @@ namespace Annium.Id.Api.Controllers
             return Ok(new UserTokenView(token, login.RefreshToken, login.RefreshTokenExpires));
         }
 
-        [HttpPost("apps/{appId:guid}/logout")]
+        [HttpDelete("apps/{appId:guid}/logout")]
         [Authorize]
         public async Task<IActionResult> LogoutAppAsync(Guid appId)
         {
@@ -139,7 +139,7 @@ namespace Annium.Id.Api.Controllers
             return NoContent();
         }
 
-        [HttpPost("apps/{appId:guid}/token")]
+        [HttpPut("apps/{appId:guid}/token")]
         public async Task<IActionResult> UpdateTokenAsync(Guid appId, Guid refreshToken)
         {
             var app = await appRepository.GetByIdAsync(appId);

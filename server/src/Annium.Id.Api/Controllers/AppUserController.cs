@@ -43,7 +43,7 @@ namespace Annium.Id.Api.Controllers
             this.mapper = mapper;
         }
 
-        [HttpPut("roles/{roleId:guid}")]
+        [HttpPost("roles/{roleId:guid}")]
         [Authorize]
         public async Task<IActionResult> AddRoleToUserAsync(Guid appId, Guid userId, Guid roleId)
         {

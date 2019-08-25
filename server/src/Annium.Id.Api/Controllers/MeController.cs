@@ -34,7 +34,7 @@ namespace Annium.Id.Api.Controllers
             this.mapper = mapper;
         }
 
-        [HttpPut]
+        [HttpPost]
         public async Task<IActionResult> RegisterUserAsync([FromBody] UserPayload userPayload)
         {
             if (!ModelState.IsValid)
@@ -56,7 +56,7 @@ namespace Annium.Id.Api.Controllers
 
             user = await userRepository.CreateAsync(user);
 
-            return Ok(user);
+            return Ok(mapper.Map<UserPrivateView>(user));
         }
 
         [HttpGet]
@@ -71,7 +71,7 @@ namespace Annium.Id.Api.Controllers
             return Ok(mapper.Map<UserPrivateView>(user));
         }
 
-        [HttpPost]
+        [HttpPut]
         [Authorize]
         public async Task<IActionResult> UpdateUserAsync([FromBody] UserPayload userPayload)
         {

@@ -18,7 +18,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var payload = new AppPayload() { Key = "de", Name = "Demo App" };
 
             // act
-            var response = await id.Put("/apps").BearerAuthorization(tokens.AccessToken).JsonContent(payload).RunAsync();
+            var response = await id.Post("/apps").BearerAuthorization(tokens.AccessToken).JsonContent(payload).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
@@ -30,10 +30,10 @@ namespace Annium.Id.IntegrationTests.Controllers
             // arrange
             var(user, tokens) = await LoginUserAsync();
             var payload = new AppPayload() { Key = "demo", Name = "Demo App" };
-            await id.Put("/apps").BearerAuthorization(tokens.AccessToken).JsonContent(payload).RunAsync();
+            await id.Post("/apps").BearerAuthorization(tokens.AccessToken).JsonContent(payload).RunAsync();
 
             // act
-            var response = await id.Put("/apps").BearerAuthorization(tokens.AccessToken).JsonContent(payload).RunAsync();
+            var response = await id.Post("/apps").BearerAuthorization(tokens.AccessToken).JsonContent(payload).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Conflict);
@@ -90,8 +90,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         {
             // arrange
             var(_, tokens) = await LoginUserAsync();
-            var p = new AppPayload() { Key = "demo", Name = "Demo App" };
-            var app = await id.Put("/apps").BearerAuthorization(tokens.AccessToken).JsonContent(p).AsAsync<AppPrivateView>();
+            var app = await CreateAppAsync(tokens.AccessToken);
 
             // act
             var response = await id.Get($"/apps/{app.Id}/token").BearerAuthorization(tokens.AccessToken).AsAsync<Guid>();
@@ -107,7 +106,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var(user, tokens) = await LoginUserAsync();
 
             // act
-            var response = await id.Post($"/apps/{Guid.NewGuid()}/token").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await id.Put($"/apps/{Guid.NewGuid()}/token").BearerAuthorization(tokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -122,7 +121,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var(_, tokens) = await LoginUserAsync();
 
             // act
-            var response = await id.Post($"/apps/{app.Id}/token").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await id.Put($"/apps/{app.Id}/token").BearerAuthorization(tokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -136,7 +135,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var app = await CreateAppAsync(tokens.AccessToken);
 
             // act
-            var response = await id.Post($"/apps/{app.Id}/token").BearerAuthorization(tokens.AccessToken).AsAsync<Guid>();
+            var response = await id.Put($"/apps/{app.Id}/token").BearerAuthorization(tokens.AccessToken).AsAsync<Guid>();
 
             // assert
             response.IsNotDefault();
@@ -161,7 +160,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var u = new AppPayload { Key = "demo" };
 
             // act
-            var response = await id.Post($"/apps/{app.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
+            var response = await id.Put($"/apps/{app.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
@@ -175,7 +174,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var u = new AppPayload { Key = "demo", Name = "Demo App" };
 
             // act
-            var response = await id.Post($"/apps/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
+            var response = await id.Put($"/apps/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -191,7 +190,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var u = new AppPayload { Key = "demo", Name = "Demo App" };
 
             // act
-            var response = await id.Post($"/apps/{app.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
+            var response = await id.Put($"/apps/{app.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -207,7 +206,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var u = new AppPayload { Key = "demo", Name = "Medo App" };
 
             // act
-            var response = await id.Post($"/apps/{app2.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
+            var response = await id.Put($"/apps/{app2.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Conflict);
@@ -222,7 +221,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var u = new AppPayload { Key = "medo", Name = "Medo App" };
 
             // act
-            var response = await id.Post($"/apps/{app.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).AsAsync<AppPrivateView>();
+            var response = await id.Put($"/apps/{app.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).AsAsync<AppPrivateView>();
 
             // assert
             response.Id.IsEqual(app.Id);
@@ -237,7 +236,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var(user, tokens) = await LoginUserAsync();
 
             // act
-            var response = await id.Post($"/apps/{Guid.NewGuid()}/owner/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await id.Put($"/apps/{Guid.NewGuid()}/owner/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -252,7 +251,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var(user, tokens) = await LoginUserAsync();
 
             // act
-            var response = await id.Post($"/apps/{app.Id}/owner/{user.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await id.Put($"/apps/{app.Id}/owner/{user.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -266,7 +265,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var app = await CreateAppAsync(ownerTokens.AccessToken, "demo", "Demo App");
 
             // act
-            var response = await id.Post($"/apps/{app.Id}/owner/{Guid.NewGuid()}").BearerAuthorization(ownerTokens.AccessToken).RunAsync();
+            var response = await id.Put($"/apps/{app.Id}/owner/{Guid.NewGuid()}").BearerAuthorization(ownerTokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -281,7 +280,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var(user, tokens) = await LoginUserAsync();
 
             // act
-            app = await id.Post($"/apps/{app.Id}/owner/{user.Id}").BearerAuthorization(ownerTokens.AccessToken).AsAsync<AppPrivateView>();
+            app = await id.Put($"/apps/{app.Id}/owner/{user.Id}").BearerAuthorization(ownerTokens.AccessToken).AsAsync<AppPrivateView>();
 
             // assert
             app.OwnerId.IsEqual(user.Id);

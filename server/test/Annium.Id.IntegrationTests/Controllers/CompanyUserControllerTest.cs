@@ -17,7 +17,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var(user, tokens) = await LoginUserAsync();
 
             // act
-            var response = await id.Put($"/companies/{Guid.NewGuid()}/users/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await id.Post($"/companies/{Guid.NewGuid()}/users/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -32,7 +32,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var(user, tokens) = await LoginUserAsync();
 
             // act
-            var response = await id.Put($"/companies/{company.Id}/users/{user.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await id.Post($"/companies/{company.Id}/users/{user.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -47,7 +47,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var(user, tokens) = await LoginUserAsync();
 
             // act
-            var response = await id.Put($"/companies/{company.Id}/users/{Guid.NewGuid()}").BearerAuthorization(ownerTokens.AccessToken).RunAsync();
+            var response = await id.Post($"/companies/{company.Id}/users/{Guid.NewGuid()}").BearerAuthorization(ownerTokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -62,7 +62,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var(user, tokens) = await LoginUserAsync();
 
             // act
-            var response = await id.Put($"/companies/{company.Id}/users/{user.Id}").BearerAuthorization(ownerTokens.AccessToken).RunAsync();
+            var response = await id.Post($"/companies/{company.Id}/users/{user.Id}").BearerAuthorization(ownerTokens.AccessToken).RunAsync();
             var members = await id.Get($"/companies/{company.Id}/users").AsAsync<UserPublicView[]>();
 
             // assert

@@ -37,7 +37,7 @@ namespace Annium.Id.Api.Controllers
             this.mapper = mapper;
         }
 
-        [HttpPut]
+        [HttpPost]
         [Authorize]
         public async Task<IActionResult> CreateRoleAsync(Guid appId, [FromBody] RolePayload rolePayload)
         {
@@ -76,7 +76,7 @@ namespace Annium.Id.Api.Controllers
             return Ok(roles);
         }
 
-        [HttpPost("{roleId:guid}")]
+        [HttpPut("{roleId:guid}")]
         [Authorize]
         public async Task<IActionResult> UpdateRoleAsync(Guid appId, Guid roleId, [FromBody] RolePayload rolePayload)
         {

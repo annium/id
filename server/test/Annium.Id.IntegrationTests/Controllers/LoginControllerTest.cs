@@ -1,9 +1,9 @@
 using System;
 using System.Net;
 using System.Threading.Tasks;
-using Annium.Net.Http;
 using Annium.Id.Api.Payloads;
 using Annium.Id.Api.Views;
+using Annium.Net.Http;
 using Annium.Testing;
 
 namespace Annium.Id.IntegrationTests.Controllers
@@ -73,7 +73,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var(user, tokens) = await LoginUserAsync();
 
             // act
-            var response = await id.Post("/me/logout").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await id.Delete("/me/logout").BearerAuthorization(tokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NoContent);
@@ -86,7 +86,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var(user, tokens) = await LoginUserAsync();
 
             // act
-            var response = await id.Post("/me/token").Param("refreshToken", Guid.NewGuid()).RunAsync();
+            var response = await id.Put("/me/token").Param("refreshToken", Guid.NewGuid()).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -99,7 +99,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var(user, tokens) = await LoginUserAsync();
 
             // act
-            var response = await id.Post("/me/token").Param("refreshToken", tokens.RefreshToken).AsAsync<UserTokenView>();
+            var response = await id.Put("/me/token").Param("refreshToken", tokens.RefreshToken).AsAsync<UserTokenView>();
 
             // assert
             response.AccessToken.IsNotDefault();
@@ -173,7 +173,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var(user, app, tokens) = await LoginUserCreateAppLoginAppAsync();
 
             // act
-            var response = await id.Post($"/me/apps/{app.Id}/logout").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await id.Delete($"/me/apps/{app.Id}/logout").BearerAuthorization(tokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NoContent);
@@ -186,7 +186,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var(user, app, tokens) = await LoginUserCreateAppLoginAppAsync();
 
             // act
-            var response = await id.Post($"/me/apps/{app.Id}/token").Param("refreshToken", Guid.NewGuid()).RunAsync();
+            var response = await id.Put($"/me/apps/{app.Id}/token").Param("refreshToken", Guid.NewGuid()).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -199,7 +199,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var(user, app, tokens) = await LoginUserCreateAppLoginAppAsync();
 
             // act
-            var response = await id.Post($"/me/apps/{app.Id}/token").Param("refreshToken", tokens.RefreshToken).AsAsync<UserTokenView>();
+            var response = await id.Put($"/me/apps/{app.Id}/token").Param("refreshToken", tokens.RefreshToken).AsAsync<UserTokenView>();
 
             // assert
             response.AccessToken.IsNotDefault();

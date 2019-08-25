@@ -47,7 +47,7 @@ namespace Annium.Id.Api.Controllers
             this.companyUserClaimRepository = companyUserClaimRepository;
         }
 
-        [HttpPut]
+        [HttpPost]
         [Authorize]
         public async Task<IActionResult> AddUserToCompanyAsync(Guid companyId, Guid userId)
         {

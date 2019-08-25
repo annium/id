@@ -18,7 +18,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var payload = new CompanyPayload() { Key = "de", Name = "Demo Company" };
 
             // act
-            var response = await id.Put("/companies").BearerAuthorization(tokens.AccessToken).JsonContent(payload).RunAsync();
+            var response = await id.Post("/companies").BearerAuthorization(tokens.AccessToken).JsonContent(payload).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
@@ -30,10 +30,9 @@ namespace Annium.Id.IntegrationTests.Controllers
             // arrange
             var(user, tokens) = await LoginUserAsync();
             var payload = new CompanyPayload() { ParentId = Guid.NewGuid(), Key = "demo", Name = "Demo Company" };
-            await id.Put("/companies").BearerAuthorization(tokens.AccessToken).JsonContent(payload).RunAsync();
 
             // act
-            var response = await id.Put("/companies").BearerAuthorization(tokens.AccessToken).JsonContent(payload).RunAsync();
+            var response = await id.Post("/companies").BearerAuthorization(tokens.AccessToken).JsonContent(payload).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -45,10 +44,10 @@ namespace Annium.Id.IntegrationTests.Controllers
             // arrange
             var(user, tokens) = await LoginUserAsync();
             var payload = new CompanyPayload() { Key = "demo", Name = "Demo Company" };
-            await id.Put("/companies").BearerAuthorization(tokens.AccessToken).JsonContent(payload).RunAsync();
+            await id.Post("/companies").BearerAuthorization(tokens.AccessToken).JsonContent(payload).RunAsync();
 
             // act
-            var response = await id.Put("/companies").BearerAuthorization(tokens.AccessToken).JsonContent(payload).RunAsync();
+            var response = await id.Post("/companies").BearerAuthorization(tokens.AccessToken).JsonContent(payload).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Conflict);
@@ -137,7 +136,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var u = new CompanyPayload { Key = "demo" };
 
             // act
-            var response = await id.Post($"/companies/{company.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
+            var response = await id.Put($"/companies/{company.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
@@ -151,7 +150,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var u = new CompanyPayload { Key = "demo", Name = "Demo Company" };
 
             // act
-            var response = await id.Post($"/companies/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
+            var response = await id.Put($"/companies/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -167,7 +166,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var u = new CompanyPayload { Key = "demo", Name = "Demo Company" };
 
             // act
-            var response = await id.Post($"/companies/{company.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
+            var response = await id.Put($"/companies/{company.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -182,7 +181,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var u = new CompanyPayload { ParentId = Guid.NewGuid(), Key = "demo", Name = "Demo Company" };
 
             // act
-            var response = await id.Post($"/companies/{company.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
+            var response = await id.Put($"/companies/{company.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -198,7 +197,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var u = new CompanyPayload { Key = "demo", Name = "Some" };
 
             // act
-            var response = await id.Post($"/companies/{company2.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
+            var response = await id.Put($"/companies/{company2.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Conflict);
@@ -213,7 +212,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var u = new CompanyPayload { Key = "medo", Name = "Medo Company" };
 
             // act
-            var response = await id.Post($"/companies/{company.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).AsAsync<CompanyPrivateView>();
+            var response = await id.Put($"/companies/{company.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).AsAsync<CompanyPrivateView>();
 
             // assert
             response.Id.IsEqual(company.Id);
@@ -228,7 +227,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var(user, tokens) = await LoginUserAsync();
 
             // act
-            var response = await id.Post($"/companies/{Guid.NewGuid()}/owner/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await id.Put($"/companies/{Guid.NewGuid()}/owner/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -243,7 +242,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var(user, tokens) = await LoginUserAsync();
 
             // act
-            var response = await id.Post($"/companies/{company.Id}/owner/{user.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await id.Put($"/companies/{company.Id}/owner/{user.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -257,7 +256,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var company = await CreateCompanyAsync(ownerTokens.AccessToken);
 
             // act
-            var response = await id.Post($"/companies/{company.Id}/owner/{Guid.NewGuid()}").BearerAuthorization(ownerTokens.AccessToken).RunAsync();
+            var response = await id.Put($"/companies/{company.Id}/owner/{Guid.NewGuid()}").BearerAuthorization(ownerTokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -272,7 +271,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var(user, tokens) = await LoginUserAsync();
 
             // act
-            company = await id.Post($"/companies/{company.Id}/owner/{user.Id}").BearerAuthorization(ownerTokens.AccessToken).AsAsync<CompanyPrivateView>();
+            company = await id.Put($"/companies/{company.Id}/owner/{user.Id}").BearerAuthorization(ownerTokens.AccessToken).AsAsync<CompanyPrivateView>();
 
             // assert
             company.OwnerId.IsEqual(user.Id);

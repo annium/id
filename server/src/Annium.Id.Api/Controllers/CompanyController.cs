@@ -35,7 +35,7 @@ namespace Annium.Id.Api.Controllers
             this.mapper = mapper;
         }
 
-        [HttpPut]
+        [HttpPost]
         [Authorize]
         public async Task<IActionResult> RegisterCompanyAsync([FromBody] CompanyPayload companyPayload)
         {
@@ -83,7 +83,7 @@ namespace Annium.Id.Api.Controllers
             return Ok(users.Select(mapper.Map<UserPublicView>).ToArray());
         }
 
-        [HttpPost("{companyId:guid}")]
+        [HttpPut("{companyId:guid}")]
         [Authorize]
         public async Task<IActionResult> UpdateCompanyAsync(Guid companyId, [FromBody] CompanyPayload companyPayload)
         {
@@ -112,7 +112,7 @@ namespace Annium.Id.Api.Controllers
             return Ok(mapper.Map<CompanyPrivateView>(company));
         }
 
-        [HttpPost("{companyId:guid}/owner/{userId:guid}")]
+        [HttpPut("{companyId:guid}/owner/{userId:guid}")]
         [Authorize]
         public async Task<IActionResult> SetCompanyOwnerAsync(Guid companyId, Guid userId)
         {

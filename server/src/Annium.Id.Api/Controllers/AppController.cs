@@ -32,7 +32,7 @@ namespace Annium.Id.Api.Controllers
             this.mapper = mapper;
         }
 
-        [HttpPut]
+        [HttpPost]
         [Authorize]
         public async Task<IActionResult> CreateAppAsync([FromBody] AppPayload appPayload)
         {
@@ -65,7 +65,7 @@ namespace Annium.Id.Api.Controllers
             return Ok(app.ApiToken);
         }
 
-        [HttpPost("{appId:guid}/token")]
+        [HttpPut("{appId:guid}/token")]
         [Authorize]
         public async Task<IActionResult> UpdateAppApiTokenAsync(Guid appId)
         {
@@ -87,7 +87,7 @@ namespace Annium.Id.Api.Controllers
             return Ok(apps.Select(mapper.Map<AppPublicView>).ToArray());
         }
 
-        [HttpPost("{appId:guid}")]
+        [HttpPut("{appId:guid}")]
         [Authorize]
         public async Task<IActionResult> UpdateAppAsync(Guid appId, [FromBody] AppPayload appPayload)
         {
@@ -109,7 +109,7 @@ namespace Annium.Id.Api.Controllers
             return Ok(mapper.Map<AppPrivateView>(app));
         }
 
-        [HttpPost("{appId:guid}/owner/{userId:guid}")]
+        [HttpPut("{appId:guid}/owner/{userId:guid}")]
         [Authorize]
         public async Task<IActionResult> SetAppOwnerAsync(Guid appId, Guid userId)
         {

@@ -1,8 +1,8 @@
 using System;
 using System.Net;
 using System.Threading.Tasks;
-using Annium.Net.Http;
 using Annium.Id.Api.Payloads;
+using Annium.Net.Http;
 using Annium.Testing;
 
 namespace Annium.Id.IntegrationTests.Controllers
@@ -16,7 +16,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var(user, tokens) = await LoginUserAsync();
 
             // act
-            var response = await id.Put($"/apps/{Guid.NewGuid()}/users/{Guid.NewGuid()}/roles/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await id.Post($"/apps/{Guid.NewGuid()}/users/{Guid.NewGuid()}/roles/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -31,7 +31,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var(user, tokens) = await LoginUserAsync();
 
             // act
-            var response = await id.Put($"/apps/{app.Id}/users/{Guid.NewGuid()}/roles/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await id.Post($"/apps/{app.Id}/users/{Guid.NewGuid()}/roles/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -45,7 +45,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var app = await CreateAppAsync(tokens.AccessToken);
 
             // act
-            var response = await id.Put($"/apps/{app.Id}/users/{Guid.NewGuid()}/roles/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await id.Post($"/apps/{app.Id}/users/{Guid.NewGuid()}/roles/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -60,7 +60,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var other = await RegisterUserAsync("other", "superpass", "some@email.com");
 
             // act
-            var response = await id.Put($"/apps/{app.Id}/users/{other.Id}/roles/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await id.Post($"/apps/{app.Id}/users/{other.Id}/roles/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -77,7 +77,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var other = await RegisterUserAsync("other", "superpass", "some@email.com");
 
             // act
-            var response = await id.Put($"/apps/{app1.Id}/users/{other.Id}/roles/{role.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await id.Post($"/apps/{app1.Id}/users/{other.Id}/roles/{role.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -93,7 +93,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var other = await RegisterUserAsync("other", "superpass", "some@email.com");
 
             // act
-            var response = await id.Put($"/apps/{app.Id}/users/{other.Id}/roles/{role.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await id.Post($"/apps/{app.Id}/users/{other.Id}/roles/{role.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NoContent);
