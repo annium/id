@@ -28,8 +28,8 @@ namespace Annium.Id.Api
 
             services.AddSingleton(new LoggerConfiguration(LogLevel.Trace));
             services.AddConsoleLogger();
-            services.AddYamlLocalization();
-
+            services.AddLocalization(opts => opts.UseYamlStorage());
+            services.AddValidation();
             services.AddMapper();
         }
     }

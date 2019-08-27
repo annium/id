@@ -7,8 +7,8 @@ using Annium.Id.Api.Views;
 using Annium.Id.AspNetCore;
 using Annium.Id.Db.Repositories;
 using Annium.Id.Domain.Entities;
+using Annium.Localization.Abstractions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Localization;
 using NodaTime;
 
 namespace Annium.Id.Api.Controllers
@@ -35,7 +35,7 @@ namespace Annium.Id.Api.Controllers
             ISecurityManager securityManager,
             ITokenGenerator tokenGenerator,
             Func<Instant> getInstant,
-            IStringLocalizer<LoginController> localizer
+            ILocalizer<LoginController> localizer
         ) : base(localizer)
         {
             this.appRepository = appRepository;

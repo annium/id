@@ -8,8 +8,8 @@ using Annium.Id.Api.Views;
 using Annium.Id.AspNetCore;
 using Annium.Id.Db.Repositories;
 using Annium.Id.Domain.Entities;
+using Annium.Localization.Abstractions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Localization;
 
 namespace Annium.Id.Api.Controllers
 {
@@ -26,7 +26,7 @@ namespace Annium.Id.Api.Controllers
             IUserRepository userRepository,
             ICompanyUserRepository companyUserRepository,
             IMapper mapper,
-            IStringLocalizer<CompanyController> localizer
+            ILocalizer<CompanyController> localizer
         ) : base(localizer)
         {
             this.companyRepository = companyRepository;

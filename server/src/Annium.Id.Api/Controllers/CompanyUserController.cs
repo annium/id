@@ -5,8 +5,8 @@ using Annium.Id.Api.Payloads;
 using Annium.Id.AspNetCore;
 using Annium.Id.Db.Repositories;
 using Annium.Id.Domain.Entities;
+using Annium.Localization.Abstractions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Localization;
 
 namespace Annium.Id.Api.Controllers
 {
@@ -35,7 +35,7 @@ namespace Annium.Id.Api.Controllers
             ICompanyUserRepository companyUserRepository,
             ICompanyUserRoleRepository companyUserRoleRepository,
             ICompanyUserClaimRepository companyUserClaimRepository,
-            IStringLocalizer<CompanyUserController> localizer
+            ILocalizer<CompanyUserController> localizer
         ) : base(localizer)
         {
             this.companyRepository = companyRepository;

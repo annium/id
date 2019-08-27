@@ -7,8 +7,8 @@ using Annium.Id.Api.Views;
 using Annium.Id.AspNetCore;
 using Annium.Id.Db.Repositories;
 using Annium.Id.Domain.Entities;
+using Annium.Localization.Abstractions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Localization;
 
 namespace Annium.Id.Api.Controllers
 {
@@ -25,7 +25,7 @@ namespace Annium.Id.Api.Controllers
             IUserLoginRepository userLoginRepository,
             ISecurityManager securityManager,
             IMapper mapper,
-            IStringLocalizer<MeController> localizer
+            ILocalizer<MeController> localizer
         ) : base(localizer)
         {
             this.userRepository = userRepository;
