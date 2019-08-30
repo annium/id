@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Reflection;
 using Annium.Data.Operations;
+using Annium.Id.Core;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -12,11 +14,11 @@ namespace Annium.Id.AspNetCore.Pipeline
     {
         private readonly Policy policy;
 
-        private readonly Func<IdAppToken, IDictionary<string, object>, object[]> mapArguments;
+        private readonly Func<IdAppToken, IReadOnlyDictionary<string, object>, object[]> mapArguments;
 
         public PolicyFilter(
             Policy policy,
-            Func<IdAppToken, IDictionary<string, object>, object[]> mapArguments
+            Func<IdAppToken, IReadOnlyDictionary<string, object>, object[]> mapArguments
         )
         {
             this.policy = policy;
@@ -27,11 +29,14 @@ namespace Annium.Id.AspNetCore.Pipeline
         {
             if (!context.ActionDescriptor.Properties.ContainsKey(Constants.IdAppTokenProperty))
             {
+                // TODO: cleanup
                 context.Result = new ObjectResult(Result.Failure().Error("Access policy violation")) { StatusCode = (int) HttpStatusCode.Forbidden };
                 return;
             }
 
-            var arguments = mapArguments((IdAppToken) context.ActionDescriptor.Properties[Constants.IdAppTokenProperty], context.ActionArguments);
+            var token = (IdAppToken) context.ActionDescriptor.Properties[Constants.IdAppTokenProperty];
+            var args = context.ActionArguments.ToDictionary(p => p.Key, p => p.Value);
+            var arguments = mapArguments(token, args);
 
             try
             {

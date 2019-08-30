@@ -1,4 +1,4 @@
-namespace Annium.Id.AspNetCore.Pipeline
+namespace Annium.Id.Core
 {
     public static class Claims
     {

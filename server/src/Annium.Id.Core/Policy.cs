@@ -1,17 +1,19 @@
 using System;
 using System.Collections.Generic;
 
-namespace Annium.Id.AspNetCore.Pipeline
+namespace Annium.Id.Core
 {
-    internal class Policy
+    public class Policy
     {
         public string Name { get; }
-
         public IReadOnlyDictionary<string, Type> Parameters { get; }
-
         public Delegate Handle { get; }
 
-        public Policy(string name, IReadOnlyDictionary<string, Type> parameters, Delegate handle)
+        public Policy(
+            string name,
+            IReadOnlyDictionary<string, Type> parameters,
+            Delegate handle
+        )
         {
             Name = name;
             Parameters = parameters;

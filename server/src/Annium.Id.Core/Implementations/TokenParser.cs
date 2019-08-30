@@ -2,20 +2,17 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Security.Cryptography;
 using Annium.Data.Operations;
-using Annium.Id.AspNetCore.Pipeline;
 using Annium.Logging.Abstractions;
 using Annium.Security.Cryptography;
 using MessagePack;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using NodaTime;
 
-namespace Annium.Id.AspNetCore.Tools
+namespace Annium.Id.Core.Implementations
 {
-    internal class TokenParser
+    internal class TokenParser : ITokenParser
     {
         private readonly RsaSecurityKey signingKey;
         private readonly AuthorizationOptions options;
@@ -37,11 +34,11 @@ namespace Annium.Id.AspNetCore.Tools
             this.logger = logger;
         }
 
-        public(object, IActionResult) ParseToken(string tokenString)
+        public IStatusResult<TokenParseStatus, IdBaseToken> ParseToken(string tokenString)
         {
             var handler = new JwtSecurityTokenHandler();
             if (!handler.CanReadToken(tokenString))
-                return fail(HttpStatusCode.BadRequest, "Token is not valid JWT");
+                return fail(TokenParseStatus.BadSource, "Token is not valid JWT");
 
             var tvp = new TokenValidationParameters();
             tvp.ClockSkew = Duration.FromSeconds(5).ToTimeSpan();
@@ -59,75 +56,77 @@ namespace Annium.Id.AspNetCore.Tools
 
             try
             {
-                handler.ValidateToken(tokenString, tvp, out var token);
-                var jwt = (JwtSecurityToken) token;
+                handler.ValidateToken(tokenString, tvp, out var securityToken);
+                var jwt = (JwtSecurityToken) securityToken;
 
                 var idClaim = jwt.Claims.FirstOrDefault(c => c.Type == Claims.Id);
                 if (idClaim == null)
-                    return fail(HttpStatusCode.Forbidden, "Token id is missing");
+                    return fail(TokenParseStatus.BadSource, "Token id is missing");
+
+                var rawToken = Convert.FromBase64String(idClaim.Value);
 
                 if (jwt.Audiences.Contains(Constants.BaseAudience))
-                    return (LZ4MessagePackSerializer.Deserialize<IdBaseToken>(Convert.FromBase64String(idClaim.Value)), null);
+                    return Result.New(TokenParseStatus.Ok, LZ4MessagePackSerializer.Deserialize<IdBaseToken>(rawToken));
 
-                return (LZ4MessagePackSerializer.Deserialize<IdAppToken>(Convert.FromBase64String(idClaim.Value)), null);
+                return Result.New<TokenParseStatus, IdBaseToken>(TokenParseStatus.Ok, LZ4MessagePackSerializer.Deserialize<IdAppToken>(rawToken));
             }
             catch (SecurityTokenDecompressionFailedException)
             {
-                return fail(HttpStatusCode.Unauthorized, "Token decompression failed");
+                return fail(TokenParseStatus.Failed, "Token decompression failed");
             }
             catch (SecurityTokenEncryptionKeyNotFoundException)
             {
                 logger.Error("Token encryption key not found");
 
-                return fail(HttpStatusCode.Unauthorized, "Token decryption failed");
+                return fail(TokenParseStatus.Failed, "Token decryption failed");
             }
             catch (SecurityTokenDecryptionFailedException)
             {
-                return fail(HttpStatusCode.Unauthorized, "Token decryption failed");
+                return fail(TokenParseStatus.Failed, "Token decryption failed");
             }
             catch (SecurityTokenNoExpirationException)
             {
-                return fail(HttpStatusCode.Unauthorized, "Token has no expiration claim");
+                return fail(TokenParseStatus.Failed, "Token has no expiration claim");
             }
             catch (SecurityTokenExpiredException)
             {
-                return fail(HttpStatusCode.Unauthorized, "Token is expired");
+                return fail(TokenParseStatus.Failed, "Token is expired");
             }
             catch (SecurityTokenNotYetValidException)
             {
-                return fail(HttpStatusCode.Unauthorized, "Token is not yet valid");
+                return fail(TokenParseStatus.Failed, "Token is not yet valid");
             }
             catch (SecurityTokenInvalidLifetimeException)
             {
-                return fail(HttpStatusCode.Unauthorized, "Token has invalid lifetime");
+                return fail(TokenParseStatus.Failed, "Token has invalid lifetime");
             }
             catch (SecurityTokenInvalidAudienceException)
             {
-                return fail(HttpStatusCode.Unauthorized, "Token has invalid audience");
+                return fail(TokenParseStatus.Failed, "Token has invalid audience");
             }
             catch (SecurityTokenInvalidIssuerException)
             {
-                return fail(HttpStatusCode.Unauthorized, "Token has invalid issuer");
+                return fail(TokenParseStatus.Failed, "Token has invalid issuer");
             }
             catch (SecurityTokenSignatureKeyNotFoundException)
             {
                 logger.Error("Token signature key not found");
 
-                return fail(HttpStatusCode.Unauthorized, "Token has invalid signature");
+                return fail(TokenParseStatus.Failed, "Token has invalid signature");
             }
             catch (SecurityTokenInvalidSignatureException)
             {
-                return fail(HttpStatusCode.Unauthorized, "Token has invalid signature");
+                return fail(TokenParseStatus.Failed, "Token has invalid signature");
             }
             catch (Exception exception)
             {
                 logger.Error($"Token validation failed: {exception}");
 
-                return fail(HttpStatusCode.BadRequest, "Token is invalid");
+                return fail(TokenParseStatus.BadSource, "Token is invalid");
             }
         }
 
-        private(IdBaseToken, IActionResult) fail(HttpStatusCode statusCode, string error) =>
-            (null, new ObjectResult(Result.Failure().Error(error)) { StatusCode = (int) statusCode });
+        private IStatusResult<TokenParseStatus, IdBaseToken> fail(TokenParseStatus status, string error) =>
+            Result.New<TokenParseStatus, IdBaseToken>(TokenParseStatus.BadSource, null).Error(error);
     }
 }

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
-using Annium.Id.AspNetCore;
 using Annium.Id.AspNetCore.Pipeline;
 using Annium.Id.AspNetCore.Tools;
+using Annium.Id.Core;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -21,6 +21,7 @@ namespace Annium.Extensions.DependencyInjection
             Action<AuthorizationOptions> configure = null
         )
         {
+            // configure authorization options
             var options = new AuthorizationOptions();
             if (configure != null)
                 configure(options);
@@ -32,13 +33,13 @@ namespace Annium.Extensions.DependencyInjection
             // filters
             services.AddSingleton<AuthorizationFilter>();
             services.AddSingleton<Func<Policy, PolicyFilter>>(
-                sp => policy => new PolicyFilter(policy, sp.GetRequiredService<PolicyMapper>().CreateMapper(policy))
+                sp => policy => new PolicyFilter(policy, sp.GetRequiredService<IPolicyMapper>().CreateMapper(policy))
             );
 
             // tools
-            services.AddSingleton<PolicyMapper>();
             services.AddSingleton<TokenAccessor>();
-            services.AddSingleton<TokenParser>();
+
+            services.AddIdAuthorizationCoreServices();
 
             return services;
         }

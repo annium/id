@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using MessagePack;
 
-namespace Annium.Id.AspNetCore
+namespace Annium.Id.Core
 {
     [MessagePackObject]
     public class IdAppToken : IdBaseToken

@@ -1,4 +1,5 @@
 using System;
+using Annium.Id.Core;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Annium.Id.AspNetCore

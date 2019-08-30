@@ -1,4 +1,4 @@
-namespace Annium.Id.AspNetCore
+namespace Annium.Id.Core
 {
     public class AuthorizationOptions
     {

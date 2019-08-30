@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Annium.Id.AspNetCore.Tools;
+using Annium.Id.Core;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 
 namespace Annium.Id.AspNetCore.Pipeline
@@ -14,7 +14,7 @@ namespace Annium.Id.AspNetCore.Pipeline
 
         private readonly IEnumerable<Policy> policies;
 
-        private readonly PolicyMapper mapper;
+        private readonly IPolicyMapper mapper;
 
         public int Order { get; } = -990;
 
@@ -22,7 +22,7 @@ namespace Annium.Id.AspNetCore.Pipeline
             AuthorizationFilter authorizationFilter,
             Func<Policy, PolicyFilter> createPolicyFilter,
             IEnumerable<Policy> policies,
-            PolicyMapper mapper
+            IPolicyMapper mapper
         )
         {
             this.authorizationFilter = authorizationFilter;
@@ -61,7 +61,11 @@ namespace Annium.Id.AspNetCore.Pipeline
             if (policy == null)
                 throw new ArgumentException($"Policy {attribute.PolicyName}, requested by {actionModel.DisplayName} is not registered");
 
-            mapper.EnsureMappable(policy, actionModel);
+            mapper.EnsureMappable(
+                policy,
+                actionModel.DisplayName,
+                actionModel.Parameters.ToDictionary(p => p.ParameterName, p => p.ParameterType)
+            );
 
             actionModel.Filters.Add(createPolicyFilter(policy));
         }

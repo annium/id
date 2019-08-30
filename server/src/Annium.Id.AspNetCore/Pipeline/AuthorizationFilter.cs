@@ -1,4 +1,5 @@
 using Annium.Id.AspNetCore.Tools;
+using Annium.Id.Core;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -8,11 +9,11 @@ namespace Annium.Id.AspNetCore.Pipeline
     {
         private readonly TokenAccessor tokenAccessor;
 
-        private readonly TokenParser tokenParser;
+        private readonly ITokenParser tokenParser;
 
         public AuthorizationFilter(
             TokenAccessor tokenAccessor,
-            TokenParser tokenParser
+            ITokenParser tokenParser
         )
         {
             this.tokenAccessor = tokenAccessor;
@@ -32,9 +33,13 @@ namespace Annium.Id.AspNetCore.Pipeline
             if (readResult != null)
                 return readResult;
 
-            var(token, parseResult) = tokenParser.ParseToken(tokenString);
-            if (parseResult != null)
-                return parseResult;
+            var parseResult = tokenParser.ParseToken(tokenString);
+            if (parseResult.Status == TokenParseStatus.BadSource)
+                return new BadRequestObjectResult(parseResult);
+            if (parseResult.Status == TokenParseStatus.Failed)
+                return new UnauthorizedObjectResult(parseResult);
+
+            var token = parseResult.Data;
 
             context.ActionDescriptor.Properties[Constants.IdBaseTokenProperty] = token;
             if (token is IdAppToken)
