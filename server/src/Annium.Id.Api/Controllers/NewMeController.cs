@@ -46,33 +46,6 @@ namespace Annium.Id.Api.Controllers
         public Task<IActionResult> RegisterUserAsync([FromBody] CreateUpdateUserRequest request)
         {
             return HandleAsync<CreateUpdateUserRequest, Guid>(request);
-            // if (!ModelState.IsValid)
-            //     return BadRequest(ModelState);
-
-            // var validator = provider.GetRequiredService<IValidator<UserPayload>>();
-            // var result = await validator.ValidateAsync(userPayload);
-            // if (result.IsFailure)
-            //     return BadRequest(result);
-
-            // if ((await userRepository.FindByLoginAsync(userPayload.Login)) != null)
-            //     return Conflict($"Login {userPayload.Login} is already used");
-
-            // if ((await userRepository.FindByEmailAsync(userPayload.Email)) != null)
-            //     return Conflict($"Email {userPayload.Email} is already used");
-
-            // var passwordHash = securityManager.Hash(userPayload.Password);
-
-            // var user = new User(
-            //     userPayload.Login,
-            //     passwordHash,
-            //     userPayload.Email
-            // );
-
-            // return NoContent();
-
-            // user = await userRepository.CreateAsync(user);
-
-            // return Ok(mapper.Map<UserPrivateView>(user));
         }
 
         [HttpGet]
