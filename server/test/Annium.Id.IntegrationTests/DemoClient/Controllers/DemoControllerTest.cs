@@ -1,9 +1,9 @@
 using System.Net;
 using System.Threading.Tasks;
 using Annium.Net.Http;
-using Annium.Id.AspNetCore;
 using Annium.Testing;
 using Newtonsoft.Json;
+using Annium.Id.Core;
 
 namespace Annium.Id.IntegrationTests.DemoClient.Controllers
 {

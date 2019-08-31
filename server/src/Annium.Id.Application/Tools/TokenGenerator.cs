@@ -5,8 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
-using Annium.Id.AspNetCore;
-using Annium.Id.AspNetCore.Pipeline;
+using Annium.Id.Core;
 using Annium.Id.Db.Repositories;
 using Annium.Id.Domain.Entities;
 using Annium.Security.Cryptography;
@@ -15,7 +14,7 @@ using Microsoft.IdentityModel.Tokens;
 using NodaTime;
 using SystemClaim = System.Security.Claims.Claim;
 
-namespace Annium.Id.Api.Tools
+namespace Annium.Id.Application.Tools
 {
     internal class TokenGenerator : ITokenGenerator
     {

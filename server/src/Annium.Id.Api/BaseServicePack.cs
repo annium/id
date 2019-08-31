@@ -1,7 +1,11 @@
 using System;
 using Annium.Core.DependencyInjection;
+using Annium.Core.Mediator;
 using Annium.Extensions.DependencyInjection;
 using Annium.Id.Api.Tools;
+using Annium.Id.Application.CommandHandlers;
+using Annium.Id.Application.PipeHandlers;
+using Annium.Id.ViewModels;
 using Annium.Logging.Abstractions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,6 +15,11 @@ namespace Annium.Id.Api
 {
     public class BaseServicePack : ServicePackBase
     {
+        public BaseServicePack()
+        {
+            Add<Application.ServicePack>();
+        }
+
         public override void Register(IServiceCollection services, IServiceProvider provider)
         {
             services.AddSingleton<Func<Instant>>(() => SystemClock.Instance.GetCurrentInstant());
@@ -23,14 +32,27 @@ namespace Annium.Id.Api
 
             // tools
             services.AddSingleton<IIdentityDataAccessor, IdentityDataAccessor>();
-            services.AddSingleton<ISecurityManager, SecurityManager>();
-            services.AddSingleton<ITokenGenerator, TokenGenerator>();
 
             services.AddSingleton(new LoggerConfiguration(LogLevel.Trace));
             services.AddConsoleLogger();
             services.AddLocalization(opts => opts.UseYamlStorage());
             services.AddValidation();
             services.AddMapper();
+            services.AddMediatorConfiguration(ConfigureMediator);
+            services.AddMediator();
+
+        }
+
+        private void ConfigureMediator(MediatorConfiguration cfg)
+        {
+            cfg.Add(typeof(LoggingPipeHandler<,>));
+            cfg.Add(typeof(HttpActionPipeHandler<,>));
+            cfg.Add(typeof(ExceptionPipeHandler<,>));
+            cfg.Add(typeof(RequestMappingPipeHandler<,>));
+            cfg.Add(typeof(RequestResponseMappingPipeHandler<,>));
+            cfg.Add(typeof(ValidationPipeHandler<,>));
+
+            cfg.Add(typeof(UserCommandHandler));
         }
     }
 }

@@ -12,10 +12,9 @@
     </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="../Annium.Id.AspNetCore/Annium.Id.AspNetCore.csproj" />
-        <ProjectReference Include="../Annium.Id.Db/Annium.Id.Db.csproj" />
+        <ProjectReference Include="../Annium.Id.ViewModels/Annium.Id.ViewModels.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Annium.Localization.Yaml" Version="0.1.0" />
         <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
         <PackageReference Include="NodaTime.Serialization.JsonNet" Version="2.2.0" />

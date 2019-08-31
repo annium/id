@@ -1,62 +1,78 @@
+using System;
+using System.Net;
 using System.Threading.Tasks;
 using Annium.AspNetCore.Extensions;
 using Annium.Core.Mapper;
+using Annium.Core.Mediator;
+using Annium.Data.Operations;
 using Annium.Id.Api.Payloads;
 using Annium.Id.Api.Views;
 using Annium.Id.Application.Tools;
 using Annium.Id.AspNetCore;
 using Annium.Id.Db.Repositories;
-using Annium.Id.Domain.Entities;
+using Annium.Id.ViewModels.User.Requests;
 using Annium.Localization.Abstractions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Annium.Id.Api.Controllers
 {
-    [Route("me")]
-    public class MeController : LocalizedServerController
+    [Route("new/me")]
+    public class NewMeController : LocalizedServerController
     {
         private readonly IUserRepository userRepository;
         private readonly IUserLoginRepository userLoginRepository;
         private readonly ISecurityManager securityManager;
         private readonly IMapper mapper;
+        private readonly IMediator mediator;
 
-        public MeController(
+        public NewMeController(
             IUserRepository userRepository,
             IUserLoginRepository userLoginRepository,
             ISecurityManager securityManager,
             IMapper mapper,
-            ILocalizer<MeController> localizer
+            IMediator mediator,
+            ILocalizer<NewMeController> localizer
         ) : base(localizer)
         {
             this.userRepository = userRepository;
             this.userLoginRepository = userLoginRepository;
             this.securityManager = securityManager;
             this.mapper = mapper;
+            this.mediator = mediator;
         }
 
         [HttpPost]
-        public async Task<IActionResult> RegisterUserAsync([FromBody] UserPayload userPayload)
+        public Task<IActionResult> RegisterUserAsync([FromBody] CreateUpdateUserRequest request)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            return HandleAsync<CreateUpdateUserRequest, Guid>(request);
+            // if (!ModelState.IsValid)
+            //     return BadRequest(ModelState);
 
-            if ((await userRepository.FindByLoginAsync(userPayload.Login)) != null)
-                return Conflict($"Login {userPayload.Login} is already used");
+            // var validator = provider.GetRequiredService<IValidator<UserPayload>>();
+            // var result = await validator.ValidateAsync(userPayload);
+            // if (result.IsFailure)
+            //     return BadRequest(result);
 
-            if ((await userRepository.FindByEmailAsync(userPayload.Email)) != null)
-                return Conflict($"Email {userPayload.Email} is already used");
+            // if ((await userRepository.FindByLoginAsync(userPayload.Login)) != null)
+            //     return Conflict($"Login {userPayload.Login} is already used");
 
-            var passwordHash = securityManager.Hash(userPayload.Password);
+            // if ((await userRepository.FindByEmailAsync(userPayload.Email)) != null)
+            //     return Conflict($"Email {userPayload.Email} is already used");
 
-            var user = new User(
-                userPayload.Login,
-                passwordHash,
-                userPayload.Email
-            );
+            // var passwordHash = securityManager.Hash(userPayload.Password);
 
-            user = await userRepository.CreateAsync(user);
+            // var user = new User(
+            //     userPayload.Login,
+            //     passwordHash,
+            //     userPayload.Email
+            // );
 
-            return Ok(mapper.Map<UserPrivateView>(user));
+            // return NoContent();
+
+            // user = await userRepository.CreateAsync(user);
+
+            // return Ok(mapper.Map<UserPrivateView>(user));
         }
 
         [HttpGet]
@@ -105,6 +121,13 @@ namespace Annium.Id.Api.Controllers
             await userRepository.DeleteByIdAsync(userId);
 
             return NoContent();
+        }
+
+        protected async Task<IActionResult> HandleAsync<TRequest, TResponse>(TRequest request)
+        {
+            var result = await mediator.SendAsync<ValueTuple<ModelStateDictionary, TRequest>, IStatusResult<HttpStatusCode, TResponse>>((ModelState, request));
+
+            return new ObjectResult(result) { StatusCode = (int) result.Status };
         }
     }
 }
