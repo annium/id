@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Annium.AspNetCore.Extensions;
 using Annium.Core.Mapper;
+using Annium.Core.Mediator;
 using Annium.Id.Api.Payloads;
 using Annium.Id.Api.Views;
 using Annium.Id.AspNetCore;
@@ -14,7 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Annium.Id.Api.Controllers
 {
     [Route("apps")]
-    public class AppController : LocalizedServerController
+    public class AppController : ServerController
     {
         private readonly IAppRepository appRepository;
         private readonly IUserRepository userRepository;
@@ -24,8 +25,9 @@ namespace Annium.Id.Api.Controllers
             IAppRepository appRepository,
             IUserRepository userRepository,
             IMapper mapper,
+            IMediator mediator,
             ILocalizer<AppController> localizer
-        ) : base(localizer)
+        ) : base(mediator)
         {
             this.appRepository = appRepository;
             this.userRepository = userRepository;

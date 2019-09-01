@@ -44,12 +44,13 @@ namespace Annium.Id.Api
         private void ConfigureMediator(MediatorConfiguration cfg)
         {
             cfg.AddLoggingHandler();
-            cfg.Add(typeof(HttpActionPipeHandler<,>));
+            cfg.AddHttpStatusPipeHandler();
+            cfg.AddModelStatePipeHandler();
             cfg.AddExceptionHandler();
             cfg.AddViewMappingHandlers();
             cfg.AddValidationHandler();
 
-            cfg.Add(typeof(UserCommandHandler));
+            cfg.AddCommandQueryHandlers();
         }
     }
 }

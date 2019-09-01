@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Annium.AspNetCore.Extensions;
 using Annium.Core.Mapper;
+using Annium.Core.Mediator;
 using Annium.Id.Api.Payloads;
 using Annium.Id.Api.Views;
 using Annium.Id.AspNetCore;
@@ -13,7 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Annium.Id.Api.Controllers
 {
     [Route("apps/{appId:guid}/users/{userId:guid}")]
-    public class AppUserController : LocalizedServerController
+    public class AppUserController : ServerController
     {
         private readonly IAppRepository appRepository;
         private readonly IUserRepository userRepository;
@@ -31,8 +32,9 @@ namespace Annium.Id.Api.Controllers
             IUserRoleRepository userRoleRepository,
             IUserClaimRepository userClaimRepository,
             IMapper mapper,
+            IMediator mediator,
             ILocalizer<AppUserController> localizer
-        ) : base(localizer)
+        ) : base(mediator)
         {
             this.appRepository = appRepository;
             this.userRepository = userRepository;

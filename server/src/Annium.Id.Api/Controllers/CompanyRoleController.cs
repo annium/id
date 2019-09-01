@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Annium.AspNetCore.Extensions;
 using Annium.Core.Mapper;
+using Annium.Core.Mediator;
 using Annium.Id.Api.Payloads;
 using Annium.Id.Api.Views;
 using Annium.Id.AspNetCore;
@@ -14,7 +15,7 @@ namespace Annium.Id.Api.Controllers
 {
     // TODO: change to apps/{appId:guid}/companies/roles
     [Route("apps/{appId:guid}/company-roles")]
-    public class CompanyRoleController : LocalizedServerController
+    public class CompanyRoleController : ServerController
     {
         private readonly IAppRepository appRepository;
         private readonly ICompanyRoleRepository roleRepository;
@@ -28,8 +29,9 @@ namespace Annium.Id.Api.Controllers
             ICompanyRoleClaimRepository roleClaimRepository,
             ICompanyClaimRepository claimRepository,
             IMapper mapper,
+            IMediator mediator,
             ILocalizer<CompanyRoleController> localizer
-        ) : base(localizer)
+        ) : base(mediator)
         {
             this.appRepository = appRepository;
             this.roleRepository = roleRepository;

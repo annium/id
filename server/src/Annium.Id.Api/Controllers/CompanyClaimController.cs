@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Annium.AspNetCore.Extensions;
 using Annium.Core.Mapper;
+using Annium.Core.Mediator;
 using Annium.Id.Api.Payloads;
 using Annium.Id.Api.Views;
 using Annium.Id.AspNetCore;
@@ -15,7 +16,7 @@ namespace Annium.Id.Api.Controllers
 {
     // TODO: change to apps/{appId:guid}/companies/claims
     [Route("apps/{appId:guid}/company-claims")]
-    public class CompanyClaimController : LocalizedServerController
+    public class CompanyClaimController : ServerController
     {
         private readonly IAppRepository appRepository;
         private readonly ICompanyClaimRepository claimRepository;
@@ -25,8 +26,9 @@ namespace Annium.Id.Api.Controllers
             IAppRepository appRepository,
             ICompanyClaimRepository claimRepository,
             IMapper mapper,
+            IMediator mediator,
             ILocalizer<CompanyClaimController> localizer
-        ) : base(localizer)
+        ) : base(mediator)
         {
             this.appRepository = appRepository;
             this.claimRepository = claimRepository;

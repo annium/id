@@ -1,45 +1,38 @@
 using System;
-using System.Net;
 using System.Threading.Tasks;
 using Annium.AspNetCore.Extensions;
 using Annium.Core.Mapper;
 using Annium.Core.Mediator;
-using Annium.Data.Operations;
 using Annium.Id.Api.Payloads;
 using Annium.Id.Api.Views;
 using Annium.Id.Application.Tools;
 using Annium.Id.AspNetCore;
 using Annium.Id.Db.Repositories;
 using Annium.Id.ViewModels.User.Requests;
-using Annium.Localization.Abstractions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Annium.Id.Api.Controllers
 {
     [Route("new/me")]
-    public class NewMeController : LocalizedServerController
+    public class NewMeController : ServerController
     {
         private readonly IUserRepository userRepository;
         private readonly IUserLoginRepository userLoginRepository;
         private readonly ISecurityManager securityManager;
         private readonly IMapper mapper;
-        private readonly IMediator mediator;
 
         public NewMeController(
             IUserRepository userRepository,
             IUserLoginRepository userLoginRepository,
             ISecurityManager securityManager,
             IMapper mapper,
-            IMediator mediator,
-            ILocalizer<NewMeController> localizer
-        ) : base(localizer)
+            IMediator mediator
+        ) : base(mediator)
         {
             this.userRepository = userRepository;
             this.userLoginRepository = userLoginRepository;
             this.securityManager = securityManager;
             this.mapper = mapper;
-            this.mediator = mediator;
         }
 
         [HttpPost]
@@ -94,13 +87,6 @@ namespace Annium.Id.Api.Controllers
             await userRepository.DeleteByIdAsync(userId);
 
             return NoContent();
-        }
-
-        protected async Task<IActionResult> HandleAsync<TRequest, TResponse>(TRequest request)
-        {
-            var result = await mediator.SendAsync<ValueTuple<ModelStateDictionary, TRequest>, IStatusResult<HttpStatusCode, TResponse>>((ModelState, request));
-
-            return new ObjectResult(result) { StatusCode = (int) result.Status };
         }
     }
 }

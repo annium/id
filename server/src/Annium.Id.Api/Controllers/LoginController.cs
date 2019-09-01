@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Annium.AspNetCore.Extensions;
+using Annium.Core.Mediator;
 using Annium.Id.Api.Payloads;
 using Annium.Id.Api.Tools;
 using Annium.Id.Api.Views;
@@ -15,7 +16,7 @@ using NodaTime;
 namespace Annium.Id.Api.Controllers
 {
     [Route("me")]
-    public class LoginController : LocalizedServerController
+    public class LoginController : ServerController
     {
         private static readonly Duration refreshTokenLifeTime = Duration.FromDays(1);
         private readonly IAppRepository appRepository;
@@ -36,8 +37,9 @@ namespace Annium.Id.Api.Controllers
             ISecurityManager securityManager,
             ITokenGenerator tokenGenerator,
             Func<Instant> getInstant,
+            IMediator mediator,
             ILocalizer<LoginController> localizer
-        ) : base(localizer)
+        ) : base(mediator)
         {
             this.appRepository = appRepository;
             this.userRepository = userRepository;
