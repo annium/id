@@ -4,8 +4,6 @@ using Annium.Core.Mediator;
 using Annium.Extensions.DependencyInjection;
 using Annium.Id.Api.Tools;
 using Annium.Id.Application.CommandHandlers;
-using Annium.Id.Application.PipeHandlers;
-using Annium.Id.ViewModels;
 using Annium.Logging.Abstractions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -45,12 +43,11 @@ namespace Annium.Id.Api
 
         private void ConfigureMediator(MediatorConfiguration cfg)
         {
-            cfg.Add(typeof(LoggingPipeHandler<,>));
+            cfg.AddLoggingHandler();
             cfg.Add(typeof(HttpActionPipeHandler<,>));
-            cfg.Add(typeof(ExceptionPipeHandler<,>));
-            cfg.Add(typeof(RequestMappingPipeHandler<,>));
-            cfg.Add(typeof(RequestResponseMappingPipeHandler<,>));
-            cfg.Add(typeof(ValidationPipeHandler<,>));
+            cfg.AddExceptionHandler();
+            cfg.AddViewMappingHandlers();
+            cfg.AddValidationHandler();
 
             cfg.Add(typeof(UserCommandHandler));
         }

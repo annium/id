@@ -13,4 +13,7 @@
     <ItemGroup>
         <ProjectReference Include="../Annium.Id.Application/Annium.Id.Application.csproj" />
     </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Annium.Architecture.ViewModel" Version="0.1.0" />
+    </ItemGroup>
 </Project>

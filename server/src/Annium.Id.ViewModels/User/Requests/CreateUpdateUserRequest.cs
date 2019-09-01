@@ -1,3 +1,4 @@
+using Annium.Architecture.ViewModel;
 using Annium.Id.Application.Commands;
 
 namespace Annium.Id.ViewModels.User.Requests
