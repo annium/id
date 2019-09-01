@@ -11,11 +11,11 @@
         <IsPackable>false</IsPackable>
     </PropertyGroup>
     <ItemGroup>
-        <ProjectReference Include="../Annium.Architecture.CQRS/Annium.Architecture.CQRS.csproj" />
         <ProjectReference Include="../Annium.Id.Core/Annium.Id.Core.csproj" />
         <ProjectReference Include="../Annium.Id.Db/Annium.Id.Db.csproj" />
     </ItemGroup>
     <ItemGroup>
+        <PackageReference Include="Annium.Architecture.CQRS" Version="0.1.0" />
         <PackageReference Include="Annium.Extensions.Validation" Version="0.1.0" />
         <PackageReference Include="Annium.Localization.Yaml" Version="0.1.0" />
     </ItemGroup>
