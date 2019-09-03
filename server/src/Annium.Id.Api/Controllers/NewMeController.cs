@@ -36,21 +36,22 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpPost]
-        public Task<IActionResult> RegisterUserAsync([FromBody] CreateUpdateUserRequest request)
+        public Task<IActionResult> RegisterUserAsync([FromBody] CreateUserRequest request)
         {
-            return HandleAsync<CreateUpdateUserRequest, Guid>(request);
+            return HandleAsync<CreateUserRequest, Guid>(request);
         }
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> GetUserAsync()
+        public Task<IActionResult> GetUserAsync()
         {
-            var user = await userRepository.GetByIdAsync(this.GetBaseId().UserId);
-            if (user == null)
-                return NotFound("User not found");
+            return HandleAsync<GetUserProfileRequest, UserPrivateView>(new GetUserProfileRequest());
+            // var user = await userRepository.GetByIdAsync(this.GetBaseId().UserId);
+            // if (user == null)
+            //     return NotFound("User not found");
 
-            // TODO: perhaps, add info about companies, user is member of
-            return Ok(mapper.Map<UserPrivateView>(user));
+            // // TODO: perhaps, add info about companies, user is member of
+            // return Ok(mapper.Map<UserPrivateView>(user));
         }
 
         [HttpPut]

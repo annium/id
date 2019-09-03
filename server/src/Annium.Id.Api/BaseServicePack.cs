@@ -3,7 +3,7 @@ using Annium.Core.DependencyInjection;
 using Annium.Core.Mediator;
 using Annium.Extensions.DependencyInjection;
 using Annium.Id.Api.Tools;
-using Annium.Id.Application.CommandHandlers;
+using Annium.Id.Application.Tools;
 using Annium.Logging.Abstractions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,6 +34,7 @@ namespace Annium.Id.Api
             services.AddSingleton(new LoggerConfiguration(LogLevel.Trace));
             services.AddConsoleLogger();
             services.AddLocalization(opts => opts.UseYamlStorage());
+            services.AddComposition();
             services.AddValidation();
             services.AddMapper();
             services.AddMediatorConfiguration(ConfigureMediator);
@@ -49,6 +50,7 @@ namespace Annium.Id.Api
             cfg.AddExceptionHandler();
             cfg.AddViewMappingHandlers();
             cfg.AddValidationHandler();
+            cfg.AddCompositionHandler();
 
             cfg.AddCommandQueryHandlers();
         }

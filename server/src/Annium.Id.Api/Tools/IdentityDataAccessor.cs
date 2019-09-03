@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Net;
+using Annium.Id.Application.Tools;
 using Microsoft.AspNetCore.Http;
 
 namespace Annium.Id.Api.Tools

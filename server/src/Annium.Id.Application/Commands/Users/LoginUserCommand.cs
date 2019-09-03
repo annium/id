@@ -1,22 +1,21 @@
 using Annium.Architecture.CQRS.Commands;
+using Annium.Id.Domain.Entities;
 
-namespace Annium.Id.Application.Commands
+namespace Annium.Id.Application.Commands.Users
 {
-    public class CreateUserCommand : ICommand
+    public class LoginUserCommand : ICommand
     {
+        public User User { get; private set; }
         public string Login { get; }
         public string Password { get; }
-        public string Email { get; }
 
-        public CreateUserCommand(
+        public LoginUserCommand(
             string login,
-            string password,
-            string email
+            string password
         )
         {
             Login = login;
             Password = password;
-            Email = email;
         }
     }
 }
