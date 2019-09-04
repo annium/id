@@ -8,7 +8,7 @@ using Microsoft.Net.Http.Headers;
 
 namespace Annium.Id.AspNetCore.Tools
 {
-    internal class TokenAccessor
+    internal class RequestTokenAccessor
     {
         public ValueTuple<string, IActionResult> GetToken(HttpRequest request)
         {

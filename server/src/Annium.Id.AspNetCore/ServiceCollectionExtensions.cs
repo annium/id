@@ -37,7 +37,7 @@ namespace Annium.Extensions.DependencyInjection
             );
 
             // tools
-            services.AddSingleton<TokenAccessor>();
+            services.AddSingleton<RequestTokenAccessor>();
 
             services.AddIdAuthorizationCoreServices();
 

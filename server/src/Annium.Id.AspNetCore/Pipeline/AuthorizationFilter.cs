@@ -7,12 +7,12 @@ namespace Annium.Id.AspNetCore.Pipeline
 {
     internal class AuthorizationFilter : IAuthorizationFilter
     {
-        private readonly TokenAccessor tokenAccessor;
+        private readonly RequestTokenAccessor tokenAccessor;
 
         private readonly ITokenParser tokenParser;
 
         public AuthorizationFilter(
-            TokenAccessor tokenAccessor,
+            RequestTokenAccessor tokenAccessor,
             ITokenParser tokenParser
         )
         {
