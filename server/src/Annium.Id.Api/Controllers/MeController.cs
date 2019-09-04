@@ -6,6 +6,7 @@ using Annium.Id.Api.Payloads;
 using Annium.Id.Api.Views;
 using Annium.Id.Application.Tools;
 using Annium.Id.AspNetCore;
+using Annium.Id.Core;
 using Annium.Id.Db.Repositories;
 using Annium.Id.Domain.Entities;
 using Annium.Localization.Abstractions;
@@ -16,12 +17,14 @@ namespace Annium.Id.Api.Controllers
     [Route("me")]
     public class MeController : ServerController
     {
+        private readonly ITokenAccessor tokenAccessor;
         private readonly IUserRepository userRepository;
         private readonly IUserLoginRepository userLoginRepository;
         private readonly ISecurityManager securityManager;
         private readonly IMapper mapper;
 
         public MeController(
+            ITokenAccessor tokenAccessor,
             IUserRepository userRepository,
             IUserLoginRepository userLoginRepository,
             ISecurityManager securityManager,
@@ -30,6 +33,7 @@ namespace Annium.Id.Api.Controllers
             ILocalizer<MeController> localizer
         ) : base(mediator)
         {
+            this.tokenAccessor = tokenAccessor;
             this.userRepository = userRepository;
             this.userLoginRepository = userLoginRepository;
             this.securityManager = securityManager;
@@ -65,7 +69,7 @@ namespace Annium.Id.Api.Controllers
         [Authorize]
         public async Task<IActionResult> GetUserAsync()
         {
-            var user = await userRepository.GetByIdAsync(this.GetBaseId().UserId);
+            var user = await userRepository.GetByIdAsync(tokenAccessor.GetBaseToken().UserId);
             if (user == null)
                 return NotFound("User not found");
 
@@ -80,7 +84,7 @@ namespace Annium.Id.Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var user = await userRepository.GetByIdAsync(this.GetBaseId().UserId);
+            var user = await userRepository.GetByIdAsync(tokenAccessor.GetBaseToken().UserId);
 
             if (userPayload.Login != user.Login && (await userRepository.FindByLoginAsync(userPayload.Login)) != null)
                 return Conflict($"Login {userPayload.Login} is already used");
@@ -101,7 +105,7 @@ namespace Annium.Id.Api.Controllers
         [Authorize]
         public async Task<IActionResult> UnregisterUserAsync()
         {
-            var userId = this.GetBaseId().UserId;
+            var userId = tokenAccessor.GetBaseToken().UserId;
 
             await userLoginRepository.DeleteAllByUserIdAsync(userId);
             await userRepository.DeleteByIdAsync(userId);

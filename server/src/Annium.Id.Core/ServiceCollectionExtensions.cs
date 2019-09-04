@@ -10,6 +10,9 @@ namespace Annium.Id.Core
             services.AddSingleton<IPolicyMapper, PolicyMapper>();
             services.AddSingleton<ITokenParser, TokenParser>();
 
+            // services.AddScoped<TokenStorage>()
+            // services.AddScoped<ITokenStorage>()
+
             return services;
         }
     }

@@ -4,6 +4,7 @@ using Annium.AspNetCore.Extensions;
 using Annium.Core.Mediator;
 using Annium.Id.Api.Payloads;
 using Annium.Id.AspNetCore;
+using Annium.Id.Core;
 using Annium.Id.Db.Repositories;
 using Annium.Id.Domain.Entities;
 using Annium.Localization.Abstractions;
@@ -14,6 +15,7 @@ namespace Annium.Id.Api.Controllers
     [Route("companies/{companyId:guid}/users/{userId:guid}")]
     public class CompanyUserController : ServerController
     {
+        private readonly ITokenAccessor tokenAccessor;
         private readonly ICompanyRepository companyRepository;
         private readonly IUserRepository userRepository;
         private readonly ICompanyRoleRepository companyRoleRepository;
@@ -23,6 +25,7 @@ namespace Annium.Id.Api.Controllers
         private readonly ICompanyUserClaimRepository companyUserClaimRepository;
 
         public CompanyUserController(
+            ITokenAccessor tokenAccessor,
             ICompanyRepository companyRepository,
             IUserRepository userRepository,
             ICompanyRoleRepository companyRoleRepository,
@@ -34,6 +37,7 @@ namespace Annium.Id.Api.Controllers
             ILocalizer<CompanyUserController> localizer
         ) : base(mediator)
         {
+            this.tokenAccessor = tokenAccessor;
             this.companyRepository = companyRepository;
             this.userRepository = userRepository;
             this.companyRoleRepository = companyRoleRepository;
@@ -182,7 +186,7 @@ namespace Annium.Id.Api.Controllers
             if (company == null)
                 return (null, NotFound("Company not found"));
 
-            if (this.GetBaseId().UserId != company.OwnerId)
+            if (tokenAccessor.GetBaseToken().UserId != company.OwnerId)
                 return (null, Forbidden($"Need to be company owner to {operation}"));
 
             return (company, null);

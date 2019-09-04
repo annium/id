@@ -7,9 +7,9 @@ using Annium.Core.Mediator;
 using Annium.Id.Api.Payloads;
 using Annium.Id.Api.Views;
 using Annium.Id.AspNetCore;
+using Annium.Id.Core;
 using Annium.Id.Db.Repositories;
 using Annium.Id.Domain.Entities;
-using Annium.Localization.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Annium.Id.Api.Controllers
@@ -17,18 +17,20 @@ namespace Annium.Id.Api.Controllers
     [Route("apps")]
     public class AppController : ServerController
     {
+        private readonly ITokenAccessor tokenAccessor;
         private readonly IAppRepository appRepository;
         private readonly IUserRepository userRepository;
         private readonly IMapper mapper;
 
         public AppController(
+            ITokenAccessor tokenAccessor,
             IAppRepository appRepository,
             IUserRepository userRepository,
             IMapper mapper,
-            IMediator mediator,
-            ILocalizer<AppController> localizer
+            IMediator mediator
         ) : base(mediator)
         {
+            this.tokenAccessor = tokenAccessor;
             this.appRepository = appRepository;
             this.userRepository = userRepository;
             this.mapper = mapper;
@@ -45,7 +47,7 @@ namespace Annium.Id.Api.Controllers
                 return Conflict($"Application key {appPayload.Key} is already used");
 
             var app = new App(
-                this.GetBaseId().UserId,
+                tokenAccessor.GetBaseToken().UserId,
                 appPayload.Key,
                 appPayload.Name,
                 Guid.NewGuid()
@@ -149,7 +151,7 @@ namespace Annium.Id.Api.Controllers
             if (app == null)
                 return (null, NotFound("Application not found"));
 
-            if (this.GetBaseId().UserId != app.OwnerId)
+            if (tokenAccessor.GetBaseToken().UserId != app.OwnerId)
                 return (null, Forbidden($"Need to be application owner to {operation}"));
 
             return (app, null);

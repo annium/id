@@ -6,6 +6,7 @@ using Annium.Core.Mediator;
 using Annium.Id.Api.Payloads;
 using Annium.Id.Api.Views;
 using Annium.Id.AspNetCore;
+using Annium.Id.Core;
 using Annium.Id.Db.Repositories;
 using Annium.Id.Domain.Entities;
 using Annium.Localization.Abstractions;
@@ -16,6 +17,7 @@ namespace Annium.Id.Api.Controllers
     [Route("apps/{appId:guid}/users/{userId:guid}")]
     public class AppUserController : ServerController
     {
+        private readonly ITokenAccessor tokenAccessor;
         private readonly IAppRepository appRepository;
         private readonly IUserRepository userRepository;
         private readonly IRoleRepository roleRepository;
@@ -25,6 +27,7 @@ namespace Annium.Id.Api.Controllers
         private readonly IMapper mapper;
 
         public AppUserController(
+            ITokenAccessor tokenAccessor,
             IAppRepository appRepository,
             IUserRepository userRepository,
             IRoleRepository roleRepository,
@@ -32,10 +35,10 @@ namespace Annium.Id.Api.Controllers
             IUserRoleRepository userRoleRepository,
             IUserClaimRepository userClaimRepository,
             IMapper mapper,
-            IMediator mediator,
-            ILocalizer<AppUserController> localizer
+            IMediator mediator
         ) : base(mediator)
         {
+            this.tokenAccessor = tokenAccessor;
             this.appRepository = appRepository;
             this.userRepository = userRepository;
             this.roleRepository = roleRepository;
@@ -142,7 +145,7 @@ namespace Annium.Id.Api.Controllers
             if (app == null)
                 return (null, null, NotFound("Application not found"));
 
-            if (this.GetBaseId().UserId != app.OwnerId)
+            if (tokenAccessor.GetBaseToken().UserId != app.OwnerId)
                 return (null, null, Forbidden($"Need to be application owner to {operation}"));
 
             var user = await userRepository.GetByIdAsync(userId);

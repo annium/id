@@ -7,6 +7,7 @@ using Annium.Core.Mediator;
 using Annium.Id.Api.Payloads;
 using Annium.Id.Api.Views;
 using Annium.Id.AspNetCore;
+using Annium.Id.Core;
 using Annium.Id.Db.Repositories;
 using Annium.Id.Domain.Entities;
 using Annium.Localization.Abstractions;
@@ -18,11 +19,13 @@ namespace Annium.Id.Api.Controllers
     [Route("apps/{appId:guid}/company-claims")]
     public class CompanyClaimController : ServerController
     {
+        private readonly ITokenAccessor tokenAccessor;
         private readonly IAppRepository appRepository;
         private readonly ICompanyClaimRepository claimRepository;
         private readonly IMapper mapper;
 
         public CompanyClaimController(
+            ITokenAccessor tokenAccessor,
             IAppRepository appRepository,
             ICompanyClaimRepository claimRepository,
             IMapper mapper,
@@ -30,6 +33,7 @@ namespace Annium.Id.Api.Controllers
             ILocalizer<CompanyClaimController> localizer
         ) : base(mediator)
         {
+            this.tokenAccessor = tokenAccessor;
             this.appRepository = appRepository;
             this.claimRepository = claimRepository;
             this.mapper = mapper;
@@ -125,7 +129,7 @@ namespace Annium.Id.Api.Controllers
             if (result != null)
                 return (null, result);
 
-            if (this.GetBaseId().UserId != app.OwnerId)
+            if (tokenAccessor.GetBaseToken().UserId != app.OwnerId)
                 return (null, Forbidden($"Need to be application owner to {operation}"));
 
             return (app, null);

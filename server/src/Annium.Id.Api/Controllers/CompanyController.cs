@@ -7,6 +7,7 @@ using Annium.Core.Mediator;
 using Annium.Id.Api.Payloads;
 using Annium.Id.Api.Views;
 using Annium.Id.AspNetCore;
+using Annium.Id.Core;
 using Annium.Id.Db.Repositories;
 using Annium.Id.Domain.Entities;
 using Annium.Localization.Abstractions;
@@ -17,12 +18,14 @@ namespace Annium.Id.Api.Controllers
     [Route("companies")]
     public class CompanyController : ServerController
     {
+        private readonly ITokenAccessor tokenAccessor;
         private readonly ICompanyRepository companyRepository;
         private readonly IUserRepository userRepository;
         private readonly ICompanyUserRepository companyUserRepository;
         private readonly IMapper mapper;
 
         public CompanyController(
+            ITokenAccessor tokenAccessor,
             ICompanyRepository companyRepository,
             IUserRepository userRepository,
             ICompanyUserRepository companyUserRepository,
@@ -31,6 +34,7 @@ namespace Annium.Id.Api.Controllers
             ILocalizer<CompanyController> localizer
         ) : base(mediator)
         {
+            this.tokenAccessor = tokenAccessor;
             this.companyRepository = companyRepository;
             this.userRepository = userRepository;
             this.companyUserRepository = companyUserRepository;
@@ -52,7 +56,7 @@ namespace Annium.Id.Api.Controllers
                 return Conflict($"Company key {companyPayload.Key} is already used");
 
             var company = new Company(
-                this.GetBaseId().UserId,
+                tokenAccessor.GetBaseToken().UserId,
                 companyPayload.ParentId,
                 companyPayload.Key,
                 companyPayload.Name
@@ -152,7 +156,7 @@ namespace Annium.Id.Api.Controllers
             if (result != null)
                 return (null, result);
 
-            if (this.GetBaseId().UserId != company.OwnerId)
+            if (tokenAccessor.GetBaseToken().UserId != company.OwnerId)
                 return (null, Forbidden($"Need to be company owner to {operation}"));
 
             return (company, null);

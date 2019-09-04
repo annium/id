@@ -7,6 +7,7 @@ using Annium.Id.Api.Tools;
 using Annium.Id.Api.Views;
 using Annium.Id.Application.Tools;
 using Annium.Id.AspNetCore;
+using Annium.Id.Core;
 using Annium.Id.Db.Repositories;
 using Annium.Id.Domain.Entities;
 using Annium.Id.ViewModels.User.Requests;
@@ -21,6 +22,7 @@ namespace Annium.Id.Api.Controllers
     public class NewLoginController : ServerController
     {
         private static readonly Duration refreshTokenLifeTime = Duration.FromDays(1);
+        private readonly ITokenAccessor tokenAccessor;
         private readonly IAppRepository appRepository;
         private readonly IUserRepository userRepository;
         private readonly IUserLoginRepository userLoginRepository;
@@ -31,6 +33,7 @@ namespace Annium.Id.Api.Controllers
         private readonly Func<Instant> getInstant;
 
         public NewLoginController(
+            ITokenAccessor tokenAccessor,
             IAppRepository appRepository,
             IUserRepository userRepository,
             IUserLoginRepository userLoginRepository,
@@ -42,6 +45,7 @@ namespace Annium.Id.Api.Controllers
             IMediator mediator
         ) : base(mediator)
         {
+            this.tokenAccessor = tokenAccessor;
             this.appRepository = appRepository;
             this.userRepository = userRepository;
             this.userLoginRepository = userLoginRepository;
@@ -83,7 +87,7 @@ namespace Annium.Id.Api.Controllers
         [Authorize]
         public async Task<IActionResult> LogoutAsync()
         {
-            var loginId = this.GetBaseId().LoginId;
+            var loginId = tokenAccessor.GetBaseToken().LoginId;
 
             await userLoginRepository.DeleteByIdAsync(loginId);
 
@@ -138,7 +142,7 @@ namespace Annium.Id.Api.Controllers
         [Authorize]
         public async Task<IActionResult> LogoutAppAsync(Guid appId)
         {
-            var loginId = this.GetBaseId().LoginId;
+            var loginId = tokenAccessor.GetBaseToken().LoginId;
 
             await userAppLoginRepository.DeleteByIdAsync(loginId);
 
