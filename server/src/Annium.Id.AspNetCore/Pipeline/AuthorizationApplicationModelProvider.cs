@@ -8,15 +8,11 @@ namespace Annium.Id.AspNetCore.Pipeline
 {
     internal class AuthorizationApplicationModelProvider : IApplicationModelProvider
     {
-        private readonly AuthorizationFilter authorizationFilter;
-
-        private readonly Func<Policy, PolicyFilter> createPolicyFilter;
-
-        private readonly IEnumerable<Policy> policies;
-
-        private readonly IPolicyMapper mapper;
-
         public int Order { get; } = -990;
+        private readonly AuthorizationFilter authorizationFilter;
+        private readonly Func<Policy, PolicyFilter> createPolicyFilter;
+        private readonly IEnumerable<Policy> policies;
+        private readonly IPolicyMapper mapper;
 
         public AuthorizationApplicationModelProvider(
             AuthorizationFilter authorizationFilter,

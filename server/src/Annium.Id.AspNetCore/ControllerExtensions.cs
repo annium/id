@@ -8,7 +8,7 @@ namespace Annium.Id.AspNetCore
     {
         public static IdBaseToken GetBaseId(this ControllerBase controller)
         {
-            if (!controller.ControllerContext.ActionDescriptor.Properties.TryGetValue(Constants.IdBaseTokenProperty, out var raw))
+            if (!controller.HttpContext.Items.TryGetValue(Constants.IdBaseTokenProperty, out var raw))
                 throw new InvalidOperationException($"User is not authenticated.");
 
             return (IdBaseToken) raw;
@@ -16,7 +16,7 @@ namespace Annium.Id.AspNetCore
 
         public static IdAppToken GetAppId(this ControllerBase controller)
         {
-            if (!controller.ControllerContext.ActionDescriptor.Properties.TryGetValue(Constants.IdAppTokenProperty, out var raw))
+            if (!controller.HttpContext.Items.TryGetValue(Constants.IdAppTokenProperty, out var raw))
                 throw new InvalidOperationException($"User is not authenticated.");
 
             return (IdAppToken) raw;

@@ -7,12 +7,11 @@ namespace Annium.Id.AspNetCore.Pipeline
 {
     internal class AuthorizationFilter : IAuthorizationFilter
     {
-        private readonly RequestTokenAccessor tokenAccessor;
-
+        private readonly RequestTokenReader tokenAccessor;
         private readonly ITokenParser tokenParser;
 
         public AuthorizationFilter(
-            RequestTokenAccessor tokenAccessor,
+            RequestTokenReader tokenAccessor,
             ITokenParser tokenParser
         )
         {
@@ -29,7 +28,7 @@ namespace Annium.Id.AspNetCore.Pipeline
 
         private IActionResult HandleAuthorization(AuthorizationFilterContext context)
         {
-            var(tokenString, readResult) = tokenAccessor.GetToken(context.HttpContext.Request);
+            var(tokenString, readResult) = tokenAccessor.ReadToken(context.HttpContext.Request);
             if (readResult != null)
                 return readResult;
 
@@ -41,9 +40,9 @@ namespace Annium.Id.AspNetCore.Pipeline
 
             var token = parseResult.Data;
 
-            context.ActionDescriptor.Properties[Constants.IdBaseTokenProperty] = token;
+            context.HttpContext.Items[Constants.IdBaseTokenProperty] = token;
             if (token is IdAppToken)
-                context.ActionDescriptor.Properties[Constants.IdAppTokenProperty] = token;
+                context.HttpContext.Items[Constants.IdAppTokenProperty] = token;
 
             return null;
         }

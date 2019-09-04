@@ -8,9 +8,9 @@ using Microsoft.Net.Http.Headers;
 
 namespace Annium.Id.AspNetCore.Tools
 {
-    internal class RequestTokenAccessor
+    internal class RequestTokenReader
     {
-        public ValueTuple<string, IActionResult> GetToken(HttpRequest request)
+        public ValueTuple<string, IActionResult> ReadToken(HttpRequest request)
         {
             if (!request.Headers.ContainsKey(HeaderNames.Authorization))
                 return fail(HttpStatusCode.Unauthorized, "Bearer authorization required.");
