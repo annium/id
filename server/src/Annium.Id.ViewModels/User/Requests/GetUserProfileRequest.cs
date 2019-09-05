@@ -1,4 +1,7 @@
+using Annium.Architecture.ViewModel;
+using Annium.Id.Application.Queries.Users;
+
 namespace Annium.Id.ViewModels.User.Requests
 {
-    public class GetUserProfileRequest { }
+    public class GetUserProfileRequest : IRequest<GetUserProfileQuery> { }
 }

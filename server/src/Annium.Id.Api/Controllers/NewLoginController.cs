@@ -60,27 +60,6 @@ namespace Annium.Id.Api.Controllers
         public Task<IActionResult> LoginAsync([FromBody] LoginUserRequest request)
         {
             return HandleAsync<LoginUserRequest, UserTokenResponse>(request);
-
-            // if (!ModelState.IsValid)
-            //     return BadRequest(ModelState);
-
-            // var user = await userRepository.FindByLoginAsync(loginPayload.Login);
-            // if (user == null)
-            //     return Forbidden("Invalid login");
-
-            // if (securityManager.Hash(loginPayload.Password) != user.PasswordHash)
-            //     return Forbidden("Invalid password");
-
-            // var instant = getInstant();
-            // var(ipAddress, client) = identityDataAccessor.GetIdentityData();
-            // var login = new UserLogin(user.Id, instant, ipAddress.ToString(), client, Guid.NewGuid(), instant + refreshTokenLifeTime);
-
-            // await userLoginRepository.DeleteExpiredByUserIdAsync(user.Id, instant);
-            // login = await userLoginRepository.CreateAsync(login);
-
-            // var token = tokenGenerator.GenerateBaseToken(login);
-
-            // return Ok(new UserTokenView(token, login.RefreshToken, login.RefreshTokenExpires));
         }
 
         [HttpDelete("logout")]

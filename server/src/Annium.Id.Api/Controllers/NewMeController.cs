@@ -10,6 +10,7 @@ using Annium.Id.AspNetCore;
 using Annium.Id.Core;
 using Annium.Id.Db.Repositories;
 using Annium.Id.ViewModels.User.Requests;
+using Annium.Id.ViewModels.User.Responses;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Annium.Id.Api.Controllers
@@ -49,13 +50,7 @@ namespace Annium.Id.Api.Controllers
         [Authorize]
         public Task<IActionResult> GetUserAsync()
         {
-            return HandleAsync<GetUserProfileRequest, UserPrivateView>(new GetUserProfileRequest());
-            // var user = await userRepository.GetByIdAsync(tokenAccessor.GetBaseToken().UserId);
-            // if (user == null)
-            //     return NotFound("User not found");
-
-            // // TODO: perhaps, add info about companies, user is member of
-            // return Ok(mapper.Map<UserPrivateView>(user));
+            return HandleAsync<GetUserProfileRequest, UserPrivateResponse>(new GetUserProfileRequest());
         }
 
         [HttpPut]

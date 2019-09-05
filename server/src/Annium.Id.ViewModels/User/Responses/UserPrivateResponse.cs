@@ -1,8 +1,9 @@
 using System;
+using Annium.Architecture.ViewModel;
 
 namespace Annium.Id.ViewModels.User.Responses
 {
-    public class UserPrivateResponse
+    public class UserPrivateResponse : IResponse<Domain.Entities.User>
     {
         public Guid Id { get; }
         public string Login { get; }

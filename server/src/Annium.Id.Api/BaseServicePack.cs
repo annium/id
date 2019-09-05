@@ -15,6 +15,7 @@ namespace Annium.Id.Api
         public BaseServicePack()
         {
             Add<Application.ServicePack>();
+            Add<ViewModels.ServicePack>();
         }
 
         public override void Register(IServiceCollection services, IServiceProvider provider)
