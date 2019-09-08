@@ -23,8 +23,7 @@ namespace Annium.Id.DemoClient
             {
                 options.Audience = "demo";
             });
-            services.AddSingleton(new LoggerConfiguration(LogLevel.Trace));
-            services.AddConsoleLogger();
+            services.AddLogging(route => route.UseConsole());
             services.AddIdPolicy(
                 "isAdmin",
                 token => token.App.Roles.Contains("admin")

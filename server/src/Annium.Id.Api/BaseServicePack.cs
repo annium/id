@@ -31,8 +31,7 @@ namespace Annium.Id.Api
             // tools
             services.AddSingleton<IIdentityDataAccessor, IdentityDataAccessor>();
 
-            services.AddSingleton(new LoggerConfiguration(LogLevel.Trace));
-            services.AddConsoleLogger();
+            services.AddLogging(route => route.UseConsole());
             services.AddLocalization(opts => opts.UseYamlStorage());
             services.AddComposition();
             services.AddValidation();

@@ -2,7 +2,6 @@ using System;
 using Annium.Core.DependencyInjection;
 using Annium.Id.Db.Repositories;
 using Annium.Id.Db.Repositories.Implementations;
-using Annium.Logging.Abstractions;
 using LinqToDB.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -38,9 +37,6 @@ namespace Annium.Id.Db
             services.AddScoped<IUserLoginRepository, UserLoginRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserRoleRepository, UserRoleRepository>();
-
-            services.AddSingleton(new LoggerConfiguration(LogLevel.Trace));
-            services.AddConsoleLogger();
         }
     }
 }

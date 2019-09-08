@@ -1,7 +1,6 @@
 using Annium.Extensions.Composition;
 using Annium.Id.Core;
 using Annium.Id.Db.Repositories;
-using Annium.Localization.Abstractions;
 
 namespace Annium.Id.Application.Queries.Users.Composers
 {
@@ -9,9 +8,8 @@ namespace Annium.Id.Application.Queries.Users.Composers
     {
         public GetUserProfileQueryComposer(
             ITokenAccessor tokenAccessor,
-            IUserRepository userRepository,
-            ILocalizer<GetUserProfileQueryComposer> localizer
-        ) : base(localizer)
+            IUserRepository userRepository
+        )
         {
             Field(e => e.User).LoadWith(ctx => userRepository.GetByIdAsync(tokenAccessor.GetBaseToken().UserId));
         }
