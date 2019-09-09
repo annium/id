@@ -4,7 +4,6 @@ using Annium.Core.Mediator;
 using Annium.Extensions.DependencyInjection;
 using Annium.Id.Api.Tools;
 using Annium.Id.Application.Tools;
-using Annium.Logging.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
 
@@ -24,9 +23,6 @@ namespace Annium.Id.Api
 
             // auth
             services.AddIdAuthorization();
-
-            // helpers
-            services.AddHttpContextAccessor();
 
             // tools
             services.AddSingleton<IIdentityDataAccessor, IdentityDataAccessor>();

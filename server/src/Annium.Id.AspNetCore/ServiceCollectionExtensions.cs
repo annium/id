@@ -32,11 +32,14 @@ namespace Annium.Extensions.DependencyInjection
 
             // filters
             services.AddSingleton<AuthorizationFilter>();
-            services.AddSingleton<Func<Policy, PolicyFilter>>(
-                sp => policy => new PolicyFilter(policy, sp.GetRequiredService<IPolicyMapper>().CreateMapper(policy))
-            );
+            services.AddSingleton<Func<Policy, PolicyFilter>>(sp => policy => new PolicyFilter(
+                sp.GetRequiredService<ITokenAccessor>(),
+                policy,
+                sp.GetRequiredService<IPolicyMapper>().CreateMapper(policy)
+            ));
 
             // tools
+            services.AddHttpContextAccessor();
             services.AddSingleton<ITokenAccessor, HttpContextTokenAccessor>();
             services.AddSingleton<RequestTokenReader>();
 
