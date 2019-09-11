@@ -14,7 +14,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task Create_InvalidPayload_BadRequest()
         {
             // arrange
-            var(user, tokens) = await LoginUserAsync();
+            var(user, tokens) = await LogUserInAsync();
             var payload = new AppPayload() { Key = "de", Name = "Demo App" };
 
             // act
@@ -28,7 +28,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task Create_NonUniqueKey_Conflict()
         {
             // arrange
-            var(user, tokens) = await LoginUserAsync();
+            var(user, tokens) = await LogUserInAsync();
             var payload = new AppPayload() { Key = "demo", Name = "Demo App" };
             await id.Post("/apps").BearerAuthorization(tokens.AccessToken).JsonContent(payload).RunAsync();
 
@@ -43,7 +43,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task Create_ValidPayload_Ok()
         {
             // arrange
-            var(user, tokens) = await LoginUserAsync();
+            var(user, tokens) = await LogUserInAsync();
             var appKey = "demo";
             var appName = "Demo App";
 
@@ -61,7 +61,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task GetApiToken_Missing_NotFound()
         {
             // arrange
-            var(user, tokens) = await LoginUserAsync();
+            var(user, tokens) = await LogUserInAsync();
 
             // act
             var response = await id.Get($"/apps/{Guid.NewGuid()}/token").BearerAuthorization(tokens.AccessToken).RunAsync();
@@ -74,9 +74,9 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task GetApiToken_NotOwner_Forbidden()
         {
             // arrange
-            var(_, ownerTokens) = await LoginUserAsync("owner", "superpass", "some@email.com");
+            var(_, ownerTokens) = await LogUserInAsync("owner", "superpass", "some@email.com");
             var app = await CreateAppAsync(ownerTokens.AccessToken);
-            var(_, tokens) = await LoginUserAsync();
+            var(_, tokens) = await LogUserInAsync();
 
             // act
             var response = await id.Get($"/apps/{app.Id}/token").BearerAuthorization(tokens.AccessToken).RunAsync();
@@ -89,7 +89,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task GetApiToken_Valid_Ok()
         {
             // arrange
-            var(_, tokens) = await LoginUserAsync();
+            var(_, tokens) = await LogUserInAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
 
             // act
@@ -103,7 +103,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task UpdateApiToken_Missing_NotFound()
         {
             // arrange
-            var(user, tokens) = await LoginUserAsync();
+            var(user, tokens) = await LogUserInAsync();
 
             // act
             var response = await id.Put($"/apps/{Guid.NewGuid()}/token").BearerAuthorization(tokens.AccessToken).RunAsync();
@@ -116,9 +116,9 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task UpdateApiToken_NotOwner_Forbidden()
         {
             // arrange
-            var(_, ownerTokens) = await LoginUserAsync("owner", "superpass", "some@email.com");
+            var(_, ownerTokens) = await LogUserInAsync("owner", "superpass", "some@email.com");
             var app = await CreateAppAsync(ownerTokens.AccessToken);
-            var(_, tokens) = await LoginUserAsync();
+            var(_, tokens) = await LogUserInAsync();
 
             // act
             var response = await id.Put($"/apps/{app.Id}/token").BearerAuthorization(tokens.AccessToken).RunAsync();
@@ -131,7 +131,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task UpdateApiToken_Valid_Ok()
         {
             // arrange
-            var(_, tokens) = await LoginUserAsync();
+            var(_, tokens) = await LogUserInAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
 
             // act
@@ -155,7 +155,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task Update_IncorrectPayload_BadRequest()
         {
             // arrange
-            var(user, tokens) = await LoginUserAsync();
+            var(user, tokens) = await LogUserInAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
             var u = new AppPayload { Key = "demo" };
 
@@ -170,7 +170,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task Update_Missing_NotFound()
         {
             // arrange
-            var(user, tokens) = await LoginUserAsync();
+            var(user, tokens) = await LogUserInAsync();
             var u = new AppPayload { Key = "demo", Name = "Demo App" };
 
             // act
@@ -184,9 +184,9 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task Update_NotOwner_Forbidden()
         {
             // arrange
-            var(owner, ownerTokens) = await LoginUserAsync("owner", "superpass", "some@email.com");
+            var(owner, ownerTokens) = await LogUserInAsync("owner", "superpass", "some@email.com");
             var app = await CreateAppAsync(ownerTokens.AccessToken);
-            var(user, tokens) = await LoginUserAsync();
+            var(user, tokens) = await LogUserInAsync();
             var u = new AppPayload { Key = "demo", Name = "Demo App" };
 
             // act
@@ -200,7 +200,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task Update_KeyIsNotUnique_Conflict()
         {
             // arrange
-            var(user, tokens) = await LoginUserAsync();
+            var(user, tokens) = await LogUserInAsync();
             var app1 = await CreateAppAsync(tokens.AccessToken, "demo", "Demo App");
             var app2 = await CreateAppAsync(tokens.AccessToken, "medo", "Medo App");
             var u = new AppPayload { Key = "demo", Name = "Medo App" };
@@ -216,7 +216,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task Update_Valid_Ok()
         {
             // arrange
-            var(user, tokens) = await LoginUserAsync();
+            var(user, tokens) = await LogUserInAsync();
             var app = await CreateAppAsync(tokens.AccessToken, "demo", "Demo App");
             var u = new AppPayload { Key = "medo", Name = "Medo App" };
 
@@ -233,7 +233,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task SetOwner_MissingApp_NotFound()
         {
             // arrange
-            var(user, tokens) = await LoginUserAsync();
+            var(user, tokens) = await LogUserInAsync();
 
             // act
             var response = await id.Put($"/apps/{Guid.NewGuid()}/owner/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
@@ -246,9 +246,9 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task SetOwner_NotOwner_Forbidden()
         {
             // arrange
-            var(owner, ownerTokens) = await LoginUserAsync("owner", "superpass", "some@email.com");
+            var(owner, ownerTokens) = await LogUserInAsync("owner", "superpass", "some@email.com");
             var app = await CreateAppAsync(ownerTokens.AccessToken, "demo", "Demo App");
-            var(user, tokens) = await LoginUserAsync();
+            var(user, tokens) = await LogUserInAsync();
 
             // act
             var response = await id.Put($"/apps/{app.Id}/owner/{user.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
@@ -261,7 +261,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task SetOwner_MissingSuccessor_NotFound()
         {
             // arrange
-            var(owner, ownerTokens) = await LoginUserAsync("owner", "superpass", "some@email.com");
+            var(owner, ownerTokens) = await LogUserInAsync("owner", "superpass", "some@email.com");
             var app = await CreateAppAsync(ownerTokens.AccessToken, "demo", "Demo App");
 
             // act
@@ -275,9 +275,9 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task SetOwner_Valid_Ok()
         {
             // arrange
-            var(owner, ownerTokens) = await LoginUserAsync("owner", "superpass", "some@email.com");
+            var(owner, ownerTokens) = await LogUserInAsync("owner", "superpass", "some@email.com");
             var app = await CreateAppAsync(ownerTokens.AccessToken, "demo", "Demo App");
-            var(user, tokens) = await LoginUserAsync();
+            var(user, tokens) = await LogUserInAsync();
 
             // act
             app = await id.Put($"/apps/{app.Id}/owner/{user.Id}").BearerAuthorization(ownerTokens.AccessToken).AsAsync<AppPrivateView>();
@@ -290,7 +290,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task Delete_MissingApp_NotFound()
         {
             // arrange
-            var(user, tokens) = await LoginUserAsync();
+            var(user, tokens) = await LogUserInAsync();
 
             // act
             var response = await id.Delete($"/apps/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
@@ -303,9 +303,9 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task Delete_NotOwner_Forbidden()
         {
             // arrange
-            var(owner, ownerTokens) = await LoginUserAsync("owner", "superpass", "some@email.com");
+            var(owner, ownerTokens) = await LogUserInAsync("owner", "superpass", "some@email.com");
             var app = await CreateAppAsync(ownerTokens.AccessToken, "demo", "Demo App");
-            var(user, tokens) = await LoginUserAsync();
+            var(user, tokens) = await LogUserInAsync();
 
             // act
             var response = await id.Delete($"/apps/{app.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
@@ -318,7 +318,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task Delete_Valid_Ok()
         {
             // arrange
-            var(user, tokens) = await LoginUserAsync();
+            var(user, tokens) = await LogUserInAsync();
             var app = await CreateAppAsync(tokens.AccessToken, "demo", "Demo App");
 
             // act

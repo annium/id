@@ -1,8 +1,9 @@
 using System;
 using Annium.Core.DependencyInjection;
 using Annium.Core.Mapper;
+using Annium.Id.Application.Commands.Users;
 using Annium.Id.Application.Queries.Users;
-using Annium.Id.ViewModels.User.Requests;
+using Annium.Id.ViewModels.Users.Requests;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Annium.Id.ViewModels
@@ -16,7 +17,11 @@ namespace Annium.Id.ViewModels
 
         private void ConfigureMapping(MapperConfiguration cfg)
         {
-            cfg.Map<GetUserProfileRequest, GetUserProfileQuery>().Ignore(t => t.User);
+            #region Users
+            cfg.Map<DeleteUserRequest, DeleteUserCommand>().Ignore(t => t.UserId);
+            cfg.Map<GetUserRequest, GetUserQuery>().Ignore(t => t.User);
+            cfg.Map<LogUserOutRequest, LogUserOutCommand>().Ignore(t => t.LoginId);
+            #endregion
         }
     }
 }

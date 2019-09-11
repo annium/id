@@ -8,14 +8,14 @@ using Annium.Id.Domain.Entities;
 
 namespace Annium.Id.Application.QueryHandlers
 {
-    internal class UserQueryHandler : IQueryHandler<GetUserProfileQuery, User>
+    internal class UserQueryHandler : IQueryHandler<GetUserQuery, User>
     {
         public Task<IStatusResult<OperationStatus, User>> HandleAsync(
-            GetUserProfileQuery request,
+            GetUserQuery request,
             CancellationToken cancellationToken
         )
         {
-            return Task.FromResult(Result.New(OperationStatus.OK, request.User));
+            return Task.FromResult(Result.Status(OperationStatus.OK, request.User));
         }
     }
 }

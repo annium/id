@@ -66,9 +66,9 @@ namespace Annium.Id.Core.Implementations
                 var rawToken = Convert.FromBase64String(idClaim.Value);
 
                 if (jwt.Audiences.Contains(Constants.BaseAudience))
-                    return Result.New(TokenParseStatus.Ok, LZ4MessagePackSerializer.Deserialize<IdBaseToken>(rawToken));
+                    return Result.Status(TokenParseStatus.Ok, LZ4MessagePackSerializer.Deserialize<IdBaseToken>(rawToken));
 
-                return Result.New<TokenParseStatus, IdBaseToken>(TokenParseStatus.Ok, LZ4MessagePackSerializer.Deserialize<IdAppToken>(rawToken));
+                return Result.Status<TokenParseStatus, IdBaseToken>(TokenParseStatus.Ok, LZ4MessagePackSerializer.Deserialize<IdAppToken>(rawToken));
             }
             catch (SecurityTokenDecompressionFailedException)
             {
@@ -127,6 +127,6 @@ namespace Annium.Id.Core.Implementations
         }
 
         private IStatusResult<TokenParseStatus, IdBaseToken> fail(TokenParseStatus status, string error) =>
-            Result.New<TokenParseStatus, IdBaseToken>(TokenParseStatus.BadSource, null).Error(error);
+            Result.Status<TokenParseStatus, IdBaseToken>(TokenParseStatus.BadSource, null).Error(error);
     }
 }

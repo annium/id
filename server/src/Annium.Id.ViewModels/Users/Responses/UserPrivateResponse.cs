@@ -1,7 +1,7 @@
 using System;
 using Annium.Architecture.ViewModel;
 
-namespace Annium.Id.ViewModels.User.Responses
+namespace Annium.Id.ViewModels.Users.Responses
 {
     public class UserPrivateResponse : IResponse<Domain.Entities.User>
     {

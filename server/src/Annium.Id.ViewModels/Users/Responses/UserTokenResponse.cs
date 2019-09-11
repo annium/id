@@ -1,15 +1,17 @@
 using System;
+using Annium.Architecture.ViewModel;
+using Annium.Id.Domain.Entities;
 using NodaTime;
 
-namespace Annium.Id.Api.Views
+namespace Annium.Id.ViewModels.Users.Responses
 {
-    public class UserTokenView
+    public class UserTokenResponse : IResponse<UserToken>
     {
         public string AccessToken { get; }
         public Guid RefreshToken { get; }
         public Instant RefreshTokenExpires { get; }
 
-        public UserTokenView(
+        public UserTokenResponse(
             string accessToken,
             Guid refreshToken,
             Instant refreshTokenExpires

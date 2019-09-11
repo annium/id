@@ -14,7 +14,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task Create_InvalidPayload_BadRequest()
         {
             // arrange
-            var(user, tokens) = await LoginUserAsync();
+            var(user, tokens) = await LogUserInAsync();
             var p = new RolePayload() { Key = "one" };
 
             // act
@@ -28,7 +28,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task Create_AppMissing_NotFound()
         {
             // arrange
-            var(user, tokens) = await LoginUserAsync();
+            var(user, tokens) = await LogUserInAsync();
             var p = new RolePayload() { Key = "one", Name = "First Role" };
 
             // act
@@ -42,9 +42,9 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task Create_NotOwner_Forbidden()
         {
             // arrange
-            var(owner, ownerTokens) = await LoginUserAsync("owner", "superpass", "some@email.com");
+            var(owner, ownerTokens) = await LogUserInAsync("owner", "superpass", "some@email.com");
             var app = await CreateAppAsync(ownerTokens.AccessToken);
-            var(user, tokens) = await LoginUserAsync();
+            var(user, tokens) = await LogUserInAsync();
             var p = new RolePayload() { Key = "one", Name = "First Role" };
 
             // act
@@ -58,7 +58,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task Create_NonUniqueKey_Conflict()
         {
             // arrange
-            var(user, tokens) = await LoginUserAsync();
+            var(user, tokens) = await LogUserInAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
             var roleKey = "one";
             var roleName = "First Role";
@@ -76,7 +76,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task Create_ValidPayload_Ok()
         {
             // arrange
-            var(user, tokens) = await LoginUserAsync();
+            var(user, tokens) = await LogUserInAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
             var roleKey = "one";
             var roleName = "First Role";
@@ -95,7 +95,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task List_MissingApp_NotFound()
         {
             // arrange
-            var(user, tokens) = await LoginUserAsync();
+            var(user, tokens) = await LogUserInAsync();
 
             // act
             var response = await id.Get($"/apps/{Guid.NewGuid()}/roles").BearerAuthorization(tokens.AccessToken).RunAsync();
@@ -108,7 +108,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task List_Ok()
         {
             // arrange
-            var(user, tokens) = await LoginUserAsync();
+            var(user, tokens) = await LogUserInAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
             var roleKey = "one";
             var roleName = "First Role";
@@ -127,7 +127,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task Update_IncorrectPayload_BadRequest()
         {
             // arrange
-            var(user, tokens) = await LoginUserAsync();
+            var(user, tokens) = await LogUserInAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
             var role = await CreateRoleAsync(tokens.AccessToken, app.Id);
             var u = new RolePayload { Key = "one" };
@@ -143,7 +143,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task Update_MissingApp_NotFound()
         {
             // arrange
-            var(user, tokens) = await LoginUserAsync();
+            var(user, tokens) = await LogUserInAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
             var role = await CreateRoleAsync(tokens.AccessToken, app.Id);
             var u = new RolePayload { Key = "one", Name = "One Role" };
@@ -159,10 +159,10 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task Update_NotOwner_Forbidden()
         {
             // arrange
-            var(owner, ownerTokens) = await LoginUserAsync("owner", "superpass", "some@email.com");
+            var(owner, ownerTokens) = await LogUserInAsync("owner", "superpass", "some@email.com");
             var app = await CreateAppAsync(ownerTokens.AccessToken);
             var role = await CreateRoleAsync(ownerTokens.AccessToken, app.Id);
-            var(user, tokens) = await LoginUserAsync();
+            var(user, tokens) = await LogUserInAsync();
             var u = new RolePayload { Key = "one", Name = "One Role" };
 
             // act
@@ -176,7 +176,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task Update_MissingRole_NotFound()
         {
             // arrange
-            var(user, tokens) = await LoginUserAsync();
+            var(user, tokens) = await LogUserInAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
             var u = new RolePayload { Key = "one", Name = "One Role" };
 
@@ -191,7 +191,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task Update_RoleBelongsOtherApp_Forbidden()
         {
             // arrange
-            var(user, tokens) = await LoginUserAsync();
+            var(user, tokens) = await LogUserInAsync();
             var app1 = await CreateAppAsync(tokens.AccessToken);
             var app2 = await CreateAppAsync(tokens.AccessToken, "other", "Other App");
             var role = await CreateRoleAsync(tokens.AccessToken, app1.Id);
@@ -208,7 +208,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task Update_NonUniqueKey_Conflict()
         {
             // arrange
-            var(user, tokens) = await LoginUserAsync();
+            var(user, tokens) = await LogUserInAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
             var role = await CreateRoleAsync(tokens.AccessToken, app.Id);
             var other = await CreateRoleAsync(tokens.AccessToken, app.Id, "other", "One Role");
@@ -225,7 +225,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task Update_Valid_Ok()
         {
             // arrange
-            var(user, tokens) = await LoginUserAsync();
+            var(user, tokens) = await LogUserInAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
             var role = await CreateRoleAsync(tokens.AccessToken, app.Id);
             var u = new RolePayload { Key = "one", Name = "One Role" };
@@ -245,7 +245,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task AddClaimToRole_IncorrectPayload_BadRequest()
         {
             // arrange
-            var(user, tokens) = await LoginUserAsync();
+            var(user, tokens) = await LogUserInAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
             var role = await CreateRoleAsync(tokens.AccessToken, app.Id);
             var claim = await CreateClaimAsync(tokens.AccessToken, app.Id);
@@ -262,7 +262,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task AddClaimToRole_MissingApp_NotFound()
         {
             // arrange
-            var(user, tokens) = await LoginUserAsync();
+            var(user, tokens) = await LogUserInAsync();
             var p = new ClaimValuePayload { Value = "Some" };
 
             // act
@@ -276,11 +276,11 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task AddClaimToRole_NotOwner_Forbidden()
         {
             // arrange
-            var(owner, ownerTokens) = await LoginUserAsync("owner", "superpass", "some@email.com");
+            var(owner, ownerTokens) = await LogUserInAsync("owner", "superpass", "some@email.com");
             var app = await CreateAppAsync(ownerTokens.AccessToken);
             var role = await CreateRoleAsync(ownerTokens.AccessToken, app.Id);
             var claim = await CreateClaimAsync(ownerTokens.AccessToken, app.Id);
-            var(user, tokens) = await LoginUserAsync();
+            var(user, tokens) = await LogUserInAsync();
             var p = new ClaimValuePayload { Value = "Some" };
 
             // act
@@ -294,7 +294,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task AddClaimToRole_MissingRole_NotFound()
         {
             // arrange
-            var(user, tokens) = await LoginUserAsync();
+            var(user, tokens) = await LogUserInAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
             var p = new ClaimValuePayload { Value = "Some" };
 
@@ -309,7 +309,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task AddClaimToRole_RoleBelongsOtherApp_Forbidden()
         {
             // arrange
-            var(user, tokens) = await LoginUserAsync();
+            var(user, tokens) = await LogUserInAsync();
             var app1 = await CreateAppAsync(tokens.AccessToken);
             var app2 = await CreateAppAsync(tokens.AccessToken, "other", "Other App");
             var role = await CreateRoleAsync(tokens.AccessToken, app1.Id);
@@ -327,7 +327,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task AddClaimToRole_MissingClaim_NotFound()
         {
             // arrange
-            var(user, tokens) = await LoginUserAsync();
+            var(user, tokens) = await LogUserInAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
             var role = await CreateRoleAsync(tokens.AccessToken, app.Id);
             var p = new ClaimValuePayload { Value = "Some" };
@@ -343,7 +343,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task AddClaimToRole_ClaimBelongsOtherApp_Forbidden()
         {
             // arrange
-            var(user, tokens) = await LoginUserAsync();
+            var(user, tokens) = await LogUserInAsync();
             var app1 = await CreateAppAsync(tokens.AccessToken);
             var app2 = await CreateAppAsync(tokens.AccessToken, "other", "Other App");
             var role = await CreateRoleAsync(tokens.AccessToken, app2.Id);
@@ -361,7 +361,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task AddClaimToRole_Valid_Ok()
         {
             // arrange
-            var(user, tokens) = await LoginUserAsync();
+            var(user, tokens) = await LogUserInAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
             var role = await CreateRoleAsync(tokens.AccessToken, app.Id);
             var claim = await CreateClaimAsync(tokens.AccessToken, app.Id);
@@ -389,7 +389,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task DeleteClaimFromRole_MissingApp_NotFound()
         {
             // arrange
-            var(user, tokens) = await LoginUserAsync();
+            var(user, tokens) = await LogUserInAsync();
 
             // act
             var response = await id.Delete($"/apps/{Guid.NewGuid()}/roles/{Guid.NewGuid()}/claims/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
@@ -402,11 +402,11 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task DeleteClaimFromRole_NotOwner_Forbidden()
         {
             // arrange
-            var(owner, ownerTokens) = await LoginUserAsync("owner", "superpass", "some@email.com");
+            var(owner, ownerTokens) = await LogUserInAsync("owner", "superpass", "some@email.com");
             var app = await CreateAppAsync(ownerTokens.AccessToken);
             var role = await CreateRoleAsync(ownerTokens.AccessToken, app.Id);
             var claim = await CreateClaimAsync(ownerTokens.AccessToken, app.Id);
-            var(user, tokens) = await LoginUserAsync();
+            var(user, tokens) = await LogUserInAsync();
 
             // act
             var response = await id.Delete($"/apps/{app.Id}/roles/{role.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
@@ -419,7 +419,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task DeleteClaimFromRole_MissingRole_NotFound()
         {
             // arrange
-            var(user, tokens) = await LoginUserAsync();
+            var(user, tokens) = await LogUserInAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
 
             // act
@@ -433,7 +433,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task DeleteClaimFromRole_RoleBelongsOtherApp_Forbidden()
         {
             // arrange
-            var(user, tokens) = await LoginUserAsync();
+            var(user, tokens) = await LogUserInAsync();
             var app1 = await CreateAppAsync(tokens.AccessToken);
             var app2 = await CreateAppAsync(tokens.AccessToken, "other", "Other App");
             var role = await CreateRoleAsync(tokens.AccessToken, app1.Id);
@@ -450,7 +450,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task DeleteClaimFromRole_MissingClaim_NotFound()
         {
             // arrange
-            var(user, tokens) = await LoginUserAsync();
+            var(user, tokens) = await LogUserInAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
             var role = await CreateRoleAsync(tokens.AccessToken, app.Id);
 
@@ -465,7 +465,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task DeleteClaimFromRole_ClaimBelongsOtherApp_Forbidden()
         {
             // arrange
-            var(user, tokens) = await LoginUserAsync();
+            var(user, tokens) = await LogUserInAsync();
             var app1 = await CreateAppAsync(tokens.AccessToken);
             var app2 = await CreateAppAsync(tokens.AccessToken, "other", "Other App");
             var role = await CreateRoleAsync(tokens.AccessToken, app2.Id);
@@ -482,7 +482,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task DeleteClaimFromRole_Valid_Ok()
         {
             // arrange
-            var(user, tokens) = await LoginUserAsync();
+            var(user, tokens) = await LogUserInAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
             var role = await CreateRoleAsync(tokens.AccessToken, app.Id);
             var claim = await CreateClaimAsync(tokens.AccessToken, app.Id);
@@ -498,7 +498,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task Delete_MissingApp_NotFound()
         {
             // arrange
-            var(user, tokens) = await LoginUserAsync();
+            var(user, tokens) = await LogUserInAsync();
 
             // act
             var response = await id.Delete($"/apps/{Guid.NewGuid()}/roles/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
@@ -511,9 +511,9 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task Delete_NotOwner_NotFound()
         {
             // arrange
-            var(owner, ownerTokens) = await LoginUserAsync("owner", "superpass", "some@email.com");
+            var(owner, ownerTokens) = await LogUserInAsync("owner", "superpass", "some@email.com");
             var app = await CreateAppAsync(ownerTokens.AccessToken);
-            var(user, tokens) = await LoginUserAsync();
+            var(user, tokens) = await LogUserInAsync();
 
             // act
             var response = await id.Delete($"/apps/{app.Id}/roles/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
@@ -526,7 +526,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task Delete_MissingRole_NotFound()
         {
             // arrange
-            var(user, tokens) = await LoginUserAsync();
+            var(user, tokens) = await LogUserInAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
 
             // act
@@ -540,7 +540,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task Delete_RoleBelongsOtherApp_NotFound()
         {
             // arrange
-            var(user, tokens) = await LoginUserAsync();
+            var(user, tokens) = await LogUserInAsync();
             var app1 = await CreateAppAsync(tokens.AccessToken);
             var app2 = await CreateAppAsync(tokens.AccessToken, "other", "Other App");
             var role = await CreateRoleAsync(tokens.AccessToken, app1.Id);
@@ -556,7 +556,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task Delete_Valid_Ok()
         {
             // arrange
-            var(user, tokens) = await LoginUserAsync();
+            var(user, tokens) = await LogUserInAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
             var role = await CreateRoleAsync(tokens.AccessToken, app.Id);
 

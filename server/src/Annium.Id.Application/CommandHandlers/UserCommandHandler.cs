@@ -12,13 +12,13 @@ using NodaTime;
 
 namespace Annium.Id.Application.CommandHandlers
 {
-    internal class UserCommandHandler : ICommandHandler<CreateUserCommand, Guid>, ICommandHandler<LoginUserCommand, UserToken>
+    internal class UserCommandHandler : ICommandHandler<CreateUserCommand, Guid>, ICommandHandler<UpdateUserCommand>, ICommandHandler<DeleteUserCommand>, ICommandHandler<LogUserInCommand, UserToken>, ICommandHandler<LogUserOutCommand>, ICommandHandler<UpdateUserTokenCommand, UserToken>, ICommandHandler<LogUserInAppCommand, UserToken>, ICommandHandler<LogUserOutAppCommand>, ICommandHandler<UpdateUserAppTokenCommand, UserToken>
     {
         private static readonly Duration refreshTokenLifeTime = Duration.FromDays(1);
-
         private readonly Func<Instant> getInstant;
         private readonly IUserRepository userRepository;
         private readonly IUserLoginRepository userLoginRepository;
+        private readonly IUserAppLoginRepository userAppLoginRepository;
         private readonly ISecurityManager securityManager;
         private readonly IIdentityDataAccessor identityDataAccessor;
         private readonly ITokenGenerator tokenGenerator;
@@ -27,6 +27,7 @@ namespace Annium.Id.Application.CommandHandlers
             Func<Instant> getInstant,
             IUserRepository userRepository,
             IUserLoginRepository userLoginRepository,
+            IUserAppLoginRepository userAppLoginRepository,
             ISecurityManager securityManager,
             IIdentityDataAccessor identityDataAccessor,
             ITokenGenerator tokenGenerator
@@ -35,6 +36,7 @@ namespace Annium.Id.Application.CommandHandlers
             this.getInstant = getInstant;
             this.userRepository = userRepository;
             this.userLoginRepository = userLoginRepository;
+            this.userAppLoginRepository = userAppLoginRepository;
             this.securityManager = securityManager;
             this.identityDataAccessor = identityDataAccessor;
             this.tokenGenerator = tokenGenerator;
@@ -55,15 +57,51 @@ namespace Annium.Id.Application.CommandHandlers
 
             user = await userRepository.CreateAsync(user);
 
-            return Result.New(OperationStatus.OK, user.Id);
+            return Result.Status(OperationStatus.OK, user.Id);
         }
 
-        public async Task<IStatusResult<OperationStatus, UserToken>> HandleAsync(LoginUserCommand request, CancellationToken cancellationToken)
+        public async Task<IStatusResult<OperationStatus>> HandleAsync(
+            UpdateUserCommand request,
+            CancellationToken cancellationToken
+        )
+        {
+            var user = request.User;
+
+            if (request.Login != user.Login && (await userRepository.FindByLoginAsync(request.Login)) != null)
+                return Result.Status(OperationStatus.Conflict).Error($"Login {request.Login} is already used");
+
+            if (request.Email != user.Email && (await userRepository.FindByEmailAsync(request.Email)) != null)
+                return Result.Status(OperationStatus.Conflict).Error($"Email {request.Email} is already used");
+
+            user.Login = request.Login;
+            user.PasswordHash = securityManager.Hash(request.Password);
+            user.Email = request.Email;
+
+            await userRepository.UpdateAsync(user);
+
+            return Result.Status(OperationStatus.OK);
+        }
+
+        public async Task<IStatusResult<OperationStatus>> HandleAsync(
+            DeleteUserCommand request,
+            CancellationToken cancellationToken
+        )
+        {
+            await userLoginRepository.DeleteAllByUserIdAsync(request.UserId);
+            await userRepository.DeleteByIdAsync(request.UserId);
+
+            return Result.Status(OperationStatus.OK);
+        }
+
+        public async Task<IStatusResult<OperationStatus, UserToken>> HandleAsync(
+            LogUserInCommand request,
+            CancellationToken cancellationToken
+        )
         {
             var user = request.User;
 
             if (securityManager.Hash(request.Password) != user.PasswordHash)
-                return Result.New<OperationStatus, UserToken>(OperationStatus.Forbidden, null).Error("Invalid password");
+                return Result.Status<OperationStatus, UserToken>(OperationStatus.Forbidden, null).Error("Invalid password");
 
             var instant = getInstant();
             var(ipAddress, client) = identityDataAccessor.GetIdentityData();
@@ -75,7 +113,81 @@ namespace Annium.Id.Application.CommandHandlers
             var token = tokenGenerator.GenerateBaseToken(login);
             var userToken = new UserToken(token, login.RefreshToken, login.RefreshTokenExpires);
 
-            return Result.New<OperationStatus, UserToken>(OperationStatus.OK, userToken);
+            return Result.Status(OperationStatus.OK, userToken);
+        }
+
+        public async Task<IStatusResult<OperationStatus>> HandleAsync(
+            LogUserOutCommand request,
+            CancellationToken cancellationToken
+        )
+        {
+            await userLoginRepository.DeleteByIdAsync(request.LoginId);
+
+            return Result.Status(OperationStatus.OK);
+        }
+
+        public Task<IStatusResult<OperationStatus, UserToken>> HandleAsync(
+            UpdateUserTokenCommand request,
+            CancellationToken cancellationToken
+        )
+        {
+            var login = request.Login;
+
+            if (login.RefreshTokenExpires < getInstant())
+                return Task.FromResult(Result.Status(OperationStatus.Forbidden, default(UserToken)).Error("Refresh token expired"));
+
+            var token = tokenGenerator.GenerateBaseToken(login);
+
+            return Task.FromResult(Result.Status(OperationStatus.OK, new UserToken(token, login.RefreshToken, login.RefreshTokenExpires)));
+        }
+
+        public async Task<IStatusResult<OperationStatus, UserToken>> HandleAsync(
+            LogUserInAppCommand request,
+            CancellationToken cancellationToken
+        )
+        {
+            var app = request.App;
+            var user = request.User;
+
+            if (securityManager.Hash(request.Password) != user.PasswordHash)
+                return Result.Status(OperationStatus.Forbidden, default(UserToken)).Error("Invalid password");
+
+            var instant = getInstant();
+            var(ipAddress, client) = identityDataAccessor.GetIdentityData();
+            var login = new UserAppLogin(app.Id, user.Id, instant, ipAddress.ToString(), client, Guid.NewGuid(), instant + refreshTokenLifeTime);
+
+            await userAppLoginRepository.DeleteExpiredByUserIdAsync(user.Id, instant);
+            login = await userAppLoginRepository.CreateAsync(login);
+
+            var token = await tokenGenerator.GenerateAppToken(login);
+
+            return Result.Status(OperationStatus.OK, new UserToken(token, login.RefreshToken, login.RefreshTokenExpires));
+        }
+
+        public async Task<IStatusResult<OperationStatus>> HandleAsync(
+            LogUserOutAppCommand request,
+            CancellationToken cancellationToken
+        )
+        {
+            await userAppLoginRepository.DeleteByIdAsync(request.LoginId);
+
+            return Result.Status(OperationStatus.OK);
+        }
+
+        public async Task<IStatusResult<OperationStatus, UserToken>> HandleAsync(
+            UpdateUserAppTokenCommand request,
+            CancellationToken cancellationToken
+        )
+        {
+            var app = request.App;
+            var login = request.Login;
+
+            if (login.RefreshTokenExpires < getInstant())
+                return Result.Status(OperationStatus.Forbidden, default(UserToken)).Error("Refresh token expired");
+
+            var token = await tokenGenerator.GenerateAppToken(login);
+
+            return Result.Status(OperationStatus.OK, new UserToken(token, login.RefreshToken, login.RefreshTokenExpires));
         }
     }
 }

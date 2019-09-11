@@ -1,6 +1,6 @@
 using System;
 
-namespace Annium.Id.ViewModels.User.Responses
+namespace Annium.Id.ViewModels.Users.Responses
 {
     public class UserPublicResponse
     {
