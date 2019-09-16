@@ -1,15 +1,11 @@
 using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Annium.AspNetCore.Extensions;
-using Annium.Core.Mapper;
 using Annium.Core.Mediator;
-using Annium.Id.Api.Payloads;
-using Annium.Id.Api.Views;
 using Annium.Id.AspNetCore;
-using Annium.Id.Core;
-using Annium.Id.Db.Repositories;
-using Annium.Id.Domain.Entities;
+using Annium.Id.ViewModels.Apps.Requests;
+using Annium.Id.ViewModels.Apps.Responses;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Annium.Id.Api.Controllers
@@ -17,144 +13,77 @@ namespace Annium.Id.Api.Controllers
     [Route("apps")]
     public class AppController : ServerController
     {
-        private readonly ITokenAccessor tokenAccessor;
-        private readonly IAppRepository appRepository;
-        private readonly IUserRepository userRepository;
-        private readonly IMapper mapper;
-
         public AppController(
-            ITokenAccessor tokenAccessor,
-            IAppRepository appRepository,
-            IUserRepository userRepository,
-            IMapper mapper,
             IMediator mediator
         ) : base(mediator)
         {
-            this.tokenAccessor = tokenAccessor;
-            this.appRepository = appRepository;
-            this.userRepository = userRepository;
-            this.mapper = mapper;
+
         }
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> CreateAppAsync([FromBody] AppPayload appPayload)
+        public Task<IActionResult> CreateAppAsync([FromBody] CreateAppRequest request)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            return HandleAsync<CreateAppRequest, Guid>(request);
+        }
 
-            if ((await appRepository.FindByKeyAsync(appPayload.Key)) != null)
-                return Conflict($"Application key {appPayload.Key} is already used");
+        [HttpGet]
+        public Task<IActionResult> ListAppsAsync()
+        {
+            return HandleAsync<ListAppsRequest, IEnumerable<AppPublicResponse>>(new ListAppsRequest());
+        }
 
-            var app = new App(
-                tokenAccessor.GetBaseToken().UserId,
-                appPayload.Key,
-                appPayload.Name,
-                Guid.NewGuid()
-            );
+        [HttpGet("{appId:guid}")]
+        public Task<IActionResult> GetAppAsync(Guid appId)
+        {
+            var request = new GetAppRequest() { AppId = appId };
 
-            app = await appRepository.CreateAsync(app);
-
-            return Ok(mapper.Map<AppPrivateView>(app));
+            return HandleAsync<GetAppRequest, AppPublicResponse>(request);
         }
 
         [HttpGet("{appId:guid}/token")]
         [Authorize]
-        public async Task<IActionResult> GetAppApiTokenAsync(Guid appId)
+        public Task<IActionResult> GetAppApiTokenAsync(Guid appId)
         {
-            var(app, result) = await VerifyAppOwnerAsync(appId, "get api token");
-            if (result != null)
-                return result;
+            var request = new GetAppApiTokenRequest() { AppId = appId };
 
-            return Ok(app.ApiToken);
-        }
-
-        [HttpPut("{appId:guid}/token")]
-        [Authorize]
-        public async Task<IActionResult> UpdateAppApiTokenAsync(Guid appId)
-        {
-            var(app, result) = await VerifyAppOwnerAsync(appId, "update api token");
-            if (result != null)
-                return result;
-
-            var apiToken = Guid.NewGuid();
-            await appRepository.UpdateApiTokenAsync(app.Id, apiToken);
-
-            return Ok(apiToken);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> ListAppsAsync()
-        {
-            var apps = await appRepository.GetAllAsync();
-
-            return Ok(apps.Select(mapper.Map<AppPublicView>).ToArray());
+            return HandleAsync<GetAppApiTokenRequest, Guid>(request);
         }
 
         [HttpPut("{appId:guid}")]
         [Authorize]
-        public async Task<IActionResult> UpdateAppAsync(Guid appId, [FromBody] AppPayload appPayload)
+        public Task<IActionResult> UpdateAppAsync(Guid appId, [FromBody] UpdateAppRequest request)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            request.AppId = appId;
 
-            var(app, result) = await VerifyAppOwnerAsync(appId, "update application");
-            if (result != null)
-                return result;
-
-            if (appPayload.Key != app.Key && (await appRepository.FindByKeyAsync(appPayload.Key)) != null)
-                return Conflict($"Application key {appPayload.Key} is already used");
-
-            app.Key = appPayload.Key;
-            app.Name = appPayload.Name;
-
-            app = await appRepository.UpdateAsync(app);
-
-            return Ok(mapper.Map<AppPrivateView>(app));
+            return HandleAsync(request);
         }
 
-        [HttpPut("{appId:guid}/owner/{userId:guid}")]
+        [HttpPut("{appId:guid}/owner/{newOwnerId:guid}")]
         [Authorize]
-        public async Task<IActionResult> SetAppOwnerAsync(Guid appId, Guid userId)
+        public Task<IActionResult> SetAppOwnerAsync(Guid appId, Guid newOwnerId)
         {
-            var(app, result) = await VerifyAppOwnerAsync(appId, "set application owner");
-            if (result != null)
-                return result;
+            var request = new SetAppOwnerRequest() { AppId = appId, NewOwnerId = newOwnerId };
 
-            var user = await userRepository.GetByIdAsync(userId);
-            if (user == null)
-                return NotFound("User not found");
+            return HandleAsync(request);
+        }
 
-            app.OwnerId = user.Id;
+        [HttpPut("{appId:guid}/token")]
+        [Authorize]
+        public Task<IActionResult> UpdateAppApiTokenAsync(Guid appId)
+        {
+            var request = new UpdateAppApiTokenRequest() { AppId = appId };
 
-            app = await appRepository.UpdateAsync(app);
-
-            return Ok(mapper.Map<AppPrivateView>(app));
+            return HandleAsync<UpdateAppApiTokenRequest, Guid>(request);
         }
 
         [HttpDelete("{appId:guid}")]
         [Authorize]
-        public async Task<IActionResult> DeleteAppAsync(Guid appId)
+        public Task<IActionResult> DeleteAppAsync(Guid appId)
         {
-            var(app, result) = await VerifyAppOwnerAsync(appId, "delete application");
-            if (result != null)
-                return result;
+            var request = new DeleteAppRequest() { AppId = appId };
 
-            await appRepository.DeleteByIdAsync(app.Id);
-
-            return NoContent();
-        }
-
-        private async Task<ValueTuple<App, IActionResult>> VerifyAppOwnerAsync(Guid appId, string operation)
-        {
-            var app = await appRepository.GetByIdAsync(appId);
-            if (app == null)
-                return (null, NotFound("Application not found"));
-
-            if (tokenAccessor.GetBaseToken().UserId != app.OwnerId)
-                return (null, Forbidden($"Need to be application owner to {operation}"));
-
-            return (app, null);
+            return HandleAsync(request);
         }
     }
 }
