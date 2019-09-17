@@ -66,7 +66,7 @@ namespace Annium.Id.IntegrationTests.DemoClient.Controllers
             var(user, app, tokens) = await LogUserInCreateAppLoginAppAsync();
             var role = await CreateRoleAsync(tokens.AccessToken, app.Id, "admin", "Administrator");
             await AddRoleToUserAsync(tokens.AccessToken, app.Id, user.Id, role.Id);
-            tokens = await LoginAppAsync(app.Id);
+            tokens = await LogUserInAppAsync(app.Id);
 
             // act
             var response = await demo.Get("/isAdmin").BearerAuthorization(tokens.AccessToken).RunAsync();
@@ -85,7 +85,7 @@ namespace Annium.Id.IntegrationTests.DemoClient.Controllers
             await AddRoleToUserAsync(tokens.AccessToken, app.Id, user.Id, role.Id);
             var claim = await CreateClaimAsync(tokens.AccessToken, app.Id, "paymentsAccess", "Payments Access");
             await AddClaimToRoleAsync(tokens.AccessToken, app.Id, role.Id, claim.Id, "full");
-            tokens = await LoginAppAsync(app.Id);
+            tokens = await LogUserInAppAsync(app.Id);
 
             // act
             var response = await demo.Get("/hasPaymentsAccess/").BearerAuthorization(tokens.AccessToken).RunAsync();
@@ -102,7 +102,7 @@ namespace Annium.Id.IntegrationTests.DemoClient.Controllers
             var(user, app, tokens) = await LogUserInCreateAppLoginAppAsync();
             var claim = await CreateClaimAsync(tokens.AccessToken, app.Id, "paymentsAccess", "Payments Access");
             await AddClaimToUserAsync(tokens.AccessToken, app.Id, user.Id, claim.Id, "full");
-            tokens = await LoginAppAsync(app.Id);
+            tokens = await LogUserInAppAsync(app.Id);
 
             // act
             var response = await demo.Get("/hasPaymentsAccess/").BearerAuthorization(tokens.AccessToken).RunAsync();
@@ -121,7 +121,7 @@ namespace Annium.Id.IntegrationTests.DemoClient.Controllers
             var claim = await CreateClaimAsync(tokens.AccessToken, app.Id, "paymentsAccess", "Payments Access");
             await AddClaimToRoleAsync(tokens.AccessToken, app.Id, role.Id, claim.Id, "limited");
             await AddClaimToUserAsync(tokens.AccessToken, app.Id, user.Id, claim.Id, "full");
-            tokens = await LoginAppAsync(app.Id);
+            tokens = await LogUserInAppAsync(app.Id);
 
             // act
             var response = await demo.Get("/hasPaymentsAccess/").BearerAuthorization(tokens.AccessToken).RunAsync();

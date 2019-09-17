@@ -1,9 +1,9 @@
 using System;
 using System.Net;
 using System.Threading.Tasks;
-using Annium.Net.Http;
 using Annium.Id.Api.Payloads;
 using Annium.Id.Api.Views;
+using Annium.Net.Http;
 using Annium.Testing;
 
 namespace Annium.Id.IntegrationTests.Controllers
@@ -55,7 +55,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         }
 
         [Fact]
-        public async Task Create_NonUniqueKey_Conflict()
+        public async Task Create_NonUniqueKey_BadRequest()
         {
             // arrange
             var(user, tokens) = await LogUserInAsync();
@@ -68,7 +68,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var response = await id.Post($"/apps/{app.Id}/claims").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
 
             // assert
-            response.StatusCode.IsEqual(HttpStatusCode.Conflict);
+            response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
         }
 
         [Fact]
@@ -112,7 +112,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var claim = await CreateClaimAsync(tokens.AccessToken, app.Id);
 
             // act
-            var claims = await id.Get($"/apps/{app.Id}/claims").BearerAuthorization(tokens.AccessToken).AsAsync<ClaimView[]>();
+            var claims = (await id.Get($"/apps/{app.Id}/claims").BearerAuthorization(tokens.AccessToken).AsResultAsync<ClaimView[]>()).Data;
 
             // assert
             claims.Has(1);
@@ -228,13 +228,10 @@ namespace Annium.Id.IntegrationTests.Controllers
             var u = new ClaimPayload { Key = "one", Name = "One Claim" };
 
             // act
-            var response = await id.Put($"/apps/{app.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).AsAsync<ClaimView>();
+            var response = await id.Put($"/apps/{app.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
 
             // assert
-            response.Id.IsEqual(claim.Id);
-            response.AppId.IsEqual(app.Id);
-            response.Key.IsEqual(u.Key);
-            response.Name.IsEqual(u.Name);
+            response.StatusCode.IsEqual(HttpStatusCode.OK);
         }
 
         [Fact]
@@ -251,15 +248,16 @@ namespace Annium.Id.IntegrationTests.Controllers
         }
 
         [Fact]
-        public async Task Delete_NotOwner_NotFound()
+        public async Task Delete_NotOwner_Forbidden()
         {
             // arrange
             var(owner, ownerTokens) = await LogUserInAsync("owner", "superpass", "some@email.com");
             var app = await CreateAppAsync(ownerTokens.AccessToken);
+            var claim = await CreateClaimAsync(ownerTokens.AccessToken, app.Id);
             var(user, tokens) = await LogUserInAsync();
 
             // act
-            var response = await id.Delete($"/apps/{app.Id}/claims/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await id.Delete($"/apps/{app.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -307,7 +305,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var response = await id.Delete($"/apps/{app.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
 
             // assert
-            response.StatusCode.IsEqual(HttpStatusCode.NoContent);
+            response.StatusCode.IsEqual(HttpStatusCode.OK);
         }
     }
 }

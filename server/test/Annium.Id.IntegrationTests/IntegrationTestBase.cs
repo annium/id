@@ -1,11 +1,12 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Annium.AspNetCore.IntegrationTesting;
-using Annium.Diagnostics.Debug;
 using Annium.Id.Api.Payloads;
 using Annium.Id.Api.Views;
 using Annium.Id.ViewModels.Apps.Requests;
 using Annium.Id.ViewModels.Apps.Responses;
+using Annium.Id.ViewModels.Claims.Requests;
 using Annium.Id.ViewModels.Users.Requests;
 using Annium.Id.ViewModels.Users.Responses;
 using Annium.Net.Http;
@@ -23,7 +24,7 @@ namespace Annium.Id.IntegrationTests
             string email = "demo@demo.com"
         )
         {
-            var(user, tokens) = await LogUserInAsync(login, password, email);
+            var(user, _) = await LogUserInAsync(login, password, email);
 
             return user;
         }
@@ -39,11 +40,11 @@ namespace Annium.Id.IntegrationTests
 
             var logUserInRequest = new LogUserInRequest { Login = login, Password = password };
 
-            var tokenResult = await id.Post("/me/login").JsonContent(logUserInRequest).AsResultAsync<UserTokenResponse>();
+            var token = (await id.Post("/me/login").JsonContent(logUserInRequest).AsResultAsync<UserTokenResponse>()).Data;
 
-            var user = await id.Get("/me").BearerAuthorization(tokenResult.Data.AccessToken).AsResultAsync<UserPrivateResponse>();
+            var user = (await id.Get("/me").BearerAuthorization(token.AccessToken).AsResultAsync<UserPrivateResponse>()).Data;
 
-            return (user.Data, tokenResult.Data);
+            return (user, token);
         }
 
         protected async Task<AppPublicResponse> CreateAppAsync(
@@ -59,7 +60,7 @@ namespace Annium.Id.IntegrationTests
             return (await id.Get($"/apps/{appId}").BearerAuthorization(accessToken).AsResultAsync<AppPublicResponse>()).Data;
         }
 
-        protected async Task<UserTokenResponse> LoginAppAsync(
+        protected async Task<UserTokenResponse> LogUserInAppAsync(
             Guid appId,
             string login = "demo",
             string password = "testtest"
@@ -101,16 +102,21 @@ namespace Annium.Id.IntegrationTests
             return id.Post($"/apps/{appId}/roles").BearerAuthorization(accessToken).JsonContent(request).AsAsync<RoleView>();
         }
 
-        protected Task<ClaimView> CreateClaimAsync(
+        protected async Task<ClaimView> CreateClaimAsync(
             string accessToken,
             Guid appId,
             string key = "first",
             string name = "First claim"
         )
         {
-            var request = new ClaimPayload { Key = key, Name = name };
+            var request = new CreateClaimRequest { Key = key, Name = name };
 
-            return id.Post($"/apps/{appId}/claims").BearerAuthorization(accessToken).JsonContent(request).AsAsync<ClaimView>();
+            var claimId = (await id.Post($"/apps/{appId}/claims").BearerAuthorization(accessToken).JsonContent(request).AsResultAsync<Guid>()).Data;
+
+            var claim = (await id.Get($"/apps/{appId}/claims").BearerAuthorization(accessToken).AsResultAsync<ClaimView[]>()).Data
+                .First(c => c.Id == claimId);
+
+            return claim;
         }
 
         protected Task<ClaimValueView> AddClaimToRoleAsync(
