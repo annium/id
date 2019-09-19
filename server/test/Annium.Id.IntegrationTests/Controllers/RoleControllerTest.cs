@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Annium.Id.Api.Payloads;
 using Annium.Id.Api.Views;
+using Annium.Id.ViewModels.Roles.Responses;
 using Annium.Net.Http;
 using Annium.Testing;
 
@@ -55,7 +56,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         }
 
         [Fact]
-        public async Task Create_NonUniqueKey_Conflict()
+        public async Task Create_NonUniqueKey_BadRequest()
         {
             // arrange
             var(user, tokens) = await LogUserInAsync();
@@ -69,7 +70,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var response = await id.Post($"/apps/{app.Id}/roles").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
 
             // assert
-            response.StatusCode.IsEqual(HttpStatusCode.Conflict);
+            response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
         }
 
         [Fact]
@@ -115,7 +116,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var role = await CreateRoleAsync(tokens.AccessToken, app.Id, roleKey, roleName);
 
             // act
-            var roles = await id.Get($"/apps/{app.Id}/roles").BearerAuthorization(tokens.AccessToken).AsAsync<RoleView[]>();
+            var roles = (await id.Get($"/apps/{app.Id}/roles").BearerAuthorization(tokens.AccessToken).AsResultAsync<RoleResponse[]>()).Data;
 
             // assert
             roles.Has(1);
@@ -231,14 +232,10 @@ namespace Annium.Id.IntegrationTests.Controllers
             var u = new RolePayload { Key = "one", Name = "One Role" };
 
             // act
-            var response = await id.Put($"/apps/{app.Id}/roles/{role.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).AsAsync<RoleView>();
+            var response = await id.Put($"/apps/{app.Id}/roles/{role.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
 
             // assert
-            response.Id.IsEqual(role.Id);
-            response.AppId.IsEqual(app.Id);
-            response.Key.IsEqual(u.Key);
-            response.Name.IsEqual(u.Name);
-            response.Claims.IsEmpty();
+            response.StatusCode.IsEqual(HttpStatusCode.OK);
         }
 
         [Fact]
@@ -369,7 +366,7 @@ namespace Annium.Id.IntegrationTests.Controllers
 
             // act
             var response = await AddClaimToRoleAsync(tokens.AccessToken, app.Id, role.Id, claim.Id, claimValue);
-            var roles = await id.Get($"/apps/{app.Id}/roles").BearerAuthorization(tokens.AccessToken).AsAsync<RoleView[]>();
+            var roles = (await id.Get($"/apps/{app.Id}/roles").BearerAuthorization(tokens.AccessToken).AsResultAsync<RoleResponse[]>()).Data;
 
             // assert
             response.Id.IsEqual(claim.Id);
@@ -491,7 +488,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var response = await id.Delete($"/apps/{app.Id}/roles/{role.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
 
             // assert
-            response.StatusCode.IsEqual(HttpStatusCode.NoContent);
+            response.StatusCode.IsEqual(HttpStatusCode.OK);
         }
 
         [Fact]
@@ -508,15 +505,16 @@ namespace Annium.Id.IntegrationTests.Controllers
         }
 
         [Fact]
-        public async Task Delete_NotOwner_NotFound()
+        public async Task Delete_NotOwner_Forbidden()
         {
             // arrange
             var(owner, ownerTokens) = await LogUserInAsync("owner", "superpass", "some@email.com");
             var app = await CreateAppAsync(ownerTokens.AccessToken);
             var(user, tokens) = await LogUserInAsync();
+            var role = await CreateRoleAsync(ownerTokens.AccessToken, app.Id);
 
             // act
-            var response = await id.Delete($"/apps/{app.Id}/roles/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await id.Delete($"/apps/{app.Id}/roles/{role.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -564,7 +562,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var response = await id.Delete($"/apps/{app.Id}/roles/{role.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
 
             // assert
-            response.StatusCode.IsEqual(HttpStatusCode.NoContent);
+            response.StatusCode.IsEqual(HttpStatusCode.OK);
         }
     }
 }

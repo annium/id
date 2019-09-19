@@ -1,15 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Annium.AspNetCore.Extensions;
-using Annium.Core.Mapper;
 using Annium.Core.Mediator;
-using Annium.Id.Api.Payloads;
-using Annium.Id.Api.Views;
 using Annium.Id.AspNetCore;
-using Annium.Id.Core;
-using Annium.Id.Db.Repositories;
-using Annium.Id.Domain.Entities;
-using Annium.Localization.Abstractions;
+using Annium.Id.ViewModels.Roles.Requests;
+using Annium.Id.ViewModels.Roles.Responses;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Annium.Id.Api.Controllers
@@ -17,188 +13,73 @@ namespace Annium.Id.Api.Controllers
     [Route("apps/{appId:guid}/roles")]
     public class RoleController : ServerController
     {
-        private readonly ITokenAccessor tokenAccessor;
-        private readonly IAppRepository appRepository;
-        private readonly IRoleRepository roleRepository;
-        private readonly IRoleClaimRepository roleClaimRepository;
-        private readonly IClaimRepository claimRepository;
-        private readonly IMapper mapper;
-
         public RoleController(
-            ITokenAccessor tokenAccessor,
-            IAppRepository appRepository,
-            IRoleRepository roleRepository,
-            IRoleClaimRepository roleClaimRepository,
-            IClaimRepository claimRepository,
-            IMapper mapper,
-            IMediator mediator,
-            ILocalizer<RoleController> localizer
+            IMediator mediator
         ) : base(mediator)
         {
-            this.tokenAccessor = tokenAccessor;
-            this.appRepository = appRepository;
-            this.roleRepository = roleRepository;
-            this.roleClaimRepository = roleClaimRepository;
-            this.claimRepository = claimRepository;
-            this.mapper = mapper;
+
         }
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> CreateRoleAsync(Guid appId, [FromBody] RolePayload rolePayload)
+        public Task<IActionResult> CreateRoleAsync(Guid appId, [FromBody] CreateRoleRequest request)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            request.AppId = appId;
 
-            var(app, result) = await VerifyAppOwnerAsync(appId, "create role");
-            if (result != null)
-                return result;
-
-            if ((await roleRepository.FindByKeyAsync(app.Id, rolePayload.Key)) != null)
-                return Conflict($"Role key {rolePayload.Key} is already used");
-
-            var role = new Role(
-                app.Id,
-                rolePayload.Key,
-                rolePayload.Name,
-                Array.Empty<ClaimValue>()
-            );
-
-            role = await roleRepository.CreateAsync(role);
-
-            return Ok(mapper.Map<RoleView>(role));
+            return HandleAsync<CreateRoleRequest, Guid>(request);
         }
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> ListRolesAsync(Guid appId)
+        public Task<IActionResult> ListRolesAsync(Guid appId)
         {
-            var(app, result) = await VerifyAppAsync(appId);
-            if (result != null)
-                return result;
+            var request = new ListRolesRequest { AppId = appId };
 
-            var roles = await roleRepository.GetAllAsync(appId);
-
-            return Ok(roles);
+            return HandleAsync<ListRolesRequest, IEnumerable<RoleResponse>>(request);
         }
 
         [HttpPut("{roleId:guid}")]
         [Authorize]
-        public async Task<IActionResult> UpdateRoleAsync(Guid appId, Guid roleId, [FromBody] RolePayload rolePayload)
+        public Task<IActionResult> UpdateRoleAsync(Guid appId, Guid roleId, [FromBody] UpdateRoleRequest request)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            request.AppId = appId;
+            request.RoleId = roleId;
 
-            var(app, role, result) = await VerifyAppOwnerRoleAsync(appId, roleId, "create role");
-            if (result != null)
-                return result;
-
-            if (rolePayload.Key != role.Key && (await roleRepository.FindByKeyAsync(app.Id, rolePayload.Key)) != null)
-                return Conflict($"Role key {rolePayload.Key} is already used");
-
-            role.Key = rolePayload.Key;
-            role.Name = rolePayload.Name;
-
-            role = await roleRepository.UpdateAsync(role);
-
-            return Ok(mapper.Map<RoleView>(role));
+            return HandleAsync(request);
         }
 
         [HttpPost("{roleId:guid}/claims/{claimId:guid}")]
         [Authorize]
-        public async Task<IActionResult> AddClaimToRoleAsync(Guid appId, Guid roleId, Guid claimId, [FromBody] ClaimValuePayload valuePayload)
+        public Task<IActionResult> AddClaimToRoleAsync(Guid appId, Guid roleId, Guid claimId, [FromBody] AddClaimToRoleRequest request)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            request.AppId = appId;
+            request.RoleId = roleId;
+            request.ClaimId = claimId;
 
-            var(app, role, claim, result) = await VerifyAppOwnerRoleClaimAsync(appId, roleId, claimId, "add claim to role");
-            if (result != null)
-                return result;
-
-            var roleClaim = new RoleClaim(role.Id, claim.Id, valuePayload.Value);
-
-            roleClaim = await roleClaimRepository.SaveAsync(roleClaim);
-
-            return Ok(new ClaimValue(claim.Id, claim.Key, claim.Name, roleClaim.Value));
+            return HandleAsync(request);
         }
 
         [HttpDelete("{roleId:guid}/claims/{claimId:guid}")]
         [Authorize]
-        public async Task<IActionResult> DeleteClaimFromRoleAsync(Guid appId, Guid roleId, Guid claimId)
+        public Task<IActionResult> DeleteClaimFromRoleAsync(Guid appId, Guid roleId, Guid claimId)
         {
-            var(app, role, claim, result) = await VerifyAppOwnerRoleClaimAsync(appId, roleId, claimId, "delete claim from role");
-            if (result != null)
-                return result;
+            var request = new DeleteClaimFromRoleRequest();
+            request.AppId = appId;
+            request.RoleId = roleId;
+            request.ClaimId = claimId;
 
-            await roleClaimRepository.DeleteByIdAsync(role.Id, claim.Id);
-
-            return NoContent();
+            return HandleAsync(request);
         }
 
         [HttpDelete("{roleId:guid}")]
         [Authorize]
-        public async Task<IActionResult> DeleteRoleAsync(Guid appId, Guid roleId)
+        public Task<IActionResult> DeleteRoleAsync(Guid appId, Guid roleId)
         {
-            var(app, role, result) = await VerifyAppOwnerRoleAsync(appId, roleId, "delete role");
-            if (result != null)
-                return result;
+            var request = new DeleteRoleRequest();
+            request.AppId = appId;
+            request.RoleId = roleId;
 
-            await roleRepository.DeleteByIdAsync(role.Id);
-
-            return NoContent();
-        }
-
-        private async Task<ValueTuple<App, Role, Claim, IActionResult>> VerifyAppOwnerRoleClaimAsync(Guid appId, Guid roleId, Guid claimId, string operation)
-        {
-            var(app, role, result) = await VerifyAppOwnerRoleAsync(appId, roleId, operation);
-            if (result != null)
-                return (null, null, null, result);
-
-            var claim = await claimRepository.GetByIdAsync(claimId);
-            if (claim == null)
-                return (null, null, null, NotFound("Claim not found"));
-
-            if (claim.AppId != app.Id)
-                return (null, null, null, Forbidden("Claim belongs to another application"));
-
-            return (app, role, claim, null);
-        }
-
-        private async Task<ValueTuple<App, Role, IActionResult>> VerifyAppOwnerRoleAsync(Guid appId, Guid roleId, string operation)
-        {
-            var(app, result) = await VerifyAppOwnerAsync(appId, operation);
-            if (result != null)
-                return (null, null, result);
-
-            var role = await roleRepository.GetByIdAsync(roleId);
-            if (role == null)
-                return (null, null, NotFound("Role not found"));
-
-            if (role.AppId != app.Id)
-                return (null, null, Forbidden("Role belongs to another application"));
-
-            return (app, role, null);
-        }
-
-        private async Task<ValueTuple<App, IActionResult>> VerifyAppOwnerAsync(Guid appId, string operation)
-        {
-            var(app, result) = await VerifyAppAsync(appId);
-            if (result != null)
-                return (null, result);
-
-            if (tokenAccessor.GetBaseToken().UserId != app.OwnerId)
-                return (null, Forbidden($"Need to be application owner to {operation}"));
-
-            return (app, null);
-        }
-
-        private async Task<ValueTuple<App, IActionResult>> VerifyAppAsync(Guid appId)
-        {
-            var app = await appRepository.GetByIdAsync(appId);
-            if (app == null)
-                return (null, NotFound("Application not found"));
-
-            return (app, null);
+            return HandleAsync(request);
         }
     }
 }
