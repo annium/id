@@ -6,6 +6,7 @@ using Annium.Id.Api.Payloads;
 using Annium.Id.Api.Views;
 using Annium.Id.ViewModels.Apps.Requests;
 using Annium.Id.ViewModels.Apps.Responses;
+using Annium.Id.ViewModels.AppUsers.Requests;
 using Annium.Id.ViewModels.Claims.Requests;
 using Annium.Id.ViewModels.Claims.Responses;
 using Annium.Id.ViewModels.Roles.Requests;
@@ -158,7 +159,7 @@ namespace Annium.Id.IntegrationTests
             return id.Post($"/apps/{appId}/users/{userId}/roles/{roleId}").BearerAuthorization(accessToken).RunAsync();
         }
 
-        protected Task<ClaimValueView> AddClaimToUserAsync(
+        protected Task AddClaimToUserAsync(
             string accessToken,
             Guid appId,
             Guid userId,
@@ -166,9 +167,9 @@ namespace Annium.Id.IntegrationTests
             string value = "Some"
         )
         {
-            var request = new ClaimValuePayload { Value = value };
+            var request = new AddClaimToUserRequest { Value = value };
 
-            return id.Post($"/apps/{appId}/users/{userId}/claims/{claimId}").BearerAuthorization(accessToken).JsonContent(request).AsAsync<ClaimValueView>();
+            return id.Post($"/apps/{appId}/users/{userId}/claims/{claimId}").BearerAuthorization(accessToken).JsonContent(request).RunAsync();
         }
 
         protected Task<CompanyPrivateView> CreateCompanyAsync(

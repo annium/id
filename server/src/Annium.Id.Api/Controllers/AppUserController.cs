@@ -1,15 +1,9 @@
 using System;
 using System.Threading.Tasks;
 using Annium.AspNetCore.Extensions;
-using Annium.Core.Mapper;
 using Annium.Core.Mediator;
-using Annium.Id.Api.Payloads;
-using Annium.Id.Api.Views;
 using Annium.Id.AspNetCore;
-using Annium.Id.Core;
-using Annium.Id.Db.Repositories;
-using Annium.Id.Domain.Entities;
-using Annium.Localization.Abstractions;
+using Annium.Id.ViewModels.AppUsers.Requests;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Annium.Id.Api.Controllers
@@ -17,142 +11,49 @@ namespace Annium.Id.Api.Controllers
     [Route("apps/{appId:guid}/users/{userId:guid}")]
     public class AppUserController : ServerController
     {
-        private readonly ITokenAccessor tokenAccessor;
-        private readonly IAppRepository appRepository;
-        private readonly IUserRepository userRepository;
-        private readonly IRoleRepository roleRepository;
-        private readonly IClaimRepository claimRepository;
-        private readonly IUserRoleRepository userRoleRepository;
-        private readonly IUserClaimRepository userClaimRepository;
-        private readonly IMapper mapper;
-
         public AppUserController(
-            ITokenAccessor tokenAccessor,
-            IAppRepository appRepository,
-            IUserRepository userRepository,
-            IRoleRepository roleRepository,
-            IClaimRepository claimRepository,
-            IUserRoleRepository userRoleRepository,
-            IUserClaimRepository userClaimRepository,
-            IMapper mapper,
             IMediator mediator
         ) : base(mediator)
         {
-            this.tokenAccessor = tokenAccessor;
-            this.appRepository = appRepository;
-            this.userRepository = userRepository;
-            this.roleRepository = roleRepository;
-            this.claimRepository = claimRepository;
-            this.userRoleRepository = userRoleRepository;
-            this.userClaimRepository = userClaimRepository;
-            this.mapper = mapper;
+
         }
 
         [HttpPost("roles/{roleId:guid}")]
         [Authorize]
-        public async Task<IActionResult> AddRoleToUserAsync(Guid appId, Guid userId, Guid roleId)
+        public Task<IActionResult> AddRoleToUserAsync(Guid appId, Guid userId, Guid roleId)
         {
-            var(app, user, role, result) = await VerifyAppOwnerUserRoleAsync(appId, userId, roleId, "add role to user");
-            if (result != null)
-                return result;
+            var request = new AddRoleToUserRequest { AppId = appId, UserId = userId, RoleId = roleId };
 
-            var userRole = new UserRole(user.Id, role.Id);
-
-            userRole = await userRoleRepository.SaveAsync(userRole);
-
-            return NoContent();
+            return HandleAsync(request);
         }
 
         [HttpDelete("roles/{roleId:guid}")]
         [Authorize]
-        public async Task<IActionResult> DeleteRoleFromUserAsync(Guid appId, Guid userId, Guid roleId)
+        public Task<IActionResult> DeleteRoleFromUserAsync(Guid appId, Guid userId, Guid roleId)
         {
-            var(app, user, role, result) = await VerifyAppOwnerUserRoleAsync(appId, userId, roleId, "delete role from user");
-            if (result != null)
-                return result;
+            var request = new DeleteRoleFromUserRequest { AppId = appId, UserId = userId, RoleId = roleId };
 
-            await userRoleRepository.DeleteByIdAsync(user.Id, role.Id);
-
-            return NoContent();
+            return HandleAsync(request);
         }
 
         [HttpPost("claims/{claimId:guid}")]
         [Authorize]
-        public async Task<IActionResult> AddClaimToUserAsync(Guid appId, Guid userId, Guid claimId, [FromBody] ClaimValuePayload valuePayload)
+        public Task<IActionResult> AddClaimToUserAsync(Guid appId, Guid userId, Guid claimId, [FromBody] AddClaimToUserRequest request)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            request.AppId = appId;
+            request.UserId = userId;
+            request.ClaimId = claimId;
 
-            var(app, user, claim, result) = await VerifyAppOwnerUserClaimAsync(appId, userId, claimId, "add claim to user");
-            if (result != null)
-                return result;
-
-            var userClaim = new UserClaim(user.Id, claim.Id, valuePayload.Value);
-            userClaim = await userClaimRepository.SaveAsync(userClaim);
-            var claimValue = new ClaimValue(claim.Id, claim.Key, claim.Name, userClaim.Value);
-
-            return Ok(mapper.Map<ClaimValueView>(claimValue));
+            return HandleAsync(request);
         }
 
         [HttpDelete("claims/{claimId:guid}")]
         [Authorize]
-        public async Task<IActionResult> DeleteClaimFromUserAsync(Guid appId, Guid userId, Guid claimId)
+        public Task<IActionResult> DeleteClaimFromUserAsync(Guid appId, Guid userId, Guid claimId)
         {
-            var(app, user, claim, result) = await VerifyAppOwnerUserClaimAsync(appId, userId, claimId, "delete claim from user");
-            if (result != null)
-                return result;
+            var request = new DeleteClaimFromUserRequest { AppId = appId, UserId = userId, ClaimId = claimId };
 
-            await userClaimRepository.DeleteByIdAsync(user.Id, claim.Id);
-
-            return NoContent();
-        }
-
-        private async Task<ValueTuple<App, User, Role, IActionResult>> VerifyAppOwnerUserRoleAsync(Guid appId, Guid userId, Guid roleId, string operation)
-        {
-            var(app, user, result) = await VerifyAppOwnerUserAsync(appId, userId, operation);
-            if (result != null)
-                return (null, null, null, result);
-
-            var role = await roleRepository.GetByIdAsync(roleId);
-            if (role == null)
-                return (null, null, null, NotFound("Role not found"));
-
-            if (role.AppId != app.Id)
-                return (null, null, null, Forbidden("Role belongs to another application"));
-
-            return (app, user, role, null);
-        }
-
-        private async Task<ValueTuple<App, User, Claim, IActionResult>> VerifyAppOwnerUserClaimAsync(Guid appId, Guid userId, Guid claimId, string operation)
-        {
-            var(app, user, result) = await VerifyAppOwnerUserAsync(appId, userId, operation);
-            if (result != null)
-                return (null, null, null, result);
-
-            var claim = await claimRepository.GetByIdAsync(claimId);
-            if (claim == null)
-                return (null, null, null, NotFound("Claim not found"));
-
-            if (claim.AppId != app.Id)
-                return (null, null, null, Forbidden("Claim belongs to another application"));
-
-            return (app, user, claim, null);
-        }
-
-        private async Task<ValueTuple<App, User, IActionResult>> VerifyAppOwnerUserAsync(Guid appId, Guid userId, string operation)
-        {
-            var app = await appRepository.GetByIdAsync(appId);
-            if (app == null)
-                return (null, null, NotFound("Application not found"));
-
-            if (tokenAccessor.GetBaseToken().UserId != app.OwnerId)
-                return (null, null, Forbidden($"Need to be application owner to {operation}"));
-
-            var user = await userRepository.GetByIdAsync(userId);
-            if (user == null)
-                return (null, null, NotFound("User not found"));
-
-            return (app, user, null);
+            return HandleAsync(request);
         }
     }
 }
