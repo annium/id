@@ -13,6 +13,8 @@ using Annium.Id.ViewModels.Companies.Requests;
 using Annium.Id.ViewModels.Companies.Responses;
 using Annium.Id.ViewModels.CompanyClaims.Requests;
 using Annium.Id.ViewModels.CompanyClaims.Responses;
+using Annium.Id.ViewModels.CompanyRoles.Requests;
+using Annium.Id.ViewModels.CompanyRoles.Responses;
 using Annium.Id.ViewModels.Roles.Requests;
 using Annium.Id.ViewModels.Roles.Responses;
 using Annium.Id.ViewModels.Users.Requests;
@@ -191,16 +193,21 @@ namespace Annium.Id.IntegrationTests
             return (await id.Get($"/companies/{companyId}").BearerAuthorization(accessToken).AsResultAsync<CompanyResponse>()).Data;
         }
 
-        protected Task<RoleView> CreateCompanyRoleAsync(
+        protected async Task<CompanyRoleResponse> CreateCompanyRoleAsync(
             string accessToken,
             Guid appId,
             string key = "one",
             string name = "First role"
         )
         {
-            var request = new RolePayload { Key = key, Name = name };
+            var request = new CreateCompanyRoleRequest { Key = key, Name = name };
 
-            return id.Post($"/apps/{appId}/company-roles").BearerAuthorization(accessToken).JsonContent(request).AsAsync<RoleView>();
+            var roleId = (await id.Post($"/apps/{appId}/company-roles").BearerAuthorization(accessToken).JsonContent(request).AsResultAsync<Guid>()).Data;
+
+            var role = (await id.Get($"/apps/{appId}/company-roles").BearerAuthorization(accessToken).AsResultAsync<CompanyRoleResponse[]>()).Data
+                .First(c => c.Id == roleId);
+
+            return role;
         }
 
         protected async Task<CompanyClaimResponse> CreateCompanyClaimAsync(
@@ -220,7 +227,7 @@ namespace Annium.Id.IntegrationTests
             return claim;
         }
 
-        protected Task<ClaimValueView> AddCompanyClaimToCompanyRoleAsync(
+        protected async Task<CompanyClaimValueResponse> AddCompanyClaimToCompanyRoleAsync(
             string accessToken,
             Guid appId,
             Guid roleId,
@@ -228,9 +235,17 @@ namespace Annium.Id.IntegrationTests
             string value = "Some"
         )
         {
-            var request = new ClaimValuePayload { Value = value };
+            var request = new AddCompanyClaimToCompanyRoleRequest { Value = value };
 
-            return id.Post($"/apps/{appId}/company-roles/{roleId}/claims/{claimId}").BearerAuthorization(accessToken).JsonContent(request).AsAsync<ClaimValueView>();
+            var response = await id.Post($"/apps/{appId}/company-roles/{roleId}/claims/{claimId}").BearerAuthorization(accessToken).JsonContent(request).RunAsync();
+            if (!response.IsSuccessStatusCode)
+                return null;
+
+            var role = (await id.Get($"/apps/{appId}/company-roles").BearerAuthorization(accessToken).AsResultAsync<CompanyRoleResponse[]>()).Data
+                .First(c => c.Id == roleId);
+
+            // perhaps, unstable, due value is not unique
+            return role.Claims.First(c => c.Value == value);
         }
 
         protected Task AddUserToCompanyAsync(

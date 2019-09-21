@@ -5,14 +5,14 @@ using Annium.Extensions.Validation;
 using Annium.Id.Db.Repositories;
 using Annium.Id.Domain.Entities;
 
-namespace Annium.Id.Application.Queries.Roles
+namespace Annium.Id.Application.Queries.CompanyRoles
 {
-    public class ListRolesQuery : IQuery
+    public class ListCompanyRolesQuery : IQuery
     {
         public Guid AppId { get; }
         public App App { get; private set; }
 
-        public ListRolesQuery(
+        public ListCompanyRolesQuery(
             Guid appId
         )
         {
@@ -20,17 +20,17 @@ namespace Annium.Id.Application.Queries.Roles
         }
     }
 
-    internal class ListRolesQueryValidator : Validator<ListRolesQuery>
+    internal class ListCompanyRolesQueryValidator : Validator<ListCompanyRolesQuery>
     {
-        public ListRolesQueryValidator()
+        public ListCompanyRolesQueryValidator()
         {
             Field(c => c.AppId).Required();
         }
     }
 
-    internal class ListRolesQueryComposer : Composer<ListRolesQuery>
+    internal class ListCompanyRolesQueryComposer : Composer<ListCompanyRolesQuery>
     {
-        public ListRolesQueryComposer(
+        public ListCompanyRolesQueryComposer(
             IAppRepository appRepository
         )
         {
