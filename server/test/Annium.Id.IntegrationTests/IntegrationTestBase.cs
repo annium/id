@@ -9,6 +9,8 @@ using Annium.Id.ViewModels.Apps.Responses;
 using Annium.Id.ViewModels.AppUsers.Requests;
 using Annium.Id.ViewModels.Claims.Requests;
 using Annium.Id.ViewModels.Claims.Responses;
+using Annium.Id.ViewModels.Companies.Requests;
+using Annium.Id.ViewModels.Companies.Responses;
 using Annium.Id.ViewModels.Roles.Requests;
 using Annium.Id.ViewModels.Roles.Responses;
 using Annium.Id.ViewModels.Users.Requests;
@@ -172,16 +174,19 @@ namespace Annium.Id.IntegrationTests
             return id.Post($"/apps/{appId}/users/{userId}/claims/{claimId}").BearerAuthorization(accessToken).JsonContent(request).RunAsync();
         }
 
-        protected Task<CompanyPrivateView> CreateCompanyAsync(
+        protected async Task<CompanyResponse> CreateCompanyAsync(
             string accessToken,
             string key = "demo",
             string name = "Demo Company",
             Guid? parentId = null
         )
         {
-            var request = new CompanyPayload { ParentId = parentId, Key = key, Name = name };
+            var request = new RegisterCompanyRequest { ParentId = parentId, Key = key, Name = name };
 
-            return id.Post("/companies").BearerAuthorization(accessToken).JsonContent(request).AsAsync<CompanyPrivateView>();
+            var companyId = (await id.Post("/companies").BearerAuthorization(accessToken).JsonContent(request).AsResultAsync<Guid>()).Data;
+            Console.WriteLine(companyId);
+
+            return (await id.Get($"/companies/{companyId}").BearerAuthorization(accessToken).AsResultAsync<CompanyResponse>()).Data;
         }
 
         protected Task<RoleView> CreateCompanyRoleAsync(

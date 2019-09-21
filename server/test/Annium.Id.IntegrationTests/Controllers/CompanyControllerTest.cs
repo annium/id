@@ -1,9 +1,10 @@
 using System;
 using System.Net;
 using System.Threading.Tasks;
+using Annium.Id.ViewModels.Companies.Requests;
+using Annium.Id.ViewModels.Companies.Responses;
+using Annium.Id.ViewModels.Users.Responses;
 using Annium.Net.Http;
-using Annium.Id.Api.Payloads;
-using Annium.Id.Api.Views;
 using Annium.Testing;
 
 namespace Annium.Id.IntegrationTests.Controllers
@@ -15,7 +16,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         {
             // arrange
             var(user, tokens) = await LogUserInAsync();
-            var payload = new CompanyPayload() { Key = "de", Name = "Demo Company" };
+            var payload = new RegisterCompanyRequest() { Key = "de", Name = "Demo Company" };
 
             // act
             var response = await id.Post("/companies").BearerAuthorization(tokens.AccessToken).JsonContent(payload).RunAsync();
@@ -29,7 +30,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         {
             // arrange
             var(user, tokens) = await LogUserInAsync();
-            var payload = new CompanyPayload() { ParentId = Guid.NewGuid(), Key = "demo", Name = "Demo Company" };
+            var payload = new RegisterCompanyRequest() { ParentId = Guid.NewGuid(), Key = "demo", Name = "Demo Company" };
 
             // act
             var response = await id.Post("/companies").BearerAuthorization(tokens.AccessToken).JsonContent(payload).RunAsync();
@@ -39,18 +40,18 @@ namespace Annium.Id.IntegrationTests.Controllers
         }
 
         [Fact]
-        public async Task Create_NonUniqueKey_Conflict()
+        public async Task Create_NonUniqueKey_BadRequest()
         {
             // arrange
             var(user, tokens) = await LogUserInAsync();
-            var payload = new CompanyPayload() { Key = "demo", Name = "Demo Company" };
+            var payload = new RegisterCompanyRequest() { Key = "demo", Name = "Demo Company" };
             await id.Post("/companies").BearerAuthorization(tokens.AccessToken).JsonContent(payload).RunAsync();
 
             // act
             var response = await id.Post("/companies").BearerAuthorization(tokens.AccessToken).JsonContent(payload).RunAsync();
 
             // assert
-            response.StatusCode.IsEqual(HttpStatusCode.Conflict);
+            response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
         }
 
         [Fact]
@@ -91,10 +92,12 @@ namespace Annium.Id.IntegrationTests.Controllers
             var company = await CreateCompanyAsync(tokens.AccessToken);
 
             // act
-            var response = await id.Get($"/companies/{company.Id}").BearerAuthorization(tokens.AccessToken).AsAsync<CompanyPublicView>();
+            var response = (await id.Get($"/companies/{company.Id}").BearerAuthorization(tokens.AccessToken).AsResultAsync<CompanyResponse>()).Data;
 
             // assert
             response.Id.IsEqual(company.Id);
+            response.Key.IsEqual(company.Key);
+            response.Name.IsEqual(company.Name);
         }
 
         [Fact]
@@ -119,7 +122,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             await AddUserToCompanyAsync(tokens.AccessToken, company.Id, user.Id);
 
             // act
-            var response = await id.Get($"/companies/{company.Id}/users").BearerAuthorization(tokens.AccessToken).AsAsync<UserPublicView[]>();
+            var response = (await id.Get($"/companies/{company.Id}/users").BearerAuthorization(tokens.AccessToken).AsResultAsync<UserPublicResponse[]>()).Data;
 
             // assert
             response.Has(1);
@@ -133,7 +136,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             // arrange
             var(user, tokens) = await LogUserInAsync();
             var company = await CreateCompanyAsync(tokens.AccessToken);
-            var u = new CompanyPayload { Key = "demo" };
+            var u = new UpdateCompanyRequest { Key = "demo" };
 
             // act
             var response = await id.Put($"/companies/{company.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
@@ -147,7 +150,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         {
             // arrange
             var(user, tokens) = await LogUserInAsync();
-            var u = new CompanyPayload { Key = "demo", Name = "Demo Company" };
+            var u = new UpdateCompanyRequest { Key = "demo", Name = "Demo Company" };
 
             // act
             var response = await id.Put($"/companies/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
@@ -163,7 +166,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var(owner, ownerTokens) = await LogUserInAsync("owner", "superpass", "some@email.com");
             var company = await CreateCompanyAsync(ownerTokens.AccessToken);
             var(user, tokens) = await LogUserInAsync();
-            var u = new CompanyPayload { Key = "demo", Name = "Demo Company" };
+            var u = new UpdateCompanyRequest { Key = "demo", Name = "Demo Company" };
 
             // act
             var response = await id.Put($"/companies/{company.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
@@ -178,7 +181,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             // arrange
             var(user, tokens) = await LogUserInAsync();
             var company = await CreateCompanyAsync(tokens.AccessToken);
-            var u = new CompanyPayload { ParentId = Guid.NewGuid(), Key = "demo", Name = "Demo Company" };
+            var u = new UpdateCompanyRequest { ParentId = Guid.NewGuid(), Key = "demo", Name = "Demo Company" };
 
             // act
             var response = await id.Put($"/companies/{company.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
@@ -194,7 +197,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var(user, tokens) = await LogUserInAsync();
             var company1 = await CreateCompanyAsync(tokens.AccessToken);
             var company2 = await CreateCompanyAsync(tokens.AccessToken, "medo");
-            var u = new CompanyPayload { Key = "demo", Name = "Some" };
+            var u = new UpdateCompanyRequest { Key = "demo", Name = "Some" };
 
             // act
             var response = await id.Put($"/companies/{company2.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
@@ -209,15 +212,13 @@ namespace Annium.Id.IntegrationTests.Controllers
             // arrange
             var(user, tokens) = await LogUserInAsync();
             var company = await CreateCompanyAsync(tokens.AccessToken);
-            var u = new CompanyPayload { Key = "medo", Name = "Medo Company" };
+            var u = new UpdateCompanyRequest { Key = "medo", Name = "Medo Company" };
 
             // act
-            var response = await id.Put($"/companies/{company.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).AsAsync<CompanyPrivateView>();
+            var response = await id.Put($"/companies/{company.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
 
             // assert
-            response.Id.IsEqual(company.Id);
-            response.Key.IsEqual(u.Key);
-            response.Name.IsEqual(u.Name);
+            response.StatusCode.IsEqual(HttpStatusCode.OK);
         }
 
         [Fact]
@@ -271,10 +272,10 @@ namespace Annium.Id.IntegrationTests.Controllers
             var(user, tokens) = await LogUserInAsync();
 
             // act
-            company = await id.Put($"/companies/{company.Id}/owner/{user.Id}").BearerAuthorization(ownerTokens.AccessToken).AsAsync<CompanyPrivateView>();
+            var response = await id.Put($"/companies/{company.Id}/owner/{user.Id}").BearerAuthorization(ownerTokens.AccessToken).RunAsync();
 
             // assert
-            company.OwnerId.IsEqual(user.Id);
+            response.StatusCode.IsEqual(HttpStatusCode.OK);
         }
 
         [Fact]
@@ -316,7 +317,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var response = await id.Delete($"/companies/{company.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
 
             // assert
-            response.StatusCode.IsEqual(HttpStatusCode.NoContent);
+            response.StatusCode.IsEqual(HttpStatusCode.OK);
         }
     }
 }
