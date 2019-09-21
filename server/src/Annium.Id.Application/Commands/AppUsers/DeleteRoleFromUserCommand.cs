@@ -34,9 +34,9 @@ namespace Annium.Id.Application.Commands.AppUsers
     {
         public DeleteRoleFromUserCommandValidator()
         {
-            Field(c => c.AppId).NotEqual(Guid.Empty);
-            Field(c => c.UserId).NotEqual(Guid.Empty);
-            Field(c => c.RoleId).NotEqual(Guid.Empty);
+            Field(c => c.AppId).Required();
+            Field(c => c.UserId).Required();
+            Field(c => c.RoleId).Required();
         }
     }
 

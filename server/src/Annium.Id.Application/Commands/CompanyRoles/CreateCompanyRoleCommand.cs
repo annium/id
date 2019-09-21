@@ -34,7 +34,7 @@ namespace Annium.Id.Application.Commands.CompanyRoles
             ICompanyRoleRepository companyRoleRepository
         )
         {
-            Field(c => c.AppId).NotEqual(Guid.Empty);
+            Field(c => c.AppId).Required();
             Field(c => c.Key).Required().Length(3, 100).Then()
                 .Unique(async(c, key) => await companyRoleRepository.FindByKeyAsync(c.AppId, key) != null, "Company role with {1} {2} already exists");
             Field(c => c.Name).Required().Length(3, 100);

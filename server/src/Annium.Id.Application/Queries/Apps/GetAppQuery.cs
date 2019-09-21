@@ -24,7 +24,7 @@ namespace Annium.Id.Application.Queries.Apps
     {
         public GetAppQueryValidator()
         {
-            Field(c => c.AppId).NotEqual(Guid.Empty);
+            Field(c => c.AppId).Required();
         }
     }
 

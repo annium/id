@@ -22,7 +22,7 @@ namespace Annium.Id.Application.Queries.Claims
     {
         public ListClaimsQueryValidator()
         {
-            Field(c => c.AppId).NotEqual(Guid.Empty);
+            Field(c => c.AppId).Required();
         }
     }
 

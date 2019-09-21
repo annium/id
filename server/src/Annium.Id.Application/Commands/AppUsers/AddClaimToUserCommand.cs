@@ -37,9 +37,9 @@ namespace Annium.Id.Application.Commands.AppUsers
     {
         public AddClaimToUserCommandValidator()
         {
-            Field(c => c.AppId).NotEqual(Guid.Empty);
-            Field(c => c.UserId).NotEqual(Guid.Empty);
-            Field(c => c.ClaimId).NotEqual(Guid.Empty);
+            Field(c => c.AppId).Required();
+            Field(c => c.UserId).Required();
+            Field(c => c.ClaimId).Required();
             Field(c => c.Value).Required().Length(3, 100);
         }
     }

@@ -24,7 +24,7 @@ namespace Annium.Id.Application.Commands.Users
     {
         public UpdateUserTokenCommandValidator()
         {
-            Field(e => e.RefreshToken).NotEqual(Guid.Empty);
+            Field(e => e.RefreshToken).Required();
         }
     }
 

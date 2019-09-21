@@ -28,8 +28,8 @@ namespace Annium.Id.Application.Commands.Users
     {
         public UpdateUserAppTokenCommandValidator()
         {
-            Field(e => e.AppId).NotEqual(Guid.Empty);
-            Field(e => e.RefreshToken).NotEqual(Guid.Empty);
+            Field(e => e.AppId).Required();
+            Field(e => e.RefreshToken).Required();
         }
     }
 

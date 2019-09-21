@@ -27,8 +27,8 @@ namespace Annium.Id.Application.Commands.Apps
     {
         public SetAppOwnerCommandValidator()
         {
-            Field(c => c.AppId).NotEqual(Guid.Empty);
-            Field(c => c.NewOwnerId).NotEqual(Guid.Empty);
+            Field(c => c.AppId).Required();
+            Field(c => c.NewOwnerId).Required();
         }
     }
 

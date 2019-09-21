@@ -30,8 +30,8 @@ namespace Annium.Id.Application.Commands.Roles
     {
         public DeleteRoleCommandValidator()
         {
-            Field(c => c.AppId).NotEqual(Guid.Empty);
-            Field(c => c.RoleId).NotEqual(Guid.Empty);
+            Field(c => c.AppId).Required();
+            Field(c => c.RoleId).Required();
         }
     }
 

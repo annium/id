@@ -30,8 +30,8 @@ namespace Annium.Id.Application.Commands.CompanyClaims
     {
         public DeleteCompanyClaimCommandValidator()
         {
-            Field(c => c.AppId).NotEqual(Guid.Empty);
-            Field(c => c.ClaimId).NotEqual(Guid.Empty);
+            Field(c => c.AppId).Required();
+            Field(c => c.ClaimId).Required();
         }
     }
 

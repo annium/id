@@ -32,7 +32,7 @@ namespace Annium.Id.Application.Commands.Users
     {
         public LogUserInAppCommandValidator()
         {
-            Field(e => e.AppId).NotEqual(Guid.Empty);
+            Field(e => e.AppId).Required();
             Field(e => e.Login).Required().Length(3, 50);
             Field(e => e.Password).Required().Length(8, 50);
         }

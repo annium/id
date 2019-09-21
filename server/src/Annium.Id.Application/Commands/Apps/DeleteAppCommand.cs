@@ -26,7 +26,7 @@ namespace Annium.Id.Application.Commands.Apps
     {
         public DeleteAppCommandValidator()
         {
-            Field(c => c.AppId).NotEqual(Guid.Empty);
+            Field(c => c.AppId).Required();
         }
     }
 
