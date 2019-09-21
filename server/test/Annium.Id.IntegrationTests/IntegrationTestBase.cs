@@ -2,8 +2,6 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Annium.AspNetCore.IntegrationTesting;
-using Annium.Id.Api.Payloads;
-using Annium.Id.Api.Views;
 using Annium.Id.ViewModels.Apps.Requests;
 using Annium.Id.ViewModels.Apps.Responses;
 using Annium.Id.ViewModels.AppUsers.Requests;
@@ -15,6 +13,7 @@ using Annium.Id.ViewModels.CompanyClaims.Requests;
 using Annium.Id.ViewModels.CompanyClaims.Responses;
 using Annium.Id.ViewModels.CompanyRoles.Requests;
 using Annium.Id.ViewModels.CompanyRoles.Responses;
+using Annium.Id.ViewModels.CompanyUsers.Requests;
 using Annium.Id.ViewModels.Roles.Requests;
 using Annium.Id.ViewModels.Roles.Responses;
 using Annium.Id.ViewModels.Users.Requests;
@@ -275,9 +274,9 @@ namespace Annium.Id.IntegrationTests
             string value = "Some"
         )
         {
-            var request = new ClaimValuePayload { Value = value };
+            var request = new AddCompanyClaimToCompanyUserRequest { Value = value };
 
-            return id.Post($"/companies/{companyId}/users/{userId}/claims/{claimId}").BearerAuthorization(accessToken).JsonContent(request).AsAsync<ClaimValueView>();
+            return id.Post($"/companies/{companyId}/users/{userId}/claims/{claimId}").BearerAuthorization(accessToken).JsonContent(request).RunAsync();
         }
     }
 }
