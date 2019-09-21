@@ -20,13 +20,14 @@ namespace Annium.Id.ViewModels
 
         private void ConfigureMapping(MapperConfiguration cfg)
         {
+            // TODO: instead of ignores, use direct maps
             #region Users
-            cfg.Map<DeleteUserRequest, DeleteUserCommand>().Ignore(t => t.UserId);
+            cfg.Map<DeleteUserRequest, DeleteUserCommand>().Ignore(t => t.MyId);
             cfg.Map<LogUserOutRequest, LogUserOutCommand>().Ignore(t => t.LoginId);
             cfg.Map<GetUserRequest, GetUserQuery>().Ignore(t => t.User);
             #endregion
             #region Apps
-            cfg.Map<SetAppOwnerRequest, SetAppOwnerCommand>().Ignore(t => t.UserId);
+            cfg.Map<SetAppOwnerRequest, SetAppOwnerCommand>().Ignore(t => t.MyId);
             cfg.Map<LogUserOutRequest, LogUserOutCommand>().Ignore(t => t.LoginId);
             cfg.Map<GetUserRequest, GetUserQuery>().Ignore(t => t.User);
             #endregion

@@ -26,7 +26,7 @@ namespace Annium.Id.Application.CommandHandlers
             CancellationToken cancellationToken
         )
         {
-            var app = new App(request.UserId, request.Key, request.Name, Guid.NewGuid());
+            var app = new App(request.MyId, request.Key, request.Name, Guid.NewGuid());
 
             app = await appRepository.CreateAsync(app);
 
@@ -38,10 +38,10 @@ namespace Annium.Id.Application.CommandHandlers
             CancellationToken cancellationToken
         )
         {
-            var userId = request.UserId;
+            var myId = request.MyId;
             var app = request.App;
 
-            if (userId != app.OwnerId)
+            if (myId != app.OwnerId)
                 return Result.Status(OperationStatus.Forbidden).Error($"Need to be application owner to update app");
 
             if (request.Key != app.Key && (await appRepository.FindByKeyAsync(request.Key)) != null)
@@ -60,11 +60,11 @@ namespace Annium.Id.Application.CommandHandlers
             CancellationToken cancellationToken
         )
         {
-            var userId = request.UserId;
+            var myId = request.MyId;
             var app = request.App;
             var newOwner = request.NewOwner;
 
-            if (userId != app.OwnerId)
+            if (myId != app.OwnerId)
                 return Result.Status(OperationStatus.Forbidden).Error($"Need to be application owner to change app owner");
 
             app.OwnerId = newOwner.Id;
@@ -80,10 +80,10 @@ namespace Annium.Id.Application.CommandHandlers
             CancellationToken cancellationToken
         )
         {
-            var userId = request.UserId;
+            var myId = request.MyId;
             var app = request.App;
 
-            if (userId != app.OwnerId)
+            if (myId != app.OwnerId)
                 return Result.Status(OperationStatus.Forbidden, Guid.Empty).Error($"Need to be application owner to update app api token");
 
             var apiToken = Guid.NewGuid();
@@ -97,10 +97,10 @@ namespace Annium.Id.Application.CommandHandlers
             CancellationToken cancellationToken
         )
         {
-            var userId = request.UserId;
+            var myId = request.MyId;
             var app = request.App;
 
-            if (userId != app.OwnerId)
+            if (myId != app.OwnerId)
                 return Result.Status(OperationStatus.Forbidden).Error($"Need to be application owner to update app api token");
 
             await appRepository.DeleteByIdAsync(app.Id);

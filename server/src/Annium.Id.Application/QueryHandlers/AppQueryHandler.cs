@@ -46,10 +46,10 @@ namespace Annium.Id.Application.QueryHandlers
             CancellationToken cancellationToken
         )
         {
-            var userId = request.UserId;
+            var myId = request.MyId;
             var app = request.App;
 
-            if (userId != app.OwnerId)
+            if (myId != app.OwnerId)
                 return Task.FromResult(Result.Status(OperationStatus.Forbidden, Guid.Empty).Error($"Need to be application owner to get app api token"));
 
             return Task.FromResult(Result.Status(OperationStatus.OK, app.ApiToken));

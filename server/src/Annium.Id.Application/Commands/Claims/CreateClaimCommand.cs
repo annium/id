@@ -13,7 +13,7 @@ namespace Annium.Id.Application.Commands.Claims
         public Guid AppId { get; }
         public string Key { get; }
         public string Name { get; }
-        public Guid UserId { get; private set; }
+        public Guid MyId { get; private set; }
         public App App { get; private set; }
 
         public CreateClaimCommand(
@@ -48,7 +48,7 @@ namespace Annium.Id.Application.Commands.Claims
             IAppRepository appRepository
         )
         {
-            Field(c => c.UserId).LoadWith(ctx => tokenAccessor.GetBaseToken().UserId);
+            Field(c => c.MyId).LoadWith(ctx => tokenAccessor.GetBaseToken().UserId);
             Field(c => c.App).LoadWith(ctx => appRepository.GetByIdAsync(ctx.Root.AppId));
         }
     }

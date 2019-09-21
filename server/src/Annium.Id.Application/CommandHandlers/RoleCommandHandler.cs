@@ -29,10 +29,10 @@ namespace Annium.Id.Application.CommandHandlers
             CancellationToken cancellationToken
         )
         {
-            var userId = request.UserId;
+            var myId = request.MyId;
             var app = request.App;
 
-            if (userId != app.OwnerId)
+            if (myId != app.OwnerId)
                 return Result.Status(OperationStatus.Forbidden, Guid.Empty).Error($"Need to be application owner to create role");
 
             var role = new Role(
@@ -52,11 +52,11 @@ namespace Annium.Id.Application.CommandHandlers
             CancellationToken cancellationToken
         )
         {
-            var userId = request.UserId;
+            var myId = request.MyId;
             var app = request.App;
             var role = request.Role;
 
-            if (userId != app.OwnerId)
+            if (myId != app.OwnerId)
                 return Result.Status(OperationStatus.Forbidden).Error($"Need to be application owner to create role");
 
             if (role.AppId != app.Id)
@@ -78,12 +78,12 @@ namespace Annium.Id.Application.CommandHandlers
             CancellationToken cancellationToken
         )
         {
-            var userId = request.UserId;
+            var myId = request.MyId;
             var app = request.App;
             var role = request.Role;
             var claim = request.Claim;
 
-            if (userId != app.OwnerId)
+            if (myId != app.OwnerId)
                 return Result.Status(OperationStatus.Forbidden).Error($"Need to be application owner to add claim to role");
 
             if (role.AppId != app.Id)
@@ -104,12 +104,12 @@ namespace Annium.Id.Application.CommandHandlers
             CancellationToken cancellationToken
         )
         {
-            var userId = request.UserId;
+            var myId = request.MyId;
             var app = request.App;
             var role = request.Role;
             var claim = request.Claim;
 
-            if (userId != app.OwnerId)
+            if (myId != app.OwnerId)
                 return Result.Status(OperationStatus.Forbidden).Error($"Need to be application owner to delete claim from role");
 
             if (role.AppId != app.Id)
@@ -128,11 +128,11 @@ namespace Annium.Id.Application.CommandHandlers
             CancellationToken cancellationToken
         )
         {
-            var userId = request.UserId;
+            var myId = request.MyId;
             var app = request.App;
             var role = request.Role;
 
-            if (userId != app.OwnerId)
+            if (myId != app.OwnerId)
                 return Result.Status(OperationStatus.Forbidden).Error($"Need to be application owner to delete role");
 
             if (role.AppId != app.Id)

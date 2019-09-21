@@ -11,7 +11,7 @@ namespace Annium.Id.Application.Queries.Apps
     public class GetAppApiTokenQuery : IQuery
     {
         public Guid AppId { get; }
-        public Guid UserId { get; private set; }
+        public Guid MyId { get; private set; }
         public App App { get; private set; }
 
         public GetAppApiTokenQuery(
@@ -37,7 +37,7 @@ namespace Annium.Id.Application.Queries.Apps
             IAppRepository appRepository
         )
         {
-            Field(c => c.UserId).LoadWith(ctx => tokenAccessor.GetBaseToken().UserId);
+            Field(c => c.MyId).LoadWith(ctx => tokenAccessor.GetBaseToken().UserId);
             Field(c => c.App).LoadWith(ctx => appRepository.GetByIdAsync(ctx.Root.AppId));
         }
     }

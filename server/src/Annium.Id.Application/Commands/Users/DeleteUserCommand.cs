@@ -7,7 +7,7 @@ namespace Annium.Id.Application.Commands.Users
 {
     public class DeleteUserCommand : ICommand
     {
-        public Guid UserId { get; private set; }
+        public Guid MyId { get; private set; }
 
         public DeleteUserCommand()
         {
@@ -21,7 +21,7 @@ namespace Annium.Id.Application.Commands.Users
             ITokenAccessor tokenAccessor
         )
         {
-            Field(e => e.UserId).LoadWith(ctx => tokenAccessor.GetBaseToken().UserId);
+            Field(e => e.MyId).LoadWith(ctx => tokenAccessor.GetBaseToken().UserId);
         }
     }
 }

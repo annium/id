@@ -26,10 +26,10 @@ namespace Annium.Id.Application.CommandHandlers
             CancellationToken cancellationToken
         )
         {
-            var userId = request.UserId;
+            var myId = request.MyId;
             var app = request.App;
 
-            if (userId != app.OwnerId)
+            if (myId != app.OwnerId)
                 return Result.Status(OperationStatus.Forbidden, Guid.Empty).Error($"Need to be application owner to create claim");
 
             var claim = new Claim(
@@ -48,11 +48,11 @@ namespace Annium.Id.Application.CommandHandlers
             CancellationToken cancellationToken
         )
         {
-            var userId = request.UserId;
+            var myId = request.MyId;
             var app = request.App;
             var claim = request.Claim;
 
-            if (userId != app.OwnerId)
+            if (myId != app.OwnerId)
                 return Result.Status(OperationStatus.Forbidden).Error($"Need to be application owner to update claim");
 
             if (claim.AppId != app.Id)
@@ -74,11 +74,11 @@ namespace Annium.Id.Application.CommandHandlers
             CancellationToken cancellationToken
         )
         {
-            var userId = request.UserId;
+            var myId = request.MyId;
             var app = request.App;
             var claim = request.Claim;
 
-            if (userId != app.OwnerId)
+            if (myId != app.OwnerId)
                 return Result.Status(OperationStatus.Forbidden).Error($"Need to be application owner to delete claim");
 
             if (claim.AppId != app.Id)

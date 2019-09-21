@@ -87,8 +87,8 @@ namespace Annium.Id.Application.CommandHandlers
             CancellationToken cancellationToken
         )
         {
-            await userLoginRepository.DeleteAllByUserIdAsync(request.UserId);
-            await userRepository.DeleteByIdAsync(request.UserId);
+            await userLoginRepository.DeleteAllByUserIdAsync(request.MyId);
+            await userRepository.DeleteByIdAsync(request.MyId);
 
             return Result.Status(OperationStatus.OK);
         }

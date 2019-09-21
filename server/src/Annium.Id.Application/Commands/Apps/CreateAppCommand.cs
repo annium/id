@@ -11,7 +11,7 @@ namespace Annium.Id.Application.Commands.Apps
     {
         public string Key { get; }
         public string Name { get; }
-        public Guid UserId { get; private set; }
+        public Guid MyId { get; private set; }
 
         public CreateAppCommand(
             string key,
@@ -41,7 +41,7 @@ namespace Annium.Id.Application.Commands.Apps
             ITokenAccessor tokenAccessor
         )
         {
-            Field(c => c.UserId).LoadWith(ctx => tokenAccessor.GetBaseToken().UserId);
+            Field(c => c.MyId).LoadWith(ctx => tokenAccessor.GetBaseToken().UserId);
         }
     }
 }
