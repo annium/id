@@ -11,6 +11,8 @@ using Annium.Id.ViewModels.Claims.Requests;
 using Annium.Id.ViewModels.Claims.Responses;
 using Annium.Id.ViewModels.Companies.Requests;
 using Annium.Id.ViewModels.Companies.Responses;
+using Annium.Id.ViewModels.CompanyClaims.Requests;
+using Annium.Id.ViewModels.CompanyClaims.Responses;
 using Annium.Id.ViewModels.Roles.Requests;
 using Annium.Id.ViewModels.Roles.Responses;
 using Annium.Id.ViewModels.Users.Requests;
@@ -201,16 +203,21 @@ namespace Annium.Id.IntegrationTests
             return id.Post($"/apps/{appId}/company-roles").BearerAuthorization(accessToken).JsonContent(request).AsAsync<RoleView>();
         }
 
-        protected Task<CompanyClaimView> CreateCompanyClaimAsync(
+        protected async Task<CompanyClaimResponse> CreateCompanyClaimAsync(
             string accessToken,
             Guid appId,
             string key = "first",
             string name = "First claim"
         )
         {
-            var request = new CompanyClaimPayload { Key = key, Name = name };
+            var request = new CreateCompanyClaimRequest { Key = key, Name = name };
 
-            return id.Post($"/apps/{appId}/company-claims").BearerAuthorization(accessToken).JsonContent(request).AsAsync<CompanyClaimView>();
+            var claimId = (await id.Post($"/apps/{appId}/company-claims").BearerAuthorization(accessToken).JsonContent(request).AsResultAsync<Guid>()).Data;
+
+            var claim = (await id.Get($"/apps/{appId}/company-claims").BearerAuthorization(accessToken).AsResultAsync<CompanyClaimResponse[]>()).Data
+                .First(c => c.Id == claimId);
+
+            return claim;
         }
 
         protected Task<ClaimValueView> AddCompanyClaimToCompanyRoleAsync(

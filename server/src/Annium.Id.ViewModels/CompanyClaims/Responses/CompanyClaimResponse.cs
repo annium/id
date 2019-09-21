@@ -2,9 +2,9 @@ using System;
 using Annium.Architecture.ViewModel;
 using Annium.Id.Domain.Entities;
 
-namespace Annium.Id.ViewModels.Claims.Responses
+namespace Annium.Id.ViewModels.CompanyClaims.Responses
 {
-    public class ClaimResponse : IResponse<Claim>
+    public class CompanyClaimResponse : IResponse<CompanyClaim>
     {
         public Guid Id { get; set; }
         public Guid AppId { get; set; }

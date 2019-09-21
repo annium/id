@@ -1,9 +1,9 @@
 using System;
 using System.Net;
 using System.Threading.Tasks;
+using Annium.Id.ViewModels.CompanyClaims.Requests;
+using Annium.Id.ViewModels.CompanyClaims.Responses;
 using Annium.Net.Http;
-using Annium.Id.Api.Payloads;
-using Annium.Id.Api.Views;
 using Annium.Testing;
 
 namespace Annium.Id.IntegrationTests.Controllers
@@ -15,7 +15,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         {
             // arrange
             var(user, tokens) = await LogUserInAsync();
-            var p = new CompanyClaimPayload() { Key = "one" };
+            var p = new CreateCompanyClaimRequest() { Key = "one" };
 
             // act
             var response = await id.Post($"/apps/{Guid.NewGuid()}/company-claims").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
@@ -29,7 +29,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         {
             // arrange
             var(user, tokens) = await LogUserInAsync();
-            var p = new CompanyClaimPayload() { Key = "one", Name = "First Claim" };
+            var p = new CreateCompanyClaimRequest() { Key = "one", Name = "First Claim" };
 
             // act
             var response = await id.Post($"/apps/{Guid.NewGuid()}/company-claims").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
@@ -45,7 +45,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var(owner, ownerTokens) = await LogUserInAsync("owner", "superpass", "some@email.com");
             var app = await CreateAppAsync(ownerTokens.AccessToken);
             var(user, tokens) = await LogUserInAsync();
-            var p = new CompanyClaimPayload() { Key = "one", Name = "First Claim" };
+            var p = new CreateCompanyClaimRequest() { Key = "one", Name = "First Claim" };
 
             // act
             var response = await id.Post($"/apps/{app.Id}/company-claims").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
@@ -55,12 +55,12 @@ namespace Annium.Id.IntegrationTests.Controllers
         }
 
         [Fact]
-        public async Task Create_NonUniqueKey_Conflict()
+        public async Task Create_NonUniqueKey_BadRequest()
         {
             // arrange
             var(user, tokens) = await LogUserInAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
-            var p = new CompanyClaimPayload() { Key = "one", Name = "First Claim" };
+            var p = new CreateCompanyClaimRequest() { Key = "one", Name = "First Claim" };
 
             await id.Post($"/apps/{app.Id}/company-claims").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
 
@@ -68,7 +68,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var response = await id.Post($"/apps/{app.Id}/company-claims").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
 
             // assert
-            response.StatusCode.IsEqual(HttpStatusCode.Conflict);
+            response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
         }
 
         [Fact]
@@ -112,7 +112,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var claim = await CreateCompanyClaimAsync(tokens.AccessToken, app.Id);
 
             // act
-            var claims = await id.Get($"/apps/{app.Id}/company-claims").BearerAuthorization(tokens.AccessToken).AsAsync<CompanyClaimView[]>();
+            var claims = (await id.Get($"/apps/{app.Id}/company-claims").BearerAuthorization(tokens.AccessToken).AsResultAsync<CompanyClaimResponse[]>()).Data;
 
             // assert
             claims.Has(1);
@@ -126,7 +126,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var(user, tokens) = await LogUserInAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
             var claim = await CreateCompanyClaimAsync(tokens.AccessToken, app.Id);
-            var u = new CompanyClaimPayload { Key = "one" };
+            var u = new UpdateCompanyClaimRequest { Key = "one" };
 
             // act
             var response = await id.Put($"/apps/{app.Id}/company-claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
@@ -142,7 +142,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var(user, tokens) = await LogUserInAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
             var claim = await CreateCompanyClaimAsync(tokens.AccessToken, app.Id);
-            var u = new CompanyClaimPayload { Key = "one", Name = "One Claim" };
+            var u = new UpdateCompanyClaimRequest { Key = "one", Name = "One Claim" };
 
             // act
             var response = await id.Put($"/apps/{Guid.NewGuid()}/company-claims/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
@@ -159,7 +159,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var app = await CreateAppAsync(ownerTokens.AccessToken);
             var claim = await CreateCompanyClaimAsync(ownerTokens.AccessToken, app.Id);
             var(user, tokens) = await LogUserInAsync();
-            var u = new CompanyClaimPayload { Key = "one", Name = "One Claim" };
+            var u = new UpdateCompanyClaimRequest { Key = "one", Name = "One Claim" };
 
             // act
             var response = await id.Put($"/apps/{app.Id}/company-claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
@@ -175,7 +175,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var(user, tokens) = await LogUserInAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
             var claim = await CreateCompanyClaimAsync(tokens.AccessToken, app.Id);
-            var u = new CompanyClaimPayload { Key = "one", Name = "One Claim" };
+            var u = new UpdateCompanyClaimRequest { Key = "one", Name = "One Claim" };
 
             // act
             var response = await id.Put($"/apps/{app.Id}/company-claims/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
@@ -192,7 +192,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var app1 = await CreateAppAsync(tokens.AccessToken);
             var app2 = await CreateAppAsync(tokens.AccessToken, "other", "Other App");
             var claim = await CreateCompanyClaimAsync(tokens.AccessToken, app1.Id);
-            var u = new CompanyClaimPayload { Key = "one", Name = "One Claim" };
+            var u = new UpdateCompanyClaimRequest { Key = "one", Name = "One Claim" };
 
             // act
             var response = await id.Put($"/apps/{app2.Id}/company-claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
@@ -208,7 +208,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var(user, tokens) = await LogUserInAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
             var claim = await CreateCompanyClaimAsync(tokens.AccessToken, app.Id);
-            var u = new CompanyClaimPayload { Key = "other", Name = "One Claim" };
+            var u = new UpdateCompanyClaimRequest { Key = "other", Name = "One Claim" };
             await CreateCompanyClaimAsync(tokens.AccessToken, app.Id, u.Key, u.Name);
 
             // act
@@ -225,16 +225,13 @@ namespace Annium.Id.IntegrationTests.Controllers
             var(user, tokens) = await LogUserInAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
             var claim = await CreateCompanyClaimAsync(tokens.AccessToken, app.Id);
-            var u = new CompanyClaimPayload { Key = "one", Name = "One Claim" };
+            var u = new UpdateCompanyClaimRequest { Key = "one", Name = "One Claim" };
 
             // act
-            var response = await id.Put($"/apps/{app.Id}/company-claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).AsAsync<CompanyClaimView>();
+            var response = await id.Put($"/apps/{app.Id}/company-claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
 
             // assert
-            response.Id.IsEqual(claim.Id);
-            response.AppId.IsEqual(app.Id);
-            response.Key.IsEqual(u.Key);
-            response.Name.IsEqual(u.Name);
+            response.StatusCode.IsEqual(HttpStatusCode.OK);
         }
 
         [Fact]
@@ -251,15 +248,16 @@ namespace Annium.Id.IntegrationTests.Controllers
         }
 
         [Fact]
-        public async Task Delete_NotOwner_NotFound()
+        public async Task Delete_NotOwner_Forbidden()
         {
             // arrange
             var(owner, ownerTokens) = await LogUserInAsync("owner", "superpass", "some@email.com");
             var app = await CreateAppAsync(ownerTokens.AccessToken);
+            var claim = await CreateCompanyClaimAsync(ownerTokens.AccessToken, app.Id);
             var(user, tokens) = await LogUserInAsync();
 
             // act
-            var response = await id.Delete($"/apps/{app.Id}/company-claims/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await id.Delete($"/apps/{app.Id}/company-claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -307,7 +305,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var response = await id.Delete($"/apps/{app.Id}/company-claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
 
             // assert
-            response.StatusCode.IsEqual(HttpStatusCode.NoContent);
+            response.StatusCode.IsEqual(HttpStatusCode.OK);
         }
     }
 }

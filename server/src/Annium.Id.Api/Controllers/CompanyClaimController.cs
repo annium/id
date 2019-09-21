@@ -1,16 +1,11 @@
 using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Annium.AspNetCore.Extensions;
-using Annium.Core.Mapper;
 using Annium.Core.Mediator;
-using Annium.Id.Api.Payloads;
-using Annium.Id.Api.Views;
 using Annium.Id.AspNetCore;
-using Annium.Id.Core;
-using Annium.Id.Db.Repositories;
-using Annium.Id.Domain.Entities;
-using Annium.Localization.Abstractions;
+using Annium.Id.ViewModels.CompanyClaims.Requests;
+using Annium.Id.ViewModels.CompanyClaims.Responses;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Annium.Id.Api.Controllers
@@ -19,129 +14,48 @@ namespace Annium.Id.Api.Controllers
     [Route("apps/{appId:guid}/company-claims")]
     public class CompanyClaimController : ServerController
     {
-        private readonly ITokenAccessor tokenAccessor;
-        private readonly IAppRepository appRepository;
-        private readonly ICompanyClaimRepository claimRepository;
-        private readonly IMapper mapper;
-
         public CompanyClaimController(
-            ITokenAccessor tokenAccessor,
-            IAppRepository appRepository,
-            ICompanyClaimRepository claimRepository,
-            IMapper mapper,
-            IMediator mediator,
-            ILocalizer<CompanyClaimController> localizer
+            IMediator mediator
         ) : base(mediator)
         {
-            this.tokenAccessor = tokenAccessor;
-            this.appRepository = appRepository;
-            this.claimRepository = claimRepository;
-            this.mapper = mapper;
+
         }
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> CreateCompanyClaimAsync(Guid appId, [FromBody] CompanyClaimPayload claimPayload)
+        public Task<IActionResult> CreateCompanyClaimAsync(Guid appId, [FromBody] CreateCompanyClaimRequest request)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            request.AppId = appId;
 
-            var(app, result) = await VerifyAppOwnerAsync(appId, "create claim");
-            if (result != null)
-                return result;
-
-            if ((await claimRepository.FindByKeyAsync(app.Id, claimPayload.Key)) != null)
-                return Conflict($"Claim key {claimPayload.Key} is already used");
-
-            var claim = new CompanyClaim(app.Id, claimPayload.Key, claimPayload.Name);
-            claim = await claimRepository.CreateAsync(claim);
-
-            return Ok(mapper.Map<CompanyClaimView>(claim));
+            return HandleAsync<CreateCompanyClaimRequest, Guid>(request);
         }
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> ListCompanyClaimsAsync(Guid appId)
+        public Task<IActionResult> ListCompanyClaimsAsync(Guid appId)
         {
-            var(app, result) = await VerifyAppAsync(appId);
-            if (result != null)
-                return result;
+            var request = new ListCompanyClaimsRequest { AppId = appId };
 
-            var claims = await claimRepository.GetAllAsync(appId);
-
-            return Ok(claims.Select(mapper.Map<CompanyClaimView>).ToArray());
+            return HandleAsync<ListCompanyClaimsRequest, IEnumerable<CompanyClaimResponse>>(request);
         }
 
         [HttpPut("{claimId:guid}")]
         [Authorize]
-        public async Task<IActionResult> UpdateCompanyClaimAsync(Guid appId, Guid claimId, [FromBody] CompanyClaimPayload claimPayload)
+        public Task<IActionResult> UpdateCompanyClaimAsync(Guid appId, Guid claimId, [FromBody] UpdateCompanyClaimRequest request)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            request.AppId = appId;
+            request.ClaimId = claimId;
 
-            var(app, claim, result) = await VerifyAppOwnerClaimAsync(appId, claimId, "update claim");
-            if (result != null)
-                return result;
-
-            if (claimPayload.Key != claim.Key && (await claimRepository.FindByKeyAsync(app.Id, claimPayload.Key)) != null)
-                return Conflict($"Claim key {claimPayload.Key} is already used");
-
-            claim.Key = claimPayload.Key;
-            claim.Name = claimPayload.Name;
-
-            claim = await claimRepository.UpdateAsync(claim);
-
-            return Ok(mapper.Map<CompanyClaimView>(claim));
+            return HandleAsync(request);
         }
 
         [HttpDelete("{claimId:guid}")]
         [Authorize]
-        public async Task<IActionResult> DeleteCompanyClaimAsync(Guid appId, Guid claimId)
+        public Task<IActionResult> DeleteCompanyClaimAsync(Guid appId, Guid claimId)
         {
-            var(app, claim, result) = await VerifyAppOwnerClaimAsync(appId, claimId, "delete claim");
-            if (result != null)
-                return result;
+            var request = new DeleteCompanyClaimRequest { AppId = appId, ClaimId = claimId };
 
-            await claimRepository.DeleteByIdAsync(claim.Id);
-
-            return NoContent();
-        }
-
-        private async Task<ValueTuple<App, CompanyClaim, IActionResult>> VerifyAppOwnerClaimAsync(Guid appId, Guid claimId, string operation)
-        {
-            var(app, result) = await VerifyAppOwnerAsync(appId, operation);
-            if (result != null)
-                return (null, null, result);
-
-            var claim = await claimRepository.GetByIdAsync(claimId);
-            if (claim == null)
-                return (null, null, NotFound("Claim not found"));
-
-            if (claim.AppId != app.Id)
-                return (null, null, Forbidden("Claim belongs to another application"));
-
-            return (app, claim, null);
-        }
-
-        private async Task<ValueTuple<App, IActionResult>> VerifyAppOwnerAsync(Guid appId, string operation)
-        {
-            var(app, result) = await VerifyAppAsync(appId);
-            if (result != null)
-                return (null, result);
-
-            if (tokenAccessor.GetBaseToken().UserId != app.OwnerId)
-                return (null, Forbidden($"Need to be application owner to {operation}"));
-
-            return (app, null);
-        }
-
-        private async Task<ValueTuple<App, IActionResult>> VerifyAppAsync(Guid appId)
-        {
-            var app = await appRepository.GetByIdAsync(appId);
-            if (app == null)
-                return (null, NotFound("Application not found"));
-
-            return (app, null);
+            return HandleAsync(request);
         }
     }
 }
