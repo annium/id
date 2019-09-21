@@ -55,6 +55,22 @@ namespace Annium.Id.IntegrationTests.Controllers
         }
 
         [Fact]
+        public async Task Create_NonParentOwner_Forbidden()
+        {
+            // arrange
+            var(owner, ownerTokens) = await LogUserInAsync("owner", "ownerpass", "owner@owner.com");
+            var parent = await CreateCompanyAsync(ownerTokens.AccessToken, "parent", "Parent");
+            var(user, tokens) = await LogUserInAsync();
+            var payload = new RegisterCompanyRequest() { ParentId = parent.Id, Key = "demo", Name = "Demo Company" };
+
+            // act
+            var response = await id.Post("/companies").BearerAuthorization(tokens.AccessToken).JsonContent(payload).RunAsync();
+
+            // assert
+            response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
+        }
+
+        [Fact]
         public async Task Create_ValidPayload_Ok()
         {
             // arrange
@@ -188,6 +204,23 @@ namespace Annium.Id.IntegrationTests.Controllers
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        }
+
+        [Fact]
+        public async Task Update_NonParentOwner_Forbidden()
+        {
+            // arrange
+            var(owner, ownerTokens) = await LogUserInAsync("owner", "ownerpass", "owner@owner.com");
+            var parent = await CreateCompanyAsync(ownerTokens.AccessToken, "parent", "Parent");
+            var(user, tokens) = await LogUserInAsync();
+            var company = await CreateCompanyAsync(tokens.AccessToken);
+            var payload = new UpdateCompanyRequest() { ParentId = parent.Id, Key = "demo", Name = "Demo Company" };
+
+            // act
+            var response = await id.Put($"/companies/{company.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(payload).RunAsync();
+
+            // assert
+            response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
         }
 
         [Fact]

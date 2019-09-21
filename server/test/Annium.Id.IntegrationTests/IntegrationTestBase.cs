@@ -187,7 +187,6 @@ namespace Annium.Id.IntegrationTests
             var request = new RegisterCompanyRequest { ParentId = parentId, Key = key, Name = name };
 
             var companyId = (await id.Post("/companies").BearerAuthorization(accessToken).JsonContent(request).AsResultAsync<Guid>()).Data;
-            Console.WriteLine(companyId);
 
             return (await id.Get($"/companies/{companyId}").BearerAuthorization(accessToken).AsResultAsync<CompanyResponse>()).Data;
         }

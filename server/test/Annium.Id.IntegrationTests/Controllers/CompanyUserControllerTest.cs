@@ -519,13 +519,27 @@ namespace Annium.Id.IntegrationTests.Controllers
             // arrange
             var(owner, ownerTokens) = await LogUserInAsync("owner", "superpass", "some@email.com");
             var company = await CreateCompanyAsync(ownerTokens.AccessToken);
-            var(user, tokens) = await LogUserInAsync();
 
             // act
             var response = await id.Delete($"/companies/{company.Id}/users/{Guid.NewGuid()}").BearerAuthorization(ownerTokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        }
+
+        [Fact]
+        public async Task DeleteUser_NotMember_Forbidden()
+        {
+            // arrange
+            var(owner, ownerTokens) = await LogUserInAsync("owner", "superpass", "some@email.com");
+            var company = await CreateCompanyAsync(ownerTokens.AccessToken);
+            var(user, tokens) = await LogUserInAsync();
+
+            // act
+            var response = await id.Delete($"/companies/{company.Id}/users/{user.Id}").BearerAuthorization(ownerTokens.AccessToken).RunAsync();
+
+            // assert
+            response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
         }
 
         [Fact]
