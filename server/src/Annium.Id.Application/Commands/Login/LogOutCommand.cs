@@ -5,14 +5,14 @@ using Annium.Id.Core;
 
 namespace Annium.Id.Application.Commands.Login
 {
-    public class LogUserOutCommand : ICommand
+    public class LogOutCommand : ICommand
     {
         public Guid LoginId { get; private set; }
     }
 
-    internal class LogUserOutCommandComposer : Composer<LogUserOutCommand>
+    internal class LogOutCommandComposer : Composer<LogOutCommand>
     {
-        public LogUserOutCommandComposer(
+        public LogOutCommandComposer(
             ITokenAccessor tokenAccessor
         )
         {

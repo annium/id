@@ -20,17 +20,17 @@ namespace Annium.Id.Application.Commands.Login
         }
     }
 
-    internal class UpdateUserTokenCommandValidator : Validator<UpdateTokensCommand>
+    internal class UpdateTokensCommandValidator : Validator<UpdateTokensCommand>
     {
-        public UpdateUserTokenCommandValidator()
+        public UpdateTokensCommandValidator()
         {
             Field(e => e.RefreshToken).Required();
         }
     }
 
-    internal class UpdateUserTokenCommandComposer : Composer<UpdateTokensCommand>
+    internal class UpdateTokensCommandComposer : Composer<UpdateTokensCommand>
     {
-        public UpdateUserTokenCommandComposer(
+        public UpdateTokensCommandComposer(
             IUserLoginRepository userLoginRepository
         )
         {

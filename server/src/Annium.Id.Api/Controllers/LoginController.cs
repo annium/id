@@ -20,48 +20,48 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpPost("login")]
-        public Task<IActionResult> LoginAsync([FromBody] LogUserInRequest request)
+        public Task<IActionResult> LoginAsync([FromBody] LogInRequest request)
         {
             // TODO: perhaps, add info about companies, user is member of
-            return HandleAsync<LogUserInRequest, TokensResponse>(request);
+            return HandleAsync<LogInRequest, TokensResponse>(request);
         }
 
         [HttpDelete("logout")]
         [Authorize]
         public Task<IActionResult> LogoutAsync()
         {
-            return HandleAsync(new LogUserOutRequest());
+            return HandleAsync(new LogOutRequest());
         }
 
         [HttpPut("token")]
-        public Task<IActionResult> UpdateTokenAsync([FromQuery] UpdateUserTokenRequest request)
+        public Task<IActionResult> UpdateTokenAsync([FromQuery] UpdateTokensRequest request)
         {
-            return HandleAsync<UpdateUserTokenRequest, TokensResponse>(request);
+            return HandleAsync<UpdateTokensRequest, TokensResponse>(request);
         }
 
         [HttpPost("apps/{appId:guid}/login")]
-        public Task<IActionResult> LoginAppAsync(Guid appId, [FromBody] LogUserInAppRequest request)
+        public Task<IActionResult> LoginAppAsync(Guid appId, [FromBody] LogInAppRequest request)
         {
             request.AppId = appId;
 
-            return HandleAsync<LogUserInAppRequest, TokensResponse>(request);
+            return HandleAsync<LogInAppRequest, TokensResponse>(request);
         }
 
         [HttpDelete("apps/{appId:guid}/logout")]
         [Authorize]
         public Task<IActionResult> LogoutAppAsync(Guid appId)
         {
-            var request = new LogUserOutAppRequest { AppId = appId };
+            var request = new LogOutAppRequest { AppId = appId };
 
             return HandleAsync(request);
         }
 
         [HttpPut("apps/{appId:guid}/token")]
-        public Task<IActionResult> UpdateTokenAsync(Guid appId, [FromQuery] UpdateUserAppTokenRequest request)
+        public Task<IActionResult> UpdateTokenAsync(Guid appId, [FromQuery] UpdateAppTokenRequest request)
         {
             request.AppId = appId;
 
-            return HandleAsync<UpdateUserAppTokenRequest, TokensResponse>(request);
+            return HandleAsync<UpdateAppTokenRequest, TokensResponse>(request);
         }
     }
 }

@@ -24,12 +24,12 @@ namespace Annium.Id.ViewModels
             // TODO: instead of ignores, use direct maps
             #region Users
             cfg.Map<UnregisterMeRequest, UnregisterMeCommand>().Ignore(t => t.MyId);
-            cfg.Map<LogUserOutRequest, LogUserOutCommand>().Ignore(t => t.LoginId);
+            cfg.Map<LogOutRequest, LogOutCommand>().Ignore(t => t.LoginId);
             cfg.Map<GetMeRequest, GetMeQuery>().Ignore(t => t.User);
             #endregion
             #region Apps
             cfg.Map<SetAppOwnerRequest, SetAppOwnerCommand>().Ignore(t => t.MyId);
-            cfg.Map<LogUserOutRequest, LogUserOutCommand>().Ignore(t => t.LoginId);
+            cfg.Map<LogOutRequest, LogOutCommand>().Ignore(t => t.LoginId);
             cfg.Map<GetMeRequest, GetMeQuery>().Ignore(t => t.User);
             #endregion
         }

@@ -7,14 +7,14 @@ using Annium.Id.Domain.Entities;
 
 namespace Annium.Id.Application.Commands.Login
 {
-    public class UpdateUserAppTokenCommand : ICommand
+    public class UpdateAppTokenCommand : ICommand
     {
         public Guid AppId { get; }
         public Guid RefreshToken { get; }
         public App App { get; private set; }
         public UserAppLogin Login { get; private set; }
 
-        public UpdateUserAppTokenCommand(
+        public UpdateAppTokenCommand(
             Guid appId,
             Guid refreshToken
         )
@@ -24,18 +24,18 @@ namespace Annium.Id.Application.Commands.Login
         }
     }
 
-    internal class UpdateUserAppTokenCommandValidator : Validator<UpdateUserAppTokenCommand>
+    internal class UpdateAppTokenCommandValidator : Validator<UpdateAppTokenCommand>
     {
-        public UpdateUserAppTokenCommandValidator()
+        public UpdateAppTokenCommandValidator()
         {
             Field(e => e.AppId).Required();
             Field(e => e.RefreshToken).Required();
         }
     }
 
-    internal class UpdateUserAppTokenCommandComposer : Composer<UpdateUserAppTokenCommand>
+    internal class UpdateAppTokenCommandComposer : Composer<UpdateAppTokenCommand>
     {
-        public UpdateUserAppTokenCommandComposer(
+        public UpdateAppTokenCommandComposer(
             IAppRepository appRepository,
             IUserAppLoginRepository userAppLoginRepository
         )

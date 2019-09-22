@@ -1,4 +1,3 @@
-using System;
 using Annium.Architecture.CQRS.Commands;
 using Annium.Extensions.Composition;
 using Annium.Extensions.Validation;
@@ -7,44 +6,37 @@ using Annium.Id.Domain.Entities;
 
 namespace Annium.Id.Application.Commands.Login
 {
-    public class LogUserInAppCommand : ICommand
+    public class LogInCommand : ICommand
     {
-        public Guid AppId { get; }
         public string Login { get; }
         public string Password { get; }
-        public App App { get; private set; }
         public User User { get; private set; }
 
-        public LogUserInAppCommand(
-            Guid appId,
+        public LogInCommand(
             string login,
             string password
         )
         {
-            AppId = appId;
             Login = login;
             Password = password;
         }
     }
 
-    internal class LogUserInAppCommandValidator : Validator<LogUserInAppCommand>
+    internal class LogInCommandValidator : Validator<LogInCommand>
     {
-        public LogUserInAppCommandValidator()
+        public LogInCommandValidator()
         {
-            Field(e => e.AppId).Required();
             Field(e => e.Login).Required().Length(3, 50);
             Field(e => e.Password).Required().Length(8, 50);
         }
     }
 
-    internal class LogUserInAppCommandComposer : Composer<LogUserInAppCommand>
+    internal class LogInCommandComposer : Composer<LogInCommand>
     {
-        public LogUserInAppCommandComposer(
-            IAppRepository appRepository,
+        public LogInCommandComposer(
             IUserRepository userRepository
         )
         {
-            Field(c => c.App).LoadWith(ctx => appRepository.GetByIdAsync(ctx.Root.AppId));
             Field(c => c.User).LoadWith(ctx => userRepository.FindByLoginAsync(ctx.Root.Login));
         }
     }

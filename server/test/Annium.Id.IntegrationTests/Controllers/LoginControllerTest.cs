@@ -15,7 +15,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         {
             // arrange
             var user = await RegisterUserAsync();
-            var payload = new LogUserInRequest { Login = "uniquelogin", Password = "asda" };
+            var payload = new LogInRequest { Login = "uniquelogin", Password = "asda" };
 
             // act
             var response = await id.Post("/me/login").JsonContent(payload).RunAsync();
@@ -29,7 +29,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         {
             // arrange
             var user = await RegisterUserAsync();
-            var payload = new LogUserInRequest { Login = "uniquelogin", Password = "asdaasda" };
+            var payload = new LogInRequest { Login = "uniquelogin", Password = "asdaasda" };
 
             // act
             var response = await id.Post("/me/login").JsonContent(payload).RunAsync();
@@ -43,7 +43,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         {
             // arrange
             var user = await RegisterUserAsync();
-            var payload = new LogUserInRequest { Login = "demo", Password = "asdaasda" };
+            var payload = new LogInRequest { Login = "demo", Password = "asdaasda" };
 
             // act
             var response = await id.Post("/me/login").JsonContent(payload).RunAsync();
@@ -57,7 +57,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         {
             // arrange
             var user = await RegisterUserAsync();
-            var payload = new LogUserInRequest { Login = "demo", Password = "testtest" };
+            var payload = new LogInRequest { Login = "demo", Password = "testtest" };
 
             // act
             var response = await id.Post("/me/login").JsonContent(payload).RunAsync();
@@ -112,7 +112,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             // arrange
             var(user, tokens) = await LogUserInAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
-            var payload = new LogUserInRequest { Login = "uniquelogin", Password = "asda" };
+            var payload = new LogInRequest { Login = "uniquelogin", Password = "asda" };
 
             // act
             var response = await id.Post($"/me/apps/{app.Id}/login").JsonContent(payload).RunAsync();
@@ -127,7 +127,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             // arrange
             var(user, tokens) = await LogUserInAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
-            var payload = new LogUserInRequest { Login = "uniquelogin", Password = "asdaasda" };
+            var payload = new LogInRequest { Login = "uniquelogin", Password = "asdaasda" };
 
             // act
             var response = await id.Post($"/me/apps/{app.Id}/login").JsonContent(payload).RunAsync();
@@ -142,7 +142,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             // arrange
             var(user, tokens) = await LogUserInAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
-            var payload = new LogUserInRequest { Login = "demo", Password = "asdaasda" };
+            var payload = new LogInRequest { Login = "demo", Password = "asdaasda" };
 
             // act
             var response = await id.Post($"/me/apps/{app.Id}/login").JsonContent(payload).RunAsync();
@@ -157,7 +157,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             // arrange
             var(user, tokens) = await LogUserInAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
-            var payload = new LogUserInRequest { Login = "demo", Password = "testtest" };
+            var payload = new LogInRequest { Login = "demo", Password = "testtest" };
 
             // act
             var response = await id.Post($"/me/apps/{app.Id}/login").JsonContent(payload).RunAsync();

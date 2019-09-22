@@ -49,7 +49,7 @@ namespace Annium.Id.IntegrationTests
             var createUserRequest = new RegisterMeRequest { Login = login, Password = password, Email = email };
             await id.Post("/me").JsonContent(createUserRequest).AsResultAsync<Guid>();
 
-            var logUserInRequest = new LogUserInRequest { Login = login, Password = password };
+            var logUserInRequest = new LogInRequest { Login = login, Password = password };
 
             var token = (await id.Post("/me/login").JsonContent(logUserInRequest).AsResultAsync<TokensResponse>()).Data;
 
@@ -77,7 +77,7 @@ namespace Annium.Id.IntegrationTests
             string password = "testtest"
         )
         {
-            var request = new LogUserInAppRequest { Login = login, Password = password };
+            var request = new LogInAppRequest { Login = login, Password = password };
 
             var tokenResult = await id.Post($"/me/apps/{appId}/login").JsonContent(request).AsResultAsync<TokensResponse>();
 
@@ -94,7 +94,7 @@ namespace Annium.Id.IntegrationTests
         {
             var(user, tokens) = await LogUserInAsync(login, password, email);
             var app = await CreateAppAsync(tokens.AccessToken, appKey, appName);
-            var request = new LogUserInRequest { Login = login, Password = password };
+            var request = new LogInRequest { Login = login, Password = password };
 
             var appTokens = (await id.Post($"/me/apps/{app.Id}/login").JsonContent(request).AsResultAsync<TokensResponse>()).Data;
 

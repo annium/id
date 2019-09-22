@@ -4,10 +4,9 @@ using Annium.Id.Application.Commands.Login;
 
 namespace Annium.Id.ViewModels.Login.Requests
 {
-    public class LogUserInAppRequest : IRequest<LogUserInAppCommand>
+    public class UpdateAppTokenRequest : IRequest<UpdateAppTokenCommand>
     {
         public Guid AppId { get; set; }
-        public string Login { get; set; }
-        public string Password { get; set; }
+        public Guid RefreshToken { get; set; }
     }
 }

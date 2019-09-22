@@ -12,7 +12,7 @@ using NodaTime;
 
 namespace Annium.Id.Application.CommandHandlers
 {
-    internal class LoginCommandHandler : ICommandHandler<LogUserInCommand, Tokens>, ICommandHandler<LogUserOutCommand>, ICommandHandler<UpdateTokensCommand, Tokens>, ICommandHandler<LogUserInAppCommand, Tokens>, ICommandHandler<LogUserOutAppCommand>, ICommandHandler<UpdateUserAppTokenCommand, Tokens>
+    internal class LoginCommandHandler : ICommandHandler<LogInCommand, Tokens>, ICommandHandler<LogOutCommand>, ICommandHandler<UpdateTokensCommand, Tokens>, ICommandHandler<LogInAppCommand, Tokens>, ICommandHandler<LogOutAppCommand>, ICommandHandler<UpdateAppTokenCommand, Tokens>
     {
         private static readonly Duration refreshTokenLifeTime = Duration.FromDays(1);
         private readonly Func<Instant> getInstant;
@@ -40,7 +40,7 @@ namespace Annium.Id.Application.CommandHandlers
         }
 
         public async Task<IStatusResult<OperationStatus, Tokens>> HandleAsync(
-            LogUserInCommand request,
+            LogInCommand request,
             CancellationToken cancellationToken
         )
         {
@@ -63,7 +63,7 @@ namespace Annium.Id.Application.CommandHandlers
         }
 
         public async Task<IStatusResult<OperationStatus>> HandleAsync(
-            LogUserOutCommand request,
+            LogOutCommand request,
             CancellationToken cancellationToken
         )
         {
@@ -88,7 +88,7 @@ namespace Annium.Id.Application.CommandHandlers
         }
 
         public async Task<IStatusResult<OperationStatus, Tokens>> HandleAsync(
-            LogUserInAppCommand request,
+            LogInAppCommand request,
             CancellationToken cancellationToken
         )
         {
@@ -111,7 +111,7 @@ namespace Annium.Id.Application.CommandHandlers
         }
 
         public async Task<IStatusResult<OperationStatus>> HandleAsync(
-            LogUserOutAppCommand request,
+            LogOutAppCommand request,
             CancellationToken cancellationToken
         )
         {
@@ -121,7 +121,7 @@ namespace Annium.Id.Application.CommandHandlers
         }
 
         public async Task<IStatusResult<OperationStatus, Tokens>> HandleAsync(
-            UpdateUserAppTokenCommand request,
+            UpdateAppTokenCommand request,
             CancellationToken cancellationToken
         )
         {
