@@ -206,11 +206,11 @@ namespace Annium.Id.IntegrationTests
             string name = "First claim"
         )
         {
-            var request = new CreateCompanyClaimRequest { Key = key, Name = name };
+            var request = new CreateCompanyClaimRequest { AppId = appId, Key = key, Name = name };
 
-            var claimId = (await id.Post($"/apps/{appId}/company-claims").BearerAuthorization(accessToken).JsonContent(request).AsResultAsync<Guid>()).Data;
+            var claimId = (await id.Post("/companies/claims").BearerAuthorization(accessToken).JsonContent(request).AsResultAsync<Guid>()).Data;
 
-            var claim = (await id.Get($"/apps/{appId}/company-claims").BearerAuthorization(accessToken).AsResultAsync<CompanyClaimResponse[]>()).Data
+            var claim = (await id.Get("/companies/claims").BearerAuthorization(accessToken).Param("appId", appId).AsResultAsync<CompanyClaimResponse[]>()).Data
                 .First(c => c.Id == claimId);
 
             return claim;

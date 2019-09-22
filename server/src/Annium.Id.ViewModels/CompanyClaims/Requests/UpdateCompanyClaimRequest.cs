@@ -6,7 +6,6 @@ namespace Annium.Id.ViewModels.CompanyClaims.Requests
 {
     public class UpdateCompanyClaimRequest : IRequest<UpdateCompanyClaimCommand>
     {
-        public Guid AppId { get; set; }
         public Guid ClaimId { get; set; }
         public string Key { get; set; }
         public string Name { get; set; }

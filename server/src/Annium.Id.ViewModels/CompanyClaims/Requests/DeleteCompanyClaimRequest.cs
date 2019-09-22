@@ -6,7 +6,6 @@ namespace Annium.Id.ViewModels.CompanyClaims.Requests
 {
     public class DeleteCompanyClaimRequest : IRequest<DeleteCompanyClaimCommand>
     {
-        public Guid AppId { get; set; }
         public Guid ClaimId { get; set; }
     }
 }

@@ -10,8 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Annium.Id.Api.Controllers
 {
-    // TODO: change to apps/{appId:guid}/companies/claims
-    [Route("apps/{appId:guid}/company-claims")]
+    [Route("companies/claims")]
     public class CompanyClaimController : ServerController
     {
         public CompanyClaimController(
@@ -23,10 +22,8 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPost]
         [Authorize]
-        public Task<IActionResult> CreateCompanyClaimAsync(Guid appId, [FromBody] CreateCompanyClaimRequest request)
+        public Task<IActionResult> CreateCompanyClaimAsync([FromBody] CreateCompanyClaimRequest request)
         {
-            request.AppId = appId;
-
             return HandleAsync<CreateCompanyClaimRequest, Guid>(request);
         }
 
@@ -41,9 +38,8 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPut("{claimId:guid}")]
         [Authorize]
-        public Task<IActionResult> UpdateCompanyClaimAsync(Guid appId, Guid claimId, [FromBody] UpdateCompanyClaimRequest request)
+        public Task<IActionResult> UpdateCompanyClaimAsync(Guid claimId, [FromBody] UpdateCompanyClaimRequest request)
         {
-            request.AppId = appId;
             request.ClaimId = claimId;
 
             return HandleAsync(request);
@@ -51,9 +47,9 @@ namespace Annium.Id.Api.Controllers
 
         [HttpDelete("{claimId:guid}")]
         [Authorize]
-        public Task<IActionResult> DeleteCompanyClaimAsync(Guid appId, Guid claimId)
+        public Task<IActionResult> DeleteCompanyClaimAsync(Guid claimId)
         {
-            var request = new DeleteCompanyClaimRequest { AppId = appId, ClaimId = claimId };
+            var request = new DeleteCompanyClaimRequest { ClaimId = claimId };
 
             return HandleAsync(request);
         }
