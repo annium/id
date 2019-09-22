@@ -7,7 +7,7 @@ namespace Annium.Id.Api.Tools
 {
     internal class IdentityDataAccessor : IIdentityDataAccessor
     {
-        private IHttpContextAccessor httpContextAccessor;
+        private readonly IHttpContextAccessor httpContextAccessor;
 
         public IdentityDataAccessor(
             IHttpContextAccessor httpContextAccessor

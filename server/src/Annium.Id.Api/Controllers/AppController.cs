@@ -30,7 +30,7 @@ namespace Annium.Id.Api.Controllers
         [HttpGet]
         public Task<IActionResult> ListAppsAsync()
         {
-            return HandleAsync<ListAppsRequest, IEnumerable<AppPublicResponse>>(new ListAppsRequest());
+            return HandleAsync<ListAppsRequest, IEnumerable<AppResponse>>(new ListAppsRequest());
         }
 
         [HttpGet("{appId:guid}")]
@@ -38,7 +38,7 @@ namespace Annium.Id.Api.Controllers
         {
             var request = new GetAppRequest() { AppId = appId };
 
-            return HandleAsync<GetAppRequest, AppPublicResponse>(request);
+            return HandleAsync<GetAppRequest, AppResponse>(request);
         }
 
         [HttpGet("{appId:guid}/token")]

@@ -1,26 +1,22 @@
 using System;
+using Annium.Architecture.ViewModel;
+using Annium.Id.Domain.Entities;
 
-namespace Annium.Id.Api.Views
+namespace Annium.Id.ViewModels.Apps.Responses
 {
-    public class CompanyPrivateView
+    public class AppResponse : IResponse<App>
     {
         public Guid Id { get; }
-        public Guid OwnerId { get; }
-        public Guid? ParentId { get; }
         public string Key { get; }
         public string Name { get; }
 
-        public CompanyPrivateView(
+        public AppResponse(
             Guid id,
-            Guid ownerId,
-            Guid? parentId,
             string key,
             string name
         )
         {
             Id = id;
-            OwnerId = ownerId;
-            ParentId = parentId;
             Key = key;
             Name = name;
         }
