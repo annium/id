@@ -368,10 +368,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var roles = (await id.Get($"/apps/{app.Id}/company-roles").BearerAuthorization(tokens.AccessToken).AsResultAsync<CompanyRoleResponse[]>()).Data;
 
             // assert
-            response.Id.IsEqual(claim.Id);
-            response.Key.IsEqual(claim.Key);
-            response.Name.IsEqual(claim.Name);
-            response.Value.IsEqual(claimValue);
+            response.StatusCode.IsEqual(HttpStatusCode.OK);
             roles.Has(1);
             roles[0].Id.IsEqual(role.Id);
             var c = roles[0].Claims.At(0);

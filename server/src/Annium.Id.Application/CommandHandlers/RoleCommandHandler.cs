@@ -12,14 +12,17 @@ namespace Annium.Id.Application.CommandHandlers
 {
     internal class RoleCommandHandler : ICommandHandler<CreateRoleCommand, Guid>, ICommandHandler<UpdateRoleCommand>, ICommandHandler<AddClaimToRoleCommand>, ICommandHandler<DeleteClaimFromRoleCommand>, ICommandHandler<DeleteRoleCommand>
     {
+        private readonly IAppRepository appRepository;
         private readonly IRoleRepository roleRepository;
         private readonly IRoleClaimRepository roleClaimRepository;
 
         public RoleCommandHandler(
+            IAppRepository appRepository,
             IRoleRepository roleRepository,
             IRoleClaimRepository roleClaimRepository
         )
         {
+            this.appRepository = appRepository;
             this.roleRepository = roleRepository;
             this.roleClaimRepository = roleClaimRepository;
         }
@@ -53,14 +56,11 @@ namespace Annium.Id.Application.CommandHandlers
         )
         {
             var myId = request.MyId;
-            var app = request.App;
+            var app = await appRepository.GetByIdAsync(request.Role.AppId);
             var role = request.Role;
 
             if (myId != app.OwnerId)
                 return Result.Status(OperationStatus.Forbidden).Error($"Need to be application owner to create role");
-
-            if (role.AppId != app.Id)
-                return Result.Status(OperationStatus.Forbidden).Error("Role belongs to another application");
 
             if (request.Key != role.Key && (await roleRepository.FindByKeyAsync(app.Id, request.Key)) != null)
                 return Result.Status(OperationStatus.Conflict).Error($"Role key {request.Key} is already used");
@@ -79,15 +79,12 @@ namespace Annium.Id.Application.CommandHandlers
         )
         {
             var myId = request.MyId;
-            var app = request.App;
+            var app = await appRepository.GetByIdAsync(request.Role.AppId);
             var role = request.Role;
             var claim = request.Claim;
 
             if (myId != app.OwnerId)
                 return Result.Status(OperationStatus.Forbidden).Error($"Need to be application owner to add claim to role");
-
-            if (role.AppId != app.Id)
-                return Result.Status(OperationStatus.Forbidden).Error("Role belongs to another application");
 
             if (claim.AppId != app.Id)
                 return Result.Status(OperationStatus.Forbidden).Error("Claim belongs to another application");
@@ -105,15 +102,12 @@ namespace Annium.Id.Application.CommandHandlers
         )
         {
             var myId = request.MyId;
-            var app = request.App;
+            var app = await appRepository.GetByIdAsync(request.Role.AppId);
             var role = request.Role;
             var claim = request.Claim;
 
             if (myId != app.OwnerId)
                 return Result.Status(OperationStatus.Forbidden).Error($"Need to be application owner to delete claim from role");
-
-            if (role.AppId != app.Id)
-                return Result.Status(OperationStatus.Forbidden).Error("Role belongs to another application");
 
             if (claim.AppId != app.Id)
                 return Result.Status(OperationStatus.Forbidden).Error("Claim belongs to another application");
@@ -129,14 +123,11 @@ namespace Annium.Id.Application.CommandHandlers
         )
         {
             var myId = request.MyId;
-            var app = request.App;
+            var app = await appRepository.GetByIdAsync(request.Role.AppId);
             var role = request.Role;
 
             if (myId != app.OwnerId)
                 return Result.Status(OperationStatus.Forbidden).Error($"Need to be application owner to delete role");
-
-            if (role.AppId != app.Id)
-                return Result.Status(OperationStatus.Forbidden).Error("Role belongs to another application");
 
             await roleRepository.DeleteByIdAsync(role.Id);
 

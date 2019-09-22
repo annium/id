@@ -84,7 +84,7 @@ namespace Annium.Id.IntegrationTests.DemoClient.Controllers
             var role = await CreateRoleAsync(tokens.AccessToken, app.Id, "coo", "Chief Operations Officer");
             await AddRoleToUserAsync(tokens.AccessToken, user.Id, role.Id);
             var claim = await CreateClaimAsync(tokens.AccessToken, app.Id, "paymentsAccess", "Payments Access");
-            await AddClaimToRoleAsync(tokens.AccessToken, app.Id, role.Id, claim.Id, "full");
+            await AddClaimToRoleAsync(tokens.AccessToken, role.Id, claim.Id, "full");
             tokens = await LogUserInAppAsync(app.Id);
 
             // act
@@ -119,7 +119,7 @@ namespace Annium.Id.IntegrationTests.DemoClient.Controllers
             var(user, app, tokens) = await LogUserInCreateAppLoginAppAsync();
             var role = await CreateRoleAsync(tokens.AccessToken, app.Id, "coo", "Chief Operations Officer");
             var claim = await CreateClaimAsync(tokens.AccessToken, app.Id, "paymentsAccess", "Payments Access");
-            await AddClaimToRoleAsync(tokens.AccessToken, app.Id, role.Id, claim.Id, "limited");
+            await AddClaimToRoleAsync(tokens.AccessToken, role.Id, claim.Id, "limited");
             await AddClaimToUserAsync(tokens.AccessToken, user.Id, claim.Id, "full");
             tokens = await LogUserInAppAsync(app.Id);
 

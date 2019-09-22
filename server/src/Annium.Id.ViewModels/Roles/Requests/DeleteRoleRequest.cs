@@ -6,7 +6,6 @@ namespace Annium.Id.ViewModels.Roles.Requests
 {
     public class DeleteRoleRequest : IRequest<DeleteRoleCommand>
     {
-        public Guid AppId { get; set; }
         public Guid RoleId { get; set; }
     }
 }

@@ -108,11 +108,11 @@ namespace Annium.Id.IntegrationTests
             string name = "First role"
         )
         {
-            var request = new CreateRoleRequest { Key = key, Name = name };
+            var request = new CreateRoleRequest { AppId = appId, Key = key, Name = name };
 
-            var roleId = (await id.Post($"/apps/{appId}/roles").BearerAuthorization(accessToken).JsonContent(request).AsResultAsync<Guid>()).Data;
+            var roleId = (await id.Post("/roles").BearerAuthorization(accessToken).JsonContent(request).AsResultAsync<Guid>()).Data;
 
-            var role = (await id.Get($"/apps/{appId}/roles").BearerAuthorization(accessToken).AsResultAsync<RoleResponse[]>()).Data
+            var role = (await id.Get("/roles").BearerAuthorization(accessToken).Param("appId", appId).AsResultAsync<RoleResponse[]>()).Data
                 .First(c => c.Id == roleId);
 
             return role;
@@ -135,9 +135,8 @@ namespace Annium.Id.IntegrationTests
             return claim;
         }
 
-        protected async Task<ClaimValueResponse> AddClaimToRoleAsync(
+        protected Task<IResponse> AddClaimToRoleAsync(
             string accessToken,
-            Guid appId,
             Guid roleId,
             Guid claimId,
             string value = "Some"
@@ -145,15 +144,7 @@ namespace Annium.Id.IntegrationTests
         {
             var request = new AddClaimToRoleRequest { Value = value };
 
-            var response = await id.Post($"/apps/{appId}/roles/{roleId}/claims/{claimId}").BearerAuthorization(accessToken).JsonContent(request).RunAsync();
-            if (!response.IsSuccessStatusCode)
-                return null;
-
-            var role = (await id.Get($"/apps/{appId}/roles").BearerAuthorization(accessToken).AsResultAsync<RoleResponse[]>()).Data
-                .First(c => c.Id == roleId);
-
-            // perhaps, unstable, due value is not unique
-            return role.Claims.First(c => c.Value == value);
+            return id.Post($"/roles/{roleId}/claims/{claimId}").BearerAuthorization(accessToken).JsonContent(request).RunAsync();
         }
 
         protected Task AddRoleToUserAsync(
@@ -225,7 +216,7 @@ namespace Annium.Id.IntegrationTests
             return claim;
         }
 
-        protected async Task<CompanyClaimValueResponse> AddCompanyClaimToCompanyRoleAsync(
+        protected Task<IResponse> AddCompanyClaimToCompanyRoleAsync(
             string accessToken,
             Guid appId,
             Guid roleId,
@@ -235,15 +226,7 @@ namespace Annium.Id.IntegrationTests
         {
             var request = new AddCompanyClaimToCompanyRoleRequest { Value = value };
 
-            var response = await id.Post($"/apps/{appId}/company-roles/{roleId}/claims/{claimId}").BearerAuthorization(accessToken).JsonContent(request).RunAsync();
-            if (!response.IsSuccessStatusCode)
-                return null;
-
-            var role = (await id.Get($"/apps/{appId}/company-roles").BearerAuthorization(accessToken).AsResultAsync<CompanyRoleResponse[]>()).Data
-                .First(c => c.Id == roleId);
-
-            // perhaps, unstable, due value is not unique
-            return role.Claims.First(c => c.Value == value);
+            return id.Post($"/apps/{appId}/company-roles/{roleId}/claims/{claimId}").BearerAuthorization(accessToken).JsonContent(request).RunAsync();
         }
 
         protected Task AddUserToCompanyAsync(

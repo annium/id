@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Annium.Id.Api.Controllers
 {
-    [Route("apps/{appId:guid}/roles")]
+    [Route("roles")]
     public class RoleController : ServerController
     {
         public RoleController(
@@ -22,10 +22,8 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPost]
         [Authorize]
-        public Task<IActionResult> CreateRoleAsync(Guid appId, [FromBody] CreateRoleRequest request)
+        public Task<IActionResult> CreateRoleAsync([FromBody] CreateRoleRequest request)
         {
-            request.AppId = appId;
-
             return HandleAsync<CreateRoleRequest, Guid>(request);
         }
 
@@ -40,9 +38,8 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPut("{roleId:guid}")]
         [Authorize]
-        public Task<IActionResult> UpdateRoleAsync(Guid appId, Guid roleId, [FromBody] UpdateRoleRequest request)
+        public Task<IActionResult> UpdateRoleAsync(Guid roleId, [FromBody] UpdateRoleRequest request)
         {
-            request.AppId = appId;
             request.RoleId = roleId;
 
             return HandleAsync(request);
@@ -50,9 +47,8 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPost("{roleId:guid}/claims/{claimId:guid}")]
         [Authorize]
-        public Task<IActionResult> AddClaimToRoleAsync(Guid appId, Guid roleId, Guid claimId, [FromBody] AddClaimToRoleRequest request)
+        public Task<IActionResult> AddClaimToRoleAsync(Guid roleId, Guid claimId, [FromBody] AddClaimToRoleRequest request)
         {
-            request.AppId = appId;
             request.RoleId = roleId;
             request.ClaimId = claimId;
 
@@ -61,10 +57,9 @@ namespace Annium.Id.Api.Controllers
 
         [HttpDelete("{roleId:guid}/claims/{claimId:guid}")]
         [Authorize]
-        public Task<IActionResult> DeleteClaimFromRoleAsync(Guid appId, Guid roleId, Guid claimId)
+        public Task<IActionResult> DeleteClaimFromRoleAsync(Guid roleId, Guid claimId)
         {
             var request = new DeleteClaimFromRoleRequest();
-            request.AppId = appId;
             request.RoleId = roleId;
             request.ClaimId = claimId;
 
@@ -73,10 +68,9 @@ namespace Annium.Id.Api.Controllers
 
         [HttpDelete("{roleId:guid}")]
         [Authorize]
-        public Task<IActionResult> DeleteRoleAsync(Guid appId, Guid roleId)
+        public Task<IActionResult> DeleteRoleAsync(Guid roleId)
         {
             var request = new DeleteRoleRequest();
-            request.AppId = appId;
             request.RoleId = roleId;
 
             return HandleAsync(request);
