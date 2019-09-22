@@ -12,12 +12,15 @@ namespace Annium.Id.Application.CommandHandlers
 {
     internal class ClaimCommandHandler : ICommandHandler<CreateClaimCommand, Guid>, ICommandHandler<UpdateClaimCommand>, ICommandHandler<DeleteClaimCommand>
     {
+        private readonly IAppRepository appRepository;
         private readonly IClaimRepository claimRepository;
 
         public ClaimCommandHandler(
+            IAppRepository appRepository,
             IClaimRepository claimRepository
         )
         {
+            this.appRepository = appRepository;
             this.claimRepository = claimRepository;
         }
 
@@ -49,14 +52,11 @@ namespace Annium.Id.Application.CommandHandlers
         )
         {
             var myId = request.MyId;
-            var app = request.App;
+            var app = await appRepository.GetByIdAsync(request.Claim.AppId);
             var claim = request.Claim;
 
             if (myId != app.OwnerId)
                 return Result.Status(OperationStatus.Forbidden).Error($"Need to be application owner to update claim");
-
-            if (claim.AppId != app.Id)
-                return Result.Status(OperationStatus.Forbidden).Error("Claim belongs to another application");
 
             if (request.Key != claim.Key && (await claimRepository.FindByKeyAsync(app.Id, request.Key)) != null)
                 return Result.Status(OperationStatus.Conflict).Error($"Claim key {request.Key} is already used");
@@ -75,14 +75,11 @@ namespace Annium.Id.Application.CommandHandlers
         )
         {
             var myId = request.MyId;
-            var app = request.App;
+            var app = await appRepository.GetByIdAsync(request.Claim.AppId);
             var claim = request.Claim;
 
             if (myId != app.OwnerId)
                 return Result.Status(OperationStatus.Forbidden).Error($"Need to be application owner to delete claim");
-
-            if (claim.AppId != app.Id)
-                return Result.Status(OperationStatus.Forbidden).Error("Claim belongs to another application");
 
             await claimRepository.DeleteByIdAsync(claim.Id);
 

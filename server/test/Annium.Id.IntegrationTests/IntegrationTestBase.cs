@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Annium.AspNetCore.IntegrationTesting;
 using Annium.Id.ViewModels.Apps.Requests;
 using Annium.Id.ViewModels.Apps.Responses;
-using Annium.Id.ViewModels.Users.Requests;
 using Annium.Id.ViewModels.Claims.Requests;
 using Annium.Id.ViewModels.Claims.Responses;
 using Annium.Id.ViewModels.Companies.Requests;
@@ -20,6 +19,7 @@ using Annium.Id.ViewModels.Me.Requests;
 using Annium.Id.ViewModels.Me.Responses;
 using Annium.Id.ViewModels.Roles.Requests;
 using Annium.Id.ViewModels.Roles.Responses;
+using Annium.Id.ViewModels.Users.Requests;
 using Annium.Net.Http;
 
 namespace Annium.Id.IntegrationTests
@@ -125,11 +125,11 @@ namespace Annium.Id.IntegrationTests
             string name = "First claim"
         )
         {
-            var request = new CreateClaimRequest { Key = key, Name = name };
+            var request = new CreateClaimRequest { AppId = appId, Key = key, Name = name };
 
-            var claimId = (await id.Post($"/apps/{appId}/claims").BearerAuthorization(accessToken).JsonContent(request).AsResultAsync<Guid>()).Data;
+            var claimId = (await id.Post("/claims").BearerAuthorization(accessToken).JsonContent(request).AsResultAsync<Guid>()).Data;
 
-            var claim = (await id.Get($"/apps/{appId}/claims").BearerAuthorization(accessToken).AsResultAsync<ClaimResponse[]>()).Data
+            var claim = (await id.Get("/claims").BearerAuthorization(accessToken).Param("appId", appId).AsResultAsync<ClaimResponse[]>()).Data
                 .First(c => c.Id == claimId);
 
             return claim;

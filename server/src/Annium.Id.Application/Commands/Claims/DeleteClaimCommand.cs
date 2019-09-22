@@ -10,18 +10,14 @@ namespace Annium.Id.Application.Commands.Claims
 {
     public class DeleteClaimCommand : ICommand
     {
-        public Guid AppId { get; }
         public Guid ClaimId { get; }
         public Guid MyId { get; private set; }
-        public App App { get; private set; }
         public Claim Claim { get; private set; }
 
         public DeleteClaimCommand(
-            Guid appId,
             Guid claimId
         )
         {
-            AppId = appId;
             ClaimId = claimId;
         }
     }
@@ -30,7 +26,6 @@ namespace Annium.Id.Application.Commands.Claims
     {
         public DeleteClaimCommandValidator()
         {
-            Field(c => c.AppId).Required();
             Field(c => c.ClaimId).Required();
         }
     }
@@ -44,7 +39,6 @@ namespace Annium.Id.Application.Commands.Claims
         )
         {
             Field(c => c.MyId).LoadWith(ctx => tokenAccessor.GetBaseToken().UserId);
-            Field(c => c.App).LoadWith(ctx => appRepository.GetByIdAsync(ctx.Root.AppId));
             Field(c => c.Claim).LoadWith(ctx => claimRepository.GetByIdAsync(ctx.Root.ClaimId));
         }
     }
