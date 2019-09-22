@@ -56,7 +56,6 @@ namespace Annium.Id.Core.Implementations
 
             try
             {
-                Microsoft.IdentityModel.Logging.IdentityModelEventSource.ShowPII = true;
                 handler.ValidateToken(tokenString, tvp, out var securityToken);
                 var jwt = (JwtSecurityToken) securityToken;
 

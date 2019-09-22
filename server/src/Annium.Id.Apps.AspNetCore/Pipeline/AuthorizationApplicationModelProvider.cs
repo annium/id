@@ -1,7 +1,7 @@
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 
-namespace Annium.Id.Api.AppAuth
+namespace Annium.Id.Apps.AspNetCore.Pipeline
 {
     internal class AuthorizationApplicationModelProvider : IApplicationModelProvider
     {

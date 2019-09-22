@@ -6,14 +6,15 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
 
-namespace Annium.Id.Api.AppAuth
+namespace Annium.Id.Apps.AspNetCore.Tools
 {
-    internal class BearerTokenAccessor : ITokenAccessor
+    internal class RequestTokenReader
     {
         public ValueTuple<Guid, IActionResult> GetToken(HttpRequest request)
         {
             if (!request.Headers.ContainsKey(HeaderNames.Authorization))
                 return fail(HttpStatusCode.Unauthorized, "Bearer authorization required.");
+
             var authorization = request.Headers[HeaderNames.Authorization]
                 .ToString().Split(' ').Select(e => e.Trim()).ToArray();
             if (authorization.Length != 2)
