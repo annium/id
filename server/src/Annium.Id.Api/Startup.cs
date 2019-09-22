@@ -1,6 +1,5 @@
 using System;
 using Annium.Core.DependencyInjection;
-using Annium.Data.Operations.Serialization;
 using Annium.Id.Api.Payloads;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
