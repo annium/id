@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using Annium.AspNetCore.Extensions;
 using Annium.Core.Mediator;
 using Annium.Id.AspNetCore;
-using Annium.Id.ViewModels.Users.Requests;
-using Annium.Id.ViewModels.Users.Responses;
+using Annium.Id.ViewModels.Me.Requests;
+using Annium.Id.ViewModels.Me.Responses;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Annium.Id.Api.Controllers
@@ -20,31 +20,31 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpPost]
-        public Task<IActionResult> RegisterUserAsync([FromBody] CreateUserRequest request)
+        public Task<IActionResult> RegisterMeAsync([FromBody] RegisterMeRequest request)
         {
-            return HandleAsync<CreateUserRequest, Guid>(request);
+            return HandleAsync<RegisterMeRequest, Guid>(request);
         }
 
         [HttpGet]
         [Authorize]
-        public Task<IActionResult> GetUserAsync()
+        public Task<IActionResult> GetMeAsync()
         {
             // TODO: perhaps, add info about companies, user is member of
-            return  HandleAsync<GetUserRequest, UserPrivateResponse>(new GetUserRequest());
+            return  HandleAsync<GetMeRequest, MeResponse>(new GetMeRequest());
         }
 
         [HttpPut]
         [Authorize]
-        public Task<IActionResult> UpdateUserAsync([FromBody] UpdateUserRequest request)
+        public Task<IActionResult> UpdateMeAsync([FromBody] UpdateMeRequest request)
         {
-            return HandleAsync<UpdateUserRequest>(request);
+            return HandleAsync(request);
         }
 
         [HttpDelete]
         [Authorize]
-        public Task<IActionResult> UnregisterUserAsync()
+        public Task<IActionResult> UnregisterMeAsync()
         {
-            return HandleAsync<DeleteUserRequest>(new DeleteUserRequest());
+            return HandleAsync(new UnregisterMeRequest());
         }
     }
 }

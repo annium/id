@@ -14,10 +14,12 @@ using Annium.Id.ViewModels.CompanyClaims.Responses;
 using Annium.Id.ViewModels.CompanyRoles.Requests;
 using Annium.Id.ViewModels.CompanyRoles.Responses;
 using Annium.Id.ViewModels.CompanyUsers.Requests;
+using Annium.Id.ViewModels.Login.Requests;
+using Annium.Id.ViewModels.Login.Responses;
+using Annium.Id.ViewModels.Me.Requests;
+using Annium.Id.ViewModels.Me.Responses;
 using Annium.Id.ViewModels.Roles.Requests;
 using Annium.Id.ViewModels.Roles.Responses;
-using Annium.Id.ViewModels.Users.Requests;
-using Annium.Id.ViewModels.Users.Responses;
 using Annium.Net.Http;
 
 namespace Annium.Id.IntegrationTests
@@ -27,7 +29,7 @@ namespace Annium.Id.IntegrationTests
         protected IRequest id => GetRequest<Api.Startup<Api.TestServicePack>>();
         protected IRequest demo => GetRequest<Id.DemoClient.Startup<Id.DemoClient.ServicePack>>();
 
-        protected async Task<UserPrivateResponse> RegisterUserAsync(
+        protected async Task<MeResponse> RegisterUserAsync(
             string login = "demo",
             string password = "testtest",
             string email = "demo@demo.com"
@@ -38,20 +40,20 @@ namespace Annium.Id.IntegrationTests
             return user;
         }
 
-        protected async Task<ValueTuple<UserPrivateResponse, UserTokenResponse>> LogUserInAsync(
+        protected async Task<ValueTuple<MeResponse, TokensResponse>> LogUserInAsync(
             string login = "demo",
             string password = "testtest",
             string email = "demo@demo.com"
         )
         {
-            var createUserRequest = new CreateUserRequest { Login = login, Password = password, Email = email };
+            var createUserRequest = new RegisterMeRequest { Login = login, Password = password, Email = email };
             await id.Post("/me").JsonContent(createUserRequest).AsResultAsync<Guid>();
 
             var logUserInRequest = new LogUserInRequest { Login = login, Password = password };
 
-            var token = (await id.Post("/me/login").JsonContent(logUserInRequest).AsResultAsync<UserTokenResponse>()).Data;
+            var token = (await id.Post("/me/login").JsonContent(logUserInRequest).AsResultAsync<TokensResponse>()).Data;
 
-            var user = (await id.Get("/me").BearerAuthorization(token.AccessToken).AsResultAsync<UserPrivateResponse>()).Data;
+            var user = (await id.Get("/me").BearerAuthorization(token.AccessToken).AsResultAsync<MeResponse>()).Data;
 
             return (user, token);
         }
@@ -69,7 +71,7 @@ namespace Annium.Id.IntegrationTests
             return (await id.Get($"/apps/{appId}").BearerAuthorization(accessToken).AsResultAsync<AppPublicResponse>()).Data;
         }
 
-        protected async Task<UserTokenResponse> LogUserInAppAsync(
+        protected async Task<TokensResponse> LogUserInAppAsync(
             Guid appId,
             string login = "demo",
             string password = "testtest"
@@ -77,12 +79,12 @@ namespace Annium.Id.IntegrationTests
         {
             var request = new LogUserInAppRequest { Login = login, Password = password };
 
-            var tokenResult = await id.Post($"/me/apps/{appId}/login").JsonContent(request).AsResultAsync<UserTokenResponse>();
+            var tokenResult = await id.Post($"/me/apps/{appId}/login").JsonContent(request).AsResultAsync<TokensResponse>();
 
             return tokenResult.Data;
         }
 
-        protected async Task<ValueTuple<UserPrivateResponse, AppPublicResponse, UserTokenResponse>> LogUserInCreateAppLoginAppAsync(
+        protected async Task<ValueTuple<MeResponse, AppPublicResponse, TokensResponse>> LogUserInCreateAppLoginAppAsync(
             string login = "demo",
             string password = "testtest",
             string email = "demo@demo.com",
@@ -94,7 +96,7 @@ namespace Annium.Id.IntegrationTests
             var app = await CreateAppAsync(tokens.AccessToken, appKey, appName);
             var request = new LogUserInRequest { Login = login, Password = password };
 
-            var appTokens = (await id.Post($"/me/apps/{app.Id}/login").JsonContent(request).AsResultAsync<UserTokenResponse>()).Data;
+            var appTokens = (await id.Post($"/me/apps/{app.Id}/login").JsonContent(request).AsResultAsync<TokensResponse>()).Data;
 
             return (user, app, appTokens);
         }

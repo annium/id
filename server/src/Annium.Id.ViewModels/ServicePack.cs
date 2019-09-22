@@ -2,11 +2,12 @@ using System;
 using Annium.Core.DependencyInjection;
 using Annium.Core.Mapper;
 using Annium.Id.Application.Commands.Apps;
-using Annium.Id.Application.Commands.Users;
-using Annium.Id.Application.Queries.Apps;
-using Annium.Id.Application.Queries.Users;
+using Annium.Id.Application.Commands.Login;
+using Annium.Id.Application.Commands.Me;
+using Annium.Id.Application.Queries.Me;
 using Annium.Id.ViewModels.Apps.Requests;
-using Annium.Id.ViewModels.Users.Requests;
+using Annium.Id.ViewModels.Login.Requests;
+using Annium.Id.ViewModels.Me.Requests;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Annium.Id.ViewModels
@@ -22,14 +23,14 @@ namespace Annium.Id.ViewModels
         {
             // TODO: instead of ignores, use direct maps
             #region Users
-            cfg.Map<DeleteUserRequest, DeleteUserCommand>().Ignore(t => t.MyId);
+            cfg.Map<UnregisterMeRequest, UnregisterMeCommand>().Ignore(t => t.MyId);
             cfg.Map<LogUserOutRequest, LogUserOutCommand>().Ignore(t => t.LoginId);
-            cfg.Map<GetUserRequest, GetUserQuery>().Ignore(t => t.User);
+            cfg.Map<GetMeRequest, GetMeQuery>().Ignore(t => t.User);
             #endregion
             #region Apps
             cfg.Map<SetAppOwnerRequest, SetAppOwnerCommand>().Ignore(t => t.MyId);
             cfg.Map<LogUserOutRequest, LogUserOutCommand>().Ignore(t => t.LoginId);
-            cfg.Map<GetUserRequest, GetUserQuery>().Ignore(t => t.User);
+            cfg.Map<GetMeRequest, GetMeQuery>().Ignore(t => t.User);
             #endregion
         }
     }

@@ -1,8 +1,7 @@
 using System.Net;
 using System.Threading.Tasks;
-using Annium.Data.Operations;
-using Annium.Id.ViewModels.Users.Requests;
-using Annium.Id.ViewModels.Users.Responses;
+using Annium.Id.ViewModels.Me.Requests;
+using Annium.Id.ViewModels.Me.Responses;
 using Annium.Net.Http;
 using Annium.Testing;
 
@@ -14,7 +13,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task Register_IncorrectPayload_BadRequest()
         {
             // arrange
-            var payload = new CreateUserRequest { Login = "demo" };
+            var payload = new RegisterMeRequest { Login = "demo" };
 
             // act
             var response = await id.Post("/me").JsonContent(payload).RunAsync();
@@ -28,7 +27,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         {
             // arrange
             var user = await RegisterUserAsync();
-            var payload = new CreateUserRequest { Login = user.Login, Password = "asdasdsdd", Email = "asd1@demo.com" };
+            var payload = new RegisterMeRequest { Login = user.Login, Password = "asdasdsdd", Email = "asd1@demo.com" };
 
             // act
             var response = await id.Post("/me").JsonContent(payload).RunAsync();
@@ -42,7 +41,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         {
             // arrange
             var user = await RegisterUserAsync();
-            var payload = new CreateUserRequest { Login = "uniquelogin", Password = "asdasdsdd", Email = user.Email };
+            var payload = new RegisterMeRequest { Login = "uniquelogin", Password = "asdasdsdd", Email = user.Email };
 
             // act
             var response = await id.Post("/me").JsonContent(payload).RunAsync();
@@ -75,7 +74,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var(user, tokens) = await LogUserInAsync();
 
             // act
-            var response = await id.Get("/me").BearerAuthorization(tokens.AccessToken).AsAsync<IResult<UserPrivateResponse>>();
+            var response = await id.Get("/me").BearerAuthorization(tokens.AccessToken).AsResultAsync<MeResponse>();
 
             // assert
             response.Data.Id.IsEqual(user.Id);
@@ -86,7 +85,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         {
             // arrange
             var(user, tokens) = await LogUserInAsync();
-            var payload = new CreateUserRequest { Login = "demo" };
+            var payload = new RegisterMeRequest { Login = "demo" };
 
             // act
             var response = await id.Put("/me").BearerAuthorization(tokens.AccessToken).JsonContent(payload).RunAsync();
@@ -101,7 +100,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             // arrange
             var(user, tokens) = await LogUserInAsync();
             var other = await RegisterUserAsync("uniquelogin", "asdasdsdd", "asd1@demo.com");
-            var update = new UpdateUserRequest { Login = other.Login, Password = "a96as9da", Email = "asd2@demo.com" };
+            var update = new UpdateMeRequest { Login = other.Login, Password = "a96as9da", Email = "asd2@demo.com" };
 
             // act
             var response = await id.Put("/me").BearerAuthorization(tokens.AccessToken).JsonContent(update).RunAsync();
@@ -116,7 +115,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             // arrange
             var(user, tokens) = await LogUserInAsync();
             var other = await RegisterUserAsync("uniquelogin", "asdasdsdd", "asd1@demo.com");
-            var update = new UpdateUserRequest { Login = "otherlogin", Password = "a96as9da", Email = other.Email };
+            var update = new UpdateMeRequest { Login = "otherlogin", Password = "a96as9da", Email = other.Email };
 
             // act
             var response = await id.Put("/me").BearerAuthorization(tokens.AccessToken).JsonContent(update).RunAsync();
@@ -130,7 +129,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         {
             // arrange
             var(user, tokens) = await LogUserInAsync();
-            var payload = new CreateUserRequest { Login = "medo", Password = "setsetset", Email = "medo@medo.com" };
+            var payload = new RegisterMeRequest { Login = "medo", Password = "setsetset", Email = "medo@medo.com" };
 
             // act
             var response = await id.Put("/me").BearerAuthorization(tokens.AccessToken).JsonContent(payload).RunAsync();

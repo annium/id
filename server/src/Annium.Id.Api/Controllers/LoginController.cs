@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using Annium.AspNetCore.Extensions;
 using Annium.Core.Mediator;
 using Annium.Id.AspNetCore;
-using Annium.Id.ViewModels.Users.Requests;
-using Annium.Id.ViewModels.Users.Responses;
+using Annium.Id.ViewModels.Login.Requests;
+using Annium.Id.ViewModels.Login.Responses;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Annium.Id.Api.Controllers
@@ -23,7 +23,7 @@ namespace Annium.Id.Api.Controllers
         public Task<IActionResult> LoginAsync([FromBody] LogUserInRequest request)
         {
             // TODO: perhaps, add info about companies, user is member of
-            return HandleAsync<LogUserInRequest, UserTokenResponse>(request);
+            return HandleAsync<LogUserInRequest, TokensResponse>(request);
         }
 
         [HttpDelete("logout")]
@@ -36,7 +36,7 @@ namespace Annium.Id.Api.Controllers
         [HttpPut("token")]
         public Task<IActionResult> UpdateTokenAsync([FromQuery] UpdateUserTokenRequest request)
         {
-            return HandleAsync<UpdateUserTokenRequest, UserTokenResponse>(request);
+            return HandleAsync<UpdateUserTokenRequest, TokensResponse>(request);
         }
 
         [HttpPost("apps/{appId:guid}/login")]
@@ -44,7 +44,7 @@ namespace Annium.Id.Api.Controllers
         {
             request.AppId = appId;
 
-            return HandleAsync<LogUserInAppRequest, UserTokenResponse>(request);
+            return HandleAsync<LogUserInAppRequest, TokensResponse>(request);
         }
 
         [HttpDelete("apps/{appId:guid}/logout")]
@@ -61,7 +61,7 @@ namespace Annium.Id.Api.Controllers
         {
             request.AppId = appId;
 
-            return HandleAsync<UpdateUserAppTokenRequest, UserTokenResponse>(request);
+            return HandleAsync<UpdateUserAppTokenRequest, TokensResponse>(request);
         }
     }
 }

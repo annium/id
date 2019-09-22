@@ -1,9 +1,8 @@
 using System;
 using System.Net;
 using System.Threading.Tasks;
-using Annium.Data.Operations;
-using Annium.Id.ViewModels.Users.Requests;
-using Annium.Id.ViewModels.Users.Responses;
+using Annium.Id.ViewModels.Login.Requests;
+using Annium.Id.ViewModels.Login.Responses;
 using Annium.Net.Http;
 using Annium.Testing;
 
@@ -100,7 +99,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var(user, tokens) = await LogUserInAsync();
 
             // act
-            var response = await id.Put("/me/token").Param("refreshToken", tokens.RefreshToken).AsAsync<IResult<UserTokenResponse>>();
+            var response = await id.Put("/me/token").Param("refreshToken", tokens.RefreshToken).AsResultAsync<TokensResponse>();
 
             // assert
             response.Data.AccessToken.IsNotDefault();
@@ -200,7 +199,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var(user, app, tokens) = await LogUserInCreateAppLoginAppAsync();
 
             // act
-            var response = await id.Put($"/me/apps/{app.Id}/token").Param("refreshToken", tokens.RefreshToken).AsAsync<IResult<UserTokenResponse>>();
+            var response = await id.Put($"/me/apps/{app.Id}/token").Param("refreshToken", tokens.RefreshToken).AsResultAsync<TokensResponse>();
 
             // assert
             response.Data.AccessToken.IsNotDefault();

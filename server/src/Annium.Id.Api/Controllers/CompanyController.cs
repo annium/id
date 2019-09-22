@@ -41,7 +41,7 @@ namespace Annium.Id.Api.Controllers
         {
             var request = new GetCompanyUsersRequest { CompanyId = companyId };
 
-            return HandleAsync<GetCompanyUsersRequest, IEnumerable<UserPublicResponse>>(request);
+            return HandleAsync<GetCompanyUsersRequest, IEnumerable<UserResponse>>(request);
         }
 
         [HttpPut("{companyId:guid}")]

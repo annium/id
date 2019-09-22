@@ -138,7 +138,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             await AddUserToCompanyAsync(tokens.AccessToken, company.Id, user.Id);
 
             // act
-            var response = (await id.Get($"/companies/{company.Id}/users").BearerAuthorization(tokens.AccessToken).AsResultAsync<UserPublicResponse[]>()).Data;
+            var response = (await id.Get($"/companies/{company.Id}/users").BearerAuthorization(tokens.AccessToken).AsResultAsync<UserResponse[]>()).Data;
 
             // assert
             response.Has(1);
