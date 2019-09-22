@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Annium.AspNetCore.IntegrationTesting;
 using Annium.Id.ViewModels.Apps.Requests;
 using Annium.Id.ViewModels.Apps.Responses;
-using Annium.Id.ViewModels.AppUsers.Requests;
+using Annium.Id.ViewModels.Users.Requests;
 using Annium.Id.ViewModels.Claims.Requests;
 using Annium.Id.ViewModels.Claims.Responses;
 using Annium.Id.ViewModels.Companies.Requests;
@@ -158,17 +158,15 @@ namespace Annium.Id.IntegrationTests
 
         protected Task AddRoleToUserAsync(
             string accessToken,
-            Guid appId,
             Guid userId,
             Guid roleId
         )
         {
-            return id.Post($"/apps/{appId}/users/{userId}/roles/{roleId}").BearerAuthorization(accessToken).RunAsync();
+            return id.Post($"/users/{userId}/roles/{roleId}").BearerAuthorization(accessToken).RunAsync();
         }
 
         protected Task AddClaimToUserAsync(
             string accessToken,
-            Guid appId,
             Guid userId,
             Guid claimId,
             string value = "Some"
@@ -176,7 +174,7 @@ namespace Annium.Id.IntegrationTests
         {
             var request = new AddClaimToUserRequest { Value = value };
 
-            return id.Post($"/apps/{appId}/users/{userId}/claims/{claimId}").BearerAuthorization(accessToken).JsonContent(request).RunAsync();
+            return id.Post($"/users/{userId}/claims/{claimId}").BearerAuthorization(accessToken).JsonContent(request).RunAsync();
         }
 
         protected async Task<CompanyResponse> CreateCompanyAsync(
