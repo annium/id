@@ -10,8 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Annium.Id.Api.Controllers
 {
-    // TODO: change to apps/{appId:guid}/companies/roles
-    [Route("apps/{appId:guid}/company-roles")]
+    [Route("companies/roles")]
     public class CompanyRoleController : ServerController
     {
         public CompanyRoleController(
@@ -23,10 +22,8 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPost]
         [Authorize]
-        public Task<IActionResult> CreateRoleAsync(Guid appId, [FromBody] CreateCompanyRoleRequest request)
+        public Task<IActionResult> CreateRoleAsync([FromBody] CreateCompanyRoleRequest request)
         {
-            request.AppId = appId;
-
             return HandleAsync<CreateCompanyRoleRequest, Guid>(request);
         }
 
@@ -41,9 +38,8 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPut("{roleId:guid}")]
         [Authorize]
-        public Task<IActionResult> UpdateRoleAsync(Guid appId, Guid roleId, [FromBody] UpdateCompanyRoleRequest request)
+        public Task<IActionResult> UpdateRoleAsync(Guid roleId, [FromBody] UpdateCompanyRoleRequest request)
         {
-            request.AppId = appId;
             request.RoleId = roleId;
 
             return HandleAsync(request);
@@ -51,9 +47,8 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPost("{roleId:guid}/claims/{claimId:guid}")]
         [Authorize]
-        public Task<IActionResult> AddClaimToRoleAsync(Guid appId, Guid roleId, Guid claimId, [FromBody] AddCompanyClaimToCompanyRoleRequest request)
+        public Task<IActionResult> AddClaimToRoleAsync(Guid roleId, Guid claimId, [FromBody] AddCompanyClaimToCompanyRoleRequest request)
         {
-            request.AppId = appId;
             request.RoleId = roleId;
             request.ClaimId = claimId;
 
@@ -62,23 +57,18 @@ namespace Annium.Id.Api.Controllers
 
         [HttpDelete("{roleId:guid}/claims/{claimId:guid}")]
         [Authorize]
-        public Task<IActionResult> DeleteClaimFromRoleAsync(Guid appId, Guid roleId, Guid claimId)
+        public Task<IActionResult> DeleteClaimFromRoleAsync(Guid roleId, Guid claimId)
         {
-            var request = new DeleteCompanyClaimFromCompanyRoleRequest();
-            request.AppId = appId;
-            request.RoleId = roleId;
-            request.ClaimId = claimId;
+            var request = new DeleteCompanyClaimFromCompanyRoleRequest { RoleId = roleId, ClaimId = claimId };
 
             return HandleAsync(request);
         }
 
         [HttpDelete("{roleId:guid}")]
         [Authorize]
-        public Task<IActionResult> DeleteRoleAsync(Guid appId, Guid roleId)
+        public Task<IActionResult> DeleteRoleAsync(Guid roleId)
         {
-            var request = new DeleteCompanyRoleRequest();
-            request.AppId = appId;
-            request.RoleId = roleId;
+            var request = new DeleteCompanyRoleRequest { RoleId = roleId };
 
             return HandleAsync(request);
         }

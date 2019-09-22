@@ -12,14 +12,17 @@ namespace Annium.Id.Application.CommandHandlers
 {
     internal class CompanyRoleCommandHandler : ICommandHandler<CreateCompanyRoleCommand, Guid>, ICommandHandler<UpdateCompanyRoleCommand>, ICommandHandler<AddCompanyClaimToCompanyRoleCommand>, ICommandHandler<DeleteCompanyClaimFromCompanyRoleCommand>, ICommandHandler<DeleteCompanyRoleCommand>
     {
+        private readonly IAppRepository appRepository;
         private readonly ICompanyRoleRepository companyRoleRepository;
         private readonly ICompanyRoleClaimRepository companyRoleClaimRepository;
 
         public CompanyRoleCommandHandler(
+            IAppRepository appRepository,
             ICompanyRoleRepository companyRoleRepository,
             ICompanyRoleClaimRepository companyRoleClaimRepository
         )
         {
+            this.appRepository = appRepository;
             this.companyRoleRepository = companyRoleRepository;
             this.companyRoleClaimRepository = companyRoleClaimRepository;
         }
@@ -53,14 +56,11 @@ namespace Annium.Id.Application.CommandHandlers
         )
         {
             var myId = request.MyId;
-            var app = request.App;
+            var app = await appRepository.GetByIdAsync(request.Role.AppId);
             var role = request.Role;
 
             if (myId != app.OwnerId)
                 return Result.Status(OperationStatus.Forbidden).Error("Need to be application owner to create company role");
-
-            if (role.AppId != app.Id)
-                return Result.Status(OperationStatus.Forbidden).Error("Company role belongs to another application");
 
             if (request.Key != role.Key && (await companyRoleRepository.FindByKeyAsync(app.Id, request.Key)) != null)
                 return Result.Status(OperationStatus.Conflict).Error($"Company role key {request.Key} is already used");
@@ -79,15 +79,12 @@ namespace Annium.Id.Application.CommandHandlers
         )
         {
             var myId = request.MyId;
-            var app = request.App;
+            var app = await appRepository.GetByIdAsync(request.Role.AppId);
             var role = request.Role;
             var claim = request.Claim;
 
             if (myId != app.OwnerId)
                 return Result.Status(OperationStatus.Forbidden).Error("Need to be application owner to add company claim to company role");
-
-            if (role.AppId != app.Id)
-                return Result.Status(OperationStatus.Forbidden).Error("Company role belongs to another application");
 
             if (claim.AppId != app.Id)
                 return Result.Status(OperationStatus.Forbidden).Error("Company claim belongs to another application");
@@ -105,15 +102,12 @@ namespace Annium.Id.Application.CommandHandlers
         )
         {
             var myId = request.MyId;
-            var app = request.App;
+            var app = await appRepository.GetByIdAsync(request.Role.AppId);
             var role = request.Role;
             var claim = request.Claim;
 
             if (myId != app.OwnerId)
                 return Result.Status(OperationStatus.Forbidden).Error("Need to be application owner to delete claim from role");
-
-            if (role.AppId != app.Id)
-                return Result.Status(OperationStatus.Forbidden).Error("CompanyRole belongs to another application");
 
             if (claim.AppId != app.Id)
                 return Result.Status(OperationStatus.Forbidden).Error("CompanyClaim belongs to another application");
@@ -129,14 +123,11 @@ namespace Annium.Id.Application.CommandHandlers
         )
         {
             var myId = request.MyId;
-            var app = request.App;
+            var app = await appRepository.GetByIdAsync(request.Role.AppId);
             var role = request.Role;
 
             if (myId != app.OwnerId)
                 return Result.Status(OperationStatus.Forbidden).Error("Need to be application owner to delete role");
-
-            if (role.AppId != app.Id)
-                return Result.Status(OperationStatus.Forbidden).Error("CompanyRole belongs to another application");
 
             await companyRoleRepository.DeleteByIdAsync(role.Id);
 

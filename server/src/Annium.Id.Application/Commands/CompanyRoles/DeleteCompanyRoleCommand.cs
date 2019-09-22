@@ -10,18 +10,14 @@ namespace Annium.Id.Application.Commands.CompanyRoles
 {
     public class DeleteCompanyRoleCommand : ICommand
     {
-        public Guid AppId { get; }
         public Guid RoleId { get; }
         public Guid MyId { get; private set; }
-        public App App { get; private set; }
         public CompanyRole Role { get; private set; }
 
         public DeleteCompanyRoleCommand(
-            Guid appId,
             Guid roleId
         )
         {
-            AppId = appId;
             RoleId = roleId;
         }
     }
@@ -30,7 +26,6 @@ namespace Annium.Id.Application.Commands.CompanyRoles
     {
         public DeleteCompanyRoleCommandValidator()
         {
-            Field(c => c.AppId).Required();
             Field(c => c.RoleId).Required();
         }
     }
@@ -39,12 +34,10 @@ namespace Annium.Id.Application.Commands.CompanyRoles
     {
         public DeleteCompanyRoleCommandComposer(
             ITokenAccessor tokenAccessor,
-            IAppRepository appRepository,
             ICompanyRoleRepository companyRoleRepository
         )
         {
             Field(c => c.MyId).LoadWith(ctx => tokenAccessor.GetBaseToken().UserId);
-            Field(c => c.App).LoadWith(ctx => appRepository.GetByIdAsync(ctx.Root.AppId));
             Field(c => c.Role).LoadWith(ctx => companyRoleRepository.GetByIdAsync(ctx.Root.RoleId));
         }
     }
