@@ -31,8 +31,6 @@ namespace Annium.Id.Db.Entities
         public ITable<RoleClaim> RoleClaims => RoleClaimsSet.ToLinqToDBTable();
         public virtual DbSet<User> UsersSet { get; set; }
         public ITable<User> Users => UsersSet.ToLinqToDBTable();
-        public virtual DbSet<UserAppLogin> UserAppLoginsSet { get; set; }
-        public ITable<UserAppLogin> UserAppLogins => UserAppLoginsSet.ToLinqToDBTable();
         public virtual DbSet<UserClaim> UserClaimsSet { get; set; }
         public ITable<UserClaim> UserClaims => UserClaimsSet.ToLinqToDBTable();
         public virtual DbSet<UserLogin> UserLoginsSet { get; set; }
@@ -138,15 +136,6 @@ namespace Annium.Id.Db.Entities
             builder.Entity<User>()
                 .HasAlternateKey(m => m.Email);
 
-            builder.Entity<UserAppLogin>()
-                .HasOne<User>().WithMany().IsRequired()
-                .HasForeignKey(m => m.UserId).OnDelete(DeleteBehavior.Restrict);
-            builder.Entity<UserAppLogin>()
-                .HasOne<App>().WithMany().IsRequired()
-                .HasForeignKey(m => m.AppId).OnDelete(DeleteBehavior.Restrict);
-            builder.Entity<UserAppLogin>()
-                .HasAlternateKey(m => m.RefreshToken);
-
             builder.Entity<UserClaim>()
                 .HasKey(p => new { p.UserId, p.ClaimId });
             builder.Entity<UserClaim>()
@@ -159,6 +148,9 @@ namespace Annium.Id.Db.Entities
             builder.Entity<UserLogin>()
                 .HasOne<User>().WithMany().IsRequired()
                 .HasForeignKey(m => m.UserId).OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<UserLogin>()
+                .HasOne<App>().WithMany().IsRequired()
+                .HasForeignKey(m => m.AppId).OnDelete(DeleteBehavior.Restrict);
             builder.Entity<UserLogin>()
                 .HasAlternateKey(m => m.RefreshToken);
 

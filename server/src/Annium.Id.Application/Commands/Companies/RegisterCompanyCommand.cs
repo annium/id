@@ -45,7 +45,7 @@ namespace Annium.Id.Application.Commands.Companies
             ITokenAccessor tokenAccessor
         )
         {
-            Field(c => c.MyId).LoadWith(ctx => tokenAccessor.GetBaseToken().UserId);
+            Field(c => c.MyId).LoadWith(ctx => tokenAccessor.GetToken().UserId);
         }
     }
 }

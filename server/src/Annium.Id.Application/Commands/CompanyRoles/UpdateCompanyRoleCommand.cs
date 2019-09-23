@@ -45,7 +45,7 @@ namespace Annium.Id.Application.Commands.CompanyRoles
             ICompanyRoleRepository companyRoleRepository
         )
         {
-            Field(c => c.MyId).LoadWith(ctx => tokenAccessor.GetBaseToken().UserId);
+            Field(c => c.MyId).LoadWith(ctx => tokenAccessor.GetToken().UserId);
             Field(c => c.Role).LoadWith(ctx => companyRoleRepository.GetByIdAsync(ctx.Root.RoleId));
         }
     }

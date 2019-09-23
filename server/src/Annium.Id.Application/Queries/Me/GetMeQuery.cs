@@ -23,7 +23,7 @@ namespace Annium.Id.Application.Queries.Me
             IUserRepository userRepository
         )
         {
-            Field(e => e.User).LoadWith(ctx => userRepository.GetByIdAsync(tokenAccessor.GetBaseToken().UserId));
+            Field(e => e.User).LoadWith(ctx => userRepository.GetByIdAsync(tokenAccessor.GetToken().UserId));
         }
     }
 

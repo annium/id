@@ -19,26 +19,6 @@ namespace Annium.Id.Api.Controllers
 
         }
 
-        [HttpPost("login")]
-        public Task<IActionResult> LoginAsync([FromBody] LogInRequest request)
-        {
-            // TODO: perhaps, add info about companies, user is member of
-            return HandleAsync<LogInRequest, TokensResponse>(request);
-        }
-
-        [HttpDelete("logout")]
-        [Authorize]
-        public Task<IActionResult> LogoutAsync()
-        {
-            return HandleAsync(new LogOutRequest());
-        }
-
-        [HttpPut("token")]
-        public Task<IActionResult> UpdateTokenAsync([FromQuery] UpdateTokensRequest request)
-        {
-            return HandleAsync<UpdateTokensRequest, TokensResponse>(request);
-        }
-
         [HttpPost("apps/{appId:guid}/login")]
         public Task<IActionResult> LoginAppAsync(Guid appId, [FromBody] LogInAppRequest request)
         {

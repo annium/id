@@ -5,8 +5,6 @@ namespace Annium.Id.Application.Tools
 {
     public interface ITokenGenerator
     {
-        string GenerateBaseToken(UserLogin login);
-
-        Task<string> GenerateAppToken(UserAppLogin login);
+        Task<string> GenerateToken(UserLogin login);
     }
 }

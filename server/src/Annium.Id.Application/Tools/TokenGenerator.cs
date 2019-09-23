@@ -54,14 +54,7 @@ namespace Annium.Id.Application.Tools
             this.getInstant = getInstant;
         }
 
-        public string GenerateBaseToken(UserLogin login)
-        {
-            var token = new IdBaseToken(login.UserId, login.Id);
-
-            return WriteToken(token, Constants.BaseAudience);
-        }
-
-        public async Task<string> GenerateAppToken(UserAppLogin login)
+        public async Task<string> GenerateToken(UserLogin login)
         {
             var app = await appRepository.GetByIdAsync(login.AppId);
 
@@ -81,7 +74,7 @@ namespace Annium.Id.Application.Tools
                 companyUserClaims.ContainsKey(company.Id) ? companyUserClaims[company.Id] : Array.Empty<ClaimValue>()
             ));
 
-            var token = new IdAppToken(login.UserId, login.Id, appToken, companyTokens);
+            var token = new IdToken(login.UserId, login.Id, appToken, companyTokens);
 
             return WriteToken(token, app.Key);
         }
@@ -130,10 +123,12 @@ namespace Annium.Id.Application.Tools
             var now = instant.ToDateTimeUtc();
             var expires = (instant + tokenLifeTime).ToDateTimeUtc();
 
-            var claims = new List<SystemClaim>();
-            claims.Add(new SystemClaim(Claims.Id, packedToken));
-            claims.Add(new SystemClaim(Claims.IssuedAt, now.ToString()));
-            claims.Add(new SystemClaim(Claims.TokenId, Guid.NewGuid().ToString()));
+            var claims = new List<SystemClaim>
+            {
+                new SystemClaim(Claims.Id, packedToken),
+                new SystemClaim(Claims.IssuedAt, now.ToString()),
+                new SystemClaim(Claims.TokenId, Guid.NewGuid().ToString())
+            };
 
             var jwt = new JwtSecurityToken(
                 issuer: Constants.Issuer,

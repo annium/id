@@ -20,9 +20,9 @@ namespace Annium.Id.Core.Implementations
                     );
         }
 
-        public Func<IdAppToken, IReadOnlyDictionary<string, object>, object[]> CreateMapper(Policy policy)
+        public Func<IdToken, IReadOnlyDictionary<string, object>, object[]> CreateMapper(Policy policy)
         {
-            var token = Expression.Parameter(typeof(IdAppToken), "token");
+            var token = Expression.Parameter(typeof(IdToken), "token");
             var args = Expression.Parameter(typeof(IReadOnlyDictionary<string, object>), "args");
             var parameters = new [] { token, args };
 
@@ -32,7 +32,7 @@ namespace Annium.Id.Core.Implementations
 
             var body = Expression.NewArrayInit(typeof(object), initializers);
 
-            return (Func<IdAppToken, IReadOnlyDictionary<string, object>, object[]>) Expression.Lambda(body, parameters).Compile();
+            return (Func<IdToken, IReadOnlyDictionary<string, object>, object[]>) Expression.Lambda(body, parameters).Compile();
         }
     }
 }

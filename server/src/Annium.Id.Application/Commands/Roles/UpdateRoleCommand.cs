@@ -45,7 +45,7 @@ namespace Annium.Id.Application.Commands.Roles
             IRoleRepository roleRepository
         )
         {
-            Field(c => c.MyId).LoadWith(ctx => tokenAccessor.GetBaseToken().UserId);
+            Field(c => c.MyId).LoadWith(ctx => tokenAccessor.GetToken().UserId);
             Field(c => c.Role).LoadWith(ctx => roleRepository.GetByIdAsync(ctx.Root.RoleId));
         }
     }

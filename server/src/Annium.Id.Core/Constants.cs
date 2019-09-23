@@ -4,10 +4,8 @@ namespace Annium.Id.Core
     {
         public const string Issuer = "annium.id";
 
-        public const string BaseAudience = "base";
+        public const string IdApp = "id";
 
-        public const string IdBaseTokenProperty = "idBaseToken";
-
-        public const string IdAppTokenProperty = "idAppToken";
+        public const string IdTokenProperty = "idToken";
     }
 }

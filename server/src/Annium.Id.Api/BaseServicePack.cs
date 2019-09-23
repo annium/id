@@ -5,6 +5,7 @@ using Annium.Core.Mediator;
 using Annium.Extensions.DependencyInjection;
 using Annium.Id.Api.Tools;
 using Annium.Id.Application.Tools;
+using Annium.Id.Core;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
 
@@ -23,7 +24,7 @@ namespace Annium.Id.Api
             services.AddSingleton<Func<Instant>>(() => SystemClock.Instance.GetCurrentInstant());
 
             // auth
-            services.AddIdAuthorization();
+            services.AddIdAuthorization(opts => opts.Audience = Constants.IdApp);
 
             // tools
             services.AddSingleton<IIdentityDataAccessor, IdentityDataAccessor>();

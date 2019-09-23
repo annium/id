@@ -37,7 +37,7 @@ namespace Annium.Id.Application.Commands.CompanyClaims
             ICompanyClaimRepository companyClaimRepository
         )
         {
-            Field(c => c.MyId).LoadWith(ctx => tokenAccessor.GetBaseToken().UserId);
+            Field(c => c.MyId).LoadWith(ctx => tokenAccessor.GetToken().UserId);
             Field(c => c.Claim).LoadWith(ctx => companyClaimRepository.GetByIdAsync(ctx.Root.ClaimId));
         }
     }

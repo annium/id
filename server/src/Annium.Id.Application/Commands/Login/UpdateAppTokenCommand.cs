@@ -12,7 +12,7 @@ namespace Annium.Id.Application.Commands.Login
         public Guid AppId { get; }
         public Guid RefreshToken { get; }
         public App App { get; private set; }
-        public UserAppLogin Login { get; private set; }
+        public UserLogin Login { get; private set; }
 
         public UpdateAppTokenCommand(
             Guid appId,
@@ -37,11 +37,11 @@ namespace Annium.Id.Application.Commands.Login
     {
         public UpdateAppTokenCommandComposer(
             IAppRepository appRepository,
-            IUserAppLoginRepository userAppLoginRepository
+            IUserLoginRepository userLoginRepository
         )
         {
             Field(c => c.App).LoadWith(ctx => appRepository.GetByIdAsync(ctx.Root.AppId));
-            Field(e => e.Login).LoadWith(ctx => userAppLoginRepository.FindByRefreshTokenAsync(ctx.Root.RefreshToken));
+            Field(e => e.Login).LoadWith(ctx => userLoginRepository.FindByRefreshTokenAsync(ctx.Root.RefreshToken));
         }
     }
 }

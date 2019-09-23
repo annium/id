@@ -11,6 +11,6 @@ namespace Annium.Id.Core
             IReadOnlyDictionary<string, Type> parameters
         );
 
-        Func<IdAppToken, IReadOnlyDictionary<string, object>, object[]> CreateMapper(Policy policy);
+        Func<IdToken, IReadOnlyDictionary<string, object>, object[]> CreateMapper(Policy policy);
     }
 }

@@ -22,7 +22,7 @@ namespace Annium.Id.Application.Commands.Login
             ITokenAccessor tokenAccessor
         )
         {
-            Field(c => c.LoginId).LoadWith(ctx => tokenAccessor.GetBaseToken().LoginId);
+            Field(c => c.LoginId).LoadWith(ctx => tokenAccessor.GetToken().LoginId);
         }
     }
 }

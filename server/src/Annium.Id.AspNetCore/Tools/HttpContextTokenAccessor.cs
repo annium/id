@@ -13,20 +13,12 @@ namespace Annium.Id.AspNetCore.Tools
             this.httpContextAccessor = httpContextAccessor;
         }
 
-        public IdAppToken GetAppToken()
+        public IdToken GetToken()
         {
-            if (!httpContextAccessor.HttpContext.Items.TryGetValue(Constants.IdAppTokenProperty, out var raw))
+            if (!httpContextAccessor.HttpContext.Items.TryGetValue(Constants.IdTokenProperty, out var raw))
                 throw new InvalidOperationException($"User is not authenticated.");
 
-            return (IdAppToken) raw;
-        }
-
-        public IdBaseToken GetBaseToken()
-        {
-            if (!httpContextAccessor.HttpContext.Items.TryGetValue(Constants.IdBaseTokenProperty, out var raw))
-                throw new InvalidOperationException($"User is not authenticated.");
-
-            return (IdBaseToken) raw;
+            return (IdToken) raw;
         }
     }
 }

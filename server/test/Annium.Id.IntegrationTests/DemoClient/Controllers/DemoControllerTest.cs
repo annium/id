@@ -27,7 +27,7 @@ namespace Annium.Id.IntegrationTests.DemoClient.Controllers
 
             // act
             var response = await demo.Get("/base").BearerAuthorization(tokens.AccessToken).RunAsync();
-            var token = JsonConvert.DeserializeObject<IdBaseToken>(await response.Content.ReadAsStringAsync());
+            var token = JsonConvert.DeserializeObject<IdToken>(await response.Content.ReadAsStringAsync());
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.OK);

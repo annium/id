@@ -4,6 +4,6 @@ namespace Annium.Id.Core
 {
     public interface ITokenParser
     {
-        IStatusResult<TokenParseStatus, IdBaseToken> ParseToken(string tokenString);
+        IStatusResult<TokenParseStatus, T> ParseToken<T>(string tokenString);
     }
 }

@@ -11,7 +11,7 @@ namespace Annium.Id.Application
         {
             // tools
             services.AddSingleton<ISecurityManager, SecurityManager>();
-            services.AddSingleton<ITokenGenerator, TokenGenerator>();
+            services.AddScoped<ITokenGenerator, TokenGenerator>();
         }
     }
 }

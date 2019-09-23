@@ -15,12 +15,12 @@ namespace Annium.Id.AspNetCore.Pipeline
     {
         private readonly ITokenAccessor tokenAccessor;
         private readonly Policy policy;
-        private readonly Func<IdAppToken, IReadOnlyDictionary<string, object>, object[]> mapArguments;
+        private readonly Func<IdToken, IReadOnlyDictionary<string, object>, object[]> mapArguments;
 
         public PolicyFilter(
             ITokenAccessor tokenAccessor,
             Policy policy,
-            Func<IdAppToken, IReadOnlyDictionary<string, object>, object[]> mapArguments
+            Func<IdToken, IReadOnlyDictionary<string, object>, object[]> mapArguments
         )
         {
             this.tokenAccessor = tokenAccessor;
@@ -54,11 +54,11 @@ namespace Annium.Id.AspNetCore.Pipeline
 
         public void OnActionExecuted(ActionExecutedContext context) { }
 
-        private IdAppToken GetToken()
+        private IdToken GetToken()
         {
             try
             {
-                return tokenAccessor.GetAppToken();
+                return tokenAccessor.GetToken();
             }
             catch
             {

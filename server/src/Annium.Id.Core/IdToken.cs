@@ -5,21 +5,29 @@ using MessagePack;
 namespace Annium.Id.Core
 {
     [MessagePackObject]
-    public class IdAppToken : IdBaseToken
+    public class IdToken
     {
+        [Key(0)]
+        public Guid UserId { get; }
+
+        [Key(1)]
+        public Guid LoginId { get; }
+
         [Key(2)]
         public AppToken App { get; }
 
         [Key(3)]
         public IEnumerable<CompanyToken> Companies { get; }
 
-        public IdAppToken(
+        public IdToken(
             Guid userId,
             Guid loginId,
             AppToken app,
             IEnumerable<CompanyToken> companies
-        ) : base(userId, loginId)
+        )
         {
+            UserId = userId;
+            LoginId = loginId;
             App = app;
             Companies = companies;
         }

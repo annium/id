@@ -17,7 +17,6 @@ namespace Annium.Id.Db.Entities
         ITable<Role> Roles { get; }
         ITable<RoleClaim> RoleClaims { get; }
         ITable<User> Users { get; }
-        ITable<UserAppLogin> UserAppLogins { get; }
         ITable<UserClaim> UserClaims { get; }
         ITable<UserLogin> UserLogins { get; }
         ITable<UserRole> UserRoles { get; }

@@ -32,17 +32,13 @@ namespace Annium.Id.AspNetCore.Pipeline
             if (readResult != null)
                 return readResult;
 
-            var parseResult = tokenParser.ParseToken(tokenString);
+            var parseResult = tokenParser.ParseToken<IdToken>(tokenString);
             if (parseResult.Status == TokenParseStatus.BadSource)
                 return new BadRequestObjectResult(parseResult);
             if (parseResult.Status == TokenParseStatus.Failed)
                 return new UnauthorizedObjectResult(parseResult);
 
-            var token = parseResult.Data;
-
-            context.HttpContext.Items[Constants.IdBaseTokenProperty] = token;
-            if (token is IdAppToken)
-                context.HttpContext.Items[Constants.IdAppTokenProperty] = token;
+            context.HttpContext.Items[Constants.IdTokenProperty] = parseResult.Data;
 
             return null;
         }

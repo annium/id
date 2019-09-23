@@ -6,6 +6,7 @@ namespace Annium.Id.Domain.Entities
     public class UserLogin
     {
         public Guid Id { get; }
+        public Guid AppId { get; }
         public Guid UserId { get; }
         public Instant LoggedAt { get; }
         public string IPAddress { get; }
@@ -14,6 +15,7 @@ namespace Annium.Id.Domain.Entities
         public Instant RefreshTokenExpires { get; set; }
 
         public UserLogin(
+            Guid appId,
             Guid userId,
             Instant loggedAt,
             string ipAddress,
@@ -22,6 +24,7 @@ namespace Annium.Id.Domain.Entities
             Instant refreshTokenExpires
         )
         {
+            AppId = appId;
             UserId = userId;
             LoggedAt = loggedAt;
             IPAddress = ipAddress;
@@ -32,13 +35,14 @@ namespace Annium.Id.Domain.Entities
 
         internal UserLogin(
             Guid id,
+            Guid appId,
             Guid userId,
             Instant loggedAt,
             string ipAddress,
             string client,
             Guid refreshToken,
             Instant refreshTokenExpires
-        ) : this(userId, loggedAt, ipAddress, client, refreshToken, refreshTokenExpires)
+        ) : this(appId, userId, loggedAt, ipAddress, client, refreshToken, refreshTokenExpires)
         {
             Id = id;
         }
