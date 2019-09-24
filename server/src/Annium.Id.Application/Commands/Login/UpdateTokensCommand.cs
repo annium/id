@@ -7,40 +7,40 @@ using Annium.Id.Domain.Entities;
 
 namespace Annium.Id.Application.Commands.Login
 {
-    public class UpdateAppTokenCommand : ICommand
+    public class UpdateTokensCommand : ICommand
     {
-        public Guid AppId { get; }
+        public string AppKey { get; }
         public Guid RefreshToken { get; }
         public App App { get; private set; }
         public UserLogin Login { get; private set; }
 
-        public UpdateAppTokenCommand(
-            Guid appId,
+        public UpdateTokensCommand(
+            string appKey,
             Guid refreshToken
         )
         {
-            AppId = appId;
+            AppKey = appKey;
             RefreshToken = refreshToken;
         }
     }
 
-    internal class UpdateAppTokenCommandValidator : Validator<UpdateAppTokenCommand>
+    internal class UpdateTokensCommandValidator : Validator<UpdateTokensCommand>
     {
-        public UpdateAppTokenCommandValidator()
+        public UpdateTokensCommandValidator()
         {
-            Field(e => e.AppId).Required();
+            Field(e => e.AppKey).Required().Length(3, 100);
             Field(e => e.RefreshToken).Required();
         }
     }
 
-    internal class UpdateAppTokenCommandComposer : Composer<UpdateAppTokenCommand>
+    internal class UpdateTokensCommandComposer : Composer<UpdateTokensCommand>
     {
-        public UpdateAppTokenCommandComposer(
+        public UpdateTokensCommandComposer(
             IAppRepository appRepository,
             IUserLoginRepository userLoginRepository
         )
         {
-            Field(c => c.App).LoadWith(ctx => appRepository.GetByIdAsync(ctx.Root.AppId));
+            Field(c => c.App).LoadWith(ctx => appRepository.FindByKeyAsync(ctx.Root.AppKey));
             Field(e => e.Login).LoadWith(ctx => userLoginRepository.FindByRefreshTokenAsync(ctx.Root.RefreshToken));
         }
     }

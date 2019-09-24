@@ -4,8 +4,8 @@ using Annium.Id.Application.Commands.Login;
 
 namespace Annium.Id.ViewModels.Login.Requests
 {
-    public class LogOutAppRequest : IRequest<LogOutAppCommand>
+    public class LogOutRequest : IRequest<LogOutCommand>
     {
-        public Guid AppId { get; set; }
+        public string AppKey { get; set; }
     }
 }
