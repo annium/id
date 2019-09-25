@@ -29,9 +29,9 @@ namespace Annium.Id.Application.Commands.Apps
             IAppRepository appRepository
         )
         {
-            Field(c => c.Key).Required().Length(3, 100).Then()
+            Field(c => c.Key).Required().Length(2, 100).Then()
                 .Unique(async(c, key) => await appRepository.FindByKeyAsync(key) != null, "App with {1} {2} already exists");
-            Field(c => c.Name).Required().Length(3, 100);
+            Field(c => c.Name).Required().Length(2, 100);
         }
     }
 

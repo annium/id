@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Annium.Id.Api.Controllers
 {
-    [Route("me")]
+    [Route("me/{appKey}")]
     public class LoginController : ServerController
     {
         public LoginController(
@@ -19,29 +19,29 @@ namespace Annium.Id.Api.Controllers
 
         }
 
-        [HttpPost("apps/{appId:guid}/login")]
-        public Task<IActionResult> LoginAppAsync(Guid appId, [FromBody] LogInAppRequest request)
+        [HttpPost("login")]
+        public Task<IActionResult> LoginAsync(string appKey, [FromBody] LogInRequest request)
         {
-            request.AppId = appId;
+            request.AppKey = appKey;
 
-            return HandleAsync<LogInAppRequest, TokensResponse>(request);
+            return HandleAsync<LogInRequest, TokensResponse>(request);
         }
 
-        [HttpDelete("apps/{appId:guid}/logout")]
-        [Authorize]
-        public Task<IActionResult> LogoutAppAsync(Guid appId)
+        [HttpPut("token")]
+        public Task<IActionResult> UpdateTokenAsync(string appKey, [FromQuery] UpdateTokensRequest request)
         {
-            var request = new LogOutAppRequest { AppId = appId };
+            request.AppKey = appKey;
+
+            return HandleAsync<UpdateTokensRequest, TokensResponse>(request);
+        }
+
+        [HttpDelete("logout")]
+        [Authorize]
+        public Task<IActionResult> LogoutAsync(string appKey)
+        {
+            var request = new LogOutRequest { AppKey = appKey };
 
             return HandleAsync(request);
-        }
-
-        [HttpPut("apps/{appId:guid}/token")]
-        public Task<IActionResult> UpdateTokenAsync(Guid appId, [FromQuery] UpdateAppTokenRequest request)
-        {
-            request.AppId = appId;
-
-            return HandleAsync<UpdateAppTokenRequest, TokensResponse>(request);
         }
     }
 }

@@ -3,14 +3,13 @@ using System.Threading.Tasks;
 using Annium.Id.Core;
 using Annium.Net.Http;
 using Annium.Testing;
-using Newtonsoft.Json;
 
 namespace Annium.Id.IntegrationTests.DemoClient.Controllers
 {
     public class DemoControllerTest : IntegrationTestBase
     {
         [Fact]
-        public async Task BaseIdAuthorization_Unauthorized_ReturnsUnauthorized()
+        public async Task IdAuthorization_Unauthorized_ReturnsUnauthorized()
         {
             // act
             var response = await demo.Get("/base").RunAsync();
@@ -20,24 +19,23 @@ namespace Annium.Id.IntegrationTests.DemoClient.Controllers
         }
 
         [Fact]
-        public async Task BaseIdAuthorization_Authorized_Works()
+        public async Task IdAuthorization_Authorized_Works()
         {
             // arrange
-            var(user, tokens) = await LogUserInAsync();
+            var(user, app, _) = await LogUserInCreateAppLogInAppAsync();
+            var appTokens = await LogUserInAppAsync(app.Key);
 
             // act
-            var response = await demo.Get("/base").BearerAuthorization(tokens.AccessToken).RunAsync();
-            var token = JsonConvert.DeserializeObject<IdToken>(await response.Content.ReadAsStringAsync());
+            var token = await demo.Get("/base").BearerAuthorization(appTokens.AccessToken).AsAsync<IdToken>();
 
             // assert
-            response.StatusCode.IsEqual(HttpStatusCode.OK);
             token.IsNotDefault();
             token.UserId.IsEqual(user.Id);
             token.LoginId.IsNotDefault();
         }
 
         [Fact]
-        public async Task AppIdAuthorization_CheckRole_Unauthorized_ReturnsUnauthorized()
+        public async Task IdAuthorization_CheckRole_Unauthorized_ReturnsUnauthorized()
         {
             // act
             var response = await demo.Get("/isAdmin").RunAsync();
@@ -47,84 +45,85 @@ namespace Annium.Id.IntegrationTests.DemoClient.Controllers
         }
 
         [Fact]
-        public async Task AppIdAuthorization_CheckRole_HasNoAccess_ReturnsForbidden()
+        public async Task IdAuthorization_CheckRole_HasNoAccess_ReturnsForbidden()
         {
             // arrange
-            var(user, tokens) = await LogUserInAsync();
+            var(_, app, _) = await LogUserInCreateAppLogInAppAsync();
+            var appTokens = await LogUserInAppAsync(app.Key);
 
             // act
-            var response = await demo.Get("/isAdmin").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await demo.Get("/isAdmin").BearerAuthorization(appTokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
         }
 
         [Fact]
-        public async Task AppIdAuthorization_CheckRole_HasAccess_Works()
+        public async Task IdAuthorization_CheckRole_HasAccess_Works()
         {
             // arrange
-            var(user, app, tokens) = await LogUserInCreateAppLoginAppAsync();
+            var(user, app, tokens) = await LogUserInCreateAppLogInAppAsync();
             var role = await CreateRoleAsync(tokens.AccessToken, app.Id, "admin", "Administrator");
             await AddRoleToUserAsync(tokens.AccessToken, user.Id, role.Id);
-            tokens = await LogUserInAppAsync(app.Id);
+            var appTokens = await LogUserInAppAsync(app.Key);
 
             // act
-            var response = await demo.Get("/isAdmin").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await demo.Get("/isAdmin").BearerAuthorization(appTokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.OK);
         }
 
         [Fact]
-        public async Task AppIdAuthorization_CheckClaim_HasRoleAccess_Works()
+        public async Task IdAuthorization_CheckClaim_HasRoleAccess_Works()
         {
             // arrange
             // for test completeness -
-            var(user, app, tokens) = await LogUserInCreateAppLoginAppAsync();
+            var(user, app, tokens) = await LogUserInCreateAppLogInAppAsync();
             var role = await CreateRoleAsync(tokens.AccessToken, app.Id, "coo", "Chief Operations Officer");
             await AddRoleToUserAsync(tokens.AccessToken, user.Id, role.Id);
             var claim = await CreateClaimAsync(tokens.AccessToken, app.Id, "paymentsAccess", "Payments Access");
             await AddClaimToRoleAsync(tokens.AccessToken, role.Id, claim.Id, "full");
-            tokens = await LogUserInAppAsync(app.Id);
+            var appTokens = await LogUserInAppAsync(app.Key);
 
             // act
-            var response = await demo.Get("/hasPaymentsAccess/").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await demo.Get("/hasPaymentsAccess/").BearerAuthorization(appTokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.OK);
         }
 
         [Fact]
-        public async Task AppIdAuthorization_CheckClaim_HasClaimAccess_Works()
+        public async Task IdAuthorization_CheckClaim_HasClaimAccess_Works()
         {
             // arrange
             // for test completeness -
-            var(user, app, tokens) = await LogUserInCreateAppLoginAppAsync();
+            var(user, app, tokens) = await LogUserInCreateAppLogInAppAsync();
             var claim = await CreateClaimAsync(tokens.AccessToken, app.Id, "paymentsAccess", "Payments Access");
             await AddClaimToUserAsync(tokens.AccessToken, user.Id, claim.Id, "full");
-            tokens = await LogUserInAppAsync(app.Id);
+            var appTokens = await LogUserInAppAsync(app.Key);
 
             // act
-            var response = await demo.Get("/hasPaymentsAccess/").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await demo.Get("/hasPaymentsAccess/").BearerAuthorization(appTokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.OK);
         }
 
         [Fact]
-        public async Task AppIdAuthorization_CheckClaim_HasRoleClaimAccess_Works()
+        public async Task IdAuthorization_CheckClaim_HasRoleClaimAccess_Works()
         {
             // arrange
             // for test completeness -
-            var(user, app, tokens) = await LogUserInCreateAppLoginAppAsync();
+            var(user, app, tokens) = await LogUserInCreateAppLogInAppAsync();
             var role = await CreateRoleAsync(tokens.AccessToken, app.Id, "coo", "Chief Operations Officer");
             var claim = await CreateClaimAsync(tokens.AccessToken, app.Id, "paymentsAccess", "Payments Access");
             await AddClaimToRoleAsync(tokens.AccessToken, role.Id, claim.Id, "limited");
             await AddClaimToUserAsync(tokens.AccessToken, user.Id, claim.Id, "full");
-            tokens = await LogUserInAppAsync(app.Id);
+            var appTokens = await LogUserInAppAsync(app.Key);
 
             // act
-            var response = await demo.Get("/hasPaymentsAccess/").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await demo.Get("/hasPaymentsAccess/").BearerAuthorization(appTokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.OK);

@@ -24,7 +24,7 @@ namespace Annium.Id.Application.Commands.Login
     {
         public LogOutCommandValidator()
         {
-            Field(e => e.AppKey).Required().Length(3, 100);
+            Field(e => e.AppKey).Required().Length(2, 100);
         }
     }
 

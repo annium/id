@@ -31,7 +31,7 @@ namespace Annium.Id.Application.Commands.Login
     {
         public LogInCommandValidator()
         {
-            Field(e => e.AppKey).Required().Length(3, 100);
+            Field(e => e.AppKey).Required().Length(2, 100);
             Field(e => e.Login).Required().Length(3, 50);
             Field(e => e.Password).Required().Length(8, 50);
         }

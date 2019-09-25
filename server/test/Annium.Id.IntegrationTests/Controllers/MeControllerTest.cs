@@ -71,7 +71,8 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task GetUser_AuthenticatedUser_Ok()
         {
             // arrange
-            var(user, tokens) = await LogUserInAsync();
+            var tokens = await LogUserInAsync();
+            var user = await GetUserAsync(tokens.AccessToken);
 
             // act
             var response = await id.Get("/me").BearerAuthorization(tokens.AccessToken).AsResultAsync<MeResponse>();
@@ -84,7 +85,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task Update_IncorrectPayload_BadRequest()
         {
             // arrange
-            var(user, tokens) = await LogUserInAsync();
+            var tokens = await LogUserInAsync();
             var payload = new RegisterMeRequest { Login = "demo" };
 
             // act
@@ -98,7 +99,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task Update_LoginIsNotUnique_BadRequest()
         {
             // arrange
-            var(user, tokens) = await LogUserInAsync();
+            var tokens = await LogUserInAsync();
             var other = await RegisterUserAsync("uniquelogin", "asdasdsdd", "asd1@demo.com");
             var update = new UpdateMeRequest { Login = other.Login, Password = "a96as9da", Email = "asd2@demo.com" };
 
@@ -113,7 +114,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task Update_EmailIsNotUnique_BadRequest()
         {
             // arrange
-            var(user, tokens) = await LogUserInAsync();
+            var tokens = await LogUserInAsync();
             var other = await RegisterUserAsync("uniquelogin", "asdasdsdd", "asd1@demo.com");
             var update = new UpdateMeRequest { Login = "otherlogin", Password = "a96as9da", Email = other.Email };
 
@@ -128,7 +129,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task Update_ValidData_Ok()
         {
             // arrange
-            var(user, tokens) = await LogUserInAsync();
+            var tokens = await LogUserInAsync();
             var payload = new RegisterMeRequest { Login = "medo", Password = "setsetset", Email = "medo@medo.com" };
 
             // act
@@ -142,7 +143,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task Unregister_ValidData_Ok()
         {
             // arrange
-            var(user, tokens) = await LogUserInAsync();
+            var tokens = await LogUserInAsync();
 
             // act
             var response = await id.Delete("/me").BearerAuthorization(tokens.AccessToken).RunAsync();

@@ -12,7 +12,7 @@ using NodaTime;
 
 namespace Annium.Id.Application.CommandHandlers
 {
-    internal class LoginCommandHandler : ICommandHandler<LogInAppCommand, Tokens>, ICommandHandler<LogOutAppCommand>, ICommandHandler<UpdateAppTokenCommand, Tokens>
+    internal class LoginCommandHandler : ICommandHandler<LogInCommand, Tokens>, ICommandHandler<LogOutCommand>, ICommandHandler<UpdateTokensCommand, Tokens>
     {
         private static readonly Duration refreshTokenLifeTime = Duration.FromDays(1);
         private readonly Func<Instant> getInstant;
@@ -37,7 +37,7 @@ namespace Annium.Id.Application.CommandHandlers
         }
 
         public async Task<IStatusResult<OperationStatus, Tokens>> HandleAsync(
-            LogInAppCommand request,
+            LogInCommand request,
             CancellationToken cancellationToken
         )
         {
@@ -59,18 +59,8 @@ namespace Annium.Id.Application.CommandHandlers
             return Result.Status(OperationStatus.OK, new Tokens(token, login.RefreshToken, login.RefreshTokenExpires));
         }
 
-        public async Task<IStatusResult<OperationStatus>> HandleAsync(
-            LogOutAppCommand request,
-            CancellationToken cancellationToken
-        )
-        {
-            await userLoginRepository.DeleteByIdAsync(request.LoginId);
-
-            return Result.Status(OperationStatus.OK);
-        }
-
         public async Task<IStatusResult<OperationStatus, Tokens>> HandleAsync(
-            UpdateAppTokenCommand request,
+            UpdateTokensCommand request,
             CancellationToken cancellationToken
         )
         {
@@ -83,6 +73,16 @@ namespace Annium.Id.Application.CommandHandlers
             var token = await tokenGenerator.GenerateToken(login);
 
             return Result.Status(OperationStatus.OK, new Tokens(token, login.RefreshToken, login.RefreshTokenExpires));
+        }
+
+        public async Task<IStatusResult<OperationStatus>> HandleAsync(
+            LogOutCommand request,
+            CancellationToken cancellationToken
+        )
+        {
+            await userLoginRepository.DeleteByIdAsync(request.LoginId);
+
+            return Result.Status(OperationStatus.OK);
         }
     }
 }

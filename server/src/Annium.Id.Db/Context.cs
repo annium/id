@@ -1,3 +1,4 @@
+using System;
 using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.EntityFrameworkCore;
@@ -46,6 +47,15 @@ namespace Annium.Id.Db.Entities
                 .HasForeignKey(m => m.OwnerId).OnDelete(DeleteBehavior.Restrict);
             builder.Entity<App>()
                 .HasAlternateKey(m => m.Key);
+            builder.Entity<App>()
+                .HasData(new App
+                {
+                    Id = Guid.Parse("1b8c21ef-f738-4d7f-9a8d-c411c22f4ef1"),
+                        Key = "id",
+                        Name = "Annium ID",
+                        OwnerId = Guid.Parse("119c1b23-3b0d-4c5c-801d-6bbcdcfa732e"),
+                        ApiToken = Guid.Parse("b62acd2a-2f1b-4da1-9273-abab4b9da7f7"),
+                });
 
             builder.Entity<Claim>()
                 .HasOne<App>().WithMany().IsRequired()
@@ -135,6 +145,14 @@ namespace Annium.Id.Db.Entities
                 .HasAlternateKey(m => m.Login);
             builder.Entity<User>()
                 .HasAlternateKey(m => m.Email);
+            builder.Entity<User>()
+                .HasData(new User
+                {
+                    Id = Guid.Parse("119c1b23-3b0d-4c5c-801d-6bbcdcfa732e"),
+                        Login = "alex",
+                        PasswordHash = "ohraPG8QMZiOnXX+MWh/45aZDwjtv/7FQMFzXxSRxQjLdSMBHpELKDSznF6cSUalufovlgCfFkn4mtR7eXB+8w==",
+                        Email = "a.kreskiyan@gmail.comz",
+                });
 
             builder.Entity<UserClaim>()
                 .HasKey(p => new { p.UserId, p.ClaimId });

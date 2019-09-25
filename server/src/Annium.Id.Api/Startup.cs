@@ -1,10 +1,13 @@
 using System;
+using System.Linq;
 using Annium.Core.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
 using NodaTime.Serialization.JsonNet;
+using NSwag;
+using NSwag.Generation.Processors.Security;
 
 namespace Annium.Id.Api
 {
@@ -20,7 +23,19 @@ namespace Annium.Id.Api
                     .ConfigureForOperations()
                 );
 
-            services.AddSwaggerDocument();
+            services.AddOpenApiDocument(doc =>
+            {
+                doc.AddSecurity("JWT", Enumerable.Empty<string>(), new OpenApiSecurityScheme
+                {
+                    Type = OpenApiSecuritySchemeType.ApiKey,
+                        Name = "Authorization",
+                        In = OpenApiSecurityApiKeyLocation.Header,
+                        Description = "Type into the textbox: Bearer {your JWT token}."
+                });
+
+                doc.OperationProcessors
+                    .Add(new AspNetCoreOperationSecurityScopeProcessor("JWT"));
+            });
 
             return new ServiceProviderBuilder(services)
                 .UseServicePack<TServicePack>()
