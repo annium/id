@@ -18,7 +18,7 @@ namespace Annium.Id.Application.Tools
 {
     internal class TokenGenerator : ITokenGenerator
     {
-        private readonly Duration tokenLifeTime = Duration.FromDays(365);
+        private readonly Duration tokenLifeTime = Duration.FromMinutes(30);
         private readonly RsaSecurityKey signingKey;
         private readonly IAppRepository appRepository;
         private readonly IUserRoleRepository userRoleRepository;
