@@ -13,11 +13,11 @@ export const userApi = {
   load: (): Promise<HttpResponse<User>> =>
     privateApi.get<User>('me'),
   login: (login: string, password: string): Promise<HttpResponse<UserToken>> =>
-    publicApi.post('me/login', undefined, { login, password }),
+    publicApi.post('me/id/login', undefined, { login, password }),
   logout: (): Promise<HttpResponse> =>
-    privateApi.post('me/logout'),
+    privateApi.post('me/id/logout'),
   updateToken: (refreshToken: string): Promise<HttpResponse<UserToken>> =>
-    publicApi.post('me/token', { refreshToken }),
+    publicApi.post('me/id/token', { refreshToken }),
   update: (user: UserPayload): Promise<HttpResponse<User>> =>
     privateApi.post('me', undefined, user),
   unregister: (): Promise<HttpResponse> =>
