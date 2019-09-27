@@ -21,6 +21,9 @@ publish-api:
 	$(call publish,api,server/src,Annium.Id.Api/Dockerfile)
 	@rm -f server/src/ef.dll
 
+publish-app:
+	$(call publish,app,web/src/app,Dockerfile)
+
 
 define publish
 	@$(eval image := $(1))
