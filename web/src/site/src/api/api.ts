@@ -7,7 +7,7 @@ import { UserToken } from '../models/UserToken'
 
 import { userApi } from './user'
 
-const { protocol, hostname: host, port } = new URL(process.env.REACT_APP_API_URL || window.location.toString())
+const { protocol, hostname: host, port } = new URL(process.env.REACT_APP_API || window.location.toString())
 
 export const publicApi = httpClientFactory({
   url: {
