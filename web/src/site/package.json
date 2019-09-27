@@ -1,7 +1,7 @@
 {
-  "name": "@id/app",
+  "name": "@id/site",
   "version": "0.1.0",
-  "description": "@id/app.",
+  "description": "@id/site.",
   "main": "dist",
   "dependencies": {
     "@annium/app-react": "0.1.0",

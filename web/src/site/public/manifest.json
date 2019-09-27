@@ -1,6 +1,6 @@
 {
-  "short_name": "@id/app",
-  "name": "@id/app",
+  "short_name": "@id/site",
+  "name": "@id/site",
   "icons": [
     {
       "src": "favicon.ico",
