@@ -3,13 +3,14 @@
         <PackageId>Annium.Id.IntegrationTests</PackageId>
         <PackageVersion>0.1.0</PackageVersion>
         <Description>Annium.Id.IntegrationTests</Description>
-        <TargetFramework>netcoreapp2.2</TargetFramework>
+        <TargetFramework>netcoreapp3.0</TargetFramework>
         <OutputType>Exe</OutputType>
         <DebugType>portable</DebugType>
         <LangVersion>latest</LangVersion>
         <WarningsAsErrors>true</WarningsAsErrors>
         <IsPackable>false</IsPackable>
         <IsTestProject>true</IsTestProject>
+        <Nullable>enable</Nullable>
     </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="../../src/Annium.Id.Api/Annium.Id.Api.csproj" />
