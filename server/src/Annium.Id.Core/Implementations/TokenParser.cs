@@ -40,17 +40,19 @@ namespace Annium.Id.Core.Implementations
             if (!handler.CanReadToken(tokenString))
                 return fail(TokenParseStatus.BadSource, "Token is not valid JWT");
 
-            var tvp = new TokenValidationParameters();
-            tvp.ClockSkew = Duration.FromSeconds(5).ToTimeSpan();
-            tvp.IssuerSigningKey = signingKey;
-            tvp.RequireExpirationTime = true;
-            tvp.RequireSignedTokens = true;
-            tvp.ValidateAudience = false;
-            tvp.ValidAudiences = new [] { options.Audience };
-            tvp.ValidateIssuer = true;
-            tvp.ValidIssuer = Constants.Issuer;
-            tvp.ValidateIssuerSigningKey = true;
-            tvp.ValidateLifetime = true;
+            var tvp = new TokenValidationParameters
+            {
+                ClockSkew = Duration.FromSeconds(5).ToTimeSpan(),
+                IssuerSigningKey = signingKey,
+                RequireExpirationTime = true,
+                RequireSignedTokens = true,
+                ValidateAudience = false,
+                ValidAudiences = new [] { options.Audience },
+                ValidateIssuer = true,
+                ValidIssuer = Constants.Issuer,
+                ValidateIssuerSigningKey = true,
+                ValidateLifetime = true
+            };
 
             try
             {
@@ -120,8 +122,8 @@ namespace Annium.Id.Core.Implementations
                 return fail(TokenParseStatus.BadSource, "Token is invalid");
             }
 
-            IStatusResult<TokenParseStatus, T> fail(TokenParseStatus status, string error) =>
-                Result.Status<TokenParseStatus, T>(TokenParseStatus.BadSource, default(T)).Error(error);
+            static IStatusResult<TokenParseStatus, T> fail(TokenParseStatus status, string error) =>
+                Result.Status(TokenParseStatus.BadSource, default(T) !).Error(error);
         }
 
     }

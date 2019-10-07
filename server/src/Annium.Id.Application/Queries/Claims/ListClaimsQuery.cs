@@ -10,7 +10,7 @@ namespace Annium.Id.Application.Queries.Claims
     public class ListClaimsQuery : IQuery
     {
         public Guid AppId { get; }
-        public App App { get; private set; }
+        public App App { get; private set; } = null!;
 
         public ListClaimsQuery(Guid appId)
         {

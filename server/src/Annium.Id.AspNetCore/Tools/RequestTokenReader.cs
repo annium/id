@@ -10,7 +10,7 @@ namespace Annium.Id.AspNetCore.Tools
 {
     internal class RequestTokenReader
     {
-        public ValueTuple<string, IActionResult> ReadToken(HttpRequest request)
+        public ValueTuple<string, IActionResult?> ReadToken(HttpRequest request)
         {
             if (!request.Headers.ContainsKey(HeaderNames.Authorization))
                 return fail(HttpStatusCode.Unauthorized, "Bearer authorization required.");
@@ -25,7 +25,7 @@ namespace Annium.Id.AspNetCore.Tools
 
             return (token, null);
 
-            (string, IActionResult) fail(HttpStatusCode statusCode, string message) =>
+            static(string, IActionResult) fail(HttpStatusCode statusCode, string message) =>
                 (string.Empty, new ObjectResult(Result.Failure().Error(message)) { StatusCode = (int) statusCode });
         }
     }

@@ -42,19 +42,19 @@ namespace Annium.Id.AspNetCore.Pipeline
 
             try
             {
-                var result = (bool) policy.Handle.DynamicInvoke(arguments);
+                var result = (bool) policy.Handle.DynamicInvoke(arguments) !;
                 if (!result)
                     context.Result = GetFailure("Access policy violation");
             }
             catch (TargetInvocationException ex)
             {
-                throw ex.InnerException;
+                throw ex.InnerException!;
             }
         }
 
         public void OnActionExecuted(ActionExecutedContext context) { }
 
-        private IdToken GetToken()
+        private IdToken? GetToken()
         {
             try
             {

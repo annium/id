@@ -26,7 +26,7 @@ namespace Annium.Id.AspNetCore.Pipeline
                 context.Result = result;
         }
 
-        private IActionResult HandleAuthorization(AuthorizationFilterContext context)
+        private IActionResult? HandleAuthorization(AuthorizationFilterContext context)
         {
             var(tokenString, readResult) = tokenReader.ReadToken(context.HttpContext.Request);
             if (readResult != null)

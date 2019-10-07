@@ -28,7 +28,7 @@ namespace Annium.Id.Apps.AspNetCore.Pipeline
             // TODO: use JWT here, with single claim, containing AppId
             await Task.CompletedTask;
 
-            return null;
+            return new NoContentResult();
         }
     }
 }

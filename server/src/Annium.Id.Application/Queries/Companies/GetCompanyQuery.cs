@@ -10,7 +10,7 @@ namespace Annium.Id.Application.Queries.Companies
     public class GetCompanyQuery : IQuery
     {
         public Guid CompanyId { get; }
-        public Company Company { get; private set; }
+        public Company Company { get; private set; } = null!;
 
         public GetCompanyQuery(
             Guid companyId

@@ -50,7 +50,7 @@ namespace Annium.Id.Application.CommandHandlers
             app.Key = request.Key;
             app.Name = request.Name;
 
-            app = await appRepository.UpdateAsync(app);
+            await appRepository.UpdateAsync(app);
 
             return Result.Status(OperationStatus.OK);
         }

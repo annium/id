@@ -10,7 +10,7 @@ namespace Annium.Id.Application.Queries.Roles
     public class ListRolesQuery : IQuery
     {
         public Guid AppId { get; }
-        public App App { get; private set; }
+        public App App { get; private set; } = null!;
 
         public ListRolesQuery(
             Guid appId

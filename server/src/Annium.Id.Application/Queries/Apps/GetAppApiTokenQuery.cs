@@ -12,7 +12,7 @@ namespace Annium.Id.Application.Queries.Apps
     {
         public Guid AppId { get; }
         public Guid MyId { get; private set; }
-        public App App { get; private set; }
+        public App App { get; private set; } = null!;
 
         public GetAppApiTokenQuery(
             Guid appId

@@ -8,7 +8,7 @@ namespace Annium.Id.Application.Queries.Me
 {
     public class GetMeQuery : IQuery
     {
-        public User User { get; private set; }
+        public User User { get; private set; } = null!;
 
         public GetMeQuery()
         {

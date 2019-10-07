@@ -10,7 +10,7 @@ namespace Annium.Id.Apps.AspNetCore.Tools
 {
     internal class RequestTokenReader
     {
-        public ValueTuple<Guid, IActionResult> GetToken(HttpRequest request)
+        public ValueTuple<Guid, IActionResult?> GetToken(HttpRequest request)
         {
             if (!request.Headers.ContainsKey(HeaderNames.Authorization))
                 return fail(HttpStatusCode.Unauthorized, "Bearer authorization required.");
@@ -28,7 +28,7 @@ namespace Annium.Id.Apps.AspNetCore.Tools
                 (token, null) :
                 fail(HttpStatusCode.Forbidden, "Invalid token passed");
 
-            (Guid, IActionResult) fail(HttpStatusCode statusCode, string message) =>
+            static(Guid, IActionResult) fail(HttpStatusCode statusCode, string message) =>
                 (Guid.Empty, new ObjectResult(Result.Failure().Error(message)) { StatusCode = (int) statusCode });
         }
     }

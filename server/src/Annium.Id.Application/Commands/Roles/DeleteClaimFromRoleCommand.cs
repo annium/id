@@ -13,7 +13,7 @@ namespace Annium.Id.Application.Commands.Roles
         public Guid RoleId { get; }
         public Guid ClaimId { get; }
         public Guid MyId { get; private set; }
-        public Role Role { get; private set; }
+        public Role Role { get; private set; } = null!;
         public Claim Claim { get; private set; } = null!;
 
         public DeleteClaimFromRoleCommand(

@@ -42,7 +42,6 @@ namespace Annium.Id.Application.Commands.Claims
     {
         public UpdateClaimCommandComposer(
             ITokenAccessor tokenAccessor,
-            IAppRepository appRepository,
             IClaimRepository claimRepository
         )
         {
