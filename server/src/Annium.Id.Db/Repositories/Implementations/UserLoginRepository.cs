@@ -1,8 +1,9 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Annium.Core.Mapper;
 using Annium.Id.Domain.Entities;
-using LinqToDB;
+using Microsoft.EntityFrameworkCore;
 using NodaTime;
 
 namespace Annium.Id.Db.Repositories.Implementations
@@ -24,56 +25,75 @@ namespace Annium.Id.Db.Repositories.Implementations
         public async Task<UserLogin> CreateAsync(UserLogin login)
         {
             var entity = mapper.Map<Entities.UserLogin>(login);
-            entity.Id = Guid.NewGuid();
 
-            using(var db = context.GetDataConnection())
-            {
-                await db.InsertAsync(entity);
-            }
+            context.UserLogins.Add(entity);
+            await context.SaveChangesAsync();
 
             return mapper.Map<UserLogin>(entity);
         }
 
         public async Task<UserLogin> FindByRefreshTokenAsync(Guid token)
         {
-            var entity = await context.UserLogins
-                .FirstOrDefaultAsync(l => l.RefreshToken == token);
+            var entity = await context.UserLogins.AsNoTracking()
+                .FirstOrDefaultAsync(x => x.RefreshToken == token);
 
             return mapper.Map<UserLogin>(entity);
         }
 
         public async Task<UserLogin> UpdateRefreshTokenAsync(UserLogin login)
         {
-            var entity = mapper.Map<Entities.UserLogin>(login);
+            var entity = await context.UserLogins
+                .SingleAsync(x => x.Id == login.Id);
 
-            await context.UserLogins
-                .UpdateAsync(
-                    l => l.Id == login.Id,
-                    l => new Entities.UserLogin
-                    {
-                        RefreshToken = entity.RefreshToken,
-                            RefreshTokenExpires = entity.RefreshTokenExpires,
-                    }
-                );
+            entity.RefreshToken = login.RefreshToken;
+            entity.RefreshTokenExpires = mapper.Map<DateTime>(login.RefreshTokenExpires);
+
+            await context.SaveChangesAsync();
 
             return mapper.Map<UserLogin>(entity);
         }
 
-        public Task DeleteByIdAsync(Guid id)
+        public async Task DeleteByIdAsync(Guid id)
         {
-            return context.UserLogins.DeleteAsync(l => l.Id == id);
+            var entity = await context.UserLogins
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if (entity is null)
+                return;
+
+            context.UserLogins.Remove(entity);
+
+            await context.SaveChangesAsync();
         }
 
-        public Task DeleteExpiredByUserIdAsync(Guid userId, Instant instant)
+        public async Task DeleteExpiredByUserIdAsync(Guid userId, Instant instant)
         {
-            var instantTime = instant.ToDateTimeUtc();
+            var expires = mapper.Map<DateTime>(instant);
 
-            return context.UserLogins.DeleteAsync(l => l.UserId == userId && l.RefreshTokenExpires <= instantTime);
+            var entities = await context.UserLogins
+                .Where(x => x.UserId == userId && x.RefreshTokenExpires <= expires)
+                .ToListAsync();
+
+            if (entities.Count == 0)
+                return;
+
+            context.UserLogins.RemoveRange(entities);
+
+            await context.SaveChangesAsync();
         }
 
-        public Task DeleteAllByUserIdAsync(Guid userId)
+        public async Task DeleteAllByUserIdAsync(Guid userId)
         {
-            return context.UserLogins.DeleteAsync(l => l.UserId == userId);
+            var entities = await context.UserLogins
+                .Where(x => x.UserId == userId)
+                .ToListAsync();
+
+            if (entities.Count == 0)
+                return;
+
+            context.UserLogins.RemoveRange(entities);
+
+            await context.SaveChangesAsync();
         }
     }
 }

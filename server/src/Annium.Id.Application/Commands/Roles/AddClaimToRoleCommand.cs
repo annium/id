@@ -14,8 +14,8 @@ namespace Annium.Id.Application.Commands.Roles
         public Guid ClaimId { get; }
         public string Value { get; }
         public Guid MyId { get; private set; }
-        public Role Role { get; private set; }
-        public Claim Claim { get; private set; }
+        public Role Role { get; private set; } = null!;
+        public Claim Claim { get; private set; } = null!;
 
         public AddClaimToRoleCommand(
             Guid roleId,

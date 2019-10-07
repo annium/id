@@ -1,25 +1,27 @@
-using LinqToDB;
-using LinqToDB.Data;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Annium.Id.Db.Entities
 {
     internal interface IContext
     {
-        ITable<App> Apps { get; }
-        ITable<Claim> Claims { get; }
-        ITable<Company> Companies { get; }
-        ITable<CompanyClaim> CompanyClaims { get; }
-        ITable<CompanyRole> CompanyRoles { get; }
-        ITable<CompanyRoleClaim> CompanyRoleClaims { get; }
-        ITable<CompanyUser> CompanyUsers { get; }
-        ITable<CompanyUserClaim> CompanyUserClaims { get; }
-        ITable<CompanyUserRole> CompanyUserRoles { get; }
-        ITable<Role> Roles { get; }
-        ITable<RoleClaim> RoleClaims { get; }
-        ITable<User> Users { get; }
-        ITable<UserClaim> UserClaims { get; }
-        ITable<UserLogin> UserLogins { get; }
-        ITable<UserRole> UserRoles { get; }
-        DataConnection GetDataConnection();
+        DbSet<App> Apps { get; }
+        DbSet<Claim> Claims { get; }
+        DbSet<Company> Companies { get; }
+        DbSet<CompanyClaim> CompanyClaims { get; }
+        DbSet<CompanyRole> CompanyRoles { get; }
+        DbSet<CompanyRoleClaim> CompanyRoleClaims { get; }
+        DbSet<CompanyUser> CompanyUsers { get; }
+        DbSet<CompanyUserClaim> CompanyUserClaims { get; }
+        DbSet<CompanyUserRole> CompanyUserRoles { get; }
+        DbSet<Role> Roles { get; }
+        DbSet<RoleClaim> RoleClaims { get; }
+        DbSet<User> Users { get; }
+        DbSet<UserClaim> UserClaims { get; }
+        DbSet<UserLogin> UserLogins { get; }
+        DbSet<UserRole> UserRoles { get; }
+
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 }

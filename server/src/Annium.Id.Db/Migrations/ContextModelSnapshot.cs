@@ -15,27 +15,34 @@ namespace Annium.Id.Db.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
-                .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
+                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
+                .HasAnnotation("ProductVersion", "3.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             modelBuilder.Entity("Annium.Id.Db.Entities.App", b =>
                 {
-                    b.Property<Guid>("Id");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
-                    b.Property<Guid>("ApiToken");
+                    b.Property<Guid>("ApiToken")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Key")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnType("text");
 
-                    b.Property<Guid>("OwnerId");
+                    b.Property<Guid>("OwnerId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
-                    b.HasAlternateKey("Key");
+                    b.HasIndex("Key")
+                        .IsUnique();
 
                     b.HasIndex("OwnerId");
 
@@ -54,40 +61,53 @@ namespace Annium.Id.Db.Migrations
 
             modelBuilder.Entity("Annium.Id.Db.Entities.Claim", b =>
                 {
-                    b.Property<Guid>("Id");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
-                    b.Property<Guid>("AppId");
+                    b.Property<Guid>("AppId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Key")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasAlternateKey("AppId", "Key");
+                    b.HasIndex("AppId", "Key")
+                        .IsUnique();
 
                     b.ToTable("Claims");
                 });
 
             modelBuilder.Entity("Annium.Id.Db.Entities.Company", b =>
                 {
-                    b.Property<Guid>("Id");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Key")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnType("text");
 
-                    b.Property<Guid>("OwnerId");
+                    b.Property<Guid>("OwnerId")
+                        .HasColumnType("uuid");
 
-                    b.Property<Guid?>("ParentId");
+                    b.Property<Guid?>("ParentId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
-                    b.HasAlternateKey("Key");
+                    b.HasIndex("Key")
+                        .IsUnique();
 
                     b.HasIndex("OwnerId");
 
@@ -98,50 +118,65 @@ namespace Annium.Id.Db.Migrations
 
             modelBuilder.Entity("Annium.Id.Db.Entities.CompanyClaim", b =>
                 {
-                    b.Property<Guid>("Id");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
-                    b.Property<Guid>("AppId");
+                    b.Property<Guid>("AppId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Key")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasAlternateKey("AppId", "Key");
+                    b.HasIndex("AppId", "Key")
+                        .IsUnique();
 
                     b.ToTable("CompanyClaims");
                 });
 
             modelBuilder.Entity("Annium.Id.Db.Entities.CompanyRole", b =>
                 {
-                    b.Property<Guid>("Id");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
-                    b.Property<Guid>("AppId");
+                    b.Property<Guid>("AppId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Key")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasAlternateKey("AppId", "Key");
+                    b.HasIndex("AppId", "Key")
+                        .IsUnique();
 
                     b.ToTable("CompanyRoles");
                 });
 
             modelBuilder.Entity("Annium.Id.Db.Entities.CompanyRoleClaim", b =>
                 {
-                    b.Property<Guid>("RoleId");
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uuid");
 
-                    b.Property<Guid>("ClaimId");
+                    b.Property<Guid>("ClaimId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Value")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("RoleId", "ClaimId");
 
@@ -152,9 +187,11 @@ namespace Annium.Id.Db.Migrations
 
             modelBuilder.Entity("Annium.Id.Db.Entities.CompanyUser", b =>
                 {
-                    b.Property<Guid>("CompanyId");
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uuid");
 
-                    b.Property<Guid>("UserId");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("CompanyId", "UserId");
 
@@ -165,14 +202,18 @@ namespace Annium.Id.Db.Migrations
 
             modelBuilder.Entity("Annium.Id.Db.Entities.CompanyUserClaim", b =>
                 {
-                    b.Property<Guid>("CompanyId");
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uuid");
 
-                    b.Property<Guid>("UserId");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
 
-                    b.Property<Guid>("ClaimId");
+                    b.Property<Guid>("ClaimId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Value")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("CompanyId", "UserId", "ClaimId");
 
@@ -185,11 +226,14 @@ namespace Annium.Id.Db.Migrations
 
             modelBuilder.Entity("Annium.Id.Db.Entities.CompanyUserRole", b =>
                 {
-                    b.Property<Guid>("CompanyId");
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uuid");
 
-                    b.Property<Guid>("UserId");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
 
-                    b.Property<Guid>("RoleId");
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("CompanyId", "UserId", "RoleId");
 
@@ -202,31 +246,40 @@ namespace Annium.Id.Db.Migrations
 
             modelBuilder.Entity("Annium.Id.Db.Entities.Role", b =>
                 {
-                    b.Property<Guid>("Id");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
-                    b.Property<Guid>("AppId");
+                    b.Property<Guid>("AppId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Key")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasAlternateKey("AppId", "Key");
+                    b.HasIndex("AppId", "Key")
+                        .IsUnique();
 
                     b.ToTable("Roles");
                 });
 
             modelBuilder.Entity("Annium.Id.Db.Entities.RoleClaim", b =>
                 {
-                    b.Property<Guid>("RoleId");
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uuid");
 
-                    b.Property<Guid>("ClaimId");
+                    b.Property<Guid>("ClaimId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Value")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("RoleId", "ClaimId");
 
@@ -237,22 +290,29 @@ namespace Annium.Id.Db.Migrations
 
             modelBuilder.Entity("Annium.Id.Db.Entities.User", b =>
                 {
-                    b.Property<Guid>("Id");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Email")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("Login")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("PasswordHash")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasAlternateKey("Email");
+                    b.HasIndex("Email")
+                        .IsUnique();
 
-                    b.HasAlternateKey("Login");
+                    b.HasIndex("Login")
+                        .IsUnique();
 
                     b.ToTable("Users");
 
@@ -260,7 +320,7 @@ namespace Annium.Id.Db.Migrations
                         new
                         {
                             Id = new Guid("119c1b23-3b0d-4c5c-801d-6bbcdcfa732e"),
-                            Email = "a.kreskiyan@gmail.comz",
+                            Email = "a.kreskiyan@gmail.com",
                             Login = "alex",
                             PasswordHash = "ohraPG8QMZiOnXX+MWh/45aZDwjtv/7FQMFzXxSRxQjLdSMBHpELKDSznF6cSUalufovlgCfFkn4mtR7eXB+8w=="
                         });
@@ -268,12 +328,15 @@ namespace Annium.Id.Db.Migrations
 
             modelBuilder.Entity("Annium.Id.Db.Entities.UserClaim", b =>
                 {
-                    b.Property<Guid>("UserId");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
 
-                    b.Property<Guid>("ClaimId");
+                    b.Property<Guid>("ClaimId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Value")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("UserId", "ClaimId");
 
@@ -284,29 +347,39 @@ namespace Annium.Id.Db.Migrations
 
             modelBuilder.Entity("Annium.Id.Db.Entities.UserLogin", b =>
                 {
-                    b.Property<Guid>("Id");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
-                    b.Property<Guid>("AppId");
+                    b.Property<Guid>("AppId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Client")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("IPAddress")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnType("text");
 
-                    b.Property<DateTime>("LoggedAt");
+                    b.Property<DateTime>("LoggedAt")
+                        .HasColumnType("timestamp without time zone");
 
-                    b.Property<Guid>("RefreshToken");
+                    b.Property<Guid>("RefreshToken")
+                        .HasColumnType("uuid");
 
-                    b.Property<DateTime>("RefreshTokenExpires");
+                    b.Property<DateTime>("RefreshTokenExpires")
+                        .HasColumnType("timestamp without time zone");
 
-                    b.Property<Guid>("UserId");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
-                    b.HasAlternateKey("RefreshToken");
-
                     b.HasIndex("AppId");
+
+                    b.HasIndex("RefreshToken")
+                        .IsUnique();
 
                     b.HasIndex("UserId");
 
@@ -315,9 +388,11 @@ namespace Annium.Id.Db.Migrations
 
             modelBuilder.Entity("Annium.Id.Db.Entities.UserRole", b =>
                 {
-                    b.Property<Guid>("UserId");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
 
-                    b.Property<Guid>("RoleId");
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -328,28 +403,31 @@ namespace Annium.Id.Db.Migrations
 
             modelBuilder.Entity("Annium.Id.Db.Entities.App", b =>
                 {
-                    b.HasOne("Annium.Id.Db.Entities.User")
+                    b.HasOne("Annium.Id.Db.Entities.User", "Owner")
                         .WithMany()
                         .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Annium.Id.Db.Entities.Claim", b =>
                 {
-                    b.HasOne("Annium.Id.Db.Entities.App")
+                    b.HasOne("Annium.Id.Db.Entities.App", null)
                         .WithMany()
                         .HasForeignKey("AppId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Annium.Id.Db.Entities.Company", b =>
                 {
-                    b.HasOne("Annium.Id.Db.Entities.User")
+                    b.HasOne("Annium.Id.Db.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
-                    b.HasOne("Annium.Id.Db.Entities.Company")
+                    b.HasOne("Annium.Id.Db.Entities.Company", null)
                         .WithMany()
                         .HasForeignKey("ParentId")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -357,140 +435,161 @@ namespace Annium.Id.Db.Migrations
 
             modelBuilder.Entity("Annium.Id.Db.Entities.CompanyClaim", b =>
                 {
-                    b.HasOne("Annium.Id.Db.Entities.App")
+                    b.HasOne("Annium.Id.Db.Entities.App", null)
                         .WithMany()
                         .HasForeignKey("AppId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Annium.Id.Db.Entities.CompanyRole", b =>
                 {
-                    b.HasOne("Annium.Id.Db.Entities.App")
+                    b.HasOne("Annium.Id.Db.Entities.App", null)
                         .WithMany()
                         .HasForeignKey("AppId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Annium.Id.Db.Entities.CompanyRoleClaim", b =>
                 {
-                    b.HasOne("Annium.Id.Db.Entities.CompanyClaim")
+                    b.HasOne("Annium.Id.Db.Entities.CompanyClaim", "Claim")
                         .WithMany()
                         .HasForeignKey("ClaimId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
-                    b.HasOne("Annium.Id.Db.Entities.CompanyRole")
-                        .WithMany()
+                    b.HasOne("Annium.Id.Db.Entities.CompanyRole", "Role")
+                        .WithMany("Claims")
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Annium.Id.Db.Entities.CompanyUser", b =>
                 {
-                    b.HasOne("Annium.Id.Db.Entities.Company")
+                    b.HasOne("Annium.Id.Db.Entities.Company", null)
                         .WithMany()
                         .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
-                    b.HasOne("Annium.Id.Db.Entities.User")
+                    b.HasOne("Annium.Id.Db.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Annium.Id.Db.Entities.CompanyUserClaim", b =>
                 {
-                    b.HasOne("Annium.Id.Db.Entities.CompanyClaim")
+                    b.HasOne("Annium.Id.Db.Entities.CompanyClaim", "Claim")
                         .WithMany()
                         .HasForeignKey("ClaimId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
-                    b.HasOne("Annium.Id.Db.Entities.Company")
+                    b.HasOne("Annium.Id.Db.Entities.Company", null)
                         .WithMany()
                         .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
-                    b.HasOne("Annium.Id.Db.Entities.User")
+                    b.HasOne("Annium.Id.Db.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Annium.Id.Db.Entities.CompanyUserRole", b =>
                 {
-                    b.HasOne("Annium.Id.Db.Entities.Company")
+                    b.HasOne("Annium.Id.Db.Entities.Company", null)
                         .WithMany()
                         .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
-                    b.HasOne("Annium.Id.Db.Entities.CompanyRole")
+                    b.HasOne("Annium.Id.Db.Entities.CompanyRole", "Role")
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
-                    b.HasOne("Annium.Id.Db.Entities.User")
+                    b.HasOne("Annium.Id.Db.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Annium.Id.Db.Entities.Role", b =>
                 {
-                    b.HasOne("Annium.Id.Db.Entities.App")
+                    b.HasOne("Annium.Id.Db.Entities.App", null)
                         .WithMany()
                         .HasForeignKey("AppId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Annium.Id.Db.Entities.RoleClaim", b =>
                 {
-                    b.HasOne("Annium.Id.Db.Entities.Claim")
+                    b.HasOne("Annium.Id.Db.Entities.Claim", "Claim")
                         .WithMany()
                         .HasForeignKey("ClaimId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
-                    b.HasOne("Annium.Id.Db.Entities.Role")
-                        .WithMany()
+                    b.HasOne("Annium.Id.Db.Entities.Role", "Role")
+                        .WithMany("Claims")
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Annium.Id.Db.Entities.UserClaim", b =>
                 {
-                    b.HasOne("Annium.Id.Db.Entities.Claim")
+                    b.HasOne("Annium.Id.Db.Entities.Claim", "Claim")
                         .WithMany()
                         .HasForeignKey("ClaimId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
-                    b.HasOne("Annium.Id.Db.Entities.User")
+                    b.HasOne("Annium.Id.Db.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Annium.Id.Db.Entities.UserLogin", b =>
                 {
-                    b.HasOne("Annium.Id.Db.Entities.App")
+                    b.HasOne("Annium.Id.Db.Entities.App", null)
                         .WithMany()
                         .HasForeignKey("AppId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
-                    b.HasOne("Annium.Id.Db.Entities.User")
+                    b.HasOne("Annium.Id.Db.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Annium.Id.Db.Entities.UserRole", b =>
                 {
-                    b.HasOne("Annium.Id.Db.Entities.Role")
+                    b.HasOne("Annium.Id.Db.Entities.Role", "Role")
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
-                    b.HasOne("Annium.Id.Db.Entities.User")
+                    b.HasOne("Annium.Id.Db.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

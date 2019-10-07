@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Annium.Core.Mapper;
 using Annium.Id.Domain.Entities;
-using LinqToDB;
+using Microsoft.EntityFrameworkCore;
 
 namespace Annium.Id.Db.Repositories.Implementations
 {
@@ -24,43 +24,25 @@ namespace Annium.Id.Db.Repositories.Implementations
         public async Task<Role> CreateAsync(Role role)
         {
             var entity = mapper.Map<Entities.Role>(role);
-            entity.Id = Guid.NewGuid();
 
-            using(var db = context.GetDataConnection())
-            {
-                await db.InsertAsync(entity);
-            }
+            context.Roles.Add(entity);
+            await context.SaveChangesAsync();
 
             return mapper.Map<Role>(entity);
         }
 
         public async Task<Role[]> GetAllAsync(Guid appId)
         {
-            var raw = await context.Roles
-                .LeftJoin(context.RoleClaims, (r, rc) => rc.RoleId == r.Id, (r, rc) => new { r, rc })
-                .LeftJoin(context.Claims, (rc, c) => rc.rc.ClaimId == c.Id, (rc, c) => new { r = rc.r, rc = rc.rc, c })
-                .Where(rc => rc.r.AppId == appId)
-                .ToArrayAsync();
+            var raw = await context.Roles.AsNoTracking()
+                .Include(x => x.Claims).ThenInclude(x => x.Claim)
+                .ToListAsync();
 
-            var roles = raw
-                .GroupBy(rc => rc.r)
-                .Select(g =>
-                {
-                    var role = g.Key;
-                    role.Claims = g.Where(rc => rc.rc.ClaimId != Guid.Empty).Select(
-                        rc => new Entities.ClaimValue { Id = rc.c.Id, Key = rc.c.Key, Name = rc.c.Name, Value = rc.rc.Value }
-                    ).ToList();
-
-                    return role;
-                })
-                .ToArray();
-
-            return roles.Select(mapper.Map<Role>).ToArray();
+            return raw.Select(mapper.Map<Role>).ToArray();
         }
 
         public async Task<Role> GetByIdAsync(Guid id)
         {
-            var role = await context.Roles
+            var role = await context.Roles.AsNoTracking()
                 .FirstOrDefaultAsync(c => c.Id == id);
 
             return mapper.Map<Role>(role);
@@ -68,7 +50,7 @@ namespace Annium.Id.Db.Repositories.Implementations
 
         public async Task<Role> FindByKeyAsync(Guid appId, string key)
         {
-            var role = await context.Roles
+            var role = await context.Roles.AsNoTracking()
                 .FirstOrDefaultAsync(c => c.AppId == appId && c.Key == key);
 
             return mapper.Map<Role>(role);
@@ -76,32 +58,29 @@ namespace Annium.Id.Db.Repositories.Implementations
 
         public async Task<Role> UpdateAsync(Role role)
         {
-            var entity = mapper.Map<Entities.Role>(role);
+            var entity = await context.Roles
+                .Include(x => x.Claims).ThenInclude(x => x.Claim)
+                .SingleAsync(x => x.Id == role.Id);
 
-            await context.Roles
-                .UpdateAsync(
-                    c => c.Id == entity.Id,
-                    u => new Entities.Role
-                    {
-                        Key = entity.Key,
-                            Name = entity.Name,
-                    }
-                );
+            entity.Key = role.Key;
+            entity.Name = role.Name;
 
-            entity.Claims = await context.RoleClaims
-                .Where(rc => rc.RoleId == entity.Id)
-                .InnerJoin(context.Claims, (rc, c) => rc.ClaimId == c.Id, (rc, c) => new { rc, c })
-                .Select(
-                    rc => new Entities.ClaimValue { Id = rc.c.Id, Key = rc.c.Key, Name = rc.c.Name, Value = rc.rc.Value }
-                )
-                .ToListAsync();
+            await context.SaveChangesAsync();
 
             return mapper.Map<Role>(entity);
         }
 
-        public Task DeleteByIdAsync(Guid id)
+        public async Task DeleteByIdAsync(Guid id)
         {
-            return context.Roles.DeleteAsync(u => u.Id == id);
+            var entity = await context.Roles
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if (entity is null)
+                return;
+
+            context.Roles.Remove(entity);
+
+            await context.SaveChangesAsync();
         }
     }
 }

@@ -12,7 +12,7 @@ namespace Annium.Id.Application.Commands.CompanyClaims
     {
         public Guid ClaimId { get; }
         public Guid MyId { get; private set; }
-        public CompanyClaim Claim { get; private set; }
+        public CompanyClaim Claim { get; private set; } = null!;
 
         public DeleteCompanyClaimCommand(
             Guid claimId

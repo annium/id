@@ -12,7 +12,7 @@ namespace Annium.Id.Application.Commands.Me
         public string Login { get; }
         public string Password { get; }
         public string Email { get; }
-        public User User { get; private set; }
+        public User User { get; private set; } = null!;
 
         public UpdateMeCommand(
             string login,

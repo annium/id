@@ -4,11 +4,15 @@ using Annium.Id.Application.Commands.Companies;
 
 namespace Annium.Id.ViewModels.Companies.Requests
 {
-    public class UpdateCompanyRequest : IRequest<UpdateCompanyCommand>
+    public class UpdateCompanyRequest : UpdateCompanyRequestBase, IRequest<UpdateCompanyCommand>
     {
         public Guid CompanyId { get; set; }
+    }
+
+    public class UpdateCompanyRequestBase
+    {
         public Guid? ParentId { get; set; }
-        public string Key { get; set; }
-        public string Name { get; set; }
+        public string Key { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
     }
 }

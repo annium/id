@@ -12,7 +12,7 @@ namespace Annium.Id.Application.Commands.Login
     {
         public string AppKey { get; }
         public Guid LoginId { get; private set; }
-        public App App { get; private set; }
+        public App App { get; private set; } = null!;
 
         public LogOutCommand(string appKey)
         {

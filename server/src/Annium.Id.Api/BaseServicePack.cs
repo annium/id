@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using Annium.Core.DependencyInjection;
 using Annium.Core.Mediator;
 using Annium.Extensions.DependencyInjection;
@@ -16,7 +15,6 @@ namespace Annium.Id.Api
         public BaseServicePack()
         {
             Add<Application.ServicePack>();
-            Add<ViewModels.ServicePack>();
         }
 
         public override void Register(IServiceCollection services, IServiceProvider provider)
@@ -29,17 +27,12 @@ namespace Annium.Id.Api
             // tools
             services.AddSingleton<IIdentityDataAccessor, IdentityDataAccessor>();
 
-            var ignored = new [] { "ChainBuilder", "PipeHandler" };
-            services.AddLogging(route => route
-                // .UseConsole());
-                .For(m => !ignored.Any(m.Source.Name.Contains)).UseConsole());
             services.AddLocalization(opts => opts.UseYamlStorage());
             services.AddComposition();
             services.AddValidation();
             services.AddMapper();
             services.AddMediatorConfiguration(ConfigureMediator);
             services.AddMediator();
-
         }
 
         private void ConfigureMediator(MediatorConfiguration cfg)

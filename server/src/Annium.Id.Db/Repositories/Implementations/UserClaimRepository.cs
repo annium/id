@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Annium.Core.Mapper;
 using Annium.Id.Domain.Entities;
-using LinqToDB;
+using Microsoft.EntityFrameworkCore;
 
 namespace Annium.Id.Db.Repositories.Implementations
 {
@@ -23,39 +23,45 @@ namespace Annium.Id.Db.Repositories.Implementations
 
         public async Task<UserClaim> SaveAsync(UserClaim claim)
         {
-            var entity = mapper.Map<Entities.UserClaim>(claim);
+            var entity = await context.UserClaims
+                .FirstOrDefaultAsync(x => x.UserId == claim.UserId && x.ClaimId == claim.ClaimId);
 
-            using(var db = context.GetDataConnection())
+            if (entity is null)
             {
-                await db.InsertOrReplaceAsync(entity);
+                entity = mapper.Map<Entities.UserClaim>(claim);
+                context.UserClaims.Add(entity);
             }
+            else
+            {
+                entity.Value = claim.Value;
+            }
+
+            await context.SaveChangesAsync();
 
             return mapper.Map<UserClaim>(entity);
         }
 
         public async Task<ClaimValue[]> GetUserClaimsAsync(Guid appId, Guid userId)
         {
-            var raw = await context.Claims
-                .InnerJoin(context.UserClaims, (c, uc) => uc.ClaimId == c.Id, (c, uc) => new { c, uc })
-                .Where(e => e.c.AppId == appId && e.uc.UserId == userId)
-                .ToArrayAsync();
+            var raw = await context.UserClaims.AsNoTracking()
+                .Include(x => x.Claim)
+                .Where(x => x.Claim.AppId == appId && x.UserId == userId)
+                .ToListAsync();
 
-            var claims = raw
-                .GroupBy(e => e.c)
-                .Select(g =>
-                {
-                    var c = g.Key;
-
-                    return new Entities.ClaimValue { Id = c.Id, Key = c.Key, Name = c.Name, Value = g.First().uc.Value };
-                })
-                .ToArray();
-
-            return claims.Select(mapper.Map<ClaimValue>).ToArray();
+            return raw.Select(mapper.Map<ClaimValue>).ToArray();
         }
 
-        public Task DeleteByIdAsync(Guid userId, Guid claimId)
+        public async Task DeleteByIdAsync(Guid userId, Guid claimId)
         {
-            return context.UserClaims.DeleteAsync(uc => uc.UserId == userId && uc.ClaimId == claimId);
+            var entity = await context.UserClaims
+                .FirstOrDefaultAsync(x => x.UserId == userId && x.ClaimId == claimId);
+
+            if (entity is null)
+                return;
+
+            context.UserClaims.Remove(entity);
+
+            await context.SaveChangesAsync();
         }
     }
 }

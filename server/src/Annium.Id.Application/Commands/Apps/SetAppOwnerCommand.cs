@@ -13,8 +13,8 @@ namespace Annium.Id.Application.Commands.Apps
         public Guid AppId { get; }
         public Guid NewOwnerId { get; }
         public Guid MyId { get; private set; }
-        public App App { get; private set; }
-        public User NewOwner { get; private set; }
+        public App App { get; private set; } = null!;
+        public User NewOwner { get; private set; } = null!;
 
         public SetAppOwnerCommand(Guid appId, Guid newOwnerId)
         {

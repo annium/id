@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Annium.Core.Mapper;
 using Annium.Id.Domain.Entities;
-using LinqToDB;
+using Microsoft.EntityFrameworkCore;
 
 namespace Annium.Id.Db.Repositories.Implementations
 {
@@ -24,76 +24,79 @@ namespace Annium.Id.Db.Repositories.Implementations
         public async Task<App> CreateAsync(App app)
         {
             var entity = mapper.Map<Entities.App>(app);
-            entity.Id = Guid.NewGuid();
 
-            using(var db = context.GetDataConnection())
-            {
-                await db.InsertAsync(entity);
-            }
+            context.Apps.Add(entity);
+            await context.SaveChangesAsync();
 
             return mapper.Map<App>(entity);
         }
 
         public async Task<App[]> GetAllAsync()
         {
-            var apps = await context.Apps.ToArrayAsync();
+            var apps = await context.Apps.AsNoTracking().ToListAsync();
 
             return apps.Select(mapper.Map<App>).ToArray();
         }
 
         public async Task<App> GetByIdAsync(Guid id)
         {
-            var app = await context.Apps
-                .FirstOrDefaultAsync(u => u.Id == id);
+            var app = await context.Apps.AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == id);
 
             return mapper.Map<App>(app);
         }
 
         public async Task<App> FindByKeyAsync(string key)
         {
-            var app = await context.Apps
-                .FirstOrDefaultAsync(u => u.Key == key);
+            var app = await context.Apps.AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Key == key);
 
             return mapper.Map<App>(app);
         }
 
         public async Task<App> FindByApiTokenAsync(Guid token)
         {
-            var app = await context.Apps.FirstOrDefaultAsync(u => u.ApiToken == token);
+            var app = await context.Apps.AsNoTracking()
+                .FirstOrDefaultAsync(x => x.ApiToken == token);
 
             return mapper.Map<App>(app);
         }
 
         public async Task<App> UpdateAsync(App app)
         {
-            var entity = mapper.Map<Entities.App>(app);
+            var entity = await context.Apps
+                .SingleAsync(x => x.Id == app.Id);
 
-            await context.Apps
-                .UpdateAsync(
-                    u => u.Id == entity.Id,
-                    u => new Entities.App
-                    {
-                        Key = entity.Key,
-                            Name = entity.Name,
-                            OwnerId = entity.OwnerId,
-                    }
-                );
+            entity.OwnerId = app.OwnerId;
+            entity.Key = app.Key;
+            entity.Name = app.Name;
+
+            await context.SaveChangesAsync();
 
             return mapper.Map<App>(entity);
         }
 
-        public Task UpdateApiTokenAsync(Guid appId, Guid apiToken)
+        public async Task UpdateApiTokenAsync(Guid appId, Guid apiToken)
         {
-            return context.Apps
-                .UpdateAsync(
-                    u => u.Id == appId,
-                    u => new Entities.App { ApiToken = apiToken, }
-                );
+            var entity = await context.Apps
+                .SingleAsync(x => x.Id == appId);
+
+            entity.ApiToken = apiToken;
+
+            await context.SaveChangesAsync();
         }
 
-        public Task DeleteByIdAsync(Guid id)
+        public async Task DeleteByIdAsync(Guid id)
         {
-            return context.Apps.DeleteAsync(u => u.Id == id);
+            var entity = await context.Apps
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if (entity is null)
+                return;
+
+            context.Apps.Remove(entity);
+
+            await context.SaveChangesAsync();
         }
     }
 }

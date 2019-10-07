@@ -12,8 +12,8 @@ namespace Annium.Id.Application.Commands.Login
         public string AppKey { get; }
         public string Login { get; }
         public string Password { get; }
-        public App App { get; private set; }
-        public User User { get; private set; }
+        public App App { get; private set; } = null!;
+        public User User { get; private set; } = null!;
 
         public LogInCommand(
             string appKey,

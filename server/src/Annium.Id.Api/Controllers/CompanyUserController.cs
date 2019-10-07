@@ -47,11 +47,15 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPost("claims/{claimId:guid}")]
         [Authorize]
-        public Task<IActionResult> AddCompanyClaimToCompanyUserAsync(Guid companyId, Guid userId, Guid claimId, [FromBody] AddCompanyClaimToCompanyUserRequest request)
+        public Task<IActionResult> AddCompanyClaimToCompanyUserAsync(Guid companyId, Guid userId, Guid claimId, [FromBody] AddCompanyClaimToCompanyUserRequestBase requestBase)
         {
-            request.CompanyId = companyId;
-            request.UserId = userId;
-            request.ClaimId = claimId;
+            var request = new AddCompanyClaimToCompanyUserRequest
+            {
+                CompanyId = companyId,
+                UserId = userId,
+                ClaimId = claimId,
+                Value = requestBase.Value,
+            };
 
             return HandleAsync(request);
         }

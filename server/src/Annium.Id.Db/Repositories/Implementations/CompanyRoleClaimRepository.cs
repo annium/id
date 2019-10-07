@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Annium.Core.Mapper;
 using Annium.Id.Domain.Entities;
-using LinqToDB;
+using Microsoft.EntityFrameworkCore;
 
 namespace Annium.Id.Db.Repositories.Implementations
 {
@@ -22,19 +22,35 @@ namespace Annium.Id.Db.Repositories.Implementations
 
         public async Task<CompanyRoleClaim> SaveAsync(CompanyRoleClaim claim)
         {
-            var entity = mapper.Map<Entities.CompanyRoleClaim>(claim);
+            var entity = await context.CompanyRoleClaims
+                .FirstOrDefaultAsync(x => x.RoleId == claim.RoleId && x.ClaimId == claim.ClaimId);
 
-            using(var db = context.GetDataConnection())
+            if (entity is null)
             {
-                await db.InsertOrReplaceAsync(entity);
+                entity = mapper.Map<Entities.CompanyRoleClaim>(claim);
+                context.CompanyRoleClaims.Add(entity);
             }
+            else
+            {
+                entity.Value = claim.Value;
+            }
+
+            await context.SaveChangesAsync();
 
             return mapper.Map<CompanyRoleClaim>(entity);
         }
 
-        public Task DeleteByIdAsync(Guid roleId, Guid claimId)
+        public async Task DeleteByIdAsync(Guid roleId, Guid claimId)
         {
-            return context.CompanyRoleClaims.DeleteAsync(rc => rc.RoleId == roleId && rc.ClaimId == claimId);
+            var entity = await context.CompanyRoleClaims
+                .FirstOrDefaultAsync(x => x.RoleId == roleId && x.ClaimId == claimId);
+
+            if (entity is null)
+                return;
+
+            context.CompanyRoleClaims.Remove(entity);
+
+            await context.SaveChangesAsync();
         }
     }
 }

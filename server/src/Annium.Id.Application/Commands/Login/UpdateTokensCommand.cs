@@ -11,8 +11,8 @@ namespace Annium.Id.Application.Commands.Login
     {
         public string AppKey { get; }
         public Guid RefreshToken { get; }
-        public App App { get; private set; }
-        public UserLogin Login { get; private set; }
+        public App App { get; private set; } = null!;
+        public UserLogin Login { get; private set; } = null!;
 
         public UpdateTokensCommand(
             string appKey,

@@ -14,7 +14,7 @@ namespace Annium.Id.Application.Commands.CompanyClaims
         public string Key { get; }
         public string Name { get; }
         public Guid MyId { get; private set; }
-        public App App { get; private set; }
+        public App App { get; private set; } = null!;
 
         public CreateCompanyClaimCommand(
             Guid appId,

@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Annium.Core.Mapper;
 using Annium.Id.Domain.Entities;
-using LinqToDB;
+using Microsoft.EntityFrameworkCore;
 
 namespace Annium.Id.Db.Repositories.Implementations
 {
@@ -23,60 +23,62 @@ namespace Annium.Id.Db.Repositories.Implementations
         public async Task<User> CreateAsync(User user)
         {
             var entity = mapper.Map<Entities.User>(user);
-            entity.Id = Guid.NewGuid();
 
-            using(var db = context.GetDataConnection())
-            {
-                await db.InsertAsync(entity);
-            }
+            context.Users.Add(entity);
+            await context.SaveChangesAsync();
 
             return mapper.Map<User>(entity);
         }
 
         public async Task<User> GetByIdAsync(Guid id)
         {
-            var user = await context.Users
-                .FirstOrDefaultAsync(u => u.Id == id);
-
-            return mapper.Map<User>(user);
-        }
-
-        public async Task<User> FindByLoginAsync(string login)
-        {
-            var user = await context.Users
-                .FirstOrDefaultAsync(u => u.Login == login);
-
-            return mapper.Map<User>(user);
-        }
-
-        public async Task<User> FindByEmailAsync(string email)
-        {
-            var user = await context.Users.FirstOrDefaultAsync(u => u.Email == email);
-
-            return mapper.Map<User>(user);
-        }
-
-        public async Task<User> UpdateAsync(User user)
-        {
-            var entity = mapper.Map<Entities.User>(user);
-
-            await context.Users
-                .UpdateAsync(
-                    u => u.Id == entity.Id,
-                    u => new Entities.User
-                    {
-                        Login = entity.Login,
-                            PasswordHash = entity.PasswordHash,
-                            Email = entity.Email,
-                    }
-                );
+            var entity = await context.Users.AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == id);
 
             return mapper.Map<User>(entity);
         }
 
-        public Task DeleteByIdAsync(Guid id)
+        public async Task<User> FindByLoginAsync(string login)
         {
-            return context.Users.DeleteAsync(u => u.Id == id);
+            var entity = await context.Users.AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Login == login);
+
+            return mapper.Map<User>(entity);
+        }
+
+        public async Task<User> FindByEmailAsync(string email)
+        {
+            var entity = await context.Users.AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Email == email);
+
+            return mapper.Map<User>(entity);
+        }
+
+        public async Task<User> UpdateAsync(User user)
+        {
+            var entity = await context.Users
+                .FirstOrDefaultAsync(x => x.Id == user.Id);
+
+            entity.Login = user.Login;
+            entity.PasswordHash = user.PasswordHash;
+            entity.Email = user.Email;
+
+            await context.SaveChangesAsync();
+
+            return mapper.Map<User>(entity);
+        }
+
+        public async Task DeleteByIdAsync(Guid id)
+        {
+            var entity = await context.Users.AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if (entity is null)
+                return;
+
+            context.Users.Remove(entity);
+
+            await context.SaveChangesAsync();
         }
     }
 }

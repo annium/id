@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Annium.Core.Mapper;
 using Annium.Id.Domain.Entities;
-using LinqToDB;
+using Microsoft.EntityFrameworkCore;
 
 namespace Annium.Id.Db.Repositories.Implementations
 {
@@ -24,44 +24,49 @@ namespace Annium.Id.Db.Repositories.Implementations
 
         public async Task<CompanyUserClaim> SaveAsync(CompanyUserClaim claim)
         {
-            var entity = mapper.Map<Entities.CompanyUserClaim>(claim);
+            var entity = await context.CompanyUserClaims
+                .FirstOrDefaultAsync(x => x.CompanyId == claim.CompanyId && x.UserId == claim.UserId && x.ClaimId == claim.ClaimId);
 
-            using(var db = context.GetDataConnection())
+            if (entity is null)
             {
-                await db.InsertOrReplaceAsync(entity);
+                entity = mapper.Map<Entities.CompanyUserClaim>(claim);
+                context.CompanyUserClaims.Add(entity);
             }
+            else
+            {
+                entity.Value = claim.Value;
+            }
+
+            await context.SaveChangesAsync();
 
             return mapper.Map<CompanyUserClaim>(entity);
         }
 
         public async Task<IReadOnlyDictionary<Guid, ClaimValue[]>> GetCompaniesUserClaimsAsync(Guid appId, Guid userId)
         {
-            var raw = await context.CompanyClaims
-                .InnerJoin(context.CompanyUserClaims, (c, uc) => uc.ClaimId == c.Id, (c, uc) => new { c, uc })
-                .Where(e => e.c.AppId == appId && e.uc.UserId == userId)
-                .ToArrayAsync();
+            var raw = await context.CompanyUserClaims.AsNoTracking()
+                .Include(x => x.Claim)
+                .Where(x => x.Claim.AppId == appId && x.UserId == userId)
+                .ToListAsync();
 
-            var claims = raw
-                .GroupBy(e => e.uc.CompanyId)
+            return raw.GroupBy(x => x.CompanyId)
                 .ToDictionary(
-                    g => g.Key,
-                    g => g.GroupBy(e => e.c)
-                    .Select(e =>
-                    {
-                        var c = e.Key;
-
-                        return new Entities.ClaimValue { Id = c.Id, Key = c.Key, Name = c.Name, Value = g.First().uc.Value };
-                    })
-                    .Select(mapper.Map<ClaimValue>)
-                    .ToArray()
+                    x => x.Key,
+                    x => x.Select(mapper.Map<ClaimValue>).ToArray()
                 );
-
-            return claims;
         }
 
-        public Task DeleteByIdAsync(Guid companyId, Guid userId, Guid claimId)
+        public async Task DeleteByIdAsync(Guid companyId, Guid userId, Guid claimId)
         {
-            return context.CompanyUserClaims.DeleteAsync(uc => uc.CompanyId == companyId && uc.UserId == userId && uc.ClaimId == claimId);
+            var entity = await context.CompanyUserClaims
+                .FirstOrDefaultAsync(x => x.CompanyId == companyId && x.UserId == userId && x.ClaimId == claimId);
+
+            if (entity is null)
+                return;
+
+            context.CompanyUserClaims.Remove(entity);
+
+            await context.SaveChangesAsync();
         }
     }
 }

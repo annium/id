@@ -38,19 +38,28 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPut("{roleId:guid}")]
         [Authorize]
-        public Task<IActionResult> UpdateRoleAsync(Guid roleId, [FromBody] UpdateRoleRequest request)
+        public Task<IActionResult> UpdateRoleAsync(Guid roleId, [FromBody] UpdateRoleRequestBase requestBase)
         {
-            request.RoleId = roleId;
+            var request = new UpdateRoleRequest
+            {
+                RoleId = roleId,
+                Key = requestBase.Key,
+                Name = requestBase.Name,
+            };
 
             return HandleAsync(request);
         }
 
         [HttpPost("{roleId:guid}/claims/{claimId:guid}")]
         [Authorize]
-        public Task<IActionResult> AddClaimToRoleAsync(Guid roleId, Guid claimId, [FromBody] AddClaimToRoleRequest request)
+        public Task<IActionResult> AddClaimToRoleAsync(Guid roleId, Guid claimId, [FromBody] AddClaimToRoleRequestBase requestBase)
         {
-            request.RoleId = roleId;
-            request.ClaimId = claimId;
+            var request = new AddClaimToRoleRequest
+            {
+                RoleId = roleId,
+                ClaimId = claimId,
+                Value = requestBase.Value,
+            };
 
             return HandleAsync(request);
         }
@@ -59,9 +68,11 @@ namespace Annium.Id.Api.Controllers
         [Authorize]
         public Task<IActionResult> DeleteClaimFromRoleAsync(Guid roleId, Guid claimId)
         {
-            var request = new DeleteClaimFromRoleRequest();
-            request.RoleId = roleId;
-            request.ClaimId = claimId;
+            var request = new DeleteClaimFromRoleRequest
+            {
+                RoleId = roleId,
+                ClaimId = claimId
+            };
 
             return HandleAsync(request);
         }
@@ -70,8 +81,10 @@ namespace Annium.Id.Api.Controllers
         [Authorize]
         public Task<IActionResult> DeleteRoleAsync(Guid roleId)
         {
-            var request = new DeleteRoleRequest();
-            request.RoleId = roleId;
+            var request = new DeleteRoleRequest
+            {
+                RoleId = roleId
+            };
 
             return HandleAsync(request);
         }

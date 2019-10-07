@@ -4,10 +4,14 @@ using Annium.Id.Application.Commands.CompanyRoles;
 
 namespace Annium.Id.ViewModels.CompanyRoles.Requests
 {
-    public class AddCompanyClaimToCompanyRoleRequest : IRequest<AddCompanyClaimToCompanyRoleCommand>
+    public class AddCompanyClaimToCompanyRoleRequest : AddCompanyClaimToCompanyRoleRequestBase, IRequest<AddCompanyClaimToCompanyRoleCommand>
     {
         public Guid RoleId { get; set; }
         public Guid ClaimId { get; set; }
-        public string Value { get; set; }
+    }
+
+    public class AddCompanyClaimToCompanyRoleRequestBase
+    {
+        public string Value { get; set; } = string.Empty;
     }
 }

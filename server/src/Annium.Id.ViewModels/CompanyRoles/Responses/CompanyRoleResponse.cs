@@ -9,8 +9,8 @@ namespace Annium.Id.ViewModels.CompanyRoles.Responses
     {
         public Guid Id { get; set; }
         public Guid AppId { get; set; }
-        public string Key { get; set; }
-        public string Name { get; set; }
-        public CompanyClaimValueResponse[] Claims { get; set; }
+        public string Key { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
+        public CompanyClaimValueResponse[] Claims { get; set; } = Array.Empty<CompanyClaimValueResponse>();
     }
 }

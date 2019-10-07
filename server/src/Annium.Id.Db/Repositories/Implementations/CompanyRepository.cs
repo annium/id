@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Annium.Core.Mapper;
 using Annium.Id.Domain.Entities;
-using LinqToDB;
+using Microsoft.EntityFrameworkCore;
 
 namespace Annium.Id.Db.Repositories.Implementations
 {
@@ -24,20 +24,17 @@ namespace Annium.Id.Db.Repositories.Implementations
         public async Task<Company> CreateAsync(Company company)
         {
             var entity = mapper.Map<Entities.Company>(company);
-            entity.Id = Guid.NewGuid();
 
-            using(var db = context.GetDataConnection())
-            {
-                await db.InsertAsync(entity);
-            }
+            context.Companies.Add(entity);
+            await context.SaveChangesAsync();
 
             return mapper.Map<Company>(entity);
         }
 
         public async Task<Company[]> GetAllByIdsAsync(Guid[] ids)
         {
-            var companies = await context.Companies
-                .Where(c => ids.Contains(c.Id))
+            var companies = await context.Companies.AsNoTracking()
+                .Where(x => ids.Contains(x.Id))
                 .ToArrayAsync();
 
             return companies.Select(mapper.Map<Company>).ToArray();
@@ -45,41 +42,45 @@ namespace Annium.Id.Db.Repositories.Implementations
 
         public async Task<Company> GetByIdAsync(Guid id)
         {
-            var company = await context.Companies
-                .FirstOrDefaultAsync(u => u.Id == id);
+            var company = await context.Companies.AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == id);
 
             return mapper.Map<Company>(company);
         }
 
         public async Task<Company> FindByKeyAsync(string key)
         {
-            var company = await context.Companies
-                .FirstOrDefaultAsync(u => u.Key == key);
+            var company = await context.Companies.AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Key == key);
 
             return mapper.Map<Company>(company);
         }
 
         public async Task<Company> UpdateAsync(Company company)
         {
-            var entity = mapper.Map<Entities.Company>(company);
+            var entity = await context.Companies
+                .SingleAsync(x => x.Id == company.Id);
 
-            await context.Companies
-                .UpdateAsync(
-                    u => u.Id == entity.Id,
-                    u => new Entities.Company
-                    {
-                        Key = entity.Key,
-                            Name = entity.Name,
-                            OwnerId = entity.OwnerId,
-                    }
-                );
+            entity.OwnerId = company.OwnerId;
+            entity.Key = company.Key;
+            entity.Name = company.Name;
+
+            await context.SaveChangesAsync();
 
             return mapper.Map<Company>(entity);
         }
 
-        public Task DeleteByIdAsync(Guid id)
+        public async Task DeleteByIdAsync(Guid id)
         {
-            return context.Companies.DeleteAsync(u => u.Id == id);
+            var entity = await context.Companies
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if (entity is null)
+                return;
+
+            context.Companies.Remove(entity);
+
+            await context.SaveChangesAsync();
         }
     }
 }

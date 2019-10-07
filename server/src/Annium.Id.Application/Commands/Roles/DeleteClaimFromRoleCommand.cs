@@ -14,7 +14,7 @@ namespace Annium.Id.Application.Commands.Roles
         public Guid ClaimId { get; }
         public Guid MyId { get; private set; }
         public Role Role { get; private set; }
-        public Claim Claim { get; private set; }
+        public Claim Claim { get; private set; } = null!;
 
         public DeleteClaimFromRoleCommand(
             Guid roleId,

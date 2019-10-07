@@ -6,19 +6,8 @@ namespace Annium.Id.ViewModels.Me.Responses
 {
     public class MeResponse : IResponse<User>
     {
-        public Guid Id { get; }
-        public string Login { get; }
-        public string Email { get; }
-
-        public MeResponse(
-            Guid id,
-            string login,
-            string email
-        )
-        {
-            Id = id;
-            Login = login;
-            Email = email;
-        }
+        public Guid Id { get; set; }
+        public string Login { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
     }
 }

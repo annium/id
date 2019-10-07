@@ -19,8 +19,6 @@ namespace Annium.Id.Db.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
-                    table.UniqueConstraint("AK_Users_Email", x => x.Email);
-                    table.UniqueConstraint("AK_Users_Login", x => x.Login);
                 });
 
             migrationBuilder.CreateTable(
@@ -36,7 +34,6 @@ namespace Annium.Id.Db.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Apps", x => x.Id);
-                    table.UniqueConstraint("AK_Apps_Key", x => x.Key);
                     table.ForeignKey(
                         name: "FK_Apps_Users_OwnerId",
                         column: x => x.OwnerId,
@@ -58,7 +55,6 @@ namespace Annium.Id.Db.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Companies", x => x.Id);
-                    table.UniqueConstraint("AK_Companies_Key", x => x.Key);
                     table.ForeignKey(
                         name: "FK_Companies_Users_OwnerId",
                         column: x => x.OwnerId,
@@ -85,7 +81,6 @@ namespace Annium.Id.Db.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Claims", x => x.Id);
-                    table.UniqueConstraint("AK_Claims_AppId_Key", x => new { x.AppId, x.Key });
                     table.ForeignKey(
                         name: "FK_Claims_Apps_AppId",
                         column: x => x.AppId,
@@ -106,7 +101,6 @@ namespace Annium.Id.Db.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_CompanyClaims", x => x.Id);
-                    table.UniqueConstraint("AK_CompanyClaims_AppId_Key", x => new { x.AppId, x.Key });
                     table.ForeignKey(
                         name: "FK_CompanyClaims_Apps_AppId",
                         column: x => x.AppId,
@@ -127,7 +121,6 @@ namespace Annium.Id.Db.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_CompanyRoles", x => x.Id);
-                    table.UniqueConstraint("AK_CompanyRoles_AppId_Key", x => new { x.AppId, x.Key });
                     table.ForeignKey(
                         name: "FK_CompanyRoles_Apps_AppId",
                         column: x => x.AppId,
@@ -148,7 +141,6 @@ namespace Annium.Id.Db.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Roles", x => x.Id);
-                    table.UniqueConstraint("AK_Roles_AppId_Key", x => new { x.AppId, x.Key });
                     table.ForeignKey(
                         name: "FK_Roles_Apps_AppId",
                         column: x => x.AppId,
@@ -173,7 +165,6 @@ namespace Annium.Id.Db.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_UserLogins", x => x.Id);
-                    table.UniqueConstraint("AK_UserLogins_RefreshToken", x => x.RefreshToken);
                     table.ForeignKey(
                         name: "FK_UserLogins_Apps_AppId",
                         column: x => x.AppId,
@@ -377,7 +368,7 @@ namespace Annium.Id.Db.Migrations
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "Email", "Login", "PasswordHash" },
-                values: new object[] { new Guid("119c1b23-3b0d-4c5c-801d-6bbcdcfa732e"), "a.kreskiyan@gmail.comz", "alex", "ohraPG8QMZiOnXX+MWh/45aZDwjtv/7FQMFzXxSRxQjLdSMBHpELKDSznF6cSUalufovlgCfFkn4mtR7eXB+8w==" });
+                values: new object[] { new Guid("119c1b23-3b0d-4c5c-801d-6bbcdcfa732e"), "a.kreskiyan@gmail.com", "alex", "ohraPG8QMZiOnXX+MWh/45aZDwjtv/7FQMFzXxSRxQjLdSMBHpELKDSznF6cSUalufovlgCfFkn4mtR7eXB+8w==" });
 
             migrationBuilder.InsertData(
                 table: "Apps",
@@ -385,9 +376,27 @@ namespace Annium.Id.Db.Migrations
                 values: new object[] { new Guid("1b8c21ef-f738-4d7f-9a8d-c411c22f4ef1"), new Guid("b62acd2a-2f1b-4da1-9273-abab4b9da7f7"), "id", "Annium ID", new Guid("119c1b23-3b0d-4c5c-801d-6bbcdcfa732e") });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Apps_Key",
+                table: "Apps",
+                column: "Key",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Apps_OwnerId",
                 table: "Apps",
                 column: "OwnerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Claims_AppId_Key",
+                table: "Claims",
+                columns: new[] { "AppId", "Key" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Companies_Key",
+                table: "Companies",
+                column: "Key",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Companies_OwnerId",
@@ -400,9 +409,21 @@ namespace Annium.Id.Db.Migrations
                 column: "ParentId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CompanyClaims_AppId_Key",
+                table: "CompanyClaims",
+                columns: new[] { "AppId", "Key" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CompanyRoleClaims_ClaimId",
                 table: "CompanyRoleClaims",
                 column: "ClaimId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CompanyRoles_AppId_Key",
+                table: "CompanyRoles",
+                columns: new[] { "AppId", "Key" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_CompanyUserClaims_ClaimId",
@@ -435,6 +456,12 @@ namespace Annium.Id.Db.Migrations
                 column: "ClaimId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Roles_AppId_Key",
+                table: "Roles",
+                columns: new[] { "AppId", "Key" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserClaims_ClaimId",
                 table: "UserClaims",
                 column: "ClaimId");
@@ -445,6 +472,12 @@ namespace Annium.Id.Db.Migrations
                 column: "AppId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_UserLogins_RefreshToken",
+                table: "UserLogins",
+                column: "RefreshToken",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserLogins_UserId",
                 table: "UserLogins",
                 column: "UserId");
@@ -453,6 +486,18 @@ namespace Annium.Id.Db.Migrations
                 name: "IX_UserRoles_RoleId",
                 table: "UserRoles",
                 column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_Email",
+                table: "Users",
+                column: "Email",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_Login",
+                table: "Users",
+                column: "Login",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

@@ -15,9 +15,9 @@ namespace Annium.Id.Application.Commands.CompanyUsers
         public Guid ClaimId { get; }
         public string Value { get; }
         public Guid MyId { get; private set; }
-        public Company Company { get; private set; }
-        public User User { get; private set; }
-        public CompanyClaim Claim { get; private set; }
+        public Company Company { get; private set; } = null!;
+        public User User { get; private set; } = null!;
+        public CompanyClaim Claim { get; private set; } = null!;
 
         public AddCompanyClaimToCompanyUserCommand(
             Guid companyId,

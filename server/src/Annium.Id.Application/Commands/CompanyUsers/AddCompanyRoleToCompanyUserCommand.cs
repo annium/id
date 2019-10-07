@@ -14,9 +14,9 @@ namespace Annium.Id.Application.Commands.CompanyUsers
         public Guid UserId { get; }
         public Guid RoleId { get; }
         public Guid MyId { get; private set; }
-        public Company Company { get; private set; }
-        public User User { get; private set; }
-        public CompanyRole Role { get; private set; }
+        public Company Company { get; private set; } = null!;
+        public User User { get; private set; } = null!;
+        public CompanyRole Role { get; private set; } = null!;
 
         public AddCompanyRoleToCompanyUserCommand(
             Guid companyId,

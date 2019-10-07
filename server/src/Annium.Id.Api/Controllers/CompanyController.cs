@@ -46,9 +46,15 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPut("{companyId:guid}")]
         [Authorize]
-        public Task<IActionResult> UpdateCompanyAsync(Guid companyId, [FromBody] UpdateCompanyRequest request)
+        public Task<IActionResult> UpdateCompanyAsync(Guid companyId, [FromBody] UpdateCompanyRequestBase requestBase)
         {
-            request.CompanyId = companyId;
+            var request = new UpdateCompanyRequest
+            {
+                CompanyId = companyId,
+                ParentId = requestBase.ParentId,
+                Key = requestBase.Key,
+                Name = requestBase.Name,
+            };
 
             return HandleAsync(request);
         }

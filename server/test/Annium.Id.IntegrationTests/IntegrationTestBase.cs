@@ -27,8 +27,8 @@ namespace Annium.Id.IntegrationTests
 {
     public class IntegrationTestBase : IntegrationTest
     {
-        protected IRequest id => GetRequest<Api.Startup<Api.TestServicePack>>();
-        protected IRequest demo => GetRequest<Id.DemoClient.Startup<Id.DemoClient.ServicePack>>();
+        protected IRequest id => GetRequest<Api.Startup, Api.TestServicePack>();
+        protected IRequest demo => GetRequest<Id.DemoClient.Startup, Id.DemoClient.ServicePack>();
 
         protected async Task<MeResponse> RegisterUserAsync(
             string login = "demo",

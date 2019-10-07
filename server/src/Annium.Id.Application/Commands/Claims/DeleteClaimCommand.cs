@@ -12,7 +12,7 @@ namespace Annium.Id.Application.Commands.Claims
     {
         public Guid ClaimId { get; }
         public Guid MyId { get; private set; }
-        public Claim Claim { get; private set; }
+        public Claim Claim { get; private set; } = null!;
 
         public DeleteClaimCommand(
             Guid claimId
@@ -34,7 +34,6 @@ namespace Annium.Id.Application.Commands.Claims
     {
         public DeleteClaimCommandComposer(
             ITokenAccessor tokenAccessor,
-            IAppRepository appRepository,
             IClaimRepository claimRepository
         )
         {

@@ -14,8 +14,8 @@ namespace Annium.Id.Application.Commands.Users
         public Guid ClaimId { get; }
         public string Value { get; }
         public Guid MyId { get; private set; }
-        public User User { get; private set; }
-        public Claim Claim { get; private set; }
+        public User User { get; private set; } = null!;
+        public Claim Claim { get; private set; } = null!;
 
         public AddClaimToUserCommand(
             Guid userId,

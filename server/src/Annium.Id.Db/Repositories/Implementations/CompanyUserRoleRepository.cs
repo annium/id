@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Annium.Core.Mapper;
 using Annium.Id.Domain.Entities;
-using LinqToDB;
+using Microsoft.EntityFrameworkCore;
 
 namespace Annium.Id.Db.Repositories.Implementations
 {
@@ -24,54 +24,44 @@ namespace Annium.Id.Db.Repositories.Implementations
 
         public async Task<CompanyUserRole> SaveAsync(CompanyUserRole userRole)
         {
-            var entity = mapper.Map<Entities.CompanyUserRole>(userRole);
+            var entity = await context.CompanyUserRoles
+                .FirstOrDefaultAsync(x => x.CompanyId == userRole.CompanyId && x.UserId == userRole.UserId && x.RoleId == userRole.RoleId);
 
-            if ((await context.CompanyUserRoles
-                    .CountAsync(ur => ur.CompanyId == entity.CompanyId && ur.UserId == entity.UserId && ur.RoleId == entity.RoleId)) == 0)
-                using(var db = context.GetDataConnection())
-                {
-                    await db.InsertAsync(entity);
-                }
+            if (entity is null)
+            {
+                entity = mapper.Map<Entities.CompanyUserRole>(userRole);
+                context.CompanyUserRoles.Add(entity);
+                await context.SaveChangesAsync();
+            }
 
             return mapper.Map<CompanyUserRole>(entity);
         }
 
         public async Task<IReadOnlyDictionary<Guid, CompanyRole[]>> GetCompaniesUserRolesAsync(Guid appId, Guid userId)
         {
-            var raw = await context.CompanyRoles
-                .InnerJoin(context.CompanyUserRoles, (r, ur) => ur.RoleId == r.Id, (r, ur) => new { r, ur })
-                .LeftJoin(context.CompanyRoleClaims, (e, rc) => rc.RoleId == e.r.Id, (e, rc) => new { r = e.r, ur = e.ur, rc })
-                .LeftJoin(context.CompanyClaims, (e, c) => e.rc.ClaimId == c.Id, (e, c) => new { r = e.r, ur = e.ur, rc = e.rc, c })
-                .Where(e => e.r.AppId == appId && e.ur.UserId == userId)
-                .ToArrayAsync();
+            var raw = await context.CompanyUserRoles.AsNoTracking()
+                .Include(x => x.Role).ThenInclude(x => x.Claims).ThenInclude(x => x.Claim)
+                .Where(x => x.Role.AppId == appId && x.UserId == userId)
+                .ToListAsync();
 
-            var roles = raw
-                .GroupBy(e => e.ur.CompanyId)
+            return raw.GroupBy(x => x.CompanyId)
                 .ToDictionary(
-                    g => g.Key,
-                    g => g.GroupBy(r => r.r)
-                    .Select(r =>
-                    {
-                        var role = r.Key;
-                        role.Claims = r
-                            .Where(e => e.rc.ClaimId != Guid.Empty)
-                            .Select(
-                                e => new Entities.ClaimValue { Id = e.c.Id, Key = e.c.Key, Name = e.c.Name, Value = e.rc.Value }
-                            )
-                            .ToList();
-
-                        return role;
-                    })
-                    .Select(mapper.Map<CompanyRole>)
-                    .ToArray()
+                    x => x.Key,
+                    x => x.Select(mapper.Map<CompanyRole>).ToArray()
                 );
-
-            return roles;
         }
 
-        public Task DeleteByIdAsync(Guid companyId, Guid userId, Guid roleId)
+        public async Task DeleteByIdAsync(Guid companyId, Guid userId, Guid roleId)
         {
-            return context.CompanyUserRoles.DeleteAsync(ur => ur.CompanyId == companyId && ur.UserId == userId && ur.RoleId == roleId);
+            var entity = await context.CompanyUserRoles
+                .FirstOrDefaultAsync(x => x.CompanyId == companyId && x.UserId == userId && x.RoleId == roleId);
+
+            if (entity is null)
+                return;
+
+            context.CompanyUserRoles.Remove(entity);
+
+            await context.SaveChangesAsync();
         }
     }
 }

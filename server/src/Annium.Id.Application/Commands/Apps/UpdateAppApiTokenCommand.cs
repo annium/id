@@ -12,7 +12,7 @@ namespace Annium.Id.Application.Commands.Apps
     {
         public Guid AppId { get; }
         public Guid MyId { get; private set; }
-        public App App { get; private set; }
+        public App App { get; private set; } = null!;
 
         public UpdateAppApiTokenCommand(
             Guid appId

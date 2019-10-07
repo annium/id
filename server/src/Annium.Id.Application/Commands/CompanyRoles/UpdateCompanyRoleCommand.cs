@@ -14,7 +14,7 @@ namespace Annium.Id.Application.Commands.CompanyRoles
         public string Key { get; }
         public string Name { get; }
         public Guid MyId { get; private set; }
-        public CompanyRole Role { get; private set; }
+        public CompanyRole Role { get; private set; } = null!;
 
         public UpdateCompanyRoleCommand(
             Guid roleId,

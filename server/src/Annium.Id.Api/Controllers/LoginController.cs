@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using Annium.AspNetCore.Extensions;
 using Annium.Core.Mediator;
@@ -20,17 +19,26 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpPost("login")]
-        public Task<IActionResult> LoginAsync(string appKey, [FromBody] LogInRequest request)
+        public Task<IActionResult> LoginAsync(string appKey, [FromBody] LogInRequestBase requestBase)
         {
-            request.AppKey = appKey;
+            var request = new LogInRequest
+            {
+                AppKey = appKey,
+                Login = requestBase.Login,
+                Password = requestBase.Password,
+            };
 
             return HandleAsync<LogInRequest, TokensResponse>(request);
         }
 
         [HttpPut("token")]
-        public Task<IActionResult> UpdateTokenAsync(string appKey, [FromQuery] UpdateTokensRequest request)
+        public Task<IActionResult> UpdateTokenAsync(string appKey, [FromQuery] UpdateTokensRequestBase requestBase)
         {
-            request.AppKey = appKey;
+            var request = new UpdateTokensRequest
+            {
+                AppKey = appKey,
+                RefreshToken = requestBase.RefreshToken,
+            };
 
             return HandleAsync<UpdateTokensRequest, TokensResponse>(request);
         }

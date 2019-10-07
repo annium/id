@@ -12,7 +12,7 @@ namespace Annium.Id.Application.Commands.CompanyRoles
     {
         public Guid RoleId { get; }
         public Guid MyId { get; private set; }
-        public CompanyRole Role { get; private set; }
+        public CompanyRole Role { get; private set; } = null!;
 
         public DeleteCompanyRoleCommand(
             Guid roleId

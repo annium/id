@@ -8,7 +8,7 @@ namespace Annium.Id.ViewModels.CompanyClaims.Responses
     {
         public Guid Id { get; set; }
         public Guid AppId { get; set; }
-        public string Key { get; set; }
-        public string Name { get; set; }
+        public string Key { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
     }
 }

@@ -14,8 +14,8 @@ namespace Annium.Id.Application.Commands.CompanyRoles
         public Guid ClaimId { get; }
         public string Value { get; }
         public Guid MyId { get; private set; }
-        public CompanyRole Role { get; private set; }
-        public CompanyClaim Claim { get; private set; }
+        public CompanyRole Role { get; private set; } = null!;
+        public CompanyClaim Claim { get; private set; } = null!;
 
         public AddCompanyClaimToCompanyRoleCommand(
             Guid roleId,

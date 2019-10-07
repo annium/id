@@ -4,10 +4,14 @@ using Annium.Id.Application.Commands.Claims;
 
 namespace Annium.Id.ViewModels.Claims.Requests
 {
-    public class UpdateClaimRequest : IRequest<UpdateClaimCommand>
+    public class UpdateClaimRequest : UpdateClaimRequestBase, IRequest<UpdateClaimCommand>
     {
         public Guid ClaimId { get; set; }
-        public string Key { get; set; }
-        public string Name { get; set; }
+    }
+
+    public class UpdateClaimRequestBase
+    {
+        public string Key { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
     }
 }

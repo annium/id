@@ -1,17 +1,13 @@
 using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Annium.Id.Db.Entities
 {
-    [Table(nameof(IContext.RoleClaims))]
-    internal class RoleClaim
+    internal class RoleClaim : BaseEntity
     {
-        [Required]
         public Guid RoleId { get; set; }
-        [Required]
+        public Role Role { get; set; } = null!;
         public Guid ClaimId { get; set; }
-        [Required]
-        public string Value { get; set; }
+        public Claim Claim { get; set; } = null!;
+        public string Value { get; set; } = string.Empty;
     }
 }

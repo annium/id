@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk.Web">
     <PropertyGroup>
         <PackageId>Annium.Id.AspNetCore</PackageId>
         <PackageVersion>0.1.0</PackageVersion>
@@ -16,6 +16,5 @@
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Annium.AspNetCore.Extensions" Version="0.1.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
     </ItemGroup>
 </Project>

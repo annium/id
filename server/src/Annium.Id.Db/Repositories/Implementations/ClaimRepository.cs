@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Annium.Core.Mapper;
 using Annium.Id.Domain.Entities;
-using LinqToDB;
+using Microsoft.EntityFrameworkCore;
 
 namespace Annium.Id.Db.Repositories.Implementations
 {
@@ -24,20 +24,17 @@ namespace Annium.Id.Db.Repositories.Implementations
         public async Task<Claim> CreateAsync(Claim claim)
         {
             var entity = mapper.Map<Entities.Claim>(claim);
-            entity.Id = Guid.NewGuid();
 
-            using(var db = context.GetDataConnection())
-            {
-                await db.InsertAsync(entity);
-            }
+            context.Claims.Add(entity);
+            await context.SaveChangesAsync();
 
             return mapper.Map<Claim>(entity);
         }
 
         public async Task<Claim[]> GetAllAsync(Guid appId)
         {
-            var claims = await context.Claims
-                .Where(c => c.AppId == appId)
+            var claims = await context.Claims.AsNoTracking()
+                .Where(x => x.AppId == appId)
                 .ToArrayAsync();
 
             return claims.Select(mapper.Map<Claim>).ToArray();
@@ -45,40 +42,44 @@ namespace Annium.Id.Db.Repositories.Implementations
 
         public async Task<Claim> GetByIdAsync(Guid id)
         {
-            var claim = await context.Claims
-                .FirstOrDefaultAsync(c => c.Id == id);
+            var claim = await context.Claims.AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == id);
 
             return mapper.Map<Claim>(claim);
         }
 
         public async Task<Claim> FindByKeyAsync(Guid appId, string key)
         {
-            var claim = await context.Claims
-                .FirstOrDefaultAsync(c => c.AppId == appId && c.Key == key);
+            var claim = await context.Claims.AsNoTracking()
+                .FirstOrDefaultAsync(x => x.AppId == appId && x.Key == key);
 
             return mapper.Map<Claim>(claim);
         }
 
         public async Task<Claim> UpdateAsync(Claim claim)
         {
-            var entity = mapper.Map<Entities.Claim>(claim);
+            var entity = await context.Claims
+                .SingleAsync(x => x.Id == claim.Id);
 
-            await context.Claims
-                .UpdateAsync(
-                    c => c.Id == entity.Id,
-                    u => new Entities.Claim
-                    {
-                        Key = entity.Key,
-                            Name = entity.Name,
-                    }
-                );
+            entity.Key = claim.Key;
+            entity.Name = claim.Name;
+
+            await context.SaveChangesAsync();
 
             return mapper.Map<Claim>(entity);
         }
 
-        public Task DeleteByIdAsync(Guid id)
+        public async Task DeleteByIdAsync(Guid id)
         {
-            return context.Claims.DeleteAsync(u => u.Id == id);
+            var entity = await context.Claims
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if (entity is null)
+                return;
+
+            context.Claims.Remove(entity);
+
+            await context.SaveChangesAsync();
         }
     }
 }

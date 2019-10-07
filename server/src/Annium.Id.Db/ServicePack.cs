@@ -1,9 +1,7 @@
 using System;
-using System.Diagnostics;
 using System.IO;
 using Annium.Configuration.Abstractions;
 using Annium.Core.DependencyInjection;
-using LinqToDB.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -50,8 +48,7 @@ namespace Annium.Id.Db
             // log queries if needed
             if (cfg.LogQueries)
             {
-                DataConnection.TurnTraceSwitchOn(TraceLevel.Verbose);
-                DataConnection.WriteTraceLine = (message, context) => Console.WriteLine($"{context}: {message}");
+                // TODO:
             }
         }
     }
