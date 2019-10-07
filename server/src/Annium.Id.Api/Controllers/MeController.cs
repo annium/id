@@ -20,14 +20,14 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpPost]
-        public Task<IActionResult> RegisterMeAsync([FromBody] RegisterMeRequest request)
+        public Task<IActionResult> RegisterMe([FromBody] RegisterMeRequest request)
         {
             return HandleAsync<RegisterMeRequest, Guid>(request);
         }
 
         [HttpGet]
         [Authorize]
-        public Task<IActionResult> GetMeAsync()
+        public Task<IActionResult> GetMe()
         {
             // TODO: perhaps, add info about companies, user is member of
             return  HandleAsync<GetMeRequest, MeResponse>(new GetMeRequest());
@@ -35,14 +35,14 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPut]
         [Authorize]
-        public Task<IActionResult> UpdateMeAsync([FromBody] UpdateMeRequest request)
+        public Task<IActionResult> UpdateMe([FromBody] UpdateMeRequest request)
         {
             return HandleAsync(request);
         }
 
         [HttpDelete]
         [Authorize]
-        public Task<IActionResult> UnregisterMeAsync()
+        public Task<IActionResult> UnregisterMe()
         {
             return HandleAsync(new UnregisterMeRequest());
         }

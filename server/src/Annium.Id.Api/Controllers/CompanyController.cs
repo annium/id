@@ -23,13 +23,13 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPost]
         [Authorize]
-        public Task<IActionResult> RegisterCompanyAsync([FromBody] RegisterCompanyRequest request)
+        public Task<IActionResult> RegisterCompany([FromBody] RegisterCompanyRequest request)
         {
             return HandleAsync<RegisterCompanyRequest, Guid>(request);
         }
 
         [HttpGet("{companyId:guid}")]
-        public Task<IActionResult> GetCompanyInfoAsync(Guid companyId)
+        public Task<IActionResult> GetCompanyInfo(Guid companyId)
         {
             var request = new GetCompanyRequest { CompanyId = companyId };
 
@@ -37,7 +37,7 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpGet("{companyId:guid}/users")]
-        public Task<IActionResult> GetCompanyUsersAsync(Guid companyId)
+        public Task<IActionResult> GetCompanyUsers(Guid companyId)
         {
             var request = new GetCompanyUsersRequest { CompanyId = companyId };
 
@@ -46,7 +46,7 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPut("{companyId:guid}")]
         [Authorize]
-        public Task<IActionResult> UpdateCompanyAsync(Guid companyId, [FromBody] UpdateCompanyRequestBase requestBase)
+        public Task<IActionResult> UpdateCompany(Guid companyId, [FromBody] UpdateCompanyRequestBase requestBase)
         {
             var request = new UpdateCompanyRequest
             {
@@ -61,7 +61,7 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPut("{companyId:guid}/owner/{userId:guid}")]
         [Authorize]
-        public Task<IActionResult> SetCompanyOwnerAsync(Guid companyId, Guid userId)
+        public Task<IActionResult> SetCompanyOwner(Guid companyId, Guid userId)
         {
             var request = new SetCompanyOwnerRequest { CompanyId = companyId, UserId = userId };
 
@@ -70,7 +70,7 @@ namespace Annium.Id.Api.Controllers
 
         [HttpDelete("{companyId:guid}")]
         [Authorize]
-        public Task<IActionResult> UnregisterCompanyAsync(Guid companyId)
+        public Task<IActionResult> UnregisterCompany(Guid companyId)
         {
             var request = new UnregisterCompanyRequest { CompanyId = companyId };
 

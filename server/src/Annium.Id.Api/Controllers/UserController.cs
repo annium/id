@@ -20,7 +20,7 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPost("roles/{roleId:guid}")]
         [Authorize]
-        public Task<IActionResult> AddRoleToUserAsync(Guid userId, Guid roleId)
+        public Task<IActionResult> AddRoleToUser(Guid userId, Guid roleId)
         {
             var request = new AddRoleToUserRequest { UserId = userId, RoleId = roleId };
 
@@ -29,7 +29,7 @@ namespace Annium.Id.Api.Controllers
 
         [HttpDelete("roles/{roleId:guid}")]
         [Authorize]
-        public Task<IActionResult> DeleteRoleFromUserAsync(Guid userId, Guid roleId)
+        public Task<IActionResult> DeleteRoleFromUser(Guid userId, Guid roleId)
         {
             var request = new DeleteRoleFromUserRequest { UserId = userId, RoleId = roleId };
 
@@ -38,7 +38,7 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPost("claims/{claimId:guid}")]
         [Authorize]
-        public Task<IActionResult> AddClaimToUserAsync(Guid userId, Guid claimId, [FromBody] AddClaimToUserRequestBase requestBase)
+        public Task<IActionResult> AddClaimToUser(Guid userId, Guid claimId, [FromBody] AddClaimToUserRequestBase requestBase)
         {
             var request = new AddClaimToUserRequest
             {
@@ -52,7 +52,7 @@ namespace Annium.Id.Api.Controllers
 
         [HttpDelete("claims/{claimId:guid}")]
         [Authorize]
-        public Task<IActionResult> DeleteClaimFromUserAsync(Guid userId, Guid claimId)
+        public Task<IActionResult> DeleteClaimFromUser(Guid userId, Guid claimId)
         {
             var request = new DeleteClaimFromUserRequest { UserId = userId, ClaimId = claimId };
 

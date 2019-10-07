@@ -20,7 +20,7 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPost]
         [Authorize]
-        public Task<IActionResult> AddUserToCompanyAsync(Guid companyId, Guid userId)
+        public Task<IActionResult> AddUserToCompany(Guid companyId, Guid userId)
         {
             var request = new AddUserToCompanyRequest { CompanyId = companyId, UserId = userId };
 
@@ -29,7 +29,7 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPost("roles/{roleId:guid}")]
         [Authorize]
-        public Task<IActionResult> AddCompanyRoleToCompanyUserAsync(Guid companyId, Guid userId, Guid roleId)
+        public Task<IActionResult> AddCompanyRoleToCompanyUser(Guid companyId, Guid userId, Guid roleId)
         {
             var request = new AddCompanyRoleToCompanyUserRequest { CompanyId = companyId, UserId = userId, RoleId = roleId };
 
@@ -38,7 +38,7 @@ namespace Annium.Id.Api.Controllers
 
         [HttpDelete("roles/{roleId:guid}")]
         [Authorize]
-        public Task<IActionResult> DeleteCompanyRoleFromCompanyUserAsync(Guid companyId, Guid userId, Guid roleId)
+        public Task<IActionResult> DeleteCompanyRoleFromCompanyUser(Guid companyId, Guid userId, Guid roleId)
         {
             var request = new DeleteCompanyRoleFromCompanyUserRequest { CompanyId = companyId, UserId = userId, RoleId = roleId };
 
@@ -47,7 +47,7 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPost("claims/{claimId:guid}")]
         [Authorize]
-        public Task<IActionResult> AddCompanyClaimToCompanyUserAsync(Guid companyId, Guid userId, Guid claimId, [FromBody] AddCompanyClaimToCompanyUserRequestBase requestBase)
+        public Task<IActionResult> AddCompanyClaimToCompanyUser(Guid companyId, Guid userId, Guid claimId, [FromBody] AddCompanyClaimToCompanyUserRequestBase requestBase)
         {
             var request = new AddCompanyClaimToCompanyUserRequest
             {
@@ -62,7 +62,7 @@ namespace Annium.Id.Api.Controllers
 
         [HttpDelete("claims/{claimId:guid}")]
         [Authorize]
-        public Task<IActionResult> DeleteCompanyClaimFromCompanyUserAsync(Guid companyId, Guid userId, Guid claimId)
+        public Task<IActionResult> DeleteCompanyClaimFromCompanyUser(Guid companyId, Guid userId, Guid claimId)
         {
             var request = new DeleteCompanyClaimFromCompanyUserRequest { CompanyId = companyId, UserId = userId, ClaimId = claimId };
 
@@ -71,7 +71,7 @@ namespace Annium.Id.Api.Controllers
 
         [HttpDelete]
         [Authorize]
-        public Task<IActionResult> DeleteUserFromCompanyAsync(Guid companyId, Guid userId)
+        public Task<IActionResult> DeleteUserFromCompany(Guid companyId, Guid userId)
         {
             var request = new DeleteUserFromCompanyRequest { CompanyId = companyId, UserId = userId };
 

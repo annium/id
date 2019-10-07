@@ -22,14 +22,14 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPost]
         [Authorize]
-        public Task<IActionResult> CreateRoleAsync([FromBody] CreateRoleRequest request)
+        public Task<IActionResult> CreateRole([FromBody] CreateRoleRequest request)
         {
             return HandleAsync<CreateRoleRequest, Guid>(request);
         }
 
         [HttpGet]
         [Authorize]
-        public Task<IActionResult> ListRolesAsync(Guid appId)
+        public Task<IActionResult> ListRoles(Guid appId)
         {
             var request = new ListRolesRequest { AppId = appId };
 
@@ -38,7 +38,7 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPut("{roleId:guid}")]
         [Authorize]
-        public Task<IActionResult> UpdateRoleAsync(Guid roleId, [FromBody] UpdateRoleRequestBase requestBase)
+        public Task<IActionResult> UpdateRole(Guid roleId, [FromBody] UpdateRoleRequestBase requestBase)
         {
             var request = new UpdateRoleRequest
             {
@@ -52,7 +52,7 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPost("{roleId:guid}/claims/{claimId:guid}")]
         [Authorize]
-        public Task<IActionResult> AddClaimToRoleAsync(Guid roleId, Guid claimId, [FromBody] AddClaimToRoleRequestBase requestBase)
+        public Task<IActionResult> AddClaimToRole(Guid roleId, Guid claimId, [FromBody] AddClaimToRoleRequestBase requestBase)
         {
             var request = new AddClaimToRoleRequest
             {
@@ -66,7 +66,7 @@ namespace Annium.Id.Api.Controllers
 
         [HttpDelete("{roleId:guid}/claims/{claimId:guid}")]
         [Authorize]
-        public Task<IActionResult> DeleteClaimFromRoleAsync(Guid roleId, Guid claimId)
+        public Task<IActionResult> DeleteClaimFromRole(Guid roleId, Guid claimId)
         {
             var request = new DeleteClaimFromRoleRequest
             {
@@ -79,7 +79,7 @@ namespace Annium.Id.Api.Controllers
 
         [HttpDelete("{roleId:guid}")]
         [Authorize]
-        public Task<IActionResult> DeleteRoleAsync(Guid roleId)
+        public Task<IActionResult> DeleteRole(Guid roleId)
         {
             var request = new DeleteRoleRequest
             {

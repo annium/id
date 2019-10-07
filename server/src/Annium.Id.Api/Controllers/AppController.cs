@@ -22,19 +22,19 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPost]
         [Authorize]
-        public Task<IActionResult> CreateAppAsync([FromBody] CreateAppRequest request)
+        public Task<IActionResult> CreateApp([FromBody] CreateAppRequest request)
         {
             return HandleAsync<CreateAppRequest, Guid>(request);
         }
 
         [HttpGet]
-        public Task<IActionResult> ListAppsAsync()
+        public Task<IActionResult> ListApps()
         {
             return HandleAsync<ListAppsRequest, IEnumerable<AppResponse>>(new ListAppsRequest());
         }
 
         [HttpGet("{appId:guid}")]
-        public Task<IActionResult> GetAppAsync(Guid appId)
+        public Task<IActionResult> GetApp(Guid appId)
         {
             var request = new GetAppRequest() { AppId = appId };
 
@@ -43,7 +43,7 @@ namespace Annium.Id.Api.Controllers
 
         [HttpGet("{appId:guid}/token")]
         [Authorize]
-        public Task<IActionResult> GetAppApiTokenAsync(Guid appId)
+        public Task<IActionResult> GetAppApiToken(Guid appId)
         {
             var request = new GetAppApiTokenRequest() { AppId = appId };
 
@@ -52,7 +52,7 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPut("{appId:guid}")]
         [Authorize]
-        public Task<IActionResult> UpdateAppAsync(Guid appId, [FromBody] UpdateAppRequestBase requestBase)
+        public Task<IActionResult> UpdateApp(Guid appId, [FromBody] UpdateAppRequestBase requestBase)
         {
             var request = new UpdateAppRequest
             {
@@ -66,7 +66,7 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPut("{appId:guid}/owner/{newOwnerId:guid}")]
         [Authorize]
-        public Task<IActionResult> SetAppOwnerAsync(Guid appId, Guid newOwnerId)
+        public Task<IActionResult> SetAppOwner(Guid appId, Guid newOwnerId)
         {
             var request = new SetAppOwnerRequest() { AppId = appId, NewOwnerId = newOwnerId };
 
@@ -75,7 +75,7 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPut("{appId:guid}/token")]
         [Authorize]
-        public Task<IActionResult> UpdateAppApiTokenAsync(Guid appId)
+        public Task<IActionResult> UpdateAppApiToken(Guid appId)
         {
             var request = new UpdateAppApiTokenRequest() { AppId = appId };
 
@@ -84,7 +84,7 @@ namespace Annium.Id.Api.Controllers
 
         [HttpDelete("{appId:guid}")]
         [Authorize]
-        public Task<IActionResult> DeleteAppAsync(Guid appId)
+        public Task<IActionResult> DeleteApp(Guid appId)
         {
             var request = new DeleteAppRequest() { AppId = appId };
 

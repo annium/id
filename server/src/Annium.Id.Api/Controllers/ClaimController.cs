@@ -22,14 +22,14 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPost]
         [Authorize]
-        public Task<IActionResult> CreateClaimAsync([FromBody] CreateClaimRequest request)
+        public Task<IActionResult> CreateClaim([FromBody] CreateClaimRequest request)
         {
             return HandleAsync<CreateClaimRequest, Guid>(request);
         }
 
         [HttpGet]
         [Authorize]
-        public Task<IActionResult> ListClaimsAsync(Guid appId)
+        public Task<IActionResult> ListClaims(Guid appId)
         {
             var request = new ListClaimsRequest { AppId = appId };
 
@@ -38,7 +38,7 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPut("{claimId:guid}")]
         [Authorize]
-        public Task<IActionResult> UpdateClaimAsync(Guid claimId, [FromBody] UpdateClaimRequestBase requestBase)
+        public Task<IActionResult> UpdateClaim(Guid claimId, [FromBody] UpdateClaimRequestBase requestBase)
         {
             var request = new UpdateClaimRequest
             {
@@ -52,7 +52,7 @@ namespace Annium.Id.Api.Controllers
 
         [HttpDelete("{claimId:guid}")]
         [Authorize]
-        public Task<IActionResult> DeleteClaimAsync(Guid claimId)
+        public Task<IActionResult> DeleteClaim(Guid claimId)
         {
             var request = new DeleteClaimRequest { ClaimId = claimId };
 

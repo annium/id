@@ -19,7 +19,7 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpPost("login")]
-        public Task<IActionResult> LoginAsync(string appKey, [FromBody] LogInRequestBase requestBase)
+        public Task<IActionResult> LogIn(string appKey, [FromBody] LogInRequestBase requestBase)
         {
             var request = new LogInRequest
             {
@@ -32,7 +32,7 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpPut("token")]
-        public Task<IActionResult> UpdateTokenAsync(string appKey, [FromQuery] UpdateTokensRequestBase requestBase)
+        public Task<IActionResult> UpdateToken(string appKey, [FromQuery] UpdateTokensRequestBase requestBase)
         {
             var request = new UpdateTokensRequest
             {
@@ -45,7 +45,7 @@ namespace Annium.Id.Api.Controllers
 
         [HttpDelete("logout")]
         [Authorize]
-        public Task<IActionResult> LogoutAsync(string appKey)
+        public Task<IActionResult> LogOut(string appKey)
         {
             var request = new LogOutRequest { AppKey = appKey };
 
