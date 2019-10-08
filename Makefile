@@ -17,7 +17,7 @@ db-drop db-update migrations-add migrations-list migrations-remove:
 	@cd server && pwsh tools/ef/$@.ps1 -startup src/Annium.Id.Api -project src/Annium.Id.Db -context Context
 
 publish-api:
-	@cp $$(find $$(dirname $$(realpath $$(which dotnet)))/sdk -type f -name ef.dll | grep netcoreapp2.2) server/src
+	@cp $$(find $$(dirname $$(realpath $$(which dotnet)))/sdk -type f -name ef.dll | grep netcoreapp3.0) server/src
 	$(call publish,api,server/src,Annium.Id.Api/Dockerfile)
 	@rm -f server/src/ef.dll
 
