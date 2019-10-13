@@ -3,7 +3,7 @@ using Annium.Id.Apps.AspNetCore.Tools;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Annium.Extensions.DependencyInjection
+namespace Annium.Core.DependencyInjection
 {
     internal static class ServiceCollectionExtensions
     {

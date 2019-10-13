@@ -1,7 +1,6 @@
 using System;
 using Annium.Core.DependencyInjection;
 using Annium.Core.Mediator;
-using Annium.Extensions.DependencyInjection;
 using Annium.Id.Api.Tools;
 using Annium.Id.Application.Tools;
 using Annium.Id.Core;
