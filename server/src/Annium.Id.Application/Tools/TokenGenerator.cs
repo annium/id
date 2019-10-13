@@ -29,6 +29,7 @@ namespace Annium.Id.Application.Tools
         private readonly Func<Instant> getInstant;
 
         public TokenGenerator(
+            Configuration configuration,
             IAppRepository appRepository,
             IUserRoleRepository userRoleRepository,
             IUserClaimRepository userClaimRepository,
@@ -38,7 +39,7 @@ namespace Annium.Id.Application.Tools
             Func<Instant> getInstant
         )
         {
-            using(var s = File.OpenRead(Path.Combine("keys", "private.key")))
+            using (var s = File.OpenRead(Path.GetFullPath(configuration.PrivateKeyFile)))
             {
                 var provider = new RSACryptoServiceProvider();
                 provider.ImportParameters(new KeyReader().ReadRsaKey(s));

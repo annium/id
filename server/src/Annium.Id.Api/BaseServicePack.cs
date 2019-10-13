@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using Annium.Configuration.Abstractions;
 using Annium.Core.DependencyInjection;
 using Annium.Core.Mediator;
 using Annium.Id.Api.Tools;
@@ -16,12 +18,25 @@ namespace Annium.Id.Api
             Add<Application.ServicePack>();
         }
 
+        public override void Configure(IServiceCollection services)
+        {
+            var cfg = new ConfigurationBuilder()
+                .AddYamlFile(Path.Combine("configuration", "api.yml"))
+                .Build<Application.Configuration>();
+            services.AddSingleton(cfg);
+        }
+
         public override void Register(IServiceCollection services, IServiceProvider provider)
         {
             services.AddSingleton<Func<Instant>>(() => SystemClock.Instance.GetCurrentInstant());
 
             // auth
-            services.AddIdAuthorization(opts => opts.Audience = Constants.IdApp);
+            services.AddIdAuthorization(opts =>
+            {
+                var cfg = provider.GetRequiredService<Application.Configuration>();
+                opts.Audience = Constants.IdApp;
+                opts.PublicKeyFile = cfg.PublicKeyFile;
+            });
 
             // tools
             services.AddSingleton<IIdentityDataAccessor, IdentityDataAccessor>();

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
@@ -24,6 +25,7 @@ namespace Annium.Core.DependencyInjection
             // configure authorization options
             var options = new AuthorizationOptions();
             configure(options);
+            Validate(options);
             services.AddSingleton(options);
 
             // provider
@@ -86,6 +88,18 @@ namespace Annium.Core.DependencyInjection
             services.AddSingleton(policy);
 
             return services;
+        }
+
+        private static void Validate(AuthorizationOptions options)
+        {
+            if (string.IsNullOrWhiteSpace(options.Audience))
+                throw new Exception($"{nameof(AuthorizationOptions.Audience)} is mandatory");
+
+            if (string.IsNullOrWhiteSpace(options.PublicKeyFile))
+                throw new Exception($"{nameof(AuthorizationOptions.PublicKeyFile)} is mandatory");
+
+            if (!File.Exists(options.PublicKeyFile))
+                throw new Exception($"{nameof(AuthorizationOptions.PublicKeyFile)} missing in file system");
         }
     }
 }

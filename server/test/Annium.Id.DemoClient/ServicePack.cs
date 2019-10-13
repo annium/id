@@ -20,6 +20,7 @@ namespace Annium.Id.DemoClient
             services.AddIdAuthorization(options =>
             {
                 options.Audience = "demo";
+                options.PublicKeyFile = "keys/public.key";
             });
             services.AddLogging(route => route.UseConsole());
             services.AddIdPolicy(
