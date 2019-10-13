@@ -2,6 +2,7 @@
   "name": "@id/site",
   "version": "0.1.0",
   "description": "@id/site.",
+  "private": true,
   "main": "dist",
   "dependencies": {
     "@annium/app-react": "0.1.0",
