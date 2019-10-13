@@ -2,12 +2,12 @@ PROJECT_NAME := id
 TAG_PREFIX := registry.annium.com/$(PROJECT_NAME)
 
 db-up api-up site-up:
-	@pwsh setup/scripts/net-up.ps1 -project $(PROJECT_NAME)
-	@pwsh setup/scripts/up.ps1 -project $(PROJECT_NAME) -component $(subst -up,,$@)
+	@pwsh dev/scripts/net-up.ps1 -project $(PROJECT_NAME)
+	@pwsh dev/scripts/up.ps1 -project $(PROJECT_NAME) -component $(subst -up,,$@)
 
 db-down api-down site-down:
-	@pwsh setup/scripts/down.ps1 -project $(PROJECT_NAME) -component $(subst -down,,$@)
-	@pwsh setup/scripts/net-down.ps1 -project $(PROJECT_NAME)
+	@pwsh dev/scripts/down.ps1 -project $(PROJECT_NAME) -component $(subst -down,,$@)
+	@pwsh dev/scripts/net-down.ps1 -project $(PROJECT_NAME)
 
 db-log api-log site-log:
 	@docker logs -f $(PROJECT_NAME)_$(subst -log,,$@)
