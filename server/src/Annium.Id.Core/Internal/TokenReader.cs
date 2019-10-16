@@ -46,7 +46,7 @@ namespace Annium.Id.Core.Internal
                 IssuerSigningKey = signingKey,
                 RequireExpirationTime = true,
                 RequireSignedTokens = true,
-                ValidateAudience = false,
+                ValidateAudience = true,
                 ValidAudiences = new[] { options.Audience },
                 ValidateIssuer = true,
                 ValidIssuer = Constants.Issuer,
@@ -123,7 +123,7 @@ namespace Annium.Id.Core.Internal
             }
 
             static IStatusResult<TokenReadStatus, IdToken> fail(TokenReadStatus status, string error) =>
-                Result.Status<TokenReadStatus, IdToken>(TokenReadStatus.BadSource, null!).Error(error);
+                Result.Status<TokenReadStatus, IdToken>(status, null!).Error(error);
         }
 
     }
