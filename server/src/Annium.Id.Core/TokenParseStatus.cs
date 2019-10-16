@@ -1,6 +1,6 @@
 namespace Annium.Id.Core
 {
-    public enum TokenParseStatus
+    public enum TokenReadStatus
     {
         BadSource,
         Failed,

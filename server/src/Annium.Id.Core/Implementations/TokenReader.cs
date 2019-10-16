@@ -12,18 +12,18 @@ using NodaTime;
 
 namespace Annium.Id.Core.Implementations
 {
-    internal class TokenParser : ITokenParser
+    internal class TokenReader : ITokenReader
     {
         private readonly RsaSecurityKey signingKey;
         private readonly AuthorizationOptions options;
         private readonly ILogger logger;
 
-        public TokenParser(
+        public TokenReader(
             AuthorizationOptions options,
-            ILogger<TokenParser> logger
+            ILogger<TokenReader> logger
         )
         {
-            using(var s = File.OpenRead(Path.Combine("keys", "public.key")))
+            using (var s = File.OpenRead(options.PublicKeyFile))
             {
                 var provider = new RSACryptoServiceProvider();
                 provider.ImportParameters(new KeyReader().ReadRsaKey(s));
@@ -34,11 +34,11 @@ namespace Annium.Id.Core.Implementations
             this.logger = logger;
         }
 
-        public IStatusResult<TokenParseStatus, T> ParseToken<T>(string tokenString)
+        public IStatusResult<TokenReadStatus, T> ReadToken<T>(string tokenString)
         {
             var handler = new JwtSecurityTokenHandler();
             if (!handler.CanReadToken(tokenString))
-                return fail(TokenParseStatus.BadSource, "Token is not valid JWT");
+                return fail(TokenReadStatus.BadSource, "Token is not valid JWT");
 
             var tvp = new TokenValidationParameters
             {
@@ -47,7 +47,7 @@ namespace Annium.Id.Core.Implementations
                 RequireExpirationTime = true,
                 RequireSignedTokens = true,
                 ValidateAudience = false,
-                ValidAudiences = new [] { options.Audience },
+                ValidAudiences = new[] { options.Audience },
                 ValidateIssuer = true,
                 ValidIssuer = Constants.Issuer,
                 ValidateIssuerSigningKey = true,
@@ -57,73 +57,73 @@ namespace Annium.Id.Core.Implementations
             try
             {
                 handler.ValidateToken(tokenString, tvp, out var securityToken);
-                var jwt = (JwtSecurityToken) securityToken;
+                var jwt = (JwtSecurityToken)securityToken;
 
                 var idClaim = jwt.Claims.FirstOrDefault(c => c.Type == Claims.Id);
                 if (idClaim == null)
-                    return fail(TokenParseStatus.BadSource, "Token id is missing");
+                    return fail(TokenReadStatus.BadSource, "Token id is missing");
 
                 var rawToken = Convert.FromBase64String(idClaim.Value);
 
-                return Result.Status(TokenParseStatus.Ok, LZ4MessagePackSerializer.Deserialize<T>(rawToken));
+                return Result.Status(TokenReadStatus.Ok, LZ4MessagePackSerializer.Deserialize<T>(rawToken));
             }
             catch (SecurityTokenDecompressionFailedException)
             {
-                return fail(TokenParseStatus.Failed, "Token decompression failed");
+                return fail(TokenReadStatus.Failed, "Token decompression failed");
             }
             catch (SecurityTokenEncryptionKeyNotFoundException)
             {
                 logger.Error("Token encryption key not found");
 
-                return fail(TokenParseStatus.Failed, "Token decryption failed");
+                return fail(TokenReadStatus.Failed, "Token decryption failed");
             }
             catch (SecurityTokenDecryptionFailedException)
             {
-                return fail(TokenParseStatus.Failed, "Token decryption failed");
+                return fail(TokenReadStatus.Failed, "Token decryption failed");
             }
             catch (SecurityTokenNoExpirationException)
             {
-                return fail(TokenParseStatus.Failed, "Token has no expiration claim");
+                return fail(TokenReadStatus.Failed, "Token has no expiration claim");
             }
             catch (SecurityTokenExpiredException)
             {
-                return fail(TokenParseStatus.Failed, "Token is expired");
+                return fail(TokenReadStatus.Failed, "Token is expired");
             }
             catch (SecurityTokenNotYetValidException)
             {
-                return fail(TokenParseStatus.Failed, "Token is not yet valid");
+                return fail(TokenReadStatus.Failed, "Token is not yet valid");
             }
             catch (SecurityTokenInvalidLifetimeException)
             {
-                return fail(TokenParseStatus.Failed, "Token has invalid lifetime");
+                return fail(TokenReadStatus.Failed, "Token has invalid lifetime");
             }
             catch (SecurityTokenInvalidAudienceException)
             {
-                return fail(TokenParseStatus.Failed, "Token has invalid audience");
+                return fail(TokenReadStatus.Failed, "Token has invalid audience");
             }
             catch (SecurityTokenInvalidIssuerException)
             {
-                return fail(TokenParseStatus.Failed, "Token has invalid issuer");
+                return fail(TokenReadStatus.Failed, "Token has invalid issuer");
             }
             catch (SecurityTokenSignatureKeyNotFoundException)
             {
                 logger.Error("Token signature key not found");
 
-                return fail(TokenParseStatus.Failed, "Token has invalid signature");
+                return fail(TokenReadStatus.Failed, "Token has invalid signature");
             }
             catch (SecurityTokenInvalidSignatureException)
             {
-                return fail(TokenParseStatus.Failed, "Token has invalid signature");
+                return fail(TokenReadStatus.Failed, "Token has invalid signature");
             }
             catch (Exception exception)
             {
                 logger.Error($"Token validation failed: {exception}");
 
-                return fail(TokenParseStatus.BadSource, "Token is invalid");
+                return fail(TokenReadStatus.BadSource, "Token is invalid");
             }
 
-            static IStatusResult<TokenParseStatus, T> fail(TokenParseStatus status, string error) =>
-                Result.Status(TokenParseStatus.BadSource, default(T) !).Error(error);
+            static IStatusResult<TokenReadStatus, T> fail(TokenReadStatus status, string error) =>
+                Result.Status(TokenReadStatus.BadSource, default(T)!).Error(error);
         }
 
     }

@@ -7,16 +7,16 @@ namespace Annium.Id.AspNetCore.Pipeline
 {
     internal class AuthorizationFilter : IAuthorizationFilter
     {
-        private readonly RequestTokenReader tokenReader;
-        private readonly ITokenParser tokenParser;
+        private readonly RequestTokenReader requestTokenReader;
+        private readonly ITokenReader tokenReader;
 
         public AuthorizationFilter(
-            RequestTokenReader tokenReader,
-            ITokenParser tokenParser
+            RequestTokenReader requestTokenReader,
+            ITokenReader tokenReader
         )
         {
+            this.requestTokenReader = requestTokenReader;
             this.tokenReader = tokenReader;
-            this.tokenParser = tokenParser;
         }
 
         public void OnAuthorization(AuthorizationFilterContext context)
@@ -28,17 +28,17 @@ namespace Annium.Id.AspNetCore.Pipeline
 
         private IActionResult? HandleAuthorization(AuthorizationFilterContext context)
         {
-            var(tokenString, readResult) = tokenReader.ReadToken(context.HttpContext.Request);
-            if (readResult != null)
-                return readResult;
+            var (tokenString, requestReadResult) = requestTokenReader.ReadToken(context.HttpContext.Request);
+            if (requestReadResult != null)
+                return requestReadResult;
 
-            var parseResult = tokenParser.ParseToken<IdToken>(tokenString);
-            if (parseResult.Status == TokenParseStatus.BadSource)
-                return new BadRequestObjectResult(parseResult);
-            if (parseResult.Status == TokenParseStatus.Failed)
-                return new UnauthorizedObjectResult(parseResult);
+            var readResult = tokenReader.ReadToken<IdToken>(tokenString);
+            if (readResult.Status == TokenReadStatus.BadSource)
+                return new BadRequestObjectResult(readResult);
+            if (readResult.Status == TokenReadStatus.Failed)
+                return new UnauthorizedObjectResult(readResult);
 
-            context.HttpContext.Items[Constants.IdTokenProperty] = parseResult.Data;
+            context.HttpContext.Items[Constants.IdTokenProperty] = readResult.Data;
 
             return null;
         }

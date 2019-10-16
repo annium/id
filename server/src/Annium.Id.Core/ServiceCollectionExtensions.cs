@@ -8,7 +8,7 @@ namespace Annium.Id.Core
         public static IServiceCollection AddIdAuthorizationCoreServices(this IServiceCollection services)
         {
             services.AddSingleton<IPolicyMapper, PolicyMapper>();
-            services.AddSingleton<ITokenParser, TokenParser>();
+            services.AddSingleton<ITokenReader, TokenReader>();
 
             return services;
         }
