@@ -4,6 +4,6 @@ namespace Annium.Id.Core
 {
     public interface ITokenReader
     {
-        IStatusResult<TokenReadStatus, T> ReadToken<T>(string tokenString);
+        IStatusResult<TokenReadStatus, IdToken> ReadToken(string tokenString);
     }
 }

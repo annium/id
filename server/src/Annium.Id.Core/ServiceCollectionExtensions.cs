@@ -1,4 +1,4 @@
-using Annium.Id.Core.Implementations;
+using Annium.Id.Core.Internal;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Annium.Id.Core
@@ -9,6 +9,7 @@ namespace Annium.Id.Core
         {
             services.AddSingleton<IPolicyMapper, PolicyMapper>();
             services.AddSingleton<ITokenReader, TokenReader>();
+            services.AddSingleton<ITokenWriter, TokenWriter>();
 
             return services;
         }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Annium.Id.Core.Implementations
+namespace Annium.Id.Core.Internal
 {
     internal class PolicyMapper : IPolicyMapper
     {

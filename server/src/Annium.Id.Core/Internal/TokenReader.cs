@@ -10,16 +10,16 @@ using MessagePack;
 using Microsoft.IdentityModel.Tokens;
 using NodaTime;
 
-namespace Annium.Id.Core.Implementations
+namespace Annium.Id.Core.Internal
 {
     internal class TokenReader : ITokenReader
     {
         private readonly RsaSecurityKey signingKey;
-        private readonly AuthorizationOptions options;
+        private readonly AuthOptions options;
         private readonly ILogger logger;
 
         public TokenReader(
-            AuthorizationOptions options,
+            AuthOptions options,
             ILogger<TokenReader> logger
         )
         {
@@ -34,7 +34,7 @@ namespace Annium.Id.Core.Implementations
             this.logger = logger;
         }
 
-        public IStatusResult<TokenReadStatus, T> ReadToken<T>(string tokenString)
+        public IStatusResult<TokenReadStatus, IdToken> ReadToken(string tokenString)
         {
             var handler = new JwtSecurityTokenHandler();
             if (!handler.CanReadToken(tokenString))
@@ -65,7 +65,7 @@ namespace Annium.Id.Core.Implementations
 
                 var rawToken = Convert.FromBase64String(idClaim.Value);
 
-                return Result.Status(TokenReadStatus.Ok, LZ4MessagePackSerializer.Deserialize<T>(rawToken));
+                return Result.Status(TokenReadStatus.Ok, LZ4MessagePackSerializer.Deserialize<IdToken>(rawToken));
             }
             catch (SecurityTokenDecompressionFailedException)
             {
@@ -122,8 +122,8 @@ namespace Annium.Id.Core.Implementations
                 return fail(TokenReadStatus.BadSource, "Token is invalid");
             }
 
-            static IStatusResult<TokenReadStatus, T> fail(TokenReadStatus status, string error) =>
-                Result.Status(TokenReadStatus.BadSource, default(T)!).Error(error);
+            static IStatusResult<TokenReadStatus, IdToken> fail(TokenReadStatus status, string error) =>
+                Result.Status<TokenReadStatus, IdToken>(TokenReadStatus.BadSource, null!).Error(error);
         }
 
     }
