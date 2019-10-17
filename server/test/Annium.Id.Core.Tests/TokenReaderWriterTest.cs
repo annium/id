@@ -87,7 +87,7 @@ namespace Annium.Id.Core.Tests
 
             var writer = provider.GetRequiredService<ITokenWriter>();
 
-            return writer.WriteToken(token);
+            return writer.WriteToken(token, audience);
         }
 
         private IStatusResult<TokenReadStatus, IdToken> ReadToken(string token)

@@ -1,58 +1,40 @@
 using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Annium.Id.Core;
 using Annium.Id.Db.Repositories;
 using Annium.Id.Domain.Entities;
-using Annium.Security.Cryptography;
-using MessagePack;
-using Microsoft.IdentityModel.Tokens;
-using NodaTime;
-using SystemClaim = System.Security.Claims.Claim;
 
 namespace Annium.Id.Application.Tools
 {
     internal class TokenGenerator : ITokenGenerator
     {
-        private readonly Duration tokenLifeTime = Duration.FromMinutes(30);
-        private readonly RsaSecurityKey signingKey;
         private readonly IAppRepository appRepository;
         private readonly IUserRoleRepository userRoleRepository;
         private readonly IUserClaimRepository userClaimRepository;
         private readonly ICompanyRepository companyRepository;
         private readonly ICompanyUserRoleRepository companyUserRoleRepository;
         private readonly ICompanyUserClaimRepository companyUserClaimRepository;
-        private readonly Func<Instant> getInstant;
+        private readonly ITokenWriter tokenWriter;
 
         public TokenGenerator(
-            Configuration configuration,
             IAppRepository appRepository,
             IUserRoleRepository userRoleRepository,
             IUserClaimRepository userClaimRepository,
             ICompanyRepository companyRepository,
             ICompanyUserRoleRepository companyUserRoleRepository,
             ICompanyUserClaimRepository companyUserClaimRepository,
-            Func<Instant> getInstant
+            ITokenWriter tokenWriter
         )
         {
-            using (var s = File.OpenRead(Path.GetFullPath(configuration.PrivateKeyFile)))
-            {
-                var provider = new RSACryptoServiceProvider();
-                provider.ImportParameters(new KeyReader().ReadRsaKey(s));
-                signingKey = new RsaSecurityKey(provider);
-            }
-
             this.appRepository = appRepository;
             this.userRoleRepository = userRoleRepository;
             this.userClaimRepository = userClaimRepository;
             this.companyRepository = companyRepository;
             this.companyUserRoleRepository = companyUserRoleRepository;
             this.companyUserClaimRepository = companyUserClaimRepository;
-            this.getInstant = getInstant;
+            this.tokenWriter = tokenWriter;
         }
 
         public async Task<string> GenerateToken(UserLogin login)
@@ -77,7 +59,7 @@ namespace Annium.Id.Application.Tools
 
             var token = new IdToken(login.UserId, login.Id, appToken, companyTokens);
 
-            return WriteToken(token, app.Key);
+            return tokenWriter.WriteToken(token, app.Key);
         }
 
         private AppToken BuildAppToken(
@@ -114,33 +96,6 @@ namespace Annium.Id.Application.Tools
                 claims[userClaim.Key] = userClaim.Value;
 
             return new CompanyToken(company.Id, company.Key, company.OwnerId, roles, claims);
-        }
-
-        private string WriteToken(object token, string audience)
-        {
-            var packedToken = Convert.ToBase64String(LZ4MessagePackSerializer.Serialize(token));
-
-            var instant = getInstant();
-            var now = instant.ToDateTimeUtc();
-            var expires = (instant + tokenLifeTime).ToDateTimeUtc();
-
-            var claims = new List<SystemClaim>
-            {
-                new SystemClaim(Claims.Id, packedToken),
-                new SystemClaim(Claims.IssuedAt, now.ToString()),
-                new SystemClaim(Claims.TokenId, Guid.NewGuid().ToString())
-            };
-
-            var jwt = new JwtSecurityToken(
-                issuer: Constants.Issuer,
-                audience: audience,
-                claims: claims,
-                expires: expires,
-                notBefore: now,
-                signingCredentials: new SigningCredentials(signingKey, SecurityAlgorithms.RsaSha256)
-            );
-
-            return new JwtSecurityTokenHandler().WriteToken(jwt);
         }
     }
 }

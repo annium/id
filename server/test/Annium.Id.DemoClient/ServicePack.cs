@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using Annium.Core.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,7 +21,7 @@ namespace Annium.Id.DemoClient
             services.AddIdAuthorization(options =>
             {
                 options.Audience = "demo";
-                options.PublicKeyFile = "keys/public.key";
+                options.PublicKeyFile = Path.Combine("keys", "public.key");
             });
             services.AddLogging(route => route.UseConsole());
             services.AddIdPolicy(

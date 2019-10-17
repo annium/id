@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using Annium.Core.DependencyInjection;
 using Annium.Logging.Abstractions;
@@ -14,9 +15,18 @@ namespace Annium.Id.Api
             Add<Db.TestServicePack>();
         }
 
+        public override void Configure(IServiceCollection services)
+        {
+            services.AddSingleton(new Application.Configuration
+            {
+                PrivateKeyFile = Path.Combine("keys", "private.key"),
+                PublicKeyFile = Path.Combine("keys", "public.key"),
+            });
+        }
+
         public override void Register(IServiceCollection services, IServiceProvider provider)
         {
-            var ignored = new [] { "ChainBuilder", "PipeHandler" };
+            var ignored = new[] { "ChainBuilder", "PipeHandler" };
             services.AddLogging(route => route
                 // .For(m =>
                 //     !ignored.Any(m.Source.Name.Contains)

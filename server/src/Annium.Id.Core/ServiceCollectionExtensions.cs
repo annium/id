@@ -34,10 +34,10 @@ namespace Annium.Core.DependencyInjection
                 throw new Exception($"{nameof(AuthOptions.PublicKeyFile)} is mandatory");
 
             if (!File.Exists(options.PublicKeyFile))
-                throw new Exception($"{nameof(AuthOptions.PublicKeyFile)} missing in file system");
+                throw new Exception($"{nameof(AuthOptions.PublicKeyFile)} {Path.GetFullPath(options.PublicKeyFile)} missing in file system");
 
-            if (options.PrivateKeyFile != null && !File.Exists(options.PrivateKeyFile))
-                throw new Exception($"{nameof(AuthOptions.PrivateKeyFile)} missing in file system");
+            if (!string.IsNullOrEmpty(options.PrivateKeyFile) && !File.Exists(options.PrivateKeyFile))
+                throw new Exception($"{nameof(AuthOptions.PrivateKeyFile)} {Path.GetFullPath(options.PrivateKeyFile)} missing in file system");
         }
     }
 }
