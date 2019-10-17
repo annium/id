@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
@@ -23,10 +22,7 @@ namespace Annium.Core.DependencyInjection
         )
         {
             // configure authorization options
-            var options = new AuthOptions();
-            configure(options);
-            Validate(options);
-            services.AddSingleton(options);
+            services.AddIdAuthorizationCoreServices(configure);
 
             // provider
             services.AddSingleton<IApplicationModelProvider, AuthorizationApplicationModelProvider>();
@@ -44,7 +40,6 @@ namespace Annium.Core.DependencyInjection
             services.AddSingleton<ITokenAccessor, HttpContextTokenAccessor>();
             services.AddSingleton<RequestTokenReader>();
 
-            services.AddIdAuthorizationCoreServices();
 
             return services;
         }
@@ -88,18 +83,6 @@ namespace Annium.Core.DependencyInjection
             services.AddSingleton(policy);
 
             return services;
-        }
-
-        private static void Validate(AuthOptions options)
-        {
-            if (string.IsNullOrWhiteSpace(options.Audience))
-                throw new Exception($"{nameof(AuthOptions.Audience)} is mandatory");
-
-            if (string.IsNullOrWhiteSpace(options.PublicKeyFile))
-                throw new Exception($"{nameof(AuthOptions.PublicKeyFile)} is mandatory");
-
-            if (!File.Exists(options.PublicKeyFile))
-                throw new Exception($"{nameof(AuthOptions.PublicKeyFile)} missing in file system");
         }
     }
 }

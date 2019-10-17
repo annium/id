@@ -78,12 +78,11 @@ namespace Annium.Id.Core.Tests
         )
         {
             var services = new ServiceCollection();
-            services.AddIdAuthorizationCoreServices();
+            services.AddIdAuthorizationCoreServices(Configure(audience));
             if (expired)
                 services.AddSingleton<Func<Instant>>(() => SystemClock.Instance.GetCurrentInstant() - Duration.FromDays(1));
             else
                 services.AddSingleton<Func<Instant>>(SystemClock.Instance.GetCurrentInstant);
-            services.AddSingleton(GetOptions(audience));
             var provider = services.BuildServiceProvider();
 
             var writer = provider.GetRequiredService<ITokenWriter>();
@@ -94,8 +93,7 @@ namespace Annium.Id.Core.Tests
         private IStatusResult<TokenReadStatus, IdToken> ReadToken(string token)
         {
             var services = new ServiceCollection();
-            services.AddIdAuthorizationCoreServices();
-            services.AddSingleton(GetOptions("demo"));
+            services.AddIdAuthorizationCoreServices(Configure("demo"));
             services.AddSingleton<Func<Instant>>(SystemClock.Instance.GetCurrentInstant);
             services.AddLogging(route => route.UseConsole());
             var provider = services.BuildServiceProvider();
@@ -105,14 +103,14 @@ namespace Annium.Id.Core.Tests
             return reader.ReadToken(token);
         }
 
-        private AuthOptions GetOptions(string audience)
+        private Action<AuthOptions> Configure(string audience)
         {
-            return new AuthOptions
+            return options =>
             {
-                Audience = audience,
-                PrivateKeyFile = Path.Combine("keys", "private.key"),
-                PublicKeyFile = Path.Combine("keys", "public.key"),
-                AccessTokenLifeTime = Duration.FromMinutes(1),
+                options.Audience = audience;
+                options.PrivateKeyFile = Path.Combine("keys", "private.key");
+                options.PublicKeyFile = Path.Combine("keys", "public.key");
+                options.AccessTokenLifeTime = Duration.FromMinutes(1);
             };
         }
 
