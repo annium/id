@@ -19,11 +19,11 @@ namespace Annium.Core.DependencyInjection
 
         public static IServiceCollection AddIdAuthorization(
             this IServiceCollection services,
-            Action<AuthorizationOptions> configure
+            Action<AuthOptions> configure
         )
         {
             // configure authorization options
-            var options = new AuthorizationOptions();
+            var options = new AuthOptions();
             configure(options);
             Validate(options);
             services.AddSingleton(options);
@@ -90,16 +90,16 @@ namespace Annium.Core.DependencyInjection
             return services;
         }
 
-        private static void Validate(AuthorizationOptions options)
+        private static void Validate(AuthOptions options)
         {
             if (string.IsNullOrWhiteSpace(options.Audience))
-                throw new Exception($"{nameof(AuthorizationOptions.Audience)} is mandatory");
+                throw new Exception($"{nameof(AuthOptions.Audience)} is mandatory");
 
             if (string.IsNullOrWhiteSpace(options.PublicKeyFile))
-                throw new Exception($"{nameof(AuthorizationOptions.PublicKeyFile)} is mandatory");
+                throw new Exception($"{nameof(AuthOptions.PublicKeyFile)} is mandatory");
 
             if (!File.Exists(options.PublicKeyFile))
-                throw new Exception($"{nameof(AuthorizationOptions.PublicKeyFile)} missing in file system");
+                throw new Exception($"{nameof(AuthOptions.PublicKeyFile)} missing in file system");
         }
     }
 }

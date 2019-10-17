@@ -32,7 +32,7 @@ namespace Annium.Id.AspNetCore.Pipeline
             if (requestReadResult != null)
                 return requestReadResult;
 
-            var readResult = tokenReader.ReadToken<IdToken>(tokenString);
+            var readResult = tokenReader.ReadToken(tokenString);
             if (readResult.Status == TokenReadStatus.BadSource)
                 return new BadRequestObjectResult(readResult);
             if (readResult.Status == TokenReadStatus.Failed)
