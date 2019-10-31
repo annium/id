@@ -26,5 +26,4 @@ namespace Annium.Id.Application.Queries.Me
             Field(e => e.User).LoadWith(ctx => userRepository.GetByIdAsync(tokenAccessor.GetToken().UserId));
         }
     }
-
 }
