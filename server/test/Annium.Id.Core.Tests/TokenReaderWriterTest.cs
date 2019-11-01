@@ -100,7 +100,7 @@ namespace Annium.Id.Core.Tests
 
             var reader = provider.GetRequiredService<ITokenReader>();
 
-            return reader.ReadToken(token);
+            return reader.ReadToken(token, new TokenReadOptions());
         }
 
         private Action<AuthOptions> Configure(string audience)

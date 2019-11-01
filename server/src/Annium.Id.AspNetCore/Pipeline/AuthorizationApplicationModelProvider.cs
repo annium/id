@@ -9,19 +9,19 @@ namespace Annium.Id.AspNetCore.Pipeline
     internal class AuthorizationApplicationModelProvider : IApplicationModelProvider
     {
         public int Order { get; } = -990;
-        private readonly AuthorizationFilter authorizationFilter;
+        private readonly Func<AuthorizationFilterOptions, AuthorizationFilter> createAuthorizationFilter;
         private readonly Func<Policy, PolicyFilter> createPolicyFilter;
         private readonly IEnumerable<Policy> policies;
         private readonly IPolicyMapper mapper;
 
         public AuthorizationApplicationModelProvider(
-            AuthorizationFilter authorizationFilter,
+            Func<AuthorizationFilterOptions, AuthorizationFilter> createAuthorizationFilter,
             Func<Policy, PolicyFilter> createPolicyFilter,
             IEnumerable<Policy> policies,
             IPolicyMapper mapper
         )
         {
-            this.authorizationFilter = authorizationFilter;
+            this.createAuthorizationFilter = createAuthorizationFilter;
             this.createPolicyFilter = createPolicyFilter;
             this.policies = policies;
             this.mapper = mapper;
@@ -46,15 +46,16 @@ namespace Annium.Id.AspNetCore.Pipeline
             var attribute = actionModel.Attributes.OfType<AuthorizeAttribute>().FirstOrDefault();
 
             //if no Authorize attribute - no filter needed
-            if (attribute == null)
+            if (attribute is null)
                 return;
 
-            actionModel.Filters.Add(authorizationFilter);
-            if (attribute.PolicyName == null)
+            var options = new AuthorizationFilterOptions(attribute.ValidateAudience, attribute.AllowedExpiration);
+            actionModel.Filters.Add(createAuthorizationFilter(options));
+            if (attribute.PolicyName is null)
                 return;
 
             var policy = policies.FirstOrDefault(p => p.Name == attribute.PolicyName);
-            if (policy == null)
+            if (policy is null)
                 throw new ArgumentException($"Policy {attribute.PolicyName}, requested by {actionModel.DisplayName} is not registered");
 
             mapper.EnsureMappable(

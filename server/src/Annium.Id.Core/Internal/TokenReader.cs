@@ -15,26 +15,29 @@ namespace Annium.Id.Core.Internal
     internal class TokenReader : ITokenReader
     {
         private readonly RsaSecurityKey signingKey;
-        private readonly AuthOptions options;
+        private readonly AuthOptions authOptions;
+        private readonly Func<Instant> getInstant;
         private readonly ILogger logger;
 
         public TokenReader(
-            AuthOptions options,
+            AuthOptions authOptions,
+            Func<Instant> getInstant,
             ILogger<TokenReader> logger
         )
         {
-            using (var s = File.OpenRead(options.PublicKeyFile))
+            using (var s = File.OpenRead(authOptions.PublicKeyFile))
             {
                 var provider = new RSACryptoServiceProvider();
                 provider.ImportParameters(new KeyReader().ReadRsaKey(s));
                 signingKey = new RsaSecurityKey(provider);
             }
 
-            this.options = options;
+            this.authOptions = authOptions;
+            this.getInstant = getInstant;
             this.logger = logger;
         }
 
-        public IStatusResult<TokenReadStatus, IdToken> ReadToken(string tokenString)
+        public IStatusResult<TokenReadStatus, IdToken> ReadToken(string tokenString, TokenReadOptions options)
         {
             var handler = new JwtSecurityTokenHandler();
             if (!handler.CanReadToken(tokenString))
@@ -42,25 +45,47 @@ namespace Annium.Id.Core.Internal
 
             var tvp = new TokenValidationParameters
             {
-                ClockSkew = Duration.FromSeconds(5).ToTimeSpan(),
                 IssuerSigningKey = signingKey,
-                RequireExpirationTime = true,
                 RequireSignedTokens = true,
-                ValidateAudience = true,
-                ValidAudiences = new[] { options.Audience },
                 ValidateIssuer = true,
                 ValidIssuer = Constants.Issuer,
                 ValidateIssuerSigningKey = true,
-                ValidateLifetime = true
             };
+
+            if (options.ValidateAudience)
+            {
+                tvp.ValidateAudience = true;
+                tvp.ValidAudience = authOptions.Audience;
+            }
+            else
+            {
+                tvp.ValidateAudience = false;
+            }
+
+            if (options.AllowedExpiration == Duration.Zero)
+            {
+                tvp.ClockSkew = Duration.FromSeconds(5).ToTimeSpan();
+                tvp.RequireExpirationTime = true;
+                tvp.ValidateLifetime = true;
+            }
 
             try
             {
                 handler.ValidateToken(tokenString, tvp, out var securityToken);
                 var jwt = (JwtSecurityToken)securityToken;
+                if (options.AllowedExpiration != Duration.Zero)
+                {
+                    var now = getInstant().ToDateTimeUtc();
+                    if (jwt.ValidFrom > now)
+                        return fail(TokenReadStatus.Failed, "Token is not yet valid");
+
+                    var allowedExpiration = now - options.AllowedExpiration.ToTimeSpan();
+                    if (jwt.ValidTo < allowedExpiration)
+                        return fail(TokenReadStatus.Failed, "Token is expired");
+                }
 
                 var idClaim = jwt.Claims.FirstOrDefault(c => c.Type == Claims.Id);
-                if (idClaim == null)
+                if (idClaim is null)
                     return fail(TokenReadStatus.BadSource, "Token id is missing");
 
                 var rawToken = Convert.FromBase64String(idClaim.Value);

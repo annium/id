@@ -21,7 +21,7 @@ namespace Annium.Id.IntegrationTests.DemoClient.Controllers
         public async Task IdAuthorization_Authorized_Works()
         {
             // arrange
-            var(_, app, _) = await LogUserInCreateAppLogInAppAsync();
+            var (_, app, _) = await RegisterLogUserInCreateAppLogInAppAsync();
             var appTokens = await LogUserInAppAsync(app.Key);
 
             // act
@@ -52,7 +52,7 @@ namespace Annium.Id.IntegrationTests.DemoClient.Controllers
         public async Task IdAuthorization_CheckRole_HasNoAccess_ReturnsForbidden()
         {
             // arrange
-            var(_, app, _) = await LogUserInCreateAppLogInAppAsync();
+            var (_, app, _) = await RegisterLogUserInCreateAppLogInAppAsync();
             var appTokens = await LogUserInAppAsync(app.Key);
 
             // act
@@ -66,7 +66,7 @@ namespace Annium.Id.IntegrationTests.DemoClient.Controllers
         public async Task IdAuthorization_CheckRole_HasAccess_Works()
         {
             // arrange
-            var(user, app, tokens) = await LogUserInCreateAppLogInAppAsync();
+            var (user, app, tokens) = await RegisterLogUserInCreateAppLogInAppAsync();
             var role = await CreateRoleAsync(tokens.AccessToken, app.Id, "admin", "Administrator");
             await AddRoleToUserAsync(tokens.AccessToken, user.Id, role.Id);
             var appTokens = await LogUserInAppAsync(app.Key);
@@ -83,7 +83,7 @@ namespace Annium.Id.IntegrationTests.DemoClient.Controllers
         {
             // arrange
             // for test completeness -
-            var(user, app, tokens) = await LogUserInCreateAppLogInAppAsync();
+            var (user, app, tokens) = await RegisterLogUserInCreateAppLogInAppAsync();
             var role = await CreateRoleAsync(tokens.AccessToken, app.Id, "coo", "Chief Operations Officer");
             await AddRoleToUserAsync(tokens.AccessToken, user.Id, role.Id);
             var claim = await CreateClaimAsync(tokens.AccessToken, app.Id, "paymentsAccess", "Payments Access");
@@ -102,7 +102,7 @@ namespace Annium.Id.IntegrationTests.DemoClient.Controllers
         {
             // arrange
             // for test completeness -
-            var(user, app, tokens) = await LogUserInCreateAppLogInAppAsync();
+            var (user, app, tokens) = await RegisterLogUserInCreateAppLogInAppAsync();
             var claim = await CreateClaimAsync(tokens.AccessToken, app.Id, "paymentsAccess", "Payments Access");
             await AddClaimToUserAsync(tokens.AccessToken, user.Id, claim.Id, "full");
             var appTokens = await LogUserInAppAsync(app.Key);
@@ -119,7 +119,7 @@ namespace Annium.Id.IntegrationTests.DemoClient.Controllers
         {
             // arrange
             // for test completeness -
-            var(user, app, tokens) = await LogUserInCreateAppLogInAppAsync();
+            var (user, app, tokens) = await RegisterLogUserInCreateAppLogInAppAsync();
             var role = await CreateRoleAsync(tokens.AccessToken, app.Id, "coo", "Chief Operations Officer");
             var claim = await CreateClaimAsync(tokens.AccessToken, app.Id, "paymentsAccess", "Payments Access");
             await AddClaimToRoleAsync(tokens.AccessToken, role.Id, claim.Id, "limited");

@@ -30,28 +30,7 @@ namespace Annium.Id.IntegrationTests
         protected IRequest id => GetRequest<Api.Startup, Api.TestServicePack>();
         protected IRequest demo => GetRequest<Id.DemoClient.Startup, Id.DemoClient.ServicePack>();
 
-        protected async Task<MeResponse> RegisterUserAsync(
-            string login = "demo",
-            string password = "testtest",
-            string email = "demo@demo.com"
-        )
-        {
-            var tokens = await LogUserInAsync(login, password, email);
-
-            return await GetUserAsync(tokens.AccessToken);
-        }
-
-        protected Task<TokensResponse> LogUserInAsync(
-            string login = "demo",
-            string password = "testtest",
-            string email = "demo@demo.com"
-        )
-        {
-            return LogUserInAppAsync(Constants.IdApp, login, password, email);
-        }
-
-        protected async Task<TokensResponse> LogUserInAppAsync(
-            string appKey,
+        private async Task CreateUserAsync(
             string login = "demo",
             string password = "testtest",
             string email = "demo@demo.com"
@@ -59,6 +38,58 @@ namespace Annium.Id.IntegrationTests
         {
             var createUserRequest = new RegisterMeRequest { Login = login, Password = password, Email = email };
             await id.Post("/me").JsonContent(createUserRequest).AsResultAsync<Guid>();
+        }
+
+        protected async Task<MeResponse> RegisterLoginGetUserAsync(
+            string login = "demo",
+            string password = "testtest",
+            string email = "demo@demo.com"
+        )
+        {
+            await CreateUserAsync(login, password, email);
+            var tokens = await RegisterLogUserInAsync(login, password, email);
+
+            return await GetUserAsync(tokens.AccessToken);
+        }
+
+        protected Task<TokensResponse> LogUserInAsync(
+            string login = "demo",
+            string password = "testtest"
+        )
+        {
+            return LogUserInAppAsync(Constants.IdApp, login, password);
+        }
+
+        protected async Task<TokensResponse> LogUserInAppAsync(
+            string appKey,
+            string login = "demo",
+            string password = "testtest"
+        )
+        {
+            var logUserInRequest = new LogInRequest { Login = login, Password = password };
+
+            var token = (await id.Post($"/me/{appKey}/login").JsonContent(logUserInRequest).AsResultAsync<TokensResponse>()).Data;
+
+            return token;
+        }
+
+        protected Task<TokensResponse> RegisterLogUserInAsync(
+            string login = "demo",
+            string password = "testtest",
+            string email = "demo@demo.com"
+        )
+        {
+            return RegisterLogUserInAppAsync(Constants.IdApp, login, password, email);
+        }
+
+        protected async Task<TokensResponse> RegisterLogUserInAppAsync(
+            string appKey,
+            string login = "demo",
+            string password = "testtest",
+            string email = "demo@demo.com"
+        )
+        {
+            await CreateUserAsync(login, password, email);
 
             var logUserInRequest = new LogInRequest { Login = login, Password = password };
 
@@ -89,7 +120,7 @@ namespace Annium.Id.IntegrationTests
             return (await id.Get($"/apps/{appId}").BearerAuthorization(accessToken).AsResultAsync<AppResponse>()).Data;
         }
 
-        protected async Task<ValueTuple<MeResponse, AppResponse, TokensResponse>> LogUserInCreateAppLogInAppAsync(
+        protected async Task<ValueTuple<MeResponse, AppResponse, TokensResponse>> RegisterLogUserInCreateAppLogInAppAsync(
             string login = "demo",
             string password = "testtest",
             string email = "demo@demo.com",
@@ -97,7 +128,7 @@ namespace Annium.Id.IntegrationTests
             string appName = "Demo App"
         )
         {
-            var tokens = await LogUserInAsync(login, password, email);
+            var tokens = await RegisterLogUserInAsync(login, password, email);
             var user = await GetUserAsync(tokens.AccessToken);
             var app = await CreateAppAsync(tokens.AccessToken, appKey, appName);
 

@@ -28,7 +28,11 @@ namespace Annium.Core.DependencyInjection
             services.AddSingleton<IApplicationModelProvider, AuthorizationApplicationModelProvider>();
 
             // filters
-            services.AddSingleton<AuthorizationFilter>();
+            services.AddSingleton<Func<AuthorizationFilterOptions, AuthorizationFilter>>(sp => options => new AuthorizationFilter(
+                options,
+                sp.GetRequiredService<RequestTokenReader>(),
+                sp.GetRequiredService<ITokenReader>()
+            ));
             services.AddSingleton<Func<Policy, PolicyFilter>>(sp => policy => new PolicyFilter(
                 sp.GetRequiredService<ITokenAccessor>(),
                 policy,

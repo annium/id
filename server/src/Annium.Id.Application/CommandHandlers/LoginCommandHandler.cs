@@ -45,10 +45,10 @@ namespace Annium.Id.Application.CommandHandlers
             var user = request.User;
 
             if (securityManager.Hash(request.Password) != user.PasswordHash)
-                return Result.Status(OperationStatus.Forbidden, default(Tokens) !).Error("Invalid password");
+                return Result.Status(OperationStatus.Forbidden, default(Tokens)!).Error("Invalid password");
 
             var instant = getInstant();
-            var(ipAddress, client) = identityDataAccessor.GetIdentityData();
+            var (ipAddress, client) = identityDataAccessor.GetIdentityData();
             var login = new UserLogin(app.Id, user.Id, instant, ipAddress.ToString(), client, Guid.NewGuid(), instant + refreshTokenLifeTime);
 
             await userLoginRepository.DeleteExpiredByUserIdAsync(user.Id, instant);
@@ -68,7 +68,7 @@ namespace Annium.Id.Application.CommandHandlers
             var login = request.Login;
 
             if (login.RefreshTokenExpires < getInstant())
-                return Result.Status(OperationStatus.Forbidden, default(Tokens) !).Error("Refresh token expired");
+                return Result.Status(OperationStatus.Forbidden, default(Tokens)!).Error("Refresh token expired");
 
             var token = await tokenGenerator.GenerateToken(login);
 
