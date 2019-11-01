@@ -38,7 +38,7 @@ namespace Annium.Id.Apps.AspNetCore.Pipeline
             var attribute = actionModel.Attributes.OfType<AuthorizeAppAttribute>().FirstOrDefault();
 
             //if no Authorize attribute - no filter needed
-            if (attribute == null)
+            if (attribute is null)
                 return;
 
             actionModel.Filters.Add(authorizationFilter);
