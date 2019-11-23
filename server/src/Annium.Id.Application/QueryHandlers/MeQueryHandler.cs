@@ -8,7 +8,8 @@ using Annium.Id.Domain.Entities;
 
 namespace Annium.Id.Application.QueryHandlers
 {
-    internal class MeQueryHandler : IQueryHandler<GetMeQuery, User>
+    internal class MeQueryHandler :
+        IQueryHandler<GetMeQuery, User>
     {
         public Task<IStatusResult<OperationStatus, User>> HandleAsync(
             GetMeQuery request,

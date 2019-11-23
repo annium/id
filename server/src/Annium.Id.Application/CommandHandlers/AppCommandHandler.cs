@@ -10,7 +10,12 @@ using Annium.Id.Domain.Entities;
 
 namespace Annium.Id.Application.CommandHandlers
 {
-    internal class AppCommandHandler : ICommandHandler<CreateAppCommand, Guid>, ICommandHandler<UpdateAppCommand>, ICommandHandler<SetAppOwnerCommand>, ICommandHandler<UpdateAppApiTokenCommand, Guid>, ICommandHandler<DeleteAppCommand>
+    internal class AppCommandHandler :
+        ICommandHandler<CreateAppCommand, Guid>,
+        ICommandHandler<UpdateAppCommand>,
+        ICommandHandler<SetAppOwnerCommand>,
+        ICommandHandler<UpdateAppApiTokenCommand, Guid>,
+        ICommandHandler<DeleteAppCommand>
     {
         private readonly IAppRepository appRepository;
 

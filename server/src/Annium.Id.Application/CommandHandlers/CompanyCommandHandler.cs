@@ -10,7 +10,11 @@ using Annium.Id.Domain.Entities;
 
 namespace Annium.Id.Application.CommandHandlers
 {
-    internal class CompanyCommandHandler : ICommandHandler<RegisterCompanyCommand, Guid>, ICommandHandler<UpdateCompanyCommand>, ICommandHandler<SetCompanyOwnerCommand>, ICommandHandler<UnregisterCompanyCommand>
+    internal class CompanyCommandHandler :
+        ICommandHandler<RegisterCompanyCommand, Guid>,
+        ICommandHandler<UpdateCompanyCommand>,
+        ICommandHandler<SetCompanyOwnerCommand>,
+        ICommandHandler<UnregisterCompanyCommand>
     {
         private readonly ICompanyRepository companyRepository;
 

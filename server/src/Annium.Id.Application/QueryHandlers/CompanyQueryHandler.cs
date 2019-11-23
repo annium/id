@@ -11,7 +11,9 @@ using Annium.Id.Domain.Entities;
 
 namespace Annium.Id.Application.QueryHandlers
 {
-    internal class CompanyQueryHandler : IQueryHandler<GetCompanyQuery, Company>, IQueryHandler<GetCompanyUsersQuery, IEnumerable<User>>
+    internal class CompanyQueryHandler :
+        IQueryHandler<GetCompanyQuery, Company>,
+        IQueryHandler<GetCompanyUsersQuery, IEnumerable<User>>
     {
         private readonly ICompanyUserRepository companyUserRepository;
 

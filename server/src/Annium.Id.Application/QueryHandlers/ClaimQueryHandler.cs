@@ -11,7 +11,8 @@ using Annium.Id.Domain.Entities;
 
 namespace Annium.Id.Application.QueryHandlers
 {
-    public class ClaimQueryHandler : IQueryHandler<ListClaimsQuery, IEnumerable<Claim>>
+    public class ClaimQueryHandler :
+        IQueryHandler<ListClaimsQuery, IEnumerable<Claim>>
     {
         private readonly IClaimRepository claimRepository;
 

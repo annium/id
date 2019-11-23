@@ -11,7 +11,10 @@ using Annium.Id.Domain.Entities;
 
 namespace Annium.Id.Application.CommandHandlers
 {
-    internal class MeCommandHandler : ICommandHandler<RegisterMeCommand, Guid>, ICommandHandler<UpdateMeCommand>, ICommandHandler<UnregisterMeCommand>
+    internal class MeCommandHandler :
+        ICommandHandler<RegisterMeCommand, Guid>,
+        ICommandHandler<UpdateMeCommand>,
+        ICommandHandler<UnregisterMeCommand>
     {
         private readonly IUserRepository userRepository;
         private readonly IUserLoginRepository userLoginRepository;

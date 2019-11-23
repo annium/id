@@ -9,7 +9,13 @@ using Annium.Id.Domain.Entities;
 
 namespace Annium.Id.Application.CommandHandlers
 {
-    internal class CompanyUserCommandHandler : ICommandHandler<AddUserToCompanyCommand>, ICommandHandler<AddCompanyRoleToCompanyUserCommand>, ICommandHandler<DeleteCompanyRoleFromCompanyUserCommand>, ICommandHandler<AddCompanyClaimToCompanyUserCommand>, ICommandHandler<DeleteCompanyClaimFromCompanyUserCommand>, ICommandHandler<DeleteUserFromCompanyCommand>
+    internal class CompanyUserCommandHandler :
+        ICommandHandler<AddUserToCompanyCommand>,
+        ICommandHandler<AddCompanyRoleToCompanyUserCommand>,
+        ICommandHandler<DeleteCompanyRoleFromCompanyUserCommand>,
+        ICommandHandler<AddCompanyClaimToCompanyUserCommand>,
+        ICommandHandler<DeleteCompanyClaimFromCompanyUserCommand>,
+        ICommandHandler<DeleteUserFromCompanyCommand>
     {
         private readonly ICompanyUserRepository companyUserRepository;
         private readonly ICompanyUserRoleRepository companyUserRoleRepository;

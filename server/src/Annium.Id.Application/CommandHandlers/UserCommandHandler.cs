@@ -9,7 +9,11 @@ using Annium.Id.Domain.Entities;
 
 namespace Annium.Id.Application.CommandHandlers
 {
-    internal class UserCommandHandler : ICommandHandler<AddRoleToUserCommand>, ICommandHandler<DeleteRoleFromUserCommand>, ICommandHandler<AddClaimToUserCommand>, ICommandHandler<DeleteClaimFromUserCommand>
+    internal class UserCommandHandler :
+        ICommandHandler<AddRoleToUserCommand>,
+        ICommandHandler<DeleteRoleFromUserCommand>,
+        ICommandHandler<AddClaimToUserCommand>,
+        ICommandHandler<DeleteClaimFromUserCommand>
     {
         private readonly IAppRepository appRepository;
         private readonly IUserRoleRepository userRoleRepository;

@@ -12,7 +12,10 @@ using NodaTime;
 
 namespace Annium.Id.Application.CommandHandlers
 {
-    internal class LoginCommandHandler : ICommandHandler<LogInCommand, Tokens>, ICommandHandler<LogOutCommand>, ICommandHandler<UpdateTokensCommand, Tokens>
+    internal class LoginCommandHandler :
+        ICommandHandler<LogInCommand, Tokens>,
+        ICommandHandler<LogOutCommand>,
+        ICommandHandler<UpdateTokensCommand, Tokens>
     {
         private static readonly Duration refreshTokenLifeTime = Duration.FromDays(1);
         private readonly Func<Instant> getInstant;

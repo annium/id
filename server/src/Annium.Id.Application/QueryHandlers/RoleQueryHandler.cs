@@ -11,7 +11,8 @@ using Annium.Id.Domain.Entities;
 
 namespace Annium.Id.Application.QueryHandlers
 {
-    internal class RoleQueryHandler : IQueryHandler<ListRolesQuery, IEnumerable<Role>>
+    internal class RoleQueryHandler :
+        IQueryHandler<ListRolesQuery, IEnumerable<Role>>
     {
         private readonly IRoleRepository roleRepository;
 

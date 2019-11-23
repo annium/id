@@ -10,7 +10,10 @@ using Annium.Id.Domain.Entities;
 
 namespace Annium.Id.Application.CommandHandlers
 {
-    internal class CompanyClaimCommandHandler : ICommandHandler<CreateCompanyClaimCommand, Guid>, ICommandHandler<UpdateCompanyClaimCommand>, ICommandHandler<DeleteCompanyClaimCommand>
+    internal class CompanyClaimCommandHandler :
+        ICommandHandler<CreateCompanyClaimCommand, Guid>,
+        ICommandHandler<UpdateCompanyClaimCommand>,
+        ICommandHandler<DeleteCompanyClaimCommand>
     {
         private readonly IAppRepository appRepository;
         private readonly ICompanyClaimRepository companyClaimRepository;

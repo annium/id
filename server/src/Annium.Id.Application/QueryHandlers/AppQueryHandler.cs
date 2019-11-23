@@ -12,7 +12,10 @@ using Annium.Id.Domain.Entities;
 
 namespace Annium.Id.Application.QueryHandlers
 {
-    internal class AppQueryHandler : IQueryHandler<ListAppsQuery, IEnumerable<App>>, IQueryHandler<GetAppQuery, App>, IQueryHandler<GetAppApiTokenQuery, Guid>
+    internal class AppQueryHandler :
+        IQueryHandler<ListAppsQuery, IEnumerable<App>>,
+        IQueryHandler<GetAppQuery, App>,
+        IQueryHandler<GetAppApiTokenQuery, Guid>
     {
         private readonly IAppRepository appRepository;
 
