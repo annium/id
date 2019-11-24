@@ -51,11 +51,11 @@ namespace Annium.Id.Db.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("1b8c21ef-f738-4d7f-9a8d-c411c22f4ef1"),
+                            Id = new Guid("278e20ae-00c7-4ba5-8db3-55df7af12d44"),
                             ApiToken = new Guid("b62acd2a-2f1b-4da1-9273-abab4b9da7f7"),
                             Key = "id",
                             Name = "Annium ID",
-                            OwnerId = new Guid("119c1b23-3b0d-4c5c-801d-6bbcdcfa732e")
+                            OwnerId = new Guid("baa0ad0f-91c5-4c19-963c-ea369048e67a")
                         });
                 });
 
@@ -319,7 +319,7 @@ namespace Annium.Id.Db.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("119c1b23-3b0d-4c5c-801d-6bbcdcfa732e"),
+                            Id = new Guid("baa0ad0f-91c5-4c19-963c-ea369048e67a"),
                             Email = "a.kreskiyan@gmail.com",
                             Login = "alex",
                             PasswordHash = "ohraPG8QMZiOnXX+MWh/45aZDwjtv/7FQMFzXxSRxQjLdSMBHpELKDSznF6cSUalufovlgCfFkn4mtR7eXB+8w=="

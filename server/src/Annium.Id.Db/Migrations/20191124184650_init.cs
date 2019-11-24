@@ -368,12 +368,12 @@ namespace Annium.Id.Db.Migrations
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "Email", "Login", "PasswordHash" },
-                values: new object[] { new Guid("119c1b23-3b0d-4c5c-801d-6bbcdcfa732e"), "a.kreskiyan@gmail.com", "alex", "ohraPG8QMZiOnXX+MWh/45aZDwjtv/7FQMFzXxSRxQjLdSMBHpELKDSznF6cSUalufovlgCfFkn4mtR7eXB+8w==" });
+                values: new object[] { new Guid("baa0ad0f-91c5-4c19-963c-ea369048e67a"), "a.kreskiyan@gmail.com", "alex", "ohraPG8QMZiOnXX+MWh/45aZDwjtv/7FQMFzXxSRxQjLdSMBHpELKDSznF6cSUalufovlgCfFkn4mtR7eXB+8w==" });
 
             migrationBuilder.InsertData(
                 table: "Apps",
                 columns: new[] { "Id", "ApiToken", "Key", "Name", "OwnerId" },
-                values: new object[] { new Guid("1b8c21ef-f738-4d7f-9a8d-c411c22f4ef1"), new Guid("b62acd2a-2f1b-4da1-9273-abab4b9da7f7"), "id", "Annium ID", new Guid("119c1b23-3b0d-4c5c-801d-6bbcdcfa732e") });
+                values: new object[] { new Guid("278e20ae-00c7-4ba5-8db3-55df7af12d44"), new Guid("b62acd2a-2f1b-4da1-9273-abab4b9da7f7"), "id", "Annium ID", new Guid("baa0ad0f-91c5-4c19-963c-ea369048e67a") });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Apps_Key",
