@@ -12,9 +12,9 @@ namespace Annium.Id.Db.Configurations
             builder.HasOne<Company>().WithMany().IsRequired()
                 .HasForeignKey(x => x.CompanyId).OnDelete(DeleteBehavior.Restrict);
             builder.HasOne<User>().WithMany().IsRequired()
-                .HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
             builder.HasOne(x => x.Role).WithMany().IsRequired()
-                .HasForeignKey(x => x.RoleId).HasForeignKey(m => m.RoleId).OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(x => x.RoleId).OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

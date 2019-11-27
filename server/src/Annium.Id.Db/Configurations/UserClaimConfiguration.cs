@@ -10,7 +10,7 @@ namespace Annium.Id.Db.Configurations
         {
             builder.HasKey(p => new { p.UserId, p.ClaimId });
             builder.HasOne<User>().WithMany().IsRequired()
-                .HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
             builder.HasOne(x => x.Claim).WithMany().IsRequired()
                 .HasForeignKey(x => x.ClaimId).OnDelete(DeleteBehavior.Restrict);
         }

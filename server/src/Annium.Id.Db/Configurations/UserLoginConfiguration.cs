@@ -11,9 +11,9 @@ namespace Annium.Id.Db.Configurations
             base.Configure(builder);
 
             builder.HasOne<User>().WithMany().IsRequired()
-                .HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
             builder.HasOne<App>().WithMany().IsRequired()
-                .HasForeignKey(x => x.AppId).OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(x => x.AppId).OnDelete(DeleteBehavior.Cascade);
             builder.HasIndex(m => m.RefreshToken).IsUnique();
         }
     }

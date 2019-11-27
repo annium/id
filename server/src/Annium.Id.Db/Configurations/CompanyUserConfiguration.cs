@@ -12,7 +12,7 @@ namespace Annium.Id.Db.Configurations
             builder.HasOne<Company>().WithMany().IsRequired()
                 .HasForeignKey(x => x.CompanyId).OnDelete(DeleteBehavior.Restrict);
             builder.HasOne(x => x.User).WithMany().IsRequired()
-                .HasForeignKey(x => x.UserId).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(x => x.UserId).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
