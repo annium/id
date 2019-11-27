@@ -1,33 +1,20 @@
 using System;
 using Annium.Core.DependencyInjection;
-using Annium.Id.Db.Repositories;
-using Annium.Id.Db.Repositories.Implementations;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Annium.Id.Db
 {
-    public class BaseServicePack : ServicePackBase
+    internal class BaseServicePack : ServicePackBase
     {
         public override void Register(IServiceCollection services, IServiceProvider provider)
         {
             services.AddScoped<Entities.IContext>(p => p.GetRequiredService<Entities.Context>());
 
             // repositories
-            services.AddScoped<IAppRepository, AppRepository>();
-            services.AddScoped<IClaimRepository, ClaimRepository>();
-            services.AddScoped<ICompanyClaimRepository, CompanyClaimRepository>();
-            services.AddScoped<ICompanyRepository, CompanyRepository>();
-            services.AddScoped<ICompanyRoleClaimRepository, CompanyRoleClaimRepository>();
-            services.AddScoped<ICompanyRoleRepository, CompanyRoleRepository>();
-            services.AddScoped<ICompanyUserClaimRepository, CompanyUserClaimRepository>();
-            services.AddScoped<ICompanyUserRepository, CompanyUserRepository>();
-            services.AddScoped<ICompanyUserRoleRepository, CompanyUserRoleRepository>();
-            services.AddScoped<IRoleClaimRepository, RoleClaimRepository>();
-            services.AddScoped<IRoleRepository, RoleRepository>();
-            services.AddScoped<IUserClaimRepository, UserClaimRepository>();
-            services.AddScoped<IUserLoginRepository, UserLoginRepository>();
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IUserRoleRepository, UserRoleRepository>();
+            services.SelectAssemblyTypes()
+                .Where(x => x.IsClass && x.Name.EndsWith("Repository"))
+                .AsImplementedInterfaces()
+                .RegisterScoped();
         }
     }
 }
