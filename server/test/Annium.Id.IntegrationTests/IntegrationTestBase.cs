@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Annium.AspNetCore.IntegrationTesting;
 using Annium.Id.Core;
+using Annium.Id.Infrastructure.Email.Models;
 using Annium.Id.ViewModels.Apps.Requests;
 using Annium.Id.ViewModels.Apps.Responses;
 using Annium.Id.ViewModels.Claims.Requests;
@@ -22,31 +23,42 @@ using Annium.Id.ViewModels.Roles.Requests;
 using Annium.Id.ViewModels.Roles.Responses;
 using Annium.Id.ViewModels.Users.Requests;
 using Annium.Net.Http;
+using Annium.Net.Mail;
+using Annium.Testing;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Annium.Id.IntegrationTests
 {
     public class IntegrationTestBase : IntegrationTest
     {
-        protected IRequest id => GetRequest<Api.Startup, Api.TestServicePack>();
-        protected IRequest demo => GetRequest<Id.DemoClient.Startup, Id.DemoClient.ServicePack>();
+        protected IRequest id => GetRequest<Api.Startup>(
+            builder => builder.UseServicePack<Api.TestServicePack>(),
+            services => services.AddSingleton<IEmailService>(emailService)
+        );
+        protected IRequest demo => GetRequest<Id.DemoClient.Startup>(
+            builder => builder.UseServicePack<Id.DemoClient.ServicePack>()
+        );
+
+        protected TestEmailService emailService = new TestEmailService();
 
         private async Task CreateUserAsync(
             string login = "demo",
-            string password = "testtest",
             string email = "demo@demo.com"
         )
         {
-            var createUserRequest = new RegisterMeRequest { Login = login, Password = password, Email = email };
-            await id.Post("/me").JsonContent(createUserRequest).AsResultAsync<Guid>();
+            var createUserRequest = new RegisterMeRequest { Login = login, Email = email };
+            await id.Post("/me")
+                .JsonContent(createUserRequest)
+                .EnsureSuccessStatusCode()
+                .AsResultAsync<Guid>();
         }
 
-        protected async Task<MeResponse> RegisterLoginGetUserAsync(
+        protected async Task<MeResponse> RegisterLogInGetUserAsync(
             string login = "demo",
             string password = "testtest",
             string email = "demo@demo.com"
         )
         {
-            await CreateUserAsync(login, password, email);
             var tokens = await RegisterLogUserInAsync(login, password, email);
 
             return await GetUserAsync(tokens.AccessToken);
@@ -68,7 +80,10 @@ namespace Annium.Id.IntegrationTests
         {
             var logUserInRequest = new LogInRequest { Login = login, Password = password };
 
-            var token = (await id.Post($"/me/{appKey}/login").JsonContent(logUserInRequest).AsResultAsync<TokensResponse>()).Data;
+            var token = (await id.Post($"/me/{appKey}/login")
+                .JsonContent(logUserInRequest)
+                .EnsureSuccessStatusCode()
+                .AsResultAsync<TokensResponse>()).Data;
 
             return token;
         }
@@ -89,11 +104,29 @@ namespace Annium.Id.IntegrationTests
             string email = "demo@demo.com"
         )
         {
-            await CreateUserAsync(login, password, email);
+            await CreateUserAsync(login, email);
 
-            var logUserInRequest = new LogInRequest { Login = login, Password = password };
+            // get id from email data
+            var userId = emailService.Emails.Last().Data.As<ConfirmEmailData>().Id;
 
-            var token = (await id.Post($"/me/{appKey}/login").JsonContent(logUserInRequest).AsResultAsync<TokensResponse>()).Data;
+            // confirm email
+            var token = (await id.Post($"/me/{appKey}/confirm-email")
+                .JsonContent(new ConfirmMyEmailRequestBase { Id = userId })
+                .EnsureSuccessStatusCode()
+                .AsResultAsync<TokensResponse>()).Data;
+
+            // set password
+            await id.Put("/me")
+                .BearerAuthorization(token.AccessToken)
+                .JsonContent(new UpdateMeRequest { Login = login, Password = password, Email = email })
+                .EnsureSuccessStatusCode()
+                .RunAsync();
+
+            // perform regular login
+            token = (await id.Post($"/me/{appKey}/login")
+                .JsonContent(new LogInRequest { Login = login, Password = password })
+                .EnsureSuccessStatusCode()
+                .AsResultAsync<TokensResponse>()).Data;
 
             return token;
         }
@@ -102,7 +135,10 @@ namespace Annium.Id.IntegrationTests
             string accessToken
         )
         {
-            var user = (await id.Get("/me").BearerAuthorization(accessToken).AsResultAsync<MeResponse>()).Data;
+            var user = (await id.Get("/me")
+                .BearerAuthorization(accessToken)
+                .EnsureSuccessStatusCode()
+                .AsResultAsync<MeResponse>()).Data;
 
             return user;
         }
@@ -115,9 +151,16 @@ namespace Annium.Id.IntegrationTests
         {
             var request = new CreateAppRequest { Key = key, Name = name };
 
-            var appId = (await id.Post("/apps").BearerAuthorization(accessToken).JsonContent(request).AsResultAsync<Guid>()).Data;
+            var appId = (await id.Post("/apps")
+                .BearerAuthorization(accessToken)
+                .JsonContent(request)
+                .EnsureSuccessStatusCode()
+                .AsResultAsync<Guid>()).Data;
 
-            return (await id.Get($"/apps/{appId}").BearerAuthorization(accessToken).AsResultAsync<AppResponse>()).Data;
+            return (await id.Get($"/apps/{appId}")
+                .BearerAuthorization(accessToken)
+                .EnsureSuccessStatusCode()
+                .AsResultAsync<AppResponse>()).Data;
         }
 
         protected async Task<ValueTuple<MeResponse, AppResponse, TokensResponse>> RegisterLogUserInCreateAppLogInAppAsync(
@@ -144,9 +187,17 @@ namespace Annium.Id.IntegrationTests
         {
             var request = new CreateRoleRequest { AppId = appId, Key = key, Name = name };
 
-            var roleId = (await id.Post("/roles").BearerAuthorization(accessToken).JsonContent(request).AsResultAsync<Guid>()).Data;
+            var roleId = (await id.Post("/roles")
+                .BearerAuthorization(accessToken)
+                .JsonContent(request)
+                .EnsureSuccessStatusCode()
+                .AsResultAsync<Guid>()).Data;
 
-            var role = (await id.Get("/roles").BearerAuthorization(accessToken).Param("appId", appId).AsResultAsync<RoleResponse[]>()).Data
+            var role = (await id.Get("/roles")
+                .BearerAuthorization(accessToken)
+                .Param("appId", appId)
+                .EnsureSuccessStatusCode()
+                .AsResultAsync<RoleResponse[]>()).Data
                 .First(c => c.Id == roleId);
 
             return role;
@@ -161,9 +212,17 @@ namespace Annium.Id.IntegrationTests
         {
             var request = new CreateClaimRequest { AppId = appId, Key = key, Name = name };
 
-            var claimId = (await id.Post("/claims").BearerAuthorization(accessToken).JsonContent(request).AsResultAsync<Guid>()).Data;
+            var claimId = (await id.Post("/claims")
+                .BearerAuthorization(accessToken)
+                .JsonContent(request)
+                .EnsureSuccessStatusCode()
+                .AsResultAsync<Guid>()).Data;
 
-            var claim = (await id.Get("/claims").BearerAuthorization(accessToken).Param("appId", appId).AsResultAsync<ClaimResponse[]>()).Data
+            var claim = (await id.Get("/claims")
+                .BearerAuthorization(accessToken)
+                .Param("appId", appId)
+                .EnsureSuccessStatusCode()
+                .AsResultAsync<ClaimResponse[]>()).Data
                 .First(c => c.Id == claimId);
 
             return claim;
@@ -178,7 +237,11 @@ namespace Annium.Id.IntegrationTests
         {
             var request = new AddClaimToRoleRequest { Value = value };
 
-            return id.Post($"/roles/{roleId}/claims/{claimId}").BearerAuthorization(accessToken).JsonContent(request).RunAsync();
+            return id.Post($"/roles/{roleId}/claims/{claimId}")
+                .BearerAuthorization(accessToken)
+                .JsonContent(request)
+                .EnsureSuccessStatusCode()
+                .RunAsync();
         }
 
         protected Task AddRoleToUserAsync(
@@ -187,7 +250,10 @@ namespace Annium.Id.IntegrationTests
             Guid roleId
         )
         {
-            return id.Post($"/users/{userId}/roles/{roleId}").BearerAuthorization(accessToken).RunAsync();
+            return id.Post($"/users/{userId}/roles/{roleId}")
+                .BearerAuthorization(accessToken)
+                .EnsureSuccessStatusCode()
+                .RunAsync();
         }
 
         protected Task AddClaimToUserAsync(
@@ -199,7 +265,11 @@ namespace Annium.Id.IntegrationTests
         {
             var request = new AddClaimToUserRequest { Value = value };
 
-            return id.Post($"/users/{userId}/claims/{claimId}").BearerAuthorization(accessToken).JsonContent(request).RunAsync();
+            return id.Post($"/users/{userId}/claims/{claimId}")
+                .BearerAuthorization(accessToken)
+                .JsonContent(request)
+                .EnsureSuccessStatusCode()
+                .RunAsync();
         }
 
         protected async Task<CompanyResponse> CreateCompanyAsync(
@@ -211,9 +281,16 @@ namespace Annium.Id.IntegrationTests
         {
             var request = new RegisterCompanyRequest { ParentId = parentId, Key = key, Name = name };
 
-            var companyId = (await id.Post("/companies").BearerAuthorization(accessToken).JsonContent(request).AsResultAsync<Guid>()).Data;
+            var companyId = (await id.Post("/companies")
+                .BearerAuthorization(accessToken)
+                .JsonContent(request)
+                .EnsureSuccessStatusCode()
+                .AsResultAsync<Guid>()).Data;
 
-            return (await id.Get($"/companies/{companyId}").BearerAuthorization(accessToken).AsResultAsync<CompanyResponse>()).Data;
+            return (await id.Get($"/companies/{companyId}")
+                .BearerAuthorization(accessToken)
+                .EnsureSuccessStatusCode()
+                .AsResultAsync<CompanyResponse>()).Data;
         }
 
         protected async Task<CompanyRoleResponse> CreateCompanyRoleAsync(
@@ -225,9 +302,17 @@ namespace Annium.Id.IntegrationTests
         {
             var request = new CreateCompanyRoleRequest { AppId = appId, Key = key, Name = name };
 
-            var roleId = (await id.Post("/companies/roles").BearerAuthorization(accessToken).JsonContent(request).AsResultAsync<Guid>()).Data;
+            var roleId = (await id.Post("/companies/roles")
+                .BearerAuthorization(accessToken)
+                .JsonContent(request)
+                .EnsureSuccessStatusCode()
+                .AsResultAsync<Guid>()).Data;
 
-            var role = (await id.Get("/companies/roles").BearerAuthorization(accessToken).Param("appId", appId).AsResultAsync<CompanyRoleResponse[]>()).Data
+            var role = (await id.Get("/companies/roles")
+                .BearerAuthorization(accessToken)
+                .Param("appId", appId)
+                .EnsureSuccessStatusCode()
+                .AsResultAsync<CompanyRoleResponse[]>()).Data
                 .First(c => c.Id == roleId);
 
             return role;
@@ -242,9 +327,17 @@ namespace Annium.Id.IntegrationTests
         {
             var request = new CreateCompanyClaimRequest { AppId = appId, Key = key, Name = name };
 
-            var claimId = (await id.Post("/companies/claims").BearerAuthorization(accessToken).JsonContent(request).AsResultAsync<Guid>()).Data;
+            var claimId = (await id.Post("/companies/claims")
+                .BearerAuthorization(accessToken)
+                .JsonContent(request)
+                .EnsureSuccessStatusCode()
+                .AsResultAsync<Guid>()).Data;
 
-            var claim = (await id.Get("/companies/claims").BearerAuthorization(accessToken).Param("appId", appId).AsResultAsync<CompanyClaimResponse[]>()).Data
+            var claim = (await id.Get("/companies/claims")
+                .BearerAuthorization(accessToken)
+                .Param("appId", appId)
+                .EnsureSuccessStatusCode()
+                .AsResultAsync<CompanyClaimResponse[]>()).Data
                 .First(c => c.Id == claimId);
 
             return claim;
@@ -259,7 +352,11 @@ namespace Annium.Id.IntegrationTests
         {
             var request = new AddCompanyClaimToCompanyRoleRequest { Value = value };
 
-            return id.Post($"/companies/roles/{roleId}/claims/{claimId}").BearerAuthorization(accessToken).JsonContent(request).RunAsync();
+            return id.Post($"/companies/roles/{roleId}/claims/{claimId}")
+                .BearerAuthorization(accessToken)
+                .JsonContent(request)
+                .EnsureSuccessStatusCode()
+                .RunAsync();
         }
 
         protected Task AddUserToCompanyAsync(
@@ -268,7 +365,10 @@ namespace Annium.Id.IntegrationTests
             Guid userId
         )
         {
-            return id.Post($"/companies/{companyId}/users/{userId}").BearerAuthorization(accessToken).RunAsync();
+            return id.Post($"/companies/{companyId}/users/{userId}")
+                .BearerAuthorization(accessToken)
+                .EnsureSuccessStatusCode()
+                .RunAsync();
         }
 
         protected Task AddCompanyRoleToCompanyUserAsync(
@@ -278,7 +378,10 @@ namespace Annium.Id.IntegrationTests
             Guid roleId
         )
         {
-            return id.Post($"/companies/{companyId}/users/{userId}/roles/{roleId}").BearerAuthorization(accessToken).RunAsync();
+            return id.Post($"/companies/{companyId}/users/{userId}/roles/{roleId}")
+                .BearerAuthorization(accessToken)
+                .EnsureSuccessStatusCode()
+                .RunAsync();
         }
 
         protected Task AddCompanyClaimToCompanyUserAsync(
@@ -291,7 +394,11 @@ namespace Annium.Id.IntegrationTests
         {
             var request = new AddCompanyClaimToCompanyUserRequest { Value = value };
 
-            return id.Post($"/companies/{companyId}/users/{userId}/claims/{claimId}").BearerAuthorization(accessToken).JsonContent(request).RunAsync();
+            return id.Post($"/companies/{companyId}/users/{userId}/claims/{claimId}")
+                .BearerAuthorization(accessToken)
+                .JsonContent(request)
+                .EnsureSuccessStatusCode()
+                .RunAsync();
         }
     }
 }

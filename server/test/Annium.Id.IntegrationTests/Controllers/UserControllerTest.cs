@@ -58,7 +58,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         {
             // arrange
             var tokens = await RegisterLogUserInAsync();
-            var other = await RegisterLoginGetUserAsync("other", "superpass", "some@email.com");
+            var other = await RegisterLogInGetUserAsync("other", "superpass", "some@email.com");
 
             // act
             var response = await id.Post($"/users/{other.Id}/roles/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
@@ -74,7 +74,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var tokens = await RegisterLogUserInAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
             var role = await CreateRoleAsync(tokens.AccessToken, app.Id);
-            var other = await RegisterLoginGetUserAsync("other", "superpass", "some@email.com");
+            var other = await RegisterLogInGetUserAsync("other", "superpass", "some@email.com");
 
             // act
             var response = await id.Post($"/users/{other.Id}/roles/{role.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
@@ -131,7 +131,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         {
             // arrange
             var tokens = await RegisterLogUserInAsync();
-            var other = await RegisterLoginGetUserAsync("other", "superpass", "some@email.com");
+            var other = await RegisterLogInGetUserAsync("other", "superpass", "some@email.com");
 
             // act
             var response = await id.Delete($"/users/{other.Id}/roles/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
@@ -147,7 +147,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var tokens = await RegisterLogUserInAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
             var role = await CreateRoleAsync(tokens.AccessToken, app.Id);
-            var other = await RegisterLoginGetUserAsync("other", "superpass", "some@email.com");
+            var other = await RegisterLogInGetUserAsync("other", "superpass", "some@email.com");
 
             // act
             var response = await id.Delete($"/users/{other.Id}/roles/{role.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
@@ -163,7 +163,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var tokens = await RegisterLogUserInAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
             var claim = await CreateClaimAsync(tokens.AccessToken, app.Id);
-            var other = await RegisterLoginGetUserAsync("other", "superpass", "some@email.com");
+            var other = await RegisterLogInGetUserAsync("other", "superpass", "some@email.com");
             var p = new AddClaimToUserRequest { Value = "S" };
 
             // act
@@ -224,7 +224,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         {
             // arrange
             var tokens = await RegisterLogUserInAsync();
-            var other = await RegisterLoginGetUserAsync("other", "superpass", "some@email.com");
+            var other = await RegisterLogInGetUserAsync("other", "superpass", "some@email.com");
             var p = new AddClaimToUserRequest { Value = "Some" };
 
             // act
@@ -241,7 +241,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var tokens = await RegisterLogUserInAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
             var claim = await CreateClaimAsync(tokens.AccessToken, app.Id);
-            var other = await RegisterLoginGetUserAsync("other", "superpass", "some@email.com");
+            var other = await RegisterLogInGetUserAsync("other", "superpass", "some@email.com");
             var p = new AddClaimToUserRequest { Value = "Some" };
 
             // act
@@ -299,7 +299,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         {
             // arrange
             var tokens = await RegisterLogUserInAsync();
-            var other = await RegisterLoginGetUserAsync("other", "superpass", "some@email.com");
+            var other = await RegisterLogInGetUserAsync("other", "superpass", "some@email.com");
 
             // act
             var response = await id.Delete($"/users/{other.Id}/claims/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
@@ -315,7 +315,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var tokens = await RegisterLogUserInAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
             var claim = await CreateClaimAsync(tokens.AccessToken, app.Id);
-            var other = await RegisterLoginGetUserAsync("other", "superpass", "some@email.com");
+            var other = await RegisterLogInGetUserAsync("other", "superpass", "some@email.com");
 
             // act
             var response = await id.Delete($"/users/{other.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();

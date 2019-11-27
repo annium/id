@@ -489,7 +489,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var tokens = await RegisterLogUserInAsync();
             var user = await GetUserAsync(tokens.AccessToken);
             await AddUserToCompanyAsync(ownerTokens.AccessToken, company.Id, user.Id);
-            await AddCompanyClaimToCompanyUserAsync(ownerTokens.AccessToken, app.Id, user.Id, claim.Id);
+            await AddCompanyClaimToCompanyUserAsync(ownerTokens.AccessToken, company.Id, user.Id, claim.Id);
 
             // act
             var response = await id.Delete($"/companies/{company.Id}/users/{user.Id}/claims/{claim.Id}").BearerAuthorization(ownerTokens.AccessToken).RunAsync();

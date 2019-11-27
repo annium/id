@@ -18,7 +18,6 @@
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Annium.AspNetCore.IntegrationTesting" Version="0.1.0" />
-        <PackageReference Include="Annium.Diagnostics.Debug" Version="0.1.0" />
         <PackageReference Include="Annium.Testing.TestAdapter" Version="0.1.0" />
         <PackageReference Include="coverlet.msbuild" Version="2.7.0" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="3.0.0" />
