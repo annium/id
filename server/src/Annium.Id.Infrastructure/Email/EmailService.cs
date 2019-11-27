@@ -1,0 +1,57 @@
+using System.Net.Mail;
+using System.Threading.Tasks;
+using Annium.Data.Operations;
+using Annium.Id.Domain.Entities;
+
+namespace Annium.Id.Infrastructure.Email
+{
+    public class EmailService : IEmailService
+    {
+        private readonly Configuration cfg;
+        private readonly Net.Mail.IEmailService emailService;
+
+        public EmailService(
+            Configuration cfg,
+            Net.Mail.IEmailService emailService
+        )
+        {
+            this.cfg = cfg;
+            this.emailService = emailService;
+        }
+
+        public async Task<IBooleanResult> SendEmailConfirmationAsync(User user)
+        {
+            using var message = GetMessage("Annium email confirmation");
+            message.To.Add(user.Email);
+
+            var data = new Models.ConfirmEmailData
+            {
+                Id = user.Id,
+            };
+
+            return await emailService.SendAsync(message, "confirm-email", data);
+        }
+
+        public async Task<IBooleanResult> SendRestoreAccessAsync(User user, Tokens tokens)
+        {
+            using var message = GetMessage("Annium access restore");
+            message.To.Add(user.Email);
+
+            var data = new Models.RestoreAccessData
+            {
+                Token = tokens.AccessToken,
+            };
+
+            return await emailService.SendAsync(message, "restore-access", data);
+        }
+
+        private MailMessage GetMessage(string subject)
+        {
+            return new MailMessage
+            {
+                From = new MailAddress(cfg.FromAddress, cfg.FromDisplay),
+                Subject = subject,
+            };
+        }
+    }
+}
