@@ -1,6 +1,4 @@
 using System;
-using System.IO;
-using System.Linq;
 using Annium.Core.DependencyInjection;
 using Annium.Logging.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,16 +10,9 @@ namespace Annium.Id.Api
         public TestServicePack()
         {
             Add<BaseServicePack>();
+            Add<Application.TestServicePack>();
             Add<Db.TestServicePack>();
-        }
-
-        public override void Configure(IServiceCollection services)
-        {
-            services.AddSingleton(new Application.Configuration
-            {
-                PrivateKeyFile = Path.Combine("keys", "private.key"),
-                PublicKeyFile = Path.Combine("keys", "public.key"),
-            });
+            Add<Infrastructure.TestServicePack>();
         }
 
         public override void Register(IServiceCollection services, IServiceProvider provider)

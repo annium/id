@@ -14,6 +14,7 @@
     <ItemGroup>
         <ProjectReference Include="../Annium.Id.Core/Annium.Id.Core.csproj" />
         <ProjectReference Include="../Annium.Id.Db/Annium.Id.Db.csproj" />
+        <ProjectReference Include="../Annium.Id.Infrastructure/Annium.Id.Infrastructure.csproj" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Annium.Architecture.CQRS" Version="0.1.0" />

@@ -1,17 +1,23 @@
-using System;
+using System.IO;
+using Annium.Configuration.Abstractions;
 using Annium.Core.DependencyInjection;
-using Annium.Id.Application.Tools;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Annium.Id.Application
 {
     public class ServicePack : ServicePackBase
     {
-        public override void Register(IServiceCollection services, IServiceProvider provider)
+        public ServicePack()
         {
-            // tools
-            services.AddSingleton<ISecurityManager, SecurityManager>();
-            services.AddScoped<ITokenGenerator, TokenGenerator>();
+            Add<BaseServicePack>();
+        }
+
+        public override void Configure(IServiceCollection services)
+        {
+            var cfg = new ConfigurationBuilder()
+                .AddYamlFile(Path.Combine("configuration", "application.yml"))
+                .Build<Configuration>();
+            services.AddSingleton(cfg);
         }
     }
 }

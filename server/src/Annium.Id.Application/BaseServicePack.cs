@@ -1,0 +1,23 @@
+using System;
+using Annium.Core.DependencyInjection;
+using Annium.Id.Application.Tools;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace Annium.Id.Application
+{
+    internal class BaseServicePack : ServicePackBase
+    {
+        public override void Register(IServiceCollection services, IServiceProvider provider)
+        {
+            // tools
+            services.AddSingleton<ISecurityManager, SecurityManager>();
+            services.AddScoped<ITokenGenerator, TokenGenerator>();
+
+            // services
+            services.SelectAssemblyTypes()
+                .Where(x => x.IsClass && x.Name.EndsWith("Service"))
+                .AsImplementedInterfaces()
+                .RegisterScoped();
+        }
+    }
+}

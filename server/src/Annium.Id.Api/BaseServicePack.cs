@@ -9,13 +9,8 @@ using NodaTime;
 
 namespace Annium.Id.Api
 {
-    public class BaseServicePack : ServicePackBase
+    internal class BaseServicePack : ServicePackBase
     {
-        public BaseServicePack()
-        {
-            Add<Application.ServicePack>();
-        }
-
         public override void Register(IServiceCollection services, IServiceProvider provider)
         {
             services.AddSingleton<Func<Instant>>(() => SystemClock.Instance.GetCurrentInstant());

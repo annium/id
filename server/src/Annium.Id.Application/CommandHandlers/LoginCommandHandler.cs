@@ -5,6 +5,7 @@ using Annium.Architecture.Base;
 using Annium.Architecture.CQRS.Commands;
 using Annium.Data.Operations;
 using Annium.Id.Application.Commands.Login;
+using Annium.Id.Application.Services;
 using Annium.Id.Application.Tools;
 using Annium.Id.Db.Repositories;
 using Annium.Id.Domain.Entities;
@@ -17,25 +18,24 @@ namespace Annium.Id.Application.CommandHandlers
         ICommandHandler<LogOutCommand>,
         ICommandHandler<UpdateTokensCommand, Tokens>
     {
-        private static readonly Duration refreshTokenLifeTime = Duration.FromDays(1);
         private readonly Func<Instant> getInstant;
         private readonly IUserLoginRepository userLoginRepository;
         private readonly ISecurityManager securityManager;
-        private readonly IIdentityDataAccessor identityDataAccessor;
+        private readonly ILoginService loginService;
         private readonly ITokenGenerator tokenGenerator;
 
         public LoginCommandHandler(
             Func<Instant> getInstant,
             IUserLoginRepository userLoginRepository,
             ISecurityManager securityManager,
-            IIdentityDataAccessor identityDataAccessor,
+            ILoginService loginService,
             ITokenGenerator tokenGenerator
         )
         {
             this.getInstant = getInstant;
             this.userLoginRepository = userLoginRepository;
             this.securityManager = securityManager;
-            this.identityDataAccessor = identityDataAccessor;
+            this.loginService = loginService;
             this.tokenGenerator = tokenGenerator;
         }
 
@@ -50,16 +50,9 @@ namespace Annium.Id.Application.CommandHandlers
             if (securityManager.Hash(request.Password) != user.PasswordHash)
                 return Result.Status(OperationStatus.Forbidden, default(Tokens)!).Error("Invalid password");
 
-            var instant = getInstant();
-            var (ipAddress, client) = identityDataAccessor.GetIdentityData();
-            var login = new UserLogin(app.Id, user.Id, instant, ipAddress.ToString(), client, Guid.NewGuid(), instant + refreshTokenLifeTime);
+            var tokens = await loginService.LogUserInAsync(app, user);
 
-            await userLoginRepository.DeleteExpiredByUserIdAsync(user.Id, instant);
-            login = await userLoginRepository.CreateAsync(login);
-
-            var token = await tokenGenerator.GenerateToken(login);
-
-            return Result.Status(OperationStatus.OK, new Tokens(token, login.RefreshToken, login.RefreshTokenExpires));
+            return Result.Status(OperationStatus.OK, tokens);
         }
 
         public async Task<IStatusResult<OperationStatus, Tokens>> HandleAsync(

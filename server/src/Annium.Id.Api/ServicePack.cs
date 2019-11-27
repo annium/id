@@ -1,7 +1,5 @@
 using System;
-using System.IO;
 using System.Linq;
-using Annium.Configuration.Abstractions;
 using Annium.Core.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -12,15 +10,9 @@ namespace Annium.Id.Api
         public ServicePack()
         {
             Add<BaseServicePack>();
+            Add<Application.ServicePack>();
             Add<Db.ServicePack>();
-        }
-
-        public override void Configure(IServiceCollection services)
-        {
-            var cfg = new ConfigurationBuilder()
-                .AddYamlFile(Path.Combine("configuration", "api.yml"))
-                .Build<Application.Configuration>();
-            services.AddSingleton(cfg);
+            Add<Infrastructure.ServicePack>();
         }
 
         public override void Register(IServiceCollection services, IServiceProvider provider)
