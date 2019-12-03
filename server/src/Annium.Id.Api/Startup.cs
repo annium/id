@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Annium.Core.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
@@ -45,7 +46,8 @@ namespace Annium.Id.Api
                 .SetIsOriginAllowed(o => true)
                 .AllowAnyMethod()
                 .AllowAnyHeader()
-                .AllowCredentials());
+                .AllowCredentials()
+                .SetPreflightMaxAge(TimeSpan.FromDays(7)));
             app.UseRequestLocalization("en", "ru");
             app.UseEndpoints(endpoints =>
             {
