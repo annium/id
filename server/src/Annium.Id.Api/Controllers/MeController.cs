@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using Annium.AspNetCore.Extensions;
 using Annium.Core.Mediator;
@@ -23,7 +22,6 @@ namespace Annium.Id.Api.Controllers
         [HttpPost]
         public Task<IActionResult> RegisterMe([FromBody] RegisterMeRequest request)
         {
-            // TODO: set empty password, send user id in confirmation email
             return HandleAsync(request);
         }
 
@@ -36,7 +34,6 @@ namespace Annium.Id.Api.Controllers
                 Id = requestBase.Id,
             };
 
-            // TODO: log user in by id, send tokens, allowing to set password (will mean, that account is confirmed)
             return HandleAsync<ConfirmMyEmailRequest, TokensResponse>(request);
         }
 
@@ -49,7 +46,6 @@ namespace Annium.Id.Api.Controllers
                 Email = requestBase.Email,
             };
 
-            // TODO: log user in, send tokens, allowing to restore access
             return HandleAsync(request);
         }
 
