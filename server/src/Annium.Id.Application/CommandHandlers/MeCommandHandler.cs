@@ -55,7 +55,7 @@ namespace Annium.Id.Application.CommandHandlers
 
             user = await userRepository.CreateAsync(user);
 
-            var result = await emailService.SendEmailConfirmationAsync(user);
+            var result = await emailService.SendEmailConfirmationAsync(user, request.ServerUri);
             if (result.IsFailure)
                 return Result.Status(OperationStatus.UncaughtException).Join(result);
 

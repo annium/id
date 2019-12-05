@@ -1,3 +1,4 @@
+using System;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using Annium.Data.Operations;
@@ -19,13 +20,14 @@ namespace Annium.Id.Infrastructure.Email
             this.emailService = emailService;
         }
 
-        public async Task<IBooleanResult> SendEmailConfirmationAsync(User user)
+        public async Task<IBooleanResult> SendEmailConfirmationAsync(User user, Uri server)
         {
             using var message = GetMessage("Annium email confirmation");
             message.To.Add(user.Email);
 
             var data = new Models.ConfirmEmailData
             {
+                Server = server.GetLeftPart(UriPartial.Authority),
                 Id = user.Id,
             };
 
