@@ -31,8 +31,8 @@ namespace Annium.Id.Application.Services
         public async Task<Tokens> LogUserInAsync(App app, User user)
         {
             var instant = getInstant();
-            var (ipAddress, client) = identityDataAccessor.GetIdentityData();
-            var login = new UserLogin(app.Id, user.Id, instant, ipAddress.ToString(), client, Guid.NewGuid(), instant + refreshTokenLifeTime);
+            var identity = identityDataAccessor.GetIdentityData();
+            var login = new UserLogin(app.Id, user.Id, instant, identity.IPAddress.ToString(), identity.Client, Guid.NewGuid(), instant + refreshTokenLifeTime);
 
             await userLoginRepository.DeleteExpiredByUserIdAsync(user.Id, instant);
             login = await userLoginRepository.CreateAsync(login);
