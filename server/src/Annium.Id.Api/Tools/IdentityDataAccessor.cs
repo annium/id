@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Net;
 using Annium.Id.Application.Tools;
+using Annium.Id.Domain.Entities.Utility;
 using Microsoft.AspNetCore.Http;
 
 namespace Annium.Id.Api.Tools
@@ -16,7 +17,7 @@ namespace Annium.Id.Api.Tools
             this.httpContextAccessor = httpContextAccessor;
         }
 
-        public(IPAddress ipAddress, string client) GetIdentityData()
+        public IdentityData GetIdentityData()
         {
             var context = httpContextAccessor.HttpContext;
 
@@ -25,8 +26,7 @@ namespace Annium.Id.Api.Tools
                 context.Request.Headers["User-Agent"].First() :
                 string.Empty;
 
-            return (ipAddress, client);
+            return new IdentityData(ipAddress, client);
         }
-
     }
 }

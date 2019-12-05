@@ -1,9 +1,9 @@
-using System.Net;
+using Annium.Id.Domain.Entities.Utility;
 
 namespace Annium.Id.Application.Tools
 {
     public interface IIdentityDataAccessor
     {
-        (IPAddress ipAddress, string client) GetIdentityData();
+        IdentityData GetIdentityData();
     }
 }
