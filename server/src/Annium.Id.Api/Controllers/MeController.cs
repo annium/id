@@ -50,7 +50,7 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [Authorize(validateAudience: false)]
         public Task<IActionResult> GetMe()
         {
             // TODO: perhaps, add info about companies, user is member of
