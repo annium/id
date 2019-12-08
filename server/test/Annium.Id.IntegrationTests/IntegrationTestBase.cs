@@ -46,14 +46,14 @@ namespace Annium.Id.IntegrationTests
             string email = "demo@demo.com"
         )
         {
-            var createUserRequest = new RegisterMeRequest { Login = login, Email = email };
+            var createUserRequest = new RegisterMeRequest { Server = "http://localhost/", Login = login, Email = email };
             await id.Post("/me")
                 .JsonContent(createUserRequest)
                 .EnsureSuccessStatusCode()
                 .AsResultAsync<Guid>();
         }
 
-        protected async Task<MeResponse> RegisterLogInGetUserAsync(
+        protected async Task<MeResponse> RegisterLogUserInGetUserAsync(
             string login = "demo",
             string password = "testtest",
             string email = "demo@demo.com"

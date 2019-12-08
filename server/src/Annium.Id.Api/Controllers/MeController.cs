@@ -43,6 +43,7 @@ namespace Annium.Id.Api.Controllers
             var request = new RestoreMyAccessRequest
             {
                 AppKey = appKey,
+                Server = requestBase.Server,
                 Email = requestBase.Email,
             };
 

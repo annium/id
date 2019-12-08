@@ -28,8 +28,8 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task RegisterMe_LoginIsNotUnique_BadRequest()
         {
             // arrange
-            var user = await RegisterLogInGetUserAsync();
-            var payload = new RegisterMeRequest { Login = user.Login, Email = "asd1@demo.com" };
+            var user = await RegisterLogUserInGetUserAsync();
+            var payload = new RegisterMeRequest { Server = "http://localhost/", Login = user.Login, Email = "asd1@demo.com" };
 
             // act
             var response = await id.Post("/me").JsonContent(payload).RunAsync();
@@ -42,8 +42,8 @@ namespace Annium.Id.IntegrationTests.Controllers
         public async Task RegisterMe_EmailIsNotUnique_BadRequest()
         {
             // arrange
-            var user = await RegisterLogInGetUserAsync();
-            var payload = new RegisterMeRequest { Login = "uniquelogin", Email = user.Email };
+            var user = await RegisterLogUserInGetUserAsync();
+            var payload = new RegisterMeRequest { Server = "http://localhost/", Login = "uniquelogin", Email = user.Email };
 
             // act
             var response = await id.Post("/me").JsonContent(payload).RunAsync();
@@ -61,7 +61,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var email = "demo@demo.com";
 
             // act
-            var response = await RegisterLogInGetUserAsync(login, password, email);
+            var response = await RegisterLogUserInGetUserAsync(login, password, email);
 
             // assert
             response.Id.IsNotDefault();
@@ -78,7 +78,7 @@ namespace Annium.Id.IntegrationTests.Controllers
 
             // act
             await id.Post($"/me/id/restore-access")
-                .JsonContent(new RestoreMyAccessRequestBase { Email = "someemail@email.com" })
+                .JsonContent(new RestoreMyAccessRequestBase { Server = "http://localhost/", Email = "someemail@email.com" })
                 .EnsureSuccessStatusCode()
                 .RunAsync();
             var token = emailService.Emails.Last().Data.As<RestoreAccessData>().Token;
@@ -121,7 +121,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         {
             // arrange
             var tokens = await RegisterLogUserInAsync();
-            var other = await RegisterLogInGetUserAsync("uniquelogin", "asdasdsdd", "asd1@demo.com");
+            var other = await RegisterLogUserInGetUserAsync("uniquelogin", "asdasdsdd", "asd1@demo.com");
             var update = new UpdateMeRequest { Login = other.Login, Password = "a96as9da", Email = "asd2@demo.com" };
 
             // act
@@ -136,7 +136,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         {
             // arrange
             var tokens = await RegisterLogUserInAsync();
-            var other = await RegisterLogInGetUserAsync("uniquelogin", "asdasdsdd", "asd1@demo.com");
+            var other = await RegisterLogUserInGetUserAsync("uniquelogin", "asdasdsdd", "asd1@demo.com");
             var update = new UpdateMeRequest { Login = "otherlogin", Password = "a96as9da", Email = other.Email };
 
             // act

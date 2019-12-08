@@ -34,7 +34,7 @@ namespace Annium.Id.Infrastructure.Email
             return await emailService.SendAsync(message, "confirm-email", data);
         }
 
-        public async Task<IBooleanResult> SendRestoreAccessAsync(User user, Tokens tokens)
+        public async Task<IBooleanResult> SendRestoreAccessAsync(User user, Uri server, Tokens tokens)
         {
             using var message = GetMessage("Annium access restore");
             message.To.Add(user.Email);

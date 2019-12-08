@@ -93,7 +93,7 @@ namespace Annium.Id.Application.CommandHandlers
 
             var tokens = await loginService.LogUserInAsync(app, user);
 
-            var result = await emailService.SendRestoreAccessAsync(user, tokens);
+            var result = await emailService.SendRestoreAccessAsync(user, request.ServerUri, tokens);
             if (result.IsFailure)
                 return Result.Status(OperationStatus.UncaughtException).Join(result);
 

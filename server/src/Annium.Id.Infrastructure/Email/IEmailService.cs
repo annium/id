@@ -8,6 +8,6 @@ namespace Annium.Id.Infrastructure.Email
     public interface IEmailService
     {
         Task<IBooleanResult> SendEmailConfirmationAsync(User user, Uri server);
-        Task<IBooleanResult> SendRestoreAccessAsync(User user, Tokens tokens);
+        Task<IBooleanResult> SendRestoreAccessAsync(User user, Uri server, Tokens tokens);
     }
 }
