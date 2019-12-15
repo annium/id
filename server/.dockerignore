@@ -11,4 +11,4 @@
 # local artifacts
 **/configuration/
 **/run/
-**/tools/
+/tools/
