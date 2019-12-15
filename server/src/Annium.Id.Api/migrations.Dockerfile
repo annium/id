@@ -1,8 +1,8 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.0-alpine
-COPY . /app
-WORKDIR /app
-RUN dotnet build -c release /app/src/Annium.Id.Api && \
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1-alpine
+COPY . /code
+WORKDIR /code
+RUN dotnet build /code/src/Annium.Id.Api && \
+    dotnet tool install -g dotnet-ef --version 3.1.0 && \
     dotnet tool restore
-
-VOLUME [ "/app/configuration" ]
+VOLUME [ "/code/src/Annium.Id.Api/configuration" ]
 CMD ["/bin/sh"]
