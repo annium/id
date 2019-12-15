@@ -81,8 +81,8 @@ namespace Annium.Id.IntegrationTests.Controllers
                 .JsonContent(new RestoreMyAccessRequestBase { Server = "http://localhost/", Email = "someemail@email.com" })
                 .EnsureSuccessStatusCode()
                 .RunAsync();
-            var token = emailService.Emails.Last().Data.As<RestoreAccessData>().Token;
-            var response = await id.Get("/me").BearerAuthorization(token).AsResultAsync<MeResponse>();
+            var accessToken = emailService.Emails.Last().Data.As<RestoreAccessData>().Tokens.AccessToken;
+            var response = await id.Get("/me").BearerAuthorization(accessToken).AsResultAsync<MeResponse>();
 
             // assert
             response.Data.Id.IsEqual(user.Id);

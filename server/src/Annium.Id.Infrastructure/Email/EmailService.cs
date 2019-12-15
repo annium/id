@@ -42,7 +42,7 @@ namespace Annium.Id.Infrastructure.Email
             var data = new Models.RestoreAccessData
             {
                 Server = server.GetLeftPart(UriPartial.Authority),
-                Token = tokens.AccessToken,
+                Tokens = tokens,
             };
 
             return await emailService.SendAsync(message, "restore-access", data);
