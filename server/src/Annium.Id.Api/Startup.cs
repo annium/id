@@ -14,18 +14,17 @@ namespace Annium.Id.Api
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
             services.AddCors();
-            services.AddMvc()
+            services.AddControllers()
                 .AddDefaultJsonOptions();
             services.AddOpenApiDocument(doc =>
             {
                 doc.AddSecurity("JWT", Enumerable.Empty<string>(), new OpenApiSecurityScheme
                 {
                     Type = OpenApiSecuritySchemeType.ApiKey,
-                        Name = "Authorization",
-                        In = OpenApiSecurityApiKeyLocation.Header,
-                        Description = "Type into the textbox: Bearer {your JWT token}."
+                    Name = "Authorization",
+                    In = OpenApiSecurityApiKeyLocation.Header,
+                    Description = "Type into the textbox: Bearer {your JWT token}."
                 });
                 doc.OperationProcessors
                     .Add(new AspNetCoreOperationSecurityScopeProcessor("JWT"));

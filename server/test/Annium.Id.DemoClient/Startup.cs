@@ -8,9 +8,8 @@ namespace Annium.Id.DemoClient
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
             services.AddCors();
-            services.AddMvc()
+            services.AddControllers()
                 .AddDefaultJsonOptions();
         }
 
