@@ -9,11 +9,11 @@ namespace Annium.Id.Db.Repositories.Implementations
 {
     internal class ClaimRepository : IClaimRepository
     {
-        private readonly Entities.IContext context;
+        private readonly IContext context;
         private readonly IMapper mapper;
 
         public ClaimRepository(
-            Entities.IContext context,
+            IContext context,
             IMapper mapper
         )
         {

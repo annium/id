@@ -8,11 +8,11 @@ namespace Annium.Id.Db.Repositories.Implementations
 {
     internal class UserRepository : IUserRepository
     {
-        private readonly Entities.IContext context;
+        private readonly IContext context;
         private readonly IMapper mapper;
 
         public UserRepository(
-            Entities.IContext context,
+            IContext context,
             IMapper mapper
         )
         {

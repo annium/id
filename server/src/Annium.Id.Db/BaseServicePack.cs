@@ -8,7 +8,7 @@ namespace Annium.Id.Db
     {
         public override void Register(IServiceCollection services, IServiceProvider provider)
         {
-            services.AddScoped<Entities.IContext>(p => p.GetRequiredService<Entities.Context>());
+            services.AddScoped<IContext>(p => p.GetRequiredService<Context>());
 
             // repositories
             services.SelectAssemblyTypes()

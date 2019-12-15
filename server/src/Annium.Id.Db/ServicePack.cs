@@ -29,7 +29,7 @@ namespace Annium.Id.Db
             // register context
             services
                 .AddEntityFrameworkNpgsql()
-                .AddDbContext<Entities.Context>(builder =>
+                .AddDbContext<Context>(builder =>
                 {
                     builder.UseNpgsql(
                         string.Join(';', new string[]

@@ -9,11 +9,11 @@ namespace Annium.Id.Db.Repositories.Implementations
 {
     internal class CompanyRoleRepository : ICompanyRoleRepository
     {
-        private readonly Entities.IContext context;
+        private readonly IContext context;
         private readonly IMapper mapper;
 
         public CompanyRoleRepository(
-            Entities.IContext context,
+            IContext context,
             IMapper mapper
         )
         {

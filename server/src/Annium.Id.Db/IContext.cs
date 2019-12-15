@@ -1,8 +1,9 @@
 using System.Threading;
 using System.Threading.Tasks;
+using Annium.Id.Db.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Annium.Id.Db.Entities
+namespace Annium.Id.Db
 {
     internal interface IContext
     {

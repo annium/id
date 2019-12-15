@@ -12,7 +12,7 @@ namespace Annium.Id.Db
 
         public override void Register(IServiceCollection services, System.IServiceProvider provider)
         {
-            services.AddEntityFrameworkSqliteInMemory<Entities.Context>();
+            services.AddEntityFrameworkSqliteInMemory<Context>();
         }
     }
 }

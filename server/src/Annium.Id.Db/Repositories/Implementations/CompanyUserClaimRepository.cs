@@ -10,11 +10,11 @@ namespace Annium.Id.Db.Repositories.Implementations
 {
     internal class CompanyUserClaimRepository : ICompanyUserClaimRepository
     {
-        private readonly Entities.IContext context;
+        private readonly IContext context;
         private readonly IMapper mapper;
 
         public CompanyUserClaimRepository(
-            Entities.IContext context,
+            IContext context,
             IMapper mapper
         )
         {

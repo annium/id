@@ -1,7 +1,8 @@
 using System;
+using Annium.Id.Db.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Annium.Id.Db.Entities
+namespace Annium.Id.Db
 {
     internal class Context : DbContext, IContext
     {
@@ -30,18 +31,18 @@ namespace Annium.Id.Db.Entities
             builder.Entity<User>().HasData(new User
             {
                 Id = Guid.Parse("baa0ad0f-91c5-4c19-963c-ea369048e67a"),
-                    Login = "alex",
-                    PasswordHash = "ohraPG8QMZiOnXX+MWh/45aZDwjtv/7FQMFzXxSRxQjLdSMBHpELKDSznF6cSUalufovlgCfFkn4mtR7eXB+8w==",
-                    Email = "a.kreskiyan@gmail.com",
+                Login = "alex",
+                PasswordHash = "ohraPG8QMZiOnXX+MWh/45aZDwjtv/7FQMFzXxSRxQjLdSMBHpELKDSznF6cSUalufovlgCfFkn4mtR7eXB+8w==",
+                Email = "a.kreskiyan@gmail.com",
             });
 
             builder.Entity<App>().HasData(new App
             {
                 Id = Guid.Parse("278e20ae-00c7-4ba5-8db3-55df7af12d44"),
-                    Key = "id",
-                    Name = "Annium ID",
-                    OwnerId = Guid.Parse("baa0ad0f-91c5-4c19-963c-ea369048e67a"),
-                    ApiToken = Guid.Parse("b62acd2a-2f1b-4da1-9273-abab4b9da7f7"),
+                Key = "id",
+                Name = "Annium ID",
+                OwnerId = Guid.Parse("baa0ad0f-91c5-4c19-963c-ea369048e67a"),
+                ApiToken = Guid.Parse("b62acd2a-2f1b-4da1-9273-abab4b9da7f7"),
             });
         }
     }
