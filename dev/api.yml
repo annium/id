@@ -10,8 +10,8 @@ services:
     ports:
       - '9501:5000'
     volumes:
-      - '../run/configuration:/app/configuration'
-      - '../run/keys:/app/keys'
+      - '../run/server/configuration:/app/configuration'
+      - '../run/server/keys:/app/keys'
     logging:
       driver: json-file
       options:
