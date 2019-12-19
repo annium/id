@@ -89,8 +89,12 @@ namespace Annium.Id.Core.Internal
                     return fail(TokenReadStatus.BadSource, "Token id is missing");
 
                 var rawToken = Convert.FromBase64String(idClaim.Value);
+                var token = MessagePackSerializer.Deserialize<IdToken>(
+                    rawToken,
+                    MessagePackSerializerOptions.Standard.WithCompression(MessagePackCompression.Lz4BlockArray)
+                );
 
-                return Result.Status(TokenReadStatus.Ok, LZ4MessagePackSerializer.Deserialize<IdToken>(rawToken));
+                return Result.Status(TokenReadStatus.Ok, token);
             }
             catch (SecurityTokenDecompressionFailedException)
             {

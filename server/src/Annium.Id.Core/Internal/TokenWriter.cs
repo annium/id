@@ -38,7 +38,10 @@ namespace Annium.Id.Core.Internal
             string audience
         )
         {
-            var packedToken = Convert.ToBase64String(LZ4MessagePackSerializer.Serialize(token));
+            var packedToken = Convert.ToBase64String(MessagePackSerializer.Serialize(
+                token,
+                MessagePackSerializerOptions.Standard.WithCompression(MessagePackCompression.Lz4BlockArray)
+            ));
 
             var instant = getInstant();
             var now = instant.ToDateTimeUtc();
