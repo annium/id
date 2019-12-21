@@ -24,8 +24,8 @@ namespace Annium.Id.Api
                 opts.PrivateKeyFile = cfg.PrivateKeyFile;
                 opts.AccessTokenLifeTime = Duration.FromMinutes(30);
             });
-            services.AddIdPolicy<string>("canRefreshToken", (token, appKey) => token.App.Key == appKey);
-            services.AddIdPolicy<string>("canLogOut", (token, appKey) => token.App.Key == appKey);
+            services.AddIdPolicy<Guid>("canRefreshToken", (token, appId) => token.App.Id == appId);
+            services.AddIdPolicy<Guid>("canLogOut", (token, appId) => token.App.Id == appId);
 
             // tools
             services.AddSingleton<IIdentityDataAccessor, IdentityDataAccessor>();

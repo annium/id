@@ -6,7 +6,7 @@ namespace Annium.Id.ViewModels.Login.Requests
 {
     public class UpdateTokensRequest : UpdateTokensRequestBase, IRequest<UpdateTokensCommand>
     {
-        public string AppKey { get; set; } = string.Empty;
+        public Guid AppId { get; set; }
     }
 
     public class UpdateTokensRequestBase

@@ -10,13 +10,15 @@ namespace Annium.Id.Application.Commands.Login
 {
     public class LogOutCommand : ICommand
     {
-        public string AppKey { get; }
+        public Guid AppId { get; }
         public Guid LoginId { get; private set; }
         public App App { get; private set; } = null!;
 
-        public LogOutCommand(string appKey)
+        public LogOutCommand(
+            Guid appId
+        )
         {
-            AppKey = appKey;
+            AppId = appId;
         }
     }
 
@@ -24,7 +26,7 @@ namespace Annium.Id.Application.Commands.Login
     {
         public LogOutCommandValidator()
         {
-            Field(e => e.AppKey).Required().Length(2, 100);
+            Field(e => e.AppId).Required();
         }
     }
 
@@ -36,7 +38,7 @@ namespace Annium.Id.Application.Commands.Login
         )
         {
             Field(c => c.LoginId).LoadWith(ctx => tokenAccessor.GetToken().LoginId);
-            Field(c => c.App).LoadWith(ctx => appRepository.FindByKeyAsync(ctx.Root.AppKey));
+            Field(c => c.App).LoadWith(ctx => appRepository.GetByIdAsync(ctx.Root.AppId));
         }
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using Annium.Id.Core;
 using Annium.Id.Db.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -38,7 +39,7 @@ namespace Annium.Id.Db
 
             builder.Entity<App>().HasData(new App
             {
-                Id = Guid.Parse("278e20ae-00c7-4ba5-8db3-55df7af12d44"),
+                Id = Constants.IdAppId,
                 Key = "id",
                 Name = "Annium ID",
                 OwnerId = Guid.Parse("baa0ad0f-91c5-4c19-963c-ea369048e67a"),

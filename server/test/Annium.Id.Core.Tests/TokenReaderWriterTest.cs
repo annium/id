@@ -114,23 +114,19 @@ namespace Annium.Id.Core.Tests
             };
         }
 
-        private IdToken GenerateToken(string app = "demo")
+        private IdToken GenerateToken()
         {
             return new IdToken(
                 Guid.NewGuid(),
                 Guid.NewGuid(),
                 new AppToken(
                     Guid.NewGuid(),
-                     app,
-                      Guid.NewGuid(),
-                      new[] { "user", "skilled" },
-                      new Dictionary<string, string> { { "moderate", "newbies" }, { "advice", "all" } }
+                    new[] { "user", "skilled" },
+                    new Dictionary<string, string> { { "moderate", "newbies" }, { "advice", "all" } }
                 ),
                 new[]
                 {
                     new CompanyToken(
-                        Guid.NewGuid(),
-                        "one",
                         Guid.NewGuid(),
                         new[] { "stuff", "manager" },
                         new Dictionary<string, string> { { "billing", "yes" }, { "hr", "yes" } }

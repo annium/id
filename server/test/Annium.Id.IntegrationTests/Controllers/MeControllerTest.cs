@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Annium.Id.Core;
 using Annium.Id.Infrastructure.Email.Models;
 using Annium.Id.ViewModels.Me.Requests;
 using Annium.Id.ViewModels.Me.Responses;
@@ -77,7 +78,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var user = await GetUserAsync(tokens.AccessToken);
 
             // act
-            await id.Post($"/me/id/restore-access")
+            await id.Post($"/me/{Constants.IdAppId}/restore-access")
                 .JsonContent(new RestoreMyAccessRequestBase { Server = "http://localhost/", Email = "someemail@email.com" })
                 .EnsureSuccessStatusCode()
                 .RunAsync();

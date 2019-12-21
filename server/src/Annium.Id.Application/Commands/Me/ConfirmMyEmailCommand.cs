@@ -9,17 +9,17 @@ namespace Annium.Id.Application.Commands.Me
 {
     public class ConfirmMyEmailCommand : ICommand
     {
-        public string AppKey { get; }
+        public Guid AppId { get; }
         public Guid Id { get; }
         public App App { get; private set; } = null!;
         public User User { get; private set; } = null!;
 
         public ConfirmMyEmailCommand(
-            string appKey,
+            Guid appId,
             Guid id
         )
         {
-            AppKey = appKey;
+            AppId = appId;
             Id = id;
         }
     }
@@ -29,7 +29,7 @@ namespace Annium.Id.Application.Commands.Me
         public ConfirmMyEmailCommandValidator(
         )
         {
-            Field(c => c.AppKey).Required();
+            Field(c => c.AppId).Required();
             Field(c => c.Id).Required();
         }
     }
@@ -41,7 +41,7 @@ namespace Annium.Id.Application.Commands.Me
             IUserRepository userRepository
         )
         {
-            Field(c => c.App).LoadWith(ctx => appRepository.FindByKeyAsync(ctx.Root.AppKey));
+            Field(c => c.App).LoadWith(ctx => appRepository.GetByIdAsync(ctx.Root.AppId));
             Field(c => c.User).LoadWith(ctx => userRepository.GetByIdAsync(ctx.Root.Id));
         }
     }

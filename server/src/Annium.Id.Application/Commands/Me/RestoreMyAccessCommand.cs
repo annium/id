@@ -9,7 +9,7 @@ namespace Annium.Id.Application.Commands.Me
 {
     public class RestoreMyAccessCommand : ICommand
     {
-        public string AppKey { get; set; } = string.Empty;
+        public Guid AppId { get; set; }
         public string Server { get; }
         public string Email { get; }
         public App App { get; private set; } = null!;
@@ -17,12 +17,12 @@ namespace Annium.Id.Application.Commands.Me
         public User User { get; private set; } = null!;
 
         public RestoreMyAccessCommand(
-            string appKey,
+            Guid appId,
             string server,
             string email
         )
         {
-            AppKey = appKey;
+            AppId = appId;
             Server = server;
             Email = email;
         }
@@ -33,7 +33,7 @@ namespace Annium.Id.Application.Commands.Me
         public RestoreMyAccessCommandValidator(
         )
         {
-            Field(c => c.AppKey).Required().Length(2, 100);
+            Field(c => c.AppId).Required();
             Field(e => e.Server).Required().Must(x => Uri.TryCreate(x, UriKind.Absolute, out _), "Server Uri is not valid");
             Field(e => e.Email).Required().Length(3, 100).Email();
         }
@@ -46,7 +46,7 @@ namespace Annium.Id.Application.Commands.Me
             IUserRepository userRepository
         )
         {
-            Field(c => c.App).LoadWith(ctx => appRepository.FindByKeyAsync(ctx.Root.AppKey));
+            Field(c => c.App).LoadWith(ctx => appRepository.GetByIdAsync(ctx.Root.AppId));
             Field(e => e.ServerUri).LoadWith(ctx => new Uri(ctx.Root.Server));
             Field(c => c.User).LoadWith(ctx => userRepository.FindByEmailAsync(ctx.Root.Email));
         }

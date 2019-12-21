@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Annium.AspNetCore.Extensions;
 using Annium.Core.Mediator;
@@ -25,24 +26,24 @@ namespace Annium.Id.Api.Controllers
             return HandleAsync(request);
         }
 
-        [HttpPost("{appKey}/confirm-email")]
-        public Task<IActionResult> ConfirmMyEmail(string appKey, [FromBody] ConfirmMyEmailRequestBase requestBase)
+        [HttpPost("{appId:guid}/confirm-email")]
+        public Task<IActionResult> ConfirmMyEmail(Guid appId, [FromBody] ConfirmMyEmailRequestBase requestBase)
         {
             var request = new ConfirmMyEmailRequest
             {
-                AppKey = appKey,
+                AppId = appId,
                 Id = requestBase.Id,
             };
 
             return HandleAsync<ConfirmMyEmailRequest, TokensResponse>(request);
         }
 
-        [HttpPost("{appKey}/restore-access")]
-        public Task<IActionResult> RestoreMyAccess(string appKey, [FromBody] RestoreMyAccessRequestBase requestBase)
+        [HttpPost("{appId:guid}/restore-access")]
+        public Task<IActionResult> RestoreMyAccess(Guid appId, [FromBody] RestoreMyAccessRequestBase requestBase)
         {
             var request = new RestoreMyAccessRequest
             {
-                AppKey = appKey,
+                AppId = appId,
                 Server = requestBase.Server,
                 Email = requestBase.Email,
             };

@@ -77,7 +77,7 @@ namespace Annium.Id.Application.Tools
             foreach (var userClaim in userClaims)
                 claims[userClaim.Key] = userClaim.Value;
 
-            return new AppToken(app.Id, app.Key, app.OwnerId, roles, claims);
+            return new AppToken(app.Id, roles, claims);
         }
 
         private CompanyToken BuildCompanyToken(
@@ -95,7 +95,7 @@ namespace Annium.Id.Application.Tools
             foreach (var userClaim in userClaims)
                 claims[userClaim.Key] = userClaim.Value;
 
-            return new CompanyToken(company.Id, company.Key, company.OwnerId, roles, claims);
+            return new CompanyToken(company.Id, roles, claims);
         }
     }
 }

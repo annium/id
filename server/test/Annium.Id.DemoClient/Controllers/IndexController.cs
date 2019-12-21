@@ -38,13 +38,6 @@ namespace Annium.Id.DemoClient.Controllers
             return new JsonResult(tokenAccessor.GetToken());
         }
 
-        [HttpGet("isCompanyOwner/{companyId:guid}")]
-        [Authorize("isCompanyOwner")]
-        public IActionResult IsCompanyOwner(Guid companyId)
-        {
-            return new JsonResult(tokenAccessor.GetToken());
-        }
-
         [HttpGet("hasCompanyPaymentsAccess/{companyId:guid}")]
         [Authorize("hasCompanyPaymentsAccess")]
         public IActionResult HasCompanyPaymentsAccess(Guid companyId)

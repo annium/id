@@ -40,28 +40,18 @@ namespace Annium.Id.Core
         public Guid Id { get; }
 
         [Key(1)]
-        public string Key { get; }
-
-        [Key(2)]
-        public Guid OwnerId { get; }
-
-        [Key(3)]
         public IEnumerable<string> Roles { get; }
 
-        [Key(4)]
+        [Key(2)]
         public IReadOnlyDictionary<string, string> Claims { get; }
 
         public AppToken(
             Guid id,
-            string key,
-            Guid ownerId,
             IEnumerable<string> roles,
             IReadOnlyDictionary<string, string> claims
         )
         {
             Id = id;
-            Key = key;
-            OwnerId = ownerId;
             Roles = roles;
             Claims = claims;
         }
@@ -74,28 +64,18 @@ namespace Annium.Id.Core
         public Guid Id { get; }
 
         [Key(1)]
-        public string Key { get; }
-
-        [Key(2)]
-        public Guid OwnerId { get; }
-
-        [Key(3)]
         public IEnumerable<string> Roles { get; }
 
-        [Key(4)]
+        [Key(2)]
         public IReadOnlyDictionary<string, string> Claims { get; }
 
         public CompanyToken(
             Guid id,
-            string key,
-            Guid ownerId,
             IEnumerable<string> roles,
             IReadOnlyDictionary<string, string> claims
         )
         {
             Id = id;
-            Key = key;
-            OwnerId = ownerId;
             Roles = roles;
             Claims = claims;
         }

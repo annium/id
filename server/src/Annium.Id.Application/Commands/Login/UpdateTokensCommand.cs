@@ -9,17 +9,17 @@ namespace Annium.Id.Application.Commands.Login
 {
     public class UpdateTokensCommand : ICommand
     {
-        public string AppKey { get; }
+        public Guid AppId { get; }
         public Guid RefreshToken { get; }
         public App App { get; private set; } = null!;
         public UserLogin Login { get; private set; } = null!;
 
         public UpdateTokensCommand(
-            string appKey,
+            Guid appId,
             Guid refreshToken
         )
         {
-            AppKey = appKey;
+            AppId = appId;
             RefreshToken = refreshToken;
         }
     }
@@ -28,7 +28,7 @@ namespace Annium.Id.Application.Commands.Login
     {
         public UpdateTokensCommandValidator()
         {
-            Field(e => e.AppKey).Required().Length(2, 100);
+            Field(e => e.AppId).Required();
             Field(e => e.RefreshToken).Required();
         }
     }
@@ -40,7 +40,7 @@ namespace Annium.Id.Application.Commands.Login
             IUserLoginRepository userLoginRepository
         )
         {
-            Field(c => c.App).LoadWith(ctx => appRepository.FindByKeyAsync(ctx.Root.AppKey));
+            Field(c => c.App).LoadWith(ctx => appRepository.GetByIdAsync(ctx.Root.AppId));
             Field(e => e.Login).LoadWith(ctx => userLoginRepository.FindByRefreshTokenAsync(ctx.Root.RefreshToken));
         }
     }

@@ -69,18 +69,18 @@ namespace Annium.Id.IntegrationTests
             string password = "testtest"
         )
         {
-            return LogUserInAppAsync(Constants.IdApp, login, password);
+            return LogUserInAppAsync(Constants.IdAppId, login, password);
         }
 
         protected async Task<TokensResponse> LogUserInAppAsync(
-            string appKey,
+            Guid appId,
             string login = "demo",
             string password = "testtest"
         )
         {
             var logUserInRequest = new LogInRequest { Login = login, Password = password };
 
-            var token = (await id.Post($"/me/{appKey}/login")
+            var token = (await id.Post($"/me/{appId}/login")
                 .JsonContent(logUserInRequest)
                 .EnsureSuccessStatusCode()
                 .AsResultAsync<TokensResponse>()).Data;
@@ -94,11 +94,11 @@ namespace Annium.Id.IntegrationTests
             string email = "demo@demo.com"
         )
         {
-            return RegisterLogUserInAppAsync(Constants.IdApp, login, password, email);
+            return RegisterLogUserInAppAsync(Constants.IdAppId, login, password, email);
         }
 
         protected async Task<TokensResponse> RegisterLogUserInAppAsync(
-            string appKey,
+            Guid appId,
             string login = "demo",
             string password = "testtest",
             string email = "demo@demo.com"
@@ -110,7 +110,7 @@ namespace Annium.Id.IntegrationTests
             var userId = emailService.Emails.Last().Data.As<ConfirmEmailData>().Id;
 
             // confirm email
-            var token = (await id.Post($"/me/{appKey}/confirm-email")
+            var token = (await id.Post($"/me/{appId}/confirm-email")
                 .JsonContent(new ConfirmMyEmailRequestBase { Id = userId })
                 .EnsureSuccessStatusCode()
                 .AsResultAsync<TokensResponse>()).Data;
@@ -123,7 +123,7 @@ namespace Annium.Id.IntegrationTests
                 .RunAsync();
 
             // perform regular login
-            token = (await id.Post($"/me/{appKey}/login")
+            token = (await id.Post($"/me/{appId}/login")
                 .JsonContent(new LogInRequest { Login = login, Password = password })
                 .EnsureSuccessStatusCode()
                 .AsResultAsync<TokensResponse>()).Data;

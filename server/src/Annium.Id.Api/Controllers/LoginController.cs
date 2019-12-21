@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Annium.AspNetCore.Extensions;
 using Annium.Core.Mediator;
@@ -8,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Annium.Id.Api.Controllers
 {
-    [Route("me/{appKey}")]
+    [Route("me/{appId:guid}")]
     public class LoginController : ServerController
     {
         public LoginController(
@@ -19,11 +20,11 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpPost("login")]
-        public Task<IActionResult> LogIn(string appKey, [FromBody] LogInRequestBase requestBase)
+        public Task<IActionResult> LogIn(Guid appId, [FromBody] LogInRequestBase requestBase)
         {
             var request = new LogInRequest
             {
-                AppKey = appKey,
+                AppId = appId,
                 Login = requestBase.Login,
                 Password = requestBase.Password,
             };
@@ -33,11 +34,11 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPut("token")]
         [Authorize("canRefreshToken", validateAudience: false, allowedExpirationInMinutes: 24 * 60)]
-        public Task<IActionResult> UpdateToken(string appKey, [FromQuery] UpdateTokensRequestBase requestBase)
+        public Task<IActionResult> UpdateToken(Guid appId, [FromQuery] UpdateTokensRequestBase requestBase)
         {
             var request = new UpdateTokensRequest
             {
-                AppKey = appKey,
+                AppId = appId,
                 RefreshToken = requestBase.RefreshToken,
             };
 
@@ -46,9 +47,9 @@ namespace Annium.Id.Api.Controllers
 
         [HttpDelete("logout")]
         [Authorize("canLogOut", validateAudience: false, allowedExpirationInMinutes: 24 * 60)]
-        public Task<IActionResult> LogOut(string appKey)
+        public Task<IActionResult> LogOut(Guid appId)
         {
-            var request = new LogOutRequest { AppKey = appKey };
+            var request = new LogOutRequest { AppId = appId };
 
             return HandleAsync(request);
         }

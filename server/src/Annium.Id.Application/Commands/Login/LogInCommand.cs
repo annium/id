@@ -9,19 +9,19 @@ namespace Annium.Id.Application.Commands.Login
 {
     public class LogInCommand : ICommand
     {
-        public string AppKey { get; }
+        public Guid AppId { get; }
         public string Login { get; }
         public string Password { get; }
         public App App { get; private set; } = null!;
         public User User { get; private set; } = null!;
 
         public LogInCommand(
-            string appKey,
+            Guid appId,
             string login,
             string password
         )
         {
-            AppKey = appKey;
+            AppId = appId;
             Login = login;
             Password = password;
         }
@@ -31,7 +31,7 @@ namespace Annium.Id.Application.Commands.Login
     {
         public LogInCommandValidator()
         {
-            Field(e => e.AppKey).Required().Length(2, 100);
+            Field(e => e.AppId).Required();
             Field(e => e.Login).Required().Length(3, 50);
             Field(e => e.Password).Required().Length(8, 50);
         }
@@ -44,7 +44,7 @@ namespace Annium.Id.Application.Commands.Login
             IUserRepository userRepository
         )
         {
-            Field(c => c.App).LoadWith(ctx => appRepository.FindByKeyAsync(ctx.Root.AppKey));
+            Field(c => c.App).LoadWith(ctx => appRepository.GetByIdAsync(ctx.Root.AppId));
             Field(c => c.User).LoadWith(ctx => userRepository.FindByLoginAsync(ctx.Root.Login));
         }
     }

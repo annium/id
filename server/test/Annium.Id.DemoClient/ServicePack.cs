@@ -34,12 +34,6 @@ namespace Annium.Id.DemoClient
                 token.App.Claims["paymentsAccess"] == "full"
             );
             services.AddIdPolicy<Guid>(
-                "isCompanyOwner",
-                (token, companyId) => token.Companies.Any(
-                    c => c.Id == companyId && c.OwnerId == token.UserId
-                )
-            );
-            services.AddIdPolicy<Guid>(
                 "hasCompanyPaymentsAccess",
                 (token, companyId) => token.Companies.Any(
                     c => c.Id == companyId && c.Claims.ContainsKey("paymentsAccess") && c.Claims["paymentsAccess"] == "full"

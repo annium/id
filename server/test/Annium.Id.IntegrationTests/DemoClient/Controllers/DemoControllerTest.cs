@@ -22,7 +22,7 @@ namespace Annium.Id.IntegrationTests.DemoClient.Controllers
         {
             // arrange
             var (_, app, _) = await RegisterLogUserInCreateAppLogInAppAsync();
-            var appTokens = await LogUserInAppAsync(app.Key);
+            var appTokens = await LogUserInAppAsync(app.Id);
 
             // act
             var response = await demo.Get("/base").BearerAuthorization(appTokens.AccessToken).RunAsync();
@@ -53,7 +53,7 @@ namespace Annium.Id.IntegrationTests.DemoClient.Controllers
         {
             // arrange
             var (_, app, _) = await RegisterLogUserInCreateAppLogInAppAsync();
-            var appTokens = await LogUserInAppAsync(app.Key);
+            var appTokens = await LogUserInAppAsync(app.Id);
 
             // act
             var response = await demo.Get("/isAdmin").BearerAuthorization(appTokens.AccessToken).RunAsync();
@@ -69,7 +69,7 @@ namespace Annium.Id.IntegrationTests.DemoClient.Controllers
             var (user, app, tokens) = await RegisterLogUserInCreateAppLogInAppAsync();
             var role = await CreateRoleAsync(tokens.AccessToken, app.Id, "admin", "Administrator");
             await AddRoleToUserAsync(tokens.AccessToken, user.Id, role.Id);
-            var appTokens = await LogUserInAppAsync(app.Key);
+            var appTokens = await LogUserInAppAsync(app.Id);
 
             // act
             var response = await demo.Get("/isAdmin").BearerAuthorization(appTokens.AccessToken).RunAsync();
@@ -88,7 +88,7 @@ namespace Annium.Id.IntegrationTests.DemoClient.Controllers
             await AddRoleToUserAsync(tokens.AccessToken, user.Id, role.Id);
             var claim = await CreateClaimAsync(tokens.AccessToken, app.Id, "paymentsAccess", "Payments Access");
             await AddClaimToRoleAsync(tokens.AccessToken, role.Id, claim.Id, "full");
-            var appTokens = await LogUserInAppAsync(app.Key);
+            var appTokens = await LogUserInAppAsync(app.Id);
 
             // act
             var response = await demo.Get("/hasPaymentsAccess/").BearerAuthorization(appTokens.AccessToken).RunAsync();
@@ -105,7 +105,7 @@ namespace Annium.Id.IntegrationTests.DemoClient.Controllers
             var (user, app, tokens) = await RegisterLogUserInCreateAppLogInAppAsync();
             var claim = await CreateClaimAsync(tokens.AccessToken, app.Id, "paymentsAccess", "Payments Access");
             await AddClaimToUserAsync(tokens.AccessToken, user.Id, claim.Id, "full");
-            var appTokens = await LogUserInAppAsync(app.Key);
+            var appTokens = await LogUserInAppAsync(app.Id);
 
             // act
             var response = await demo.Get("/hasPaymentsAccess/").BearerAuthorization(appTokens.AccessToken).RunAsync();
@@ -124,7 +124,7 @@ namespace Annium.Id.IntegrationTests.DemoClient.Controllers
             var claim = await CreateClaimAsync(tokens.AccessToken, app.Id, "paymentsAccess", "Payments Access");
             await AddClaimToRoleAsync(tokens.AccessToken, role.Id, claim.Id, "limited");
             await AddClaimToUserAsync(tokens.AccessToken, user.Id, claim.Id, "full");
-            var appTokens = await LogUserInAppAsync(app.Key);
+            var appTokens = await LogUserInAppAsync(app.Id);
 
             // act
             var response = await demo.Get("/hasPaymentsAccess/").BearerAuthorization(appTokens.AccessToken).RunAsync();

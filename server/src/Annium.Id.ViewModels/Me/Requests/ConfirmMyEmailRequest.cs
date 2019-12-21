@@ -6,7 +6,7 @@ namespace Annium.Id.ViewModels.Me.Requests
 {
     public class ConfirmMyEmailRequest : ConfirmMyEmailRequestBase, IRequest<ConfirmMyEmailCommand>
     {
-        public string AppKey { get; set; } = string.Empty;
+        public Guid AppId { get; set; }
     }
 
     public class ConfirmMyEmailRequestBase

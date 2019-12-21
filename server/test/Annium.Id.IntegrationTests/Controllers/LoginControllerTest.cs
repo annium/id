@@ -19,7 +19,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var payload = new LogInRequest { Login = "uniquelogin", Password = "asda" };
 
             // act
-            var response = await id.Post($"/me/{app.Key}/login").JsonContent(payload).RunAsync();
+            var response = await id.Post($"/me/{app.Id}/login").JsonContent(payload).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
@@ -34,7 +34,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var payload = new LogInRequest { Login = "uniquelogin", Password = "asdaasda" };
 
             // act
-            var response = await id.Post($"/me/{app.Key}/login").JsonContent(payload).RunAsync();
+            var response = await id.Post($"/me/{app.Id}/login").JsonContent(payload).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -49,7 +49,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var payload = new LogInRequest { Login = "demo", Password = "asdaasda" };
 
             // act
-            var response = await id.Post($"/me/{app.Key}/login").JsonContent(payload).RunAsync();
+            var response = await id.Post($"/me/{app.Id}/login").JsonContent(payload).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -64,7 +64,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var payload = new LogInRequest { Login = "demo", Password = "testtest" };
 
             // act
-            var response = await id.Post($"/me/{app.Key}/login").JsonContent(payload).RunAsync();
+            var response = await id.Post($"/me/{app.Id}/login").JsonContent(payload).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.OK);
@@ -75,10 +75,10 @@ namespace Annium.Id.IntegrationTests.Controllers
         {
             // arrange
             var (_, app, _) = await RegisterLogUserInCreateAppLogInAppAsync();
-            var tokens = await LogUserInAppAsync(app.Key);
+            var tokens = await LogUserInAppAsync(app.Id);
 
             // act
-            var response = await id.Put($"/me/{app.Key}/token").BearerAuthorization(tokens.AccessToken).Param("refreshToken", Guid.NewGuid()).RunAsync();
+            var response = await id.Put($"/me/{app.Id}/token").BearerAuthorization(tokens.AccessToken).Param("refreshToken", Guid.NewGuid()).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -89,10 +89,10 @@ namespace Annium.Id.IntegrationTests.Controllers
         {
             // arrange
             var (_, app, _) = await RegisterLogUserInCreateAppLogInAppAsync();
-            var tokens = await LogUserInAppAsync(app.Key);
+            var tokens = await LogUserInAppAsync(app.Id);
 
             // act
-            var response = await id.Put($"/me/{app.Key}/token").BearerAuthorization(tokens.AccessToken).Param("refreshToken", tokens.RefreshToken).AsResultAsync<TokensResponse>();
+            var response = await id.Put($"/me/{app.Id}/token").BearerAuthorization(tokens.AccessToken).Param("refreshToken", tokens.RefreshToken).AsResultAsync<TokensResponse>();
 
             // assert
             response.Data.AccessToken.IsNotDefault();
@@ -104,10 +104,10 @@ namespace Annium.Id.IntegrationTests.Controllers
         {
             // arrange
             var (_, app, _) = await RegisterLogUserInCreateAppLogInAppAsync();
-            var tokens = await LogUserInAppAsync(app.Key);
+            var tokens = await LogUserInAppAsync(app.Id);
 
             // act
-            var response = await id.Delete($"/me/{app.Key}/logout").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await id.Delete($"/me/{app.Id}/logout").BearerAuthorization(tokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.OK);
