@@ -7,19 +7,16 @@ namespace Annium.Id.Domain.Entities
         public Guid Id { get; }
         public Guid OwnerId { get; set; }
         public Guid? ParentId { get; set; }
-        public string Key { get; set; }
         public string Name { get; set; }
 
         public Company(
             Guid ownerId,
             Guid? parentId,
-            string key,
             string name
         )
         {
             OwnerId = ownerId;
             ParentId = parentId;
-            Key = key;
             Name = name;
         }
 
@@ -27,9 +24,8 @@ namespace Annium.Id.Domain.Entities
             Guid id,
             Guid ownerId,
             Guid? parentId,
-            string key,
             string name
-        ) : this(ownerId, parentId, key, name)
+        ) : this(ownerId, parentId, name)
         {
             Id = id;
         }

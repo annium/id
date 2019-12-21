@@ -7,15 +7,10 @@ namespace Annium.Id.Db.Repositories
     public interface IRoleRepository
     {
         Task<Role> CreateAsync(Role role);
-
         Task<Role[]> GetAllAsync(Guid appId);
-
         Task<Role> GetByIdAsync(Guid id);
-
         Task<Role> FindByKeyAsync(Guid appId, string key);
-
         Task<Role> UpdateAsync(Role role);
-
         Task DeleteByIdAsync(Guid id);
     }
 }

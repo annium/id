@@ -269,7 +269,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             // arrange
             var tokens = await RegisterLogUserInAsync();
             var app1 = await CreateAppAsync(tokens.AccessToken);
-            var app2 = await CreateAppAsync(tokens.AccessToken, "other", "Other App");
+            var app2 = await CreateAppAsync(tokens.AccessToken, "Other App");
             var role = await CreateCompanyRoleAsync(tokens.AccessToken, app2.Id);
             var claim = await CreateCompanyClaimAsync(tokens.AccessToken, app1.Id);
             var p = new AddCompanyClaimToCompanyRoleRequest { Value = "Some" };
@@ -357,7 +357,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             // arrange
             var tokens = await RegisterLogUserInAsync();
             var app1 = await CreateAppAsync(tokens.AccessToken);
-            var app2 = await CreateAppAsync(tokens.AccessToken, "other", "Other App");
+            var app2 = await CreateAppAsync(tokens.AccessToken, "Other App");
             var role = await CreateCompanyRoleAsync(tokens.AccessToken, app2.Id);
             var claim = await CreateCompanyClaimAsync(tokens.AccessToken, app1.Id);
 

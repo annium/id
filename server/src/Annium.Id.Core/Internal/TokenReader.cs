@@ -55,7 +55,7 @@ namespace Annium.Id.Core.Internal
             if (options.ValidateAudience)
             {
                 tvp.ValidateAudience = true;
-                tvp.ValidAudience = authOptions.Audience;
+                tvp.ValidAudience = authOptions.Audience.ToString();
             }
             else
             {

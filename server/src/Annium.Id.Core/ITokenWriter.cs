@@ -2,9 +2,6 @@ namespace Annium.Id.Core
 {
     public interface ITokenWriter
     {
-        string WriteToken(
-            IdToken token,
-            string audience
-        );
+        string WriteToken(IdToken token);
     }
 }

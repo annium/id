@@ -33,10 +33,7 @@ namespace Annium.Id.Core.Internal
             this.getInstant = getInstant;
         }
 
-        public string WriteToken(
-            IdToken token,
-            string audience
-        )
+        public string WriteToken(IdToken token)
         {
             var packedToken = Convert.ToBase64String(MessagePackSerializer.Serialize(
                 token,
@@ -56,7 +53,7 @@ namespace Annium.Id.Core.Internal
 
             var jwt = new JwtSecurityToken(
                 issuer: Constants.Issuer,
-                audience: audience,
+                audience: token.App.Id.ToString(),
                 claims: claims,
                 expires: expires,
                 notBefore: now,

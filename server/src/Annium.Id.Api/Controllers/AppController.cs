@@ -57,7 +57,6 @@ namespace Annium.Id.Api.Controllers
             var request = new UpdateAppRequest
             {
                 AppId = appId,
-                Key = requestBase.Key,
                 Name = requestBase.Name,
             };
 

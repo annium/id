@@ -1,7 +1,9 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Annium.AspNetCore.IntegrationTesting;
+using Annium.Core.DependencyInjection;
 using Annium.Id.Core;
 using Annium.Id.Infrastructure.Email.Models;
 using Annium.Id.ViewModels.Apps.Requests;
@@ -35,8 +37,14 @@ namespace Annium.Id.IntegrationTests
             builder => builder.UseServicePack<Api.TestServicePack>(),
             services => services.AddSingleton<IEmailService>(emailService)
         );
-        protected IRequest demo => GetRequest<Id.DemoClient.Startup>(
-            builder => builder.UseServicePack<Id.DemoClient.ServicePack>()
+        protected IRequest demo(Guid appId) => GetRequest<Id.DemoClient.Startup>(
+            builder => builder.UseServicePack<Id.DemoClient.ServicePack>(),
+            (IServiceCollection services) => services
+                .AddIdAuthorization(options =>
+            {
+                options.Audience = appId;
+                options.PublicKeyFile = Path.Combine("keys", "public.key");
+            })
         );
 
         protected TestEmailService emailService = new TestEmailService();
@@ -145,11 +153,10 @@ namespace Annium.Id.IntegrationTests
 
         protected async Task<AppResponse> CreateAppAsync(
             string accessToken,
-            string key = "demo",
             string name = "Demo App"
         )
         {
-            var request = new CreateAppRequest { Key = key, Name = name };
+            var request = new CreateAppRequest { Name = name };
 
             var appId = (await id.Post("/apps")
                 .BearerAuthorization(accessToken)
@@ -167,13 +174,12 @@ namespace Annium.Id.IntegrationTests
             string login = "demo",
             string password = "testtest",
             string email = "demo@demo.com",
-            string appKey = "demo",
             string appName = "Demo App"
         )
         {
             var tokens = await RegisterLogUserInAsync(login, password, email);
             var user = await GetUserAsync(tokens.AccessToken);
-            var app = await CreateAppAsync(tokens.AccessToken, appKey, appName);
+            var app = await CreateAppAsync(tokens.AccessToken, appName);
 
             return (user, app, tokens);
         }
@@ -274,12 +280,11 @@ namespace Annium.Id.IntegrationTests
 
         protected async Task<CompanyResponse> CreateCompanyAsync(
             string accessToken,
-            string key = "demo",
             string name = "Demo Company",
             Guid? parentId = null
         )
         {
-            var request = new RegisterCompanyRequest { ParentId = parentId, Key = key, Name = name };
+            var request = new RegisterCompanyRequest { ParentId = parentId, Name = name };
 
             var companyId = (await id.Post("/companies")
                 .BearerAuthorization(accessToken)

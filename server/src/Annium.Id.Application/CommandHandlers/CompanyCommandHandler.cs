@@ -46,7 +46,6 @@ namespace Annium.Id.Application.CommandHandlers
             var company = new Company(
                 myId,
                 parentId,
-                request.Key,
                 request.Name
             );
 
@@ -77,11 +76,7 @@ namespace Annium.Id.Application.CommandHandlers
                     return Result.Status(OperationStatus.Forbidden).Error("Need to be owner of parent company to set child company parent");
             }
 
-            if (request.Key != company.Key && (await companyRepository.FindByKeyAsync(request.Key)) != null)
-                return Result.Status(OperationStatus.Conflict).Error($"Company key {request.Key} is already used");
-
             company.ParentId = request.ParentId;
-            company.Key = request.Key;
             company.Name = request.Name;
 
             await companyRepository.UpdateAsync(company);

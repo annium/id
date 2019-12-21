@@ -11,19 +11,16 @@ namespace Annium.Id.Application.Commands.Apps
     public class UpdateAppCommand : ICommand
     {
         public Guid AppId { get; }
-        public string Key { get; }
         public string Name { get; }
         public Guid MyId { get; private set; }
         public App App { get; private set; } = null!;
 
         public UpdateAppCommand(
             Guid appId,
-            string key,
             string name
         )
         {
             AppId = appId;
-            Key = key;
             Name = name;
         }
     }
@@ -33,7 +30,6 @@ namespace Annium.Id.Application.Commands.Apps
         public UpdateAppCommandValidator()
         {
             Field(c => c.AppId).Required();
-            Field(c => c.Key).Required().Length(2, 100).Then();
             Field(c => c.Name).Required().Length(2, 100);
         }
     }

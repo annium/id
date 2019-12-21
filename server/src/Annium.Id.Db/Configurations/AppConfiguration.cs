@@ -12,7 +12,6 @@ namespace Annium.Id.Db.Configurations
 
             builder.HasOne(x => x.Owner).WithMany().IsRequired()
                 .HasForeignKey(m => m.OwnerId).OnDelete(DeleteBehavior.Restrict);
-            builder.HasIndex(m => m.Key).IsUnique();
         }
     }
 }

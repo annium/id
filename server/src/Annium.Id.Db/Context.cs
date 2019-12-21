@@ -40,8 +40,7 @@ namespace Annium.Id.Db
             builder.Entity<App>().HasData(new App
             {
                 Id = Constants.IdAppId,
-                Key = "id",
-                Name = "Annium ID",
+               Name = "Annium ID",
                 OwnerId = Guid.Parse("baa0ad0f-91c5-4c19-963c-ea369048e67a"),
                 ApiToken = Guid.Parse("b62acd2a-2f1b-4da1-9273-abab4b9da7f7"),
             });

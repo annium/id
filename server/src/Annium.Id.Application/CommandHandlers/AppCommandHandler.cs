@@ -31,7 +31,7 @@ namespace Annium.Id.Application.CommandHandlers
             CancellationToken cancellationToken
         )
         {
-            var app = new App(request.MyId, request.Key, request.Name, Guid.NewGuid());
+            var app = new App(request.MyId, request.Name, Guid.NewGuid());
 
             app = await appRepository.CreateAsync(app);
 
@@ -49,10 +49,6 @@ namespace Annium.Id.Application.CommandHandlers
             if (myId != app.OwnerId)
                 return Result.Status(OperationStatus.Forbidden).Error($"Need to be application owner to update app");
 
-            if (request.Key != app.Key && (await appRepository.FindByKeyAsync(request.Key)) != null)
-                return Result.Status(OperationStatus.Conflict).Error($"App key {request.Key} is already used");
-
-            app.Key = request.Key;
             app.Name = request.Name;
 
             await appRepository.UpdateAsync(app);

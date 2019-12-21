@@ -59,7 +59,7 @@ namespace Annium.Id.Application.Tools
 
             var token = new IdToken(login.UserId, login.Id, appToken, companyTokens);
 
-            return tokenWriter.WriteToken(token, app.Key);
+            return tokenWriter.WriteToken(token);
         }
 
         private AppToken BuildAppToken(

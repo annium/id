@@ -12,7 +12,6 @@ namespace Annium.Id.Application.Commands.Companies
     {
         public Guid CompanyId { get; }
         public Guid? ParentId { get; }
-        public string Key { get; }
         public string Name { get; }
         public Guid MyId { get; private set; }
         public Company Company { get; private set; } = null!;
@@ -20,13 +19,11 @@ namespace Annium.Id.Application.Commands.Companies
         public UpdateCompanyCommand(
             Guid companyId,
             Guid? parentId,
-            string key,
             string name
         )
         {
             CompanyId = companyId;
             ParentId = parentId;
-            Key = key;
             Name = name;
         }
     }
@@ -37,7 +34,6 @@ namespace Annium.Id.Application.Commands.Companies
         {
             Field(c => c.CompanyId).Required();
             Field(c => c.ParentId).Required();
-            Field(c => c.Key).Required().Length(3, 100);
             Field(c => c.Name).Required().Length(3, 100);
         }
     }

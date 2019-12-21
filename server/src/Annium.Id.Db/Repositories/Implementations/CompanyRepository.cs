@@ -48,21 +48,12 @@ namespace Annium.Id.Db.Repositories.Implementations
             return mapper.Map<Company>(company);
         }
 
-        public async Task<Company> FindByKeyAsync(string key)
-        {
-            var company = await context.Companies.AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Key == key);
-
-            return mapper.Map<Company>(company);
-        }
-
         public async Task<Company> UpdateAsync(Company company)
         {
             var entity = await context.Companies
                 .SingleAsync(x => x.Id == company.Id);
 
             entity.OwnerId = company.OwnerId;
-            entity.Key = company.Key;
             entity.Name = company.Name;
 
             await context.SaveChangesAsync();

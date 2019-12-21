@@ -52,7 +52,6 @@ namespace Annium.Id.Api.Controllers
             {
                 CompanyId = companyId,
                 ParentId = requestBase.ParentId,
-                Key = requestBase.Key,
                 Name = requestBase.Name,
             };
 

@@ -6,7 +6,6 @@ namespace Annium.Id.Db.Entities
     {
         public Guid OwnerId { get; set; }
         public User Owner { get; set; } = null!;
-        public string Key { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
         public Guid ApiToken { get; set; }
     }

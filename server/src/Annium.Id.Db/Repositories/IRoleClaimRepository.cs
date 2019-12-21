@@ -7,7 +7,6 @@ namespace Annium.Id.Db.Repositories
     public interface IRoleClaimRepository
     {
         Task<RoleClaim> SaveAsync(RoleClaim claim);
-
         Task DeleteByIdAsync(Guid roleId, Guid claimId);
     }
 }

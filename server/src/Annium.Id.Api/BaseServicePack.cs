@@ -19,7 +19,7 @@ namespace Annium.Id.Api
             services.AddIdAuthorization(opts =>
             {
                 var cfg = provider.GetRequiredService<Application.Configuration>();
-                opts.Audience = Constants.IdApp;
+                opts.Audience = Constants.IdAppId;
                 opts.PublicKeyFile = cfg.PublicKeyFile;
                 opts.PrivateKeyFile = cfg.PrivateKeyFile;
                 opts.AccessTokenLifeTime = Duration.FromMinutes(30);

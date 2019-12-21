@@ -20,7 +20,7 @@ namespace Annium.Id.Core.Tests
             var token = "badtoken";
 
             // act
-            var (status, _) = ReadToken(token);
+            var (status, _) = ReadToken(token, Guid.NewGuid());
 
             // assert
             status.IsEqual(TokenReadStatus.BadSource);
@@ -30,11 +30,12 @@ namespace Annium.Id.Core.Tests
         public void Read_Expired_ReturnsFailure()
         {
             // arrange
-            var source = GenerateToken();
+            var appId = Guid.NewGuid();
+            var source = GenerateToken(appId);
             var token = WriteToken(source, expired: true);
 
             // act
-            var result = ReadToken(token);
+            var result = ReadToken(token, appId);
 
             // assert
             result.Status.IsEqual(TokenReadStatus.Failed);
@@ -45,11 +46,12 @@ namespace Annium.Id.Core.Tests
         public void Read_InvalidAudience_ReturnsFailure()
         {
             // arrange
-            var source = GenerateToken();
-            var token = WriteToken(source, audience: "other");
+            var appId = Guid.NewGuid();
+            var source = GenerateToken(appId);
+            var token = WriteToken(source);
 
             // act
-            var result = ReadToken(token);
+            var result = ReadToken(token, Guid.NewGuid());
 
             // assert
             result.Status.IsEqual(TokenReadStatus.Failed);
@@ -60,11 +62,12 @@ namespace Annium.Id.Core.Tests
         public void Read_Valid_ReturnsToken()
         {
             // arrange
-            var source = GenerateToken();
+            var appId = Guid.NewGuid();
+            var source = GenerateToken(appId);
             var token = WriteToken(source);
 
             // act
-            var (status, result) = ReadToken(token);
+            var (status, result) = ReadToken(token, appId);
 
             // assert
             status.IsEqual(TokenReadStatus.Ok);
@@ -73,12 +76,11 @@ namespace Annium.Id.Core.Tests
 
         private string WriteToken(
             IdToken token,
-            bool expired = false,
-            string audience = "demo"
+            bool expired = false
         )
         {
             var services = new ServiceCollection();
-            services.AddIdAuthorizationCoreServices(Configure(audience));
+            services.AddIdAuthorizationCoreServices(Configure(token.App.Id));
             if (expired)
                 services.AddSingleton<Func<Instant>>(() => SystemClock.Instance.GetCurrentInstant() - Duration.FromDays(1));
             else
@@ -87,13 +89,13 @@ namespace Annium.Id.Core.Tests
 
             var writer = provider.GetRequiredService<ITokenWriter>();
 
-            return writer.WriteToken(token, audience);
+            return writer.WriteToken(token);
         }
 
-        private IStatusResult<TokenReadStatus, IdToken> ReadToken(string token)
+        private IStatusResult<TokenReadStatus, IdToken> ReadToken(string token, Guid appId)
         {
             var services = new ServiceCollection();
-            services.AddIdAuthorizationCoreServices(Configure("demo"));
+            services.AddIdAuthorizationCoreServices(Configure(appId));
             services.AddSingleton<Func<Instant>>(SystemClock.Instance.GetCurrentInstant);
             services.AddLogging(route => route.UseConsole());
             var provider = services.BuildServiceProvider();
@@ -103,24 +105,24 @@ namespace Annium.Id.Core.Tests
             return reader.ReadToken(token, new TokenReadOptions());
         }
 
-        private Action<AuthOptions> Configure(string audience)
+        private Action<AuthOptions> Configure(Guid appId)
         {
             return options =>
             {
-                options.Audience = audience;
+                options.Audience = appId;
                 options.PrivateKeyFile = Path.Combine("keys", "private.key");
                 options.PublicKeyFile = Path.Combine("keys", "public.key");
                 options.AccessTokenLifeTime = Duration.FromMinutes(1);
             };
         }
 
-        private IdToken GenerateToken()
+        private IdToken GenerateToken(Guid appId)
         {
             return new IdToken(
                 Guid.NewGuid(),
                 Guid.NewGuid(),
                 new AppToken(
-                    Guid.NewGuid(),
+                    appId,
                     new[] { "user", "skilled" },
                     new Dictionary<string, string> { { "moderate", "newbies" }, { "advice", "all" } }
                 ),

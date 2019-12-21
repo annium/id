@@ -46,14 +46,6 @@ namespace Annium.Id.Db.Repositories.Implementations
             return mapper.Map<App>(app);
         }
 
-        public async Task<App> FindByKeyAsync(string key)
-        {
-            var app = await context.Apps.AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Key == key);
-
-            return mapper.Map<App>(app);
-        }
-
         public async Task<App> FindByApiTokenAsync(Guid token)
         {
             var app = await context.Apps.AsNoTracking()
@@ -68,7 +60,6 @@ namespace Annium.Id.Db.Repositories.Implementations
                 .SingleAsync(x => x.Id == app.Id);
 
             entity.OwnerId = app.OwnerId;
-            entity.Key = app.Key;
             entity.Name = app.Name;
 
             await context.SaveChangesAsync();

@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Linq;
 using Annium.Core.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,11 +17,12 @@ namespace Annium.Id.DemoClient
         {
             services.AddSingleton<Func<Instant>>(SystemClock.Instance.GetCurrentInstant);
 
-            services.AddIdAuthorization(options =>
-            {
-                options.Audience = "demo";
-                options.PublicKeyFile = Path.Combine("keys", "public.key");
-            });
+            // FIXME: removed, cause id is set dynamically from tests
+            // services.AddIdAuthorization(options =>
+            // {
+            //     options.Audience = Constants.AppId;
+            //     options.PublicKeyFile = Path.Combine("keys", "public.key");
+            // });
             services.AddLogging(route => route.UseConsole());
             services.AddIdPolicy(
                 "isAdmin",

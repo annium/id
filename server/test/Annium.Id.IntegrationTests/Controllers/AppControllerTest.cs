@@ -16,22 +16,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         {
             // arrange
             var tokens = await RegisterLogUserInAsync();
-            var payload = new CreateAppRequest() { Key = "d", Name = "Demo App" };
-
-            // act
-            var response = await id.Post("/apps").BearerAuthorization(tokens.AccessToken).JsonContent(payload).RunAsync();
-
-            // assert
-            response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
-        }
-
-        [Fact]
-        public async Task Create_NonUniqueKey_BadRequest()
-        {
-            // arrange
-            var tokens = await RegisterLogUserInAsync();
-            var payload = new CreateAppRequest() { Key = "demo", Name = "Demo App" };
-            await id.Post("/apps").BearerAuthorization(tokens.AccessToken).JsonContent(payload).RunAsync();
+            var payload = new CreateAppRequest() { Name = "x" };
 
             // act
             var response = await id.Post("/apps").BearerAuthorization(tokens.AccessToken).JsonContent(payload).RunAsync();
@@ -45,16 +30,14 @@ namespace Annium.Id.IntegrationTests.Controllers
         {
             // arrange
             var tokens = await RegisterLogUserInAsync();
-            var appKey = "demo";
             var appName = "Demo App";
 
             // act
-            var app = await CreateAppAsync(tokens.AccessToken, appKey, appName);
+            var app = await CreateAppAsync(tokens.AccessToken, appName);
             var apps = (await id.Get("/apps").AsResultAsync<AppResponse[]>()).Data;
 
             // assert
             apps.Has(2);
-            app.Key.IsEqual(appKey);
             app.Name.IsEqual(appName);
         }
 
@@ -150,7 +133,7 @@ namespace Annium.Id.IntegrationTests.Controllers
 
             // assert
             response.Has(1);
-            response.At(0).Key.IsEqual(Constants.IdApp);
+            response.At(0).Id.IsEqual(Constants.IdAppId);
         }
 
         [Fact]
@@ -159,7 +142,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             // arrange
             var tokens = await RegisterLogUserInAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
-            var u = new UpdateAppRequest { Key = "demo" };
+            var u = new UpdateAppRequest { Name = "d" };
 
             // act
             var response = await id.Put($"/apps/{app.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
@@ -173,7 +156,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         {
             // arrange
             var tokens = await RegisterLogUserInAsync();
-            var u = new UpdateAppRequest { Key = "demo", Name = "Demo App" };
+            var u = new UpdateAppRequest { Name = "Demo App" };
 
             // act
             var response = await id.Put($"/apps/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
@@ -189,7 +172,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var ownerTokens = await RegisterLogUserInAsync("owner", "superpass", "some@email.com");
             var app = await CreateAppAsync(ownerTokens.AccessToken);
             var tokens = await RegisterLogUserInAsync();
-            var u = new UpdateAppRequest { Key = "demo", Name = "Demo App" };
+            var u = new UpdateAppRequest { Name = "Demo App" };
 
             // act
             var response = await id.Put($"/apps/{app.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
@@ -199,28 +182,12 @@ namespace Annium.Id.IntegrationTests.Controllers
         }
 
         [Fact]
-        public async Task Update_KeyIsNotUnique_Conflict()
-        {
-            // arrange
-            var tokens = await RegisterLogUserInAsync();
-            await CreateAppAsync(tokens.AccessToken, "demo", "Demo App");
-            var app2 = await CreateAppAsync(tokens.AccessToken, "medo", "Medo App");
-            var u = new UpdateAppRequest { Key = "demo", Name = "Medo App" };
-
-            // act
-            var response = await id.Put($"/apps/{app2.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
-
-            // assert
-            response.StatusCode.IsEqual(HttpStatusCode.Conflict);
-        }
-
-        [Fact]
         public async Task Update_Valid_Ok()
         {
             // arrange
             var tokens = await RegisterLogUserInAsync();
-            var app = await CreateAppAsync(tokens.AccessToken, "demo", "Demo App");
-            var u = new UpdateAppRequest { Key = "medo", Name = "Medo App" };
+            var app = await CreateAppAsync(tokens.AccessToken, "Demo App");
+            var u = new UpdateAppRequest { Name = "Medo App" };
 
             // act
             var updateResponse = await id.Put($"/apps/{app.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
@@ -229,7 +196,6 @@ namespace Annium.Id.IntegrationTests.Controllers
 
             // assert
             response.Id.IsEqual(app.Id);
-            response.Key.IsEqual(u.Key);
             response.Name.IsEqual(u.Name);
         }
 
@@ -251,7 +217,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         {
             // arrange
             var ownerTokens = await RegisterLogUserInAsync("owner", "superpass", "some@email.com");
-            var app = await CreateAppAsync(ownerTokens.AccessToken, "demo", "Demo App");
+            var app = await CreateAppAsync(ownerTokens.AccessToken, "Demo App");
             var tokens = await RegisterLogUserInAsync();
             var user = await GetUserAsync(tokens.AccessToken);
 
@@ -267,7 +233,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         {
             // arrange
             var ownerTokens = await RegisterLogUserInAsync("owner", "superpass", "some@email.com");
-            var app = await CreateAppAsync(ownerTokens.AccessToken, "demo", "Demo App");
+            var app = await CreateAppAsync(ownerTokens.AccessToken, "Demo App");
 
             // act
             var response = await id.Put($"/apps/{app.Id}/owner/{Guid.NewGuid()}").BearerAuthorization(ownerTokens.AccessToken).RunAsync();
@@ -281,7 +247,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         {
             // arrange
             var ownerTokens = await RegisterLogUserInAsync("owner", "superpass", "some@email.com");
-            var app = await CreateAppAsync(ownerTokens.AccessToken, "demo", "Demo App");
+            var app = await CreateAppAsync(ownerTokens.AccessToken, "Demo App");
             var tokens = await RegisterLogUserInAsync();
             var user = await GetUserAsync(tokens.AccessToken);
 
@@ -313,7 +279,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         {
             // arrange
             var ownerTokens = await RegisterLogUserInAsync("owner", "superpass", "some@email.com");
-            var app = await CreateAppAsync(ownerTokens.AccessToken, "demo", "Demo App");
+            var app = await CreateAppAsync(ownerTokens.AccessToken, "Demo App");
             var tokens = await RegisterLogUserInAsync();
 
             // act
@@ -328,7 +294,7 @@ namespace Annium.Id.IntegrationTests.Controllers
         {
             // arrange
             var tokens = await RegisterLogUserInAsync();
-            var app = await CreateAppAsync(tokens.AccessToken, "demo", "Demo App");
+            var app = await CreateAppAsync(tokens.AccessToken, "Demo App");
 
             // act
             var response = await id.Delete($"/apps/{app.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();

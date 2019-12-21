@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 using System.Threading.Tasks;
 using Annium.Net.Http;
@@ -11,7 +12,7 @@ namespace Annium.Id.IntegrationTests.DemoClient.Controllers
         public async Task IdAuthorization_Unauthorized_ReturnsUnauthorized()
         {
             // act
-            var response = await demo.Get("/base").RunAsync();
+            var response = await demo(Guid.NewGuid()).Get("/base").RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Unauthorized);
@@ -25,12 +26,12 @@ namespace Annium.Id.IntegrationTests.DemoClient.Controllers
             var appTokens = await LogUserInAppAsync(app.Id);
 
             // act
-            var response = await demo.Get("/base").BearerAuthorization(appTokens.AccessToken).RunAsync();
+            var response = await demo(app.Id).Get("/base").BearerAuthorization(appTokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.OK);
             // FIXME: use, when System.Text.Json supports Deserialize with non-default constructor
-            // var token = await demo.Get("/base").BearerAuthorization(appTokens.AccessToken).AsAsync<IdToken>();
+            // var token = await demo(app.Id).Get("/base").BearerAuthorization(appTokens.AccessToken).AsAsync<IdToken>();
 
             // // assert
             // token.IsNotDefault();
@@ -42,7 +43,7 @@ namespace Annium.Id.IntegrationTests.DemoClient.Controllers
         public async Task IdAuthorization_CheckRole_Unauthorized_ReturnsUnauthorized()
         {
             // act
-            var response = await demo.Get("/isAdmin").RunAsync();
+            var response = await demo(Guid.NewGuid()).Get("/isAdmin").RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Unauthorized);
@@ -56,7 +57,7 @@ namespace Annium.Id.IntegrationTests.DemoClient.Controllers
             var appTokens = await LogUserInAppAsync(app.Id);
 
             // act
-            var response = await demo.Get("/isAdmin").BearerAuthorization(appTokens.AccessToken).RunAsync();
+            var response = await demo(app.Id).Get("/isAdmin").BearerAuthorization(appTokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -72,7 +73,7 @@ namespace Annium.Id.IntegrationTests.DemoClient.Controllers
             var appTokens = await LogUserInAppAsync(app.Id);
 
             // act
-            var response = await demo.Get("/isAdmin").BearerAuthorization(appTokens.AccessToken).RunAsync();
+            var response = await demo(app.Id).Get("/isAdmin").BearerAuthorization(appTokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.OK);
@@ -91,7 +92,7 @@ namespace Annium.Id.IntegrationTests.DemoClient.Controllers
             var appTokens = await LogUserInAppAsync(app.Id);
 
             // act
-            var response = await demo.Get("/hasPaymentsAccess/").BearerAuthorization(appTokens.AccessToken).RunAsync();
+            var response = await demo(app.Id).Get("/hasPaymentsAccess/").BearerAuthorization(appTokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.OK);
@@ -108,7 +109,7 @@ namespace Annium.Id.IntegrationTests.DemoClient.Controllers
             var appTokens = await LogUserInAppAsync(app.Id);
 
             // act
-            var response = await demo.Get("/hasPaymentsAccess/").BearerAuthorization(appTokens.AccessToken).RunAsync();
+            var response = await demo(app.Id).Get("/hasPaymentsAccess/").BearerAuthorization(appTokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.OK);
@@ -127,7 +128,7 @@ namespace Annium.Id.IntegrationTests.DemoClient.Controllers
             var appTokens = await LogUserInAppAsync(app.Id);
 
             // act
-            var response = await demo.Get("/hasPaymentsAccess/").BearerAuthorization(appTokens.AccessToken).RunAsync();
+            var response = await demo(app.Id).Get("/hasPaymentsAccess/").BearerAuthorization(appTokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.OK);

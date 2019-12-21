@@ -27,7 +27,7 @@ namespace Annium.Core.DependencyInjection
 
         private static void Validate(AuthOptions options)
         {
-            if (string.IsNullOrWhiteSpace(options.Audience))
+            if (options.Audience == Guid.Empty)
                 throw new Exception($"{nameof(AuthOptions.Audience)} is mandatory");
 
             if (string.IsNullOrWhiteSpace(options.PublicKeyFile))
