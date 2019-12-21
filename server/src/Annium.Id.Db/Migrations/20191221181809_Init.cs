@@ -27,7 +27,6 @@ namespace Annium.Id.Db.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     OwnerId = table.Column<Guid>(nullable: false),
-                    Key = table.Column<string>(nullable: false),
                     Name = table.Column<string>(nullable: false),
                     ApiToken = table.Column<Guid>(nullable: false)
                 },
@@ -49,7 +48,6 @@ namespace Annium.Id.Db.Migrations
                     Id = table.Column<Guid>(nullable: false),
                     OwnerId = table.Column<Guid>(nullable: false),
                     ParentId = table.Column<Guid>(nullable: true),
-                    Key = table.Column<string>(nullable: false),
                     Name = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
@@ -372,14 +370,8 @@ namespace Annium.Id.Db.Migrations
 
             migrationBuilder.InsertData(
                 table: "Apps",
-                columns: new[] { "Id", "ApiToken", "Key", "Name", "OwnerId" },
-                values: new object[] { new Guid("278e20ae-00c7-4ba5-8db3-55df7af12d44"), new Guid("b62acd2a-2f1b-4da1-9273-abab4b9da7f7"), "id", "Annium ID", new Guid("baa0ad0f-91c5-4c19-963c-ea369048e67a") });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Apps_Key",
-                table: "Apps",
-                column: "Key",
-                unique: true);
+                columns: new[] { "Id", "ApiToken", "Name", "OwnerId" },
+                values: new object[] { new Guid("278e20ae-00c7-4ba5-8db3-55df7af12d44"), new Guid("b62acd2a-2f1b-4da1-9273-abab4b9da7f7"), "Annium ID", new Guid("baa0ad0f-91c5-4c19-963c-ea369048e67a") });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Apps_OwnerId",
@@ -390,12 +382,6 @@ namespace Annium.Id.Db.Migrations
                 name: "IX_Claims_AppId_Key",
                 table: "Claims",
                 columns: new[] { "AppId", "Key" },
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Companies_Key",
-                table: "Companies",
-                column: "Key",
                 unique: true);
 
             migrationBuilder.CreateIndex(
