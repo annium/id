@@ -60,21 +60,21 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpPut("profile")]
-        [Authorize]
+        [Authorize(validateAudience: false)]
         public Task<IActionResult> UpdateMyProfile([FromBody] UpdateMyProfileRequest request)
         {
             return HandleAsync(request);
         }
 
         [HttpPut("password")]
-        [Authorize]
+        [Authorize(validateAudience: false)]
         public Task<IActionResult> UpdateMyPassword([FromBody] UpdateMyPasswordRequest request)
         {
             return HandleAsync(request);
         }
 
         [HttpDelete]
-        [Authorize]
+        [Authorize(validateAudience: false)]
         public Task<IActionResult> UnregisterMe()
         {
             return HandleAsync(new UnregisterMeRequest());
