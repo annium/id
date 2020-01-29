@@ -1,44 +1,41 @@
 using Annium.Architecture.CQRS.Commands;
-using Annium.Extensions.Composition;
 using Annium.Extensions.Validation;
+using Annium.Extensions.Composition;
 using Annium.Id.Core;
 using Annium.Id.Db.Repositories;
 using Annium.Id.Domain.Entities;
 
 namespace Annium.Id.Application.Commands.Me
 {
-    public class UpdateMeCommand : ICommand
+    public class UpdateMyProfileCommand : ICommand
     {
         public string Login { get; }
-        public string Password { get; }
         public string Email { get; }
         public User User { get; private set; } = null!;
 
-        public UpdateMeCommand(
+        public UpdateMyProfileCommand(
             string login,
-            string password,
             string email
         )
         {
             Login = login;
-            Password = password;
             Email = email;
         }
     }
 
-    internal class UpdateMeCommandValidator : Validator<UpdateMeCommand>
+    internal class UpdateMyProfileCommandValidator : Validator<UpdateMyProfileCommand>
     {
-        public UpdateMeCommandValidator()
+        public UpdateMyProfileCommandValidator(
+        )
         {
             Field(e => e.Login).Required().Length(3, 50);
-            Field(e => e.Password).Required().Length(8, 50);
             Field(e => e.Email).Required().Length(3, 100).Email();
         }
     }
 
-    internal class UpdateMeCommandComposer : Composer<UpdateMeCommand>
+    internal class UpdateMyProfileCommandComposer : Composer<UpdateMyProfileCommand>
     {
-        public UpdateMeCommandComposer(
+        public UpdateMyProfileCommandComposer(
             ITokenAccessor tokenAccessor,
             IUserRepository userRepository
         )

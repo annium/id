@@ -59,9 +59,16 @@ namespace Annium.Id.Api.Controllers
             return HandleAsync<GetMeRequest, MeResponse>(new GetMeRequest());
         }
 
-        [HttpPut]
+        [HttpPut("profile")]
         [Authorize]
-        public Task<IActionResult> UpdateMe([FromBody] UpdateMeRequest request)
+        public Task<IActionResult> UpdateMyProfile([FromBody] UpdateMyProfileRequest request)
+        {
+            return HandleAsync(request);
+        }
+
+        [HttpPut("password")]
+        [Authorize]
+        public Task<IActionResult> UpdateMyPassword([FromBody] UpdateMyPasswordRequest request)
         {
             return HandleAsync(request);
         }

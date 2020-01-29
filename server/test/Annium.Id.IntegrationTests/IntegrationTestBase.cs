@@ -37,14 +37,15 @@ namespace Annium.Id.IntegrationTests
             builder => builder.UseServicePack<Api.TestServicePack>(),
             services => services.AddSingleton<IEmailService>(emailService)
         );
+
         protected IRequest demo(Guid appId) => GetRequest<Id.DemoClient.Startup>(
             builder => builder.UseServicePack<Id.DemoClient.ServicePack>(),
             (IServiceCollection services) => services
                 .AddIdAuthorization(options =>
-            {
-                options.Audience = appId;
-                options.PublicKeyFile = Path.Combine("keys", "public.key");
-            })
+                {
+                    options.Audience = appId;
+                    options.PublicKeyFile = Path.Combine("keys", "public.key");
+                })
         );
 
         protected TestEmailService emailService = new TestEmailService();
@@ -124,9 +125,9 @@ namespace Annium.Id.IntegrationTests
                 .AsResultAsync<TokensResponse>()).Data;
 
             // set password
-            await id.Put("/me")
+            await id.Put("/me/password")
                 .BearerAuthorization(token.AccessToken)
-                .JsonContent(new UpdateMeRequest { Login = login, Password = password, Email = email })
+                .JsonContent(new UpdateMyPasswordRequest { Password = password })
                 .EnsureSuccessStatusCode()
                 .RunAsync();
 
@@ -200,10 +201,10 @@ namespace Annium.Id.IntegrationTests
                 .AsResultAsync<Guid>()).Data;
 
             var role = (await id.Get("/roles")
-                .BearerAuthorization(accessToken)
-                .Param("appId", appId)
-                .EnsureSuccessStatusCode()
-                .AsResultAsync<RoleResponse[]>()).Data
+                    .BearerAuthorization(accessToken)
+                    .Param("appId", appId)
+                    .EnsureSuccessStatusCode()
+                    .AsResultAsync<RoleResponse[]>()).Data
                 .First(c => c.Id == roleId);
 
             return role;
@@ -225,10 +226,10 @@ namespace Annium.Id.IntegrationTests
                 .AsResultAsync<Guid>()).Data;
 
             var claim = (await id.Get("/claims")
-                .BearerAuthorization(accessToken)
-                .Param("appId", appId)
-                .EnsureSuccessStatusCode()
-                .AsResultAsync<ClaimResponse[]>()).Data
+                    .BearerAuthorization(accessToken)
+                    .Param("appId", appId)
+                    .EnsureSuccessStatusCode()
+                    .AsResultAsync<ClaimResponse[]>()).Data
                 .First(c => c.Id == claimId);
 
             return claim;
@@ -314,10 +315,10 @@ namespace Annium.Id.IntegrationTests
                 .AsResultAsync<Guid>()).Data;
 
             var role = (await id.Get("/companies/roles")
-                .BearerAuthorization(accessToken)
-                .Param("appId", appId)
-                .EnsureSuccessStatusCode()
-                .AsResultAsync<CompanyRoleResponse[]>()).Data
+                    .BearerAuthorization(accessToken)
+                    .Param("appId", appId)
+                    .EnsureSuccessStatusCode()
+                    .AsResultAsync<CompanyRoleResponse[]>()).Data
                 .First(c => c.Id == roleId);
 
             return role;
@@ -339,10 +340,10 @@ namespace Annium.Id.IntegrationTests
                 .AsResultAsync<Guid>()).Data;
 
             var claim = (await id.Get("/companies/claims")
-                .BearerAuthorization(accessToken)
-                .Param("appId", appId)
-                .EnsureSuccessStatusCode()
-                .AsResultAsync<CompanyClaimResponse[]>()).Data
+                    .BearerAuthorization(accessToken)
+                    .Param("appId", appId)
+                    .EnsureSuccessStatusCode()
+                    .AsResultAsync<CompanyClaimResponse[]>()).Data
                 .First(c => c.Id == claimId);
 
             return claim;

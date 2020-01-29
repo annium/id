@@ -105,58 +105,86 @@ namespace Annium.Id.IntegrationTests.Controllers
         }
 
         [Fact]
-        public async Task UpdateMe_IncorrectPayload_BadRequest()
+        public async Task UpdateMyProfile_IncorrectPayload_BadRequest()
         {
             // arrange
             var tokens = await RegisterLogUserInAsync();
-            var payload = new RegisterMeRequest { Login = "demo" };
+            var payload = new UpdateMyProfileRequest { Login = "demo" };
 
             // act
-            var response = await id.Put("/me").BearerAuthorization(tokens.AccessToken).JsonContent(payload).RunAsync();
+            var response = await id.Put("/me/profile").BearerAuthorization(tokens.AccessToken).JsonContent(payload).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
         }
 
         [Fact]
-        public async Task UpdateMe_LoginIsNotUnique_BadRequest()
+        public async Task UpdateMyProfile_LoginIsNotUnique_BadRequest()
         {
             // arrange
             var tokens = await RegisterLogUserInAsync();
             var other = await RegisterLogUserInGetUserAsync("uniquelogin", "asdasdsdd", "asd1@demo.com");
-            var update = new UpdateMeRequest { Login = other.Login, Password = "a96as9da", Email = "asd2@demo.com" };
+            var update = new UpdateMyProfileRequest { Login = other.Login, Email = "asd2@demo.com" };
 
             // act
-            var response = await id.Put("/me").BearerAuthorization(tokens.AccessToken).JsonContent(update).RunAsync();
+            var response = await id.Put("/me/profile").BearerAuthorization(tokens.AccessToken).JsonContent(update).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Conflict);
         }
 
         [Fact]
-        public async Task UpdateMe_EmailIsNotUnique_BadRequest()
+        public async Task UpdateMyProfile_EmailIsNotUnique_BadRequest()
         {
             // arrange
             var tokens = await RegisterLogUserInAsync();
             var other = await RegisterLogUserInGetUserAsync("uniquelogin", "asdasdsdd", "asd1@demo.com");
-            var update = new UpdateMeRequest { Login = "otherlogin", Password = "a96as9da", Email = other.Email };
+            var update = new UpdateMyProfileRequest { Login = "otherlogin", Email = other.Email };
 
             // act
-            var response = await id.Put("/me").BearerAuthorization(tokens.AccessToken).JsonContent(update).RunAsync();
+            var response = await id.Put("/me/profile").BearerAuthorization(tokens.AccessToken).JsonContent(update).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Conflict);
         }
 
         [Fact]
-        public async Task UpdateMe_ValidData_Ok()
+        public async Task UpdateMyProfile_ValidData_Ok()
         {
             // arrange
             var tokens = await RegisterLogUserInAsync();
-            var payload = new UpdateMeRequest { Login = "medo", Password = "setsetset", Email = "medo@medo.com" };
+            var payload = new UpdateMyProfileRequest { Login = "medo", Email = "medo@medo.com" };
 
             // act
-            var response = await id.Put("/me").BearerAuthorization(tokens.AccessToken).JsonContent(payload).RunAsync();
+            var response = await id.Put("/me/profile").BearerAuthorization(tokens.AccessToken).JsonContent(payload).RunAsync();
+
+            // assert
+            response.StatusCode.IsEqual(HttpStatusCode.OK);
+        }
+
+        [Fact]
+        public async Task UpdateMyPassword_IncorrectPayload_BadRequest()
+        {
+            // arrange
+            var tokens = await RegisterLogUserInAsync();
+            var payload = new UpdateMyPasswordRequest { Password = "demo" };
+
+            // act
+            var response = await id.Put("/me/password").BearerAuthorization(tokens.AccessToken).JsonContent(payload).RunAsync();
+
+            // assert
+            response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
+        }
+
+        [Fact]
+        public async Task UpdateMyPassword_ValidData_Ok()
+        {
+            // arrange
+            var tokens = await RegisterLogUserInAsync();
+            var payload = new UpdateMyPasswordRequest { Password = "setsetset" };
+
+            // act
+            var response = await id.Put("/me/password").BearerAuthorization(tokens.AccessToken).JsonContent(payload).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.OK);

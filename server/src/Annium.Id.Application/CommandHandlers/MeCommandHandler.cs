@@ -18,7 +18,8 @@ namespace Annium.Id.Application.CommandHandlers
         ICommandHandler<RegisterMeCommand>,
         ICommandHandler<ConfirmMyEmailCommand, Tokens>,
         ICommandHandler<RestoreMyAccessCommand>,
-        ICommandHandler<UpdateMeCommand>,
+        ICommandHandler<UpdateMyPasswordCommand>,
+        ICommandHandler<UpdateMyProfileCommand>,
         ICommandHandler<UnregisterMeCommand>
     {
         private readonly IUserRepository userRepository;
@@ -101,7 +102,21 @@ namespace Annium.Id.Application.CommandHandlers
         }
 
         public async Task<IStatusResult<OperationStatus>> HandleAsync(
-            UpdateMeCommand request,
+            UpdateMyPasswordCommand request,
+            CancellationToken cancellationToken
+        )
+        {
+            var user = request.User;
+
+            user.PasswordHash = securityManager.Hash(request.Password);
+
+            await userRepository.UpdateAsync(user);
+
+            return Result.Status(OperationStatus.OK);
+        }
+
+        public async Task<IStatusResult<OperationStatus>> HandleAsync(
+            UpdateMyProfileCommand request,
             CancellationToken cancellationToken
         )
         {
@@ -114,7 +129,6 @@ namespace Annium.Id.Application.CommandHandlers
                 return Result.Status(OperationStatus.Conflict).Error($"Email {request.Email} is already used");
 
             user.Login = request.Login;
-            user.PasswordHash = securityManager.Hash(request.Password);
             user.Email = request.Email;
 
             await userRepository.UpdateAsync(user);
