@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Annium.Net.Http;
 using Annium.Testing;
+using Xunit;
 
 namespace Annium.Id.IntegrationTests.DemoClient.Controllers
 {

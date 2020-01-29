@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Annium.Id.ViewModels.Users.Requests;
 using Annium.Net.Http;
 using Annium.Testing;
+using Xunit;
 
 namespace Annium.Id.IntegrationTests.Controllers
 {

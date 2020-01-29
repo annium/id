@@ -5,6 +5,7 @@ using Annium.Id.ViewModels.Login.Requests;
 using Annium.Id.ViewModels.Login.Responses;
 using Annium.Net.Http;
 using Annium.Testing;
+using Xunit;
 
 namespace Annium.Id.IntegrationTests.Controllers
 {

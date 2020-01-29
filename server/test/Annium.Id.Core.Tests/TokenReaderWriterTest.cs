@@ -8,6 +8,7 @@ using Annium.Data.Operations;
 using Annium.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
+using Xunit;
 
 namespace Annium.Id.Core.Tests
 {
