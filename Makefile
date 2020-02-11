@@ -13,9 +13,6 @@ db-log api-log site-log:
 	@docker logs -f $(PROJECT_NAME)_$(subst -log,,$@)
 
 
-db-drop db-update migrations-add migrations-list migrations-remove:
-	@cd server && pwsh tools/ef/$@.ps1 -startup src/Annium.Id.Api -project src/Annium.Id.Db -context Context
-
 publish-api:
 	$(call publish,api,server,src/Annium.Id.Api/Dockerfile)
 	$(call publish,migrations,server,src/Annium.Id.Api/migrations.Dockerfile)
