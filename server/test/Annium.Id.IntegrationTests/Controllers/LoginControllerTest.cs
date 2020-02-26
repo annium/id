@@ -79,7 +79,10 @@ namespace Annium.Id.IntegrationTests.Controllers
             var tokens = await LogUserInAppAsync(app.Id);
 
             // act
-            var response = await id.Put($"/me/{app.Id}/token").BearerAuthorization(tokens.AccessToken).Param("refreshToken", Guid.NewGuid()).RunAsync();
+            var response = await id.Put($"/me/{app.Id}/token")
+                .BearerAuthorization(tokens.AccessToken)
+                .Param("refreshToken", Guid.NewGuid())
+                .RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -93,11 +96,14 @@ namespace Annium.Id.IntegrationTests.Controllers
             var tokens = await LogUserInAppAsync(app.Id);
 
             // act
-            var response = await id.Put($"/me/{app.Id}/token").BearerAuthorization(tokens.AccessToken).Param("refreshToken", tokens.RefreshToken).AsResultAsync<TokensResponse>();
+            var response = await id.Put($"/me/{app.Id}/token")
+                .BearerAuthorization(tokens.AccessToken)
+                .Param("refreshToken", tokens.RefreshToken)
+                .AsResultAsync<TokensResponse>();
 
             // assert
-            response.Data.AccessToken.IsNotDefault();
-            response.Data.RefreshToken.IsNotDefault();
+            response.Data.AccessToken.IsNotDefault().IsNotEqual(tokens.AccessToken);
+            response.Data.RefreshToken.IsNotDefault().IsNotEqual(tokens.RefreshToken);
         }
 
         [Fact]

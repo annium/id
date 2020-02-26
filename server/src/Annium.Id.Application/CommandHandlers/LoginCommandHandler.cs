@@ -7,6 +7,7 @@ using Annium.Data.Operations;
 using Annium.Id.Application.Commands.Login;
 using Annium.Id.Application.Services;
 using Annium.Id.Application.Tools;
+using Annium.Id.Core;
 using Annium.Id.Db.Repositories;
 using Annium.Id.Domain.Entities;
 using NodaTime;
@@ -19,6 +20,7 @@ namespace Annium.Id.Application.CommandHandlers
         ICommandHandler<UpdateTokensCommand, Tokens>
     {
         private readonly Func<Instant> getInstant;
+        private readonly AuthOptions options;
         private readonly IUserLoginRepository userLoginRepository;
         private readonly ISecurityManager securityManager;
         private readonly ILoginService loginService;
@@ -26,6 +28,7 @@ namespace Annium.Id.Application.CommandHandlers
 
         public LoginCommandHandler(
             Func<Instant> getInstant,
+            AuthOptions options,
             IUserLoginRepository userLoginRepository,
             ISecurityManager securityManager,
             ILoginService loginService,
@@ -33,6 +36,7 @@ namespace Annium.Id.Application.CommandHandlers
         )
         {
             this.getInstant = getInstant;
+            this.options = options;
             this.userLoginRepository = userLoginRepository;
             this.securityManager = securityManager;
             this.loginService = loginService;
@@ -60,12 +64,14 @@ namespace Annium.Id.Application.CommandHandlers
             CancellationToken cancellationToken
         )
         {
-            var app = request.App;
             var login = request.Login;
 
             if (login.RefreshTokenExpires < getInstant())
                 return Result.Status(OperationStatus.Forbidden, default(Tokens)!).Error("Refresh token expired");
 
+            login.RefreshToken = Guid.NewGuid();
+            login.RefreshTokenExpires = getInstant() + options.RefreshTokenLifeTime;
+            await userLoginRepository.UpdateRefreshTokenAsync(login);
             var token = await tokenGenerator.GenerateToken(login);
 
             return Result.Status(OperationStatus.OK, new Tokens(token, login.RefreshToken, login.RefreshTokenExpires));
