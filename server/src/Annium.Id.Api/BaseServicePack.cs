@@ -23,6 +23,7 @@ namespace Annium.Id.Api
                 opts.PublicKeyFile = cfg.PublicKeyFile;
                 opts.PrivateKeyFile = cfg.PrivateKeyFile;
                 opts.AccessTokenLifeTime = Duration.FromMinutes(30);
+                opts.RefreshTokenLifeTime = Duration.FromDays(1);
             });
             services.AddIdPolicy<Guid>("canRefreshToken", (token, appId) => token.App.Id == appId);
             services.AddIdPolicy<Guid>("canLogOut", (token, appId) => token.App.Id == appId);

@@ -28,6 +28,7 @@ using Annium.Net.Http;
 using Annium.Net.Mail;
 using Annium.Testing;
 using Microsoft.Extensions.DependencyInjection;
+using NodaTime;
 
 namespace Annium.Id.IntegrationTests
 {
@@ -45,6 +46,8 @@ namespace Annium.Id.IntegrationTests
                 {
                     options.Audience = appId;
                     options.PublicKeyFile = Path.Combine("keys", "public.key");
+                    options.AccessTokenLifeTime = Duration.FromMinutes(5);
+                    options.RefreshTokenLifeTime = Duration.FromMinutes(5);
                 })
         );
 
