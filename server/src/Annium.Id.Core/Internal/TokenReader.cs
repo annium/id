@@ -58,30 +58,29 @@ namespace Annium.Id.Core.Internal
                 tvp.ValidAudience = authOptions.Audience.ToString();
             }
             else
-            {
                 tvp.ValidateAudience = false;
-            }
 
-            if (options.AllowedExpiration == Duration.Zero)
+            if (options.ValidateExpiration)
             {
                 tvp.ClockSkew = Duration.FromSeconds(5).ToTimeSpan();
                 tvp.RequireExpirationTime = true;
                 tvp.ValidateLifetime = true;
             }
+            else
+            {
+                tvp.RequireExpirationTime = false;
+                tvp.ValidateLifetime = false;
+            }
 
             try
             {
                 handler.ValidateToken(tokenString, tvp, out var securityToken);
-                var jwt = (JwtSecurityToken)securityToken;
-                if (options.AllowedExpiration != Duration.Zero)
+                var jwt = (JwtSecurityToken) securityToken;
+                if (!options.ValidateExpiration)
                 {
                     var now = getInstant().ToDateTimeUtc();
                     if (jwt.ValidFrom > now)
                         return fail(TokenReadStatus.Failed, "Token is not yet valid");
-
-                    var allowedExpiration = now - options.AllowedExpiration.ToTimeSpan();
-                    if (jwt.ValidTo < allowedExpiration)
-                        return fail(TokenReadStatus.Failed, "Token is expired");
                 }
 
                 var idClaim = jwt.Claims.FirstOrDefault(c => c.Type == Claims.Id);
@@ -154,6 +153,5 @@ namespace Annium.Id.Core.Internal
             static IStatusResult<TokenReadStatus, IdToken> fail(TokenReadStatus status, string error) =>
                 Result.Status<TokenReadStatus, IdToken>(status, null!).Error(error);
         }
-
     }
 }

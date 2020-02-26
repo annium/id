@@ -39,7 +39,7 @@ namespace Annium.Id.AspNetCore.Pipeline
             var tokenReadOptions = new TokenReadOptions
             {
                 ValidateAudience = options.ValidateAudience,
-                AllowedExpiration = options.AllowedExpiration,
+                ValidateExpiration = options.ValidateExpiration,
             };
             var readResult = tokenReader.ReadToken(tokenString, tokenReadOptions);
             if (readResult.Status == TokenReadStatus.BadSource)

@@ -49,7 +49,7 @@ namespace Annium.Id.AspNetCore.Pipeline
             if (attribute is null)
                 return;
 
-            var options = new AuthorizationFilterOptions(attribute.ValidateAudience, attribute.AllowedExpiration);
+            var options = new AuthorizationFilterOptions(attribute.ValidateAudience, attribute.ValidateExpiration);
             actionModel.Filters.Add(createAuthorizationFilter(options));
             if (attribute.PolicyName is null)
                 return;

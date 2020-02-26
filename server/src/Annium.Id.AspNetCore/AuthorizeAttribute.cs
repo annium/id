@@ -1,24 +1,25 @@
 using System;
-using NodaTime;
 
 namespace Annium.Id.AspNetCore
 {
-    [AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Method, Inherited = false)]
     public class AuthorizeAttribute : Attribute
     {
         public string? PolicyName { get; }
         public bool ValidateAudience { get; } = true;
-        public Duration AllowedExpiration { get; } = Duration.Zero;
+        public bool ValidateExpiration { get; } = true;
 
-        public AuthorizeAttribute() { }
+        public AuthorizeAttribute()
+        {
+        }
 
         public AuthorizeAttribute(
             bool validateAudience = true,
-            int allowedExpirationInMinutes = 0
+            bool validateExpiration = true
         )
         {
             ValidateAudience = validateAudience;
-            AllowedExpiration = Duration.FromMinutes(allowedExpirationInMinutes);
+            ValidateExpiration = validateExpiration;
         }
 
         public AuthorizeAttribute(
@@ -31,12 +32,12 @@ namespace Annium.Id.AspNetCore
         public AuthorizeAttribute(
             string policyName,
             bool validateAudience = true,
-            int allowedExpirationInMinutes = 0
+            bool validateExpiration = true
         )
         {
             PolicyName = policyName;
             ValidateAudience = validateAudience;
-            AllowedExpiration = Duration.FromMinutes(allowedExpirationInMinutes);
+            ValidateExpiration = validateExpiration;
         }
     }
 }

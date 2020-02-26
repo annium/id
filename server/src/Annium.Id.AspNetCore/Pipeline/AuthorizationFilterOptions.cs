@@ -1,19 +1,17 @@
-using NodaTime;
-
 namespace Annium.Id.AspNetCore.Pipeline
 {
     internal class AuthorizationFilterOptions
     {
         public bool ValidateAudience { get; }
-        public Duration AllowedExpiration { get; }
+        public bool ValidateExpiration { get; }
 
         public AuthorizationFilterOptions(
             bool validateAudience,
-            Duration allowedExpiration
+            bool validateExpiration
         )
         {
             ValidateAudience = validateAudience;
-            AllowedExpiration = allowedExpiration;
+            ValidateExpiration = validateExpiration;
         }
     }
 }
