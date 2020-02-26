@@ -25,8 +25,8 @@ namespace Annium.Id.Api
                 opts.AccessTokenLifeTime = Duration.FromMinutes(30);
                 opts.RefreshTokenLifeTime = Duration.FromDays(1);
             });
-            services.AddIdPolicy<Guid>("canRefreshToken", (token, appId) => token.App.Id == appId);
-            services.AddIdPolicy<Guid>("canLogOut", (token, appId) => token.App.Id == appId);
+            services.AddIdPolicy<Guid>(AuthPolicy.CanRefreshToken, (token, appId) => token.App.Id == appId);
+            services.AddIdPolicy<Guid>(AuthPolicy.CanLogOut, (token, appId) => token.App.Id == appId);
 
             // tools
             services.AddSingleton<IIdentityDataAccessor, IdentityDataAccessor>();

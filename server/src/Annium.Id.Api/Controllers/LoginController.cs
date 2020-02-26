@@ -33,7 +33,7 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpPut("token")]
-        [Authorize("canRefreshToken", validateAudience: false, allowedExpirationInMinutes: 24 * 60)]
+        [Authorize(AuthPolicy.CanRefreshToken, validateAudience: false, allowedExpirationInMinutes: 24 * 60)]
         public Task<IActionResult> UpdateToken(Guid appId, [FromQuery] UpdateTokensRequestBase requestBase)
         {
             var request = new UpdateTokensRequest
@@ -46,7 +46,7 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpDelete("logout")]
-        [Authorize("canLogOut", validateAudience: false, allowedExpirationInMinutes: 24 * 60)]
+        [Authorize(AuthPolicy.CanLogOut, validateAudience: false, allowedExpirationInMinutes: 24 * 60)]
         public Task<IActionResult> LogOut(Guid appId)
         {
             var request = new LogOutRequest { AppId = appId };
