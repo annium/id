@@ -18,7 +18,7 @@ publish-api:
 	$(call publish,migrations,server,src/Annium.Id.Api/migrations.Dockerfile)
 
 publish-site:
-	$(call publish,site,web/src/site,Dockerfile)
+	$(call publish,site,web/site,Dockerfile)
 
 
 define publish

@@ -2,7 +2,7 @@ version: '3.7'
 services:
   api:
     build:
-      context: ../server/web/src/site
+      context: ../server/web/site
       dockerfile: Dockerfile
     image: id_site
     container_name: id_site
