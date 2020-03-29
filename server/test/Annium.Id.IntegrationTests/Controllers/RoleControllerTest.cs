@@ -1,6 +1,7 @@
 using System;
 using System.Net;
 using System.Threading.Tasks;
+using Annium.Id.ViewModels.Claims.Responses;
 using Annium.Id.ViewModels.Roles.Requests;
 using Annium.Id.ViewModels.Roles.Responses;
 using Annium.Net.Http;
@@ -87,9 +88,7 @@ namespace Annium.Id.IntegrationTests.Controllers
 
             // assert
             role.Id.IsNotDefault();
-            role.AppId.IsEqual(app.Id);
-            role.Key.IsEqual(roleKey);
-            role.Name.IsEqual(roleName);
+            role.IsEqual(new { AppId = app.Id, Key = roleKey, Name = roleName });
         }
 
         [Fact]
@@ -119,9 +118,17 @@ namespace Annium.Id.IntegrationTests.Controllers
             var roles = (await id.Get("/roles").BearerAuthorization(tokens.AccessToken).Param("appId", app.Id).AsResultAsync<RoleResponse[]>()).Data;
 
             // assert
-            roles.Has(1);
-            roles[0].Id.IsEqual(role.Id);
-            roles[0].Claims.IsEmpty();
+            roles.IsEqual(new[]
+            {
+                new RoleResponse
+                {
+                    Id = role.Id,
+                    AppId = app.Id,
+                    Key = roleKey,
+                    Name = roleName,
+                    Claims = Array.Empty<ClaimValueResponse>(),
+                }
+            });
         }
 
         [Fact]
@@ -306,10 +313,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             roles.Has(1);
             roles[0].Id.IsEqual(role.Id);
             var c = roles[0].Claims.At(0);
-            c.Id.IsEqual(claim.Id);
-            c.Key.IsEqual(claim.Key);
-            c.Name.IsEqual(claim.Name);
-            c.Value.IsEqual(claimValue);
+            c.IsEqual(new ClaimValueResponse { Id = claim.Id, Key = claim.Key, Name = claim.Name, Value = claimValue });
         }
 
         [Fact]

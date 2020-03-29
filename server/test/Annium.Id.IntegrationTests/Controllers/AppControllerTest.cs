@@ -196,8 +196,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var response = (await id.Get($"/apps/{app.Id}").BearerAuthorization(tokens.AccessToken).AsResultAsync<AppResponse>()).Data;
 
             // assert
-            response.Id.IsEqual(app.Id);
-            response.Name.IsEqual(u.Name);
+            response.IsEqual(new AppResponse { Id = app.Id, Name = u.Name });
         }
 
         [Fact]

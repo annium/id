@@ -1,6 +1,7 @@
 using System;
 using System.Net;
 using System.Threading.Tasks;
+using Annium.Id.ViewModels.CompanyClaims.Responses;
 using Annium.Id.ViewModels.CompanyRoles.Requests;
 using Annium.Id.ViewModels.CompanyRoles.Responses;
 using Annium.Net.Http;
@@ -87,9 +88,7 @@ namespace Annium.Id.IntegrationTests.Controllers
 
             // assert
             role.Id.IsNotDefault();
-            role.AppId.IsEqual(app.Id);
-            role.Key.IsEqual(roleKey);
-            role.Name.IsEqual(roleName);
+            role.IsEqual(new { AppId = app.Id, Key = roleKey, Name = roleName });
         }
 
         [Fact]
@@ -116,7 +115,8 @@ namespace Annium.Id.IntegrationTests.Controllers
             var role = await CreateCompanyRoleAsync(tokens.AccessToken, app.Id, roleKey, roleName);
 
             // act
-            var roles = (await id.Get($"/companies/roles").BearerAuthorization(tokens.AccessToken).Param("appId", app.Id).AsResultAsync<CompanyRoleResponse[]>()).Data;
+            var roles =
+                (await id.Get($"/companies/roles").BearerAuthorization(tokens.AccessToken).Param("appId", app.Id).AsResultAsync<CompanyRoleResponse[]>()).Data;
 
             // assert
             roles.Has(1);
@@ -210,7 +210,8 @@ namespace Annium.Id.IntegrationTests.Controllers
             var p = new AddCompanyClaimToCompanyRoleRequest { Value = "S" };
 
             // act
-            var response = await id.Post($"/companies/roles/{Guid.NewGuid()}/claims/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
+            var response = await id.Post($"/companies/roles/{Guid.NewGuid()}/claims/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).JsonContent(p)
+                .RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
@@ -224,7 +225,8 @@ namespace Annium.Id.IntegrationTests.Controllers
             var p = new AddCompanyClaimToCompanyRoleRequest { Value = "Some" };
 
             // act
-            var response = await id.Post($"/companies/roles/{Guid.NewGuid()}/claims/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
+            var response = await id.Post($"/companies/roles/{Guid.NewGuid()}/claims/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).JsonContent(p)
+                .RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -240,7 +242,8 @@ namespace Annium.Id.IntegrationTests.Controllers
             var p = new AddCompanyClaimToCompanyRoleRequest { Value = "Some" };
 
             // act
-            var response = await id.Post($"/companies/roles/{role.Id}/claims/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
+            var response = await id.Post($"/companies/roles/{role.Id}/claims/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).JsonContent(p)
+                .RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -294,17 +297,15 @@ namespace Annium.Id.IntegrationTests.Controllers
 
             // act
             var response = await AddCompanyClaimToCompanyRoleAsync(tokens.AccessToken, role.Id, claim.Id, claimValue);
-            var roles = (await id.Get($"/companies/roles").BearerAuthorization(tokens.AccessToken).Param("appId", app.Id).AsResultAsync<CompanyRoleResponse[]>()).Data;
+            var roles =
+                (await id.Get($"/companies/roles").BearerAuthorization(tokens.AccessToken).Param("appId", app.Id).AsResultAsync<CompanyRoleResponse[]>()).Data;
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.OK);
             roles.Has(1);
             roles[0].Id.IsEqual(role.Id);
             var c = roles[0].Claims.At(0);
-            c.Id.IsEqual(claim.Id);
-            c.Key.IsEqual(claim.Key);
-            c.Name.IsEqual(claim.Name);
-            c.Value.IsEqual(claimValue);
+            c.IsEqual(new CompanyClaimValueResponse { Id = claim.Id, Key = claim.Key, Name = claim.Name, Value = claimValue });
         }
 
         [Fact]

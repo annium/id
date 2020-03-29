@@ -92,8 +92,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var response = (await id.Get($"/companies/{company.Id}").BearerAuthorization(tokens.AccessToken).AsResultAsync<CompanyResponse>()).Data;
 
             // assert
-            response.Id.IsEqual(company.Id);
-            response.Name.IsEqual(company.Name);
+            response.IsEqual(company);
         }
 
         [Fact]
@@ -120,8 +119,7 @@ namespace Annium.Id.IntegrationTests.Controllers
 
             // assert
             response.Has(1);
-            response.At(0).Id.IsEqual(user.Id);
-            response.At(0).Login.IsEqual(user.Login);
+            response.At(0).IsEqual(new { user.Id, user.Login });
         }
 
         [Fact]

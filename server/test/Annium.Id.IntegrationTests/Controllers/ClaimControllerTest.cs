@@ -86,9 +86,7 @@ namespace Annium.Id.IntegrationTests.Controllers
 
             // assert
             claim.Id.IsNotDefault();
-            claim.AppId.IsEqual(app.Id);
-            claim.Key.IsEqual(claimKey);
-            claim.Name.IsEqual(claimName);
+            claim.IsEqual(new { AppId = app.Id, Key = claimKey, Name = claimName });
         }
 
         [Fact]

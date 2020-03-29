@@ -86,9 +86,7 @@ namespace Annium.Id.IntegrationTests.Controllers
 
             // assert
             claim.Id.IsNotDefault();
-            claim.AppId.IsEqual(app.Id);
-            claim.Key.IsEqual(claimKey);
-            claim.Name.IsEqual(claimName);
+            claim.IsEqual(new { AppId = app.Id, Key = claimKey, Name = claimName });
         }
 
         [Fact]
@@ -113,7 +111,8 @@ namespace Annium.Id.IntegrationTests.Controllers
             var claim = await CreateCompanyClaimAsync(tokens.AccessToken, app.Id);
 
             // act
-            var claims = (await id.Get("/companies/claims").BearerAuthorization(tokens.AccessToken).Param("appId", app.Id).AsResultAsync<CompanyClaimResponse[]>()).Data;
+            var claims = (await id.Get("/companies/claims").BearerAuthorization(tokens.AccessToken).Param("appId", app.Id)
+                .AsResultAsync<CompanyClaimResponse[]>()).Data;
 
             // assert
             claims.Has(1);
