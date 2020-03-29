@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Annium.AspNetCore.Extensions;
 using Annium.Core.Mediator;
+using Annium.Data.Operations;
 using Annium.Id.AspNetCore;
 using Annium.Id.ViewModels.Users.Requests;
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +21,7 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPost("roles/{roleId:guid}")]
         [Authorize]
-        public Task<IActionResult> AddRoleToUser(Guid userId, Guid roleId)
+        public Task<IResult> AddRoleToUser(Guid userId, Guid roleId)
         {
             var request = new AddRoleToUserRequest { UserId = userId, RoleId = roleId };
 
@@ -29,7 +30,7 @@ namespace Annium.Id.Api.Controllers
 
         [HttpDelete("roles/{roleId:guid}")]
         [Authorize]
-        public Task<IActionResult> DeleteRoleFromUser(Guid userId, Guid roleId)
+        public Task<IResult> DeleteRoleFromUser(Guid userId, Guid roleId)
         {
             var request = new DeleteRoleFromUserRequest { UserId = userId, RoleId = roleId };
 
@@ -38,7 +39,7 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPost("claims/{claimId:guid}")]
         [Authorize]
-        public Task<IActionResult> AddClaimToUser(Guid userId, Guid claimId, [FromBody] AddClaimToUserRequestBase requestBase)
+        public Task<IResult> AddClaimToUser(Guid userId, Guid claimId, [FromBody] AddClaimToUserRequestBase requestBase)
         {
             var request = new AddClaimToUserRequest
             {
@@ -52,7 +53,7 @@ namespace Annium.Id.Api.Controllers
 
         [HttpDelete("claims/{claimId:guid}")]
         [Authorize]
-        public Task<IActionResult> DeleteClaimFromUser(Guid userId, Guid claimId)
+        public Task<IResult> DeleteClaimFromUser(Guid userId, Guid claimId)
         {
             var request = new DeleteClaimFromUserRequest { UserId = userId, ClaimId = claimId };
 

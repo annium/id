@@ -20,7 +20,7 @@
         <PackageReference Include="Annium.Architecture.Http" Version="0.1.0" />
         <PackageReference Include="Annium.Logging.Microsoft" Version="0.1.0" />
         <PackageReference Include="Annium.NodaTime.Serialization.Json" Version="0.1.0" />
-        <PackageReference Include="NSwag.AspNetCore" Version="13.2.3" />
+        <PackageReference Include="NSwag.AspNetCore" Version="13.3.0" />
     </ItemGroup>
     <ItemGroup>
         <None Update="**/locale/*.yml" CopyToOutputDirectory="PreserveNewest" />

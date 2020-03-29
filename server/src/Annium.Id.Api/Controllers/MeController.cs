@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Annium.AspNetCore.Extensions;
 using Annium.Core.Mediator;
+using Annium.Data.Operations;
 using Annium.Id.AspNetCore;
 using Annium.Id.ViewModels.Login.Responses;
 using Annium.Id.ViewModels.Me.Requests;
@@ -17,17 +18,16 @@ namespace Annium.Id.Api.Controllers
             IMediator mediator
         ) : base(mediator)
         {
-
         }
 
         [HttpPost]
-        public Task<IActionResult> RegisterMe([FromBody] RegisterMeRequest request)
+        public Task<IResult> RegisterMe([FromBody] RegisterMeRequest request)
         {
             return HandleAsync(request);
         }
 
         [HttpPost("{appId:guid}/confirm-email")]
-        public Task<IActionResult> ConfirmMyEmail(Guid appId, [FromBody] ConfirmMyEmailRequestBase requestBase)
+        public Task<IResult<TokensResponse>> ConfirmMyEmail(Guid appId, [FromBody] ConfirmMyEmailRequestBase requestBase)
         {
             var request = new ConfirmMyEmailRequest
             {
@@ -39,7 +39,7 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpPost("{appId:guid}/restore-access")]
-        public Task<IActionResult> RestoreMyAccess(Guid appId, [FromBody] RestoreMyAccessRequestBase requestBase)
+        public Task<IResult> RestoreMyAccess(Guid appId, [FromBody] RestoreMyAccessRequestBase requestBase)
         {
             var request = new RestoreMyAccessRequest
             {
@@ -53,7 +53,7 @@ namespace Annium.Id.Api.Controllers
 
         [HttpGet]
         [Authorize(validateAudience: false)]
-        public Task<IActionResult> GetMe()
+        public Task<IResult<MeResponse>> GetMe()
         {
             // TODO: perhaps, add info about companies, user is member of
             return HandleAsync<GetMeRequest, MeResponse>(new GetMeRequest());
@@ -61,21 +61,21 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPut("profile")]
         [Authorize(validateAudience: false)]
-        public Task<IActionResult> UpdateMyProfile([FromBody] UpdateMyProfileRequest request)
+        public Task<IResult> UpdateMyProfile([FromBody] UpdateMyProfileRequest request)
         {
             return HandleAsync(request);
         }
 
         [HttpPut("password")]
         [Authorize(validateAudience: false)]
-        public Task<IActionResult> UpdateMyPassword([FromBody] UpdateMyPasswordRequest request)
+        public Task<IResult> UpdateMyPassword([FromBody] UpdateMyPasswordRequest request)
         {
             return HandleAsync(request);
         }
 
         [HttpDelete]
         [Authorize(validateAudience: false)]
-        public Task<IActionResult> UnregisterMe()
+        public Task<IResult> UnregisterMe()
         {
             return HandleAsync(new UnregisterMeRequest());
         }

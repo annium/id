@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Annium.AspNetCore.Extensions;
 using Annium.Core.Mediator;
+using Annium.Data.Operations;
 using Annium.Id.AspNetCore;
 using Annium.Id.ViewModels.Login.Requests;
 using Annium.Id.ViewModels.Login.Responses;
@@ -19,7 +20,7 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpPost("login")]
-        public Task<IActionResult> LogIn(Guid appId, [FromBody] LogInRequestBase requestBase)
+        public Task<IResult<TokensResponse>> LogIn(Guid appId, [FromBody] LogInRequestBase requestBase)
         {
             var request = new LogInRequest
             {
@@ -33,7 +34,7 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPut("token")]
         [Authorize(AuthPolicy.CanRefreshToken, validateAudience: false, validateExpiration: false)]
-        public Task<IActionResult> UpdateToken(Guid appId, [FromQuery] UpdateTokensRequestBase requestBase)
+        public Task<IResult<TokensResponse>> UpdateToken(Guid appId, [FromQuery] UpdateTokensRequestBase requestBase)
         {
             var request = new UpdateTokensRequest
             {
@@ -46,7 +47,7 @@ namespace Annium.Id.Api.Controllers
 
         [HttpDelete("logout")]
         [Authorize(AuthPolicy.CanLogOut, validateAudience: false)]
-        public Task<IActionResult> LogOut(Guid appId)
+        public Task<IResult> LogOut(Guid appId)
         {
             var request = new LogOutRequest { AppId = appId };
 

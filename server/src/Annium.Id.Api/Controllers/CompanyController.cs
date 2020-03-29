@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Annium.AspNetCore.Extensions;
 using Annium.Core.Mediator;
+using Annium.Data.Operations;
 using Annium.Id.AspNetCore;
 using Annium.Id.ViewModels.Companies.Requests;
 using Annium.Id.ViewModels.Companies.Responses;
@@ -23,13 +24,13 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPost]
         [Authorize]
-        public Task<IActionResult> RegisterCompany([FromBody] RegisterCompanyRequest request)
+        public Task<IResult<Guid>> RegisterCompany([FromBody] RegisterCompanyRequest request)
         {
             return HandleAsync<RegisterCompanyRequest, Guid>(request);
         }
 
         [HttpGet("{companyId:guid}")]
-        public Task<IActionResult> GetCompanyInfo(Guid companyId)
+        public Task<IResult<CompanyResponse>> GetCompanyInfo(Guid companyId)
         {
             var request = new GetCompanyRequest { CompanyId = companyId };
 
@@ -37,7 +38,7 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpGet("{companyId:guid}/users")]
-        public Task<IActionResult> GetCompanyUsers(Guid companyId)
+        public Task<IResult<IEnumerable<UserResponse>>> GetCompanyUsers(Guid companyId)
         {
             var request = new GetCompanyUsersRequest { CompanyId = companyId };
 
@@ -46,7 +47,7 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPut("{companyId:guid}")]
         [Authorize]
-        public Task<IActionResult> UpdateCompany(Guid companyId, [FromBody] UpdateCompanyRequestBase requestBase)
+        public Task<IResult> UpdateCompany(Guid companyId, [FromBody] UpdateCompanyRequestBase requestBase)
         {
             var request = new UpdateCompanyRequest
             {
@@ -60,7 +61,7 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPut("{companyId:guid}/owner/{userId:guid}")]
         [Authorize]
-        public Task<IActionResult> SetCompanyOwner(Guid companyId, Guid userId)
+        public Task<IResult> SetCompanyOwner(Guid companyId, Guid userId)
         {
             var request = new SetCompanyOwnerRequest { CompanyId = companyId, UserId = userId };
 
@@ -69,7 +70,7 @@ namespace Annium.Id.Api.Controllers
 
         [HttpDelete("{companyId:guid}")]
         [Authorize]
-        public Task<IActionResult> UnregisterCompany(Guid companyId)
+        public Task<IResult> UnregisterCompany(Guid companyId)
         {
             var request = new UnregisterCompanyRequest { CompanyId = companyId };
 

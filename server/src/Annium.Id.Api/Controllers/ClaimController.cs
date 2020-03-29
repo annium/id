@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Annium.AspNetCore.Extensions;
 using Annium.Core.Mediator;
+using Annium.Data.Operations;
 using Annium.Id.AspNetCore;
 using Annium.Id.ViewModels.Claims.Requests;
 using Annium.Id.ViewModels.Claims.Responses;
@@ -22,14 +23,14 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPost]
         [Authorize]
-        public Task<IActionResult> CreateClaim([FromBody] CreateClaimRequest request)
+        public Task<IResult<Guid>> CreateClaim([FromBody] CreateClaimRequest request)
         {
             return HandleAsync<CreateClaimRequest, Guid>(request);
         }
 
         [HttpGet]
         [Authorize]
-        public Task<IActionResult> ListClaims(Guid appId)
+        public Task<IResult<IEnumerable<ClaimResponse>>> ListClaims(Guid appId)
         {
             var request = new ListClaimsRequest { AppId = appId };
 
@@ -38,7 +39,7 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPut("{claimId:guid}")]
         [Authorize]
-        public Task<IActionResult> UpdateClaim(Guid claimId, [FromBody] UpdateClaimRequestBase requestBase)
+        public Task<IResult> UpdateClaim(Guid claimId, [FromBody] UpdateClaimRequestBase requestBase)
         {
             var request = new UpdateClaimRequest
             {
@@ -52,7 +53,7 @@ namespace Annium.Id.Api.Controllers
 
         [HttpDelete("{claimId:guid}")]
         [Authorize]
-        public Task<IActionResult> DeleteClaim(Guid claimId)
+        public Task<IResult> DeleteClaim(Guid claimId)
         {
             var request = new DeleteClaimRequest { ClaimId = claimId };
 

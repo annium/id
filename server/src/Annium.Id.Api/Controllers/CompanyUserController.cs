@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Annium.AspNetCore.Extensions;
 using Annium.Core.Mediator;
+using Annium.Data.Operations;
 using Annium.Id.AspNetCore;
 using Annium.Id.ViewModels.CompanyUsers.Requests;
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +21,7 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPost]
         [Authorize]
-        public Task<IActionResult> AddUserToCompany(Guid companyId, Guid userId)
+        public Task<IResult> AddUserToCompany(Guid companyId, Guid userId)
         {
             var request = new AddUserToCompanyRequest { CompanyId = companyId, UserId = userId };
 
@@ -29,7 +30,7 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPost("roles/{roleId:guid}")]
         [Authorize]
-        public Task<IActionResult> AddCompanyRoleToCompanyUser(Guid companyId, Guid userId, Guid roleId)
+        public Task<IResult> AddCompanyRoleToCompanyUser(Guid companyId, Guid userId, Guid roleId)
         {
             var request = new AddCompanyRoleToCompanyUserRequest { CompanyId = companyId, UserId = userId, RoleId = roleId };
 
@@ -38,7 +39,7 @@ namespace Annium.Id.Api.Controllers
 
         [HttpDelete("roles/{roleId:guid}")]
         [Authorize]
-        public Task<IActionResult> DeleteCompanyRoleFromCompanyUser(Guid companyId, Guid userId, Guid roleId)
+        public Task<IResult> DeleteCompanyRoleFromCompanyUser(Guid companyId, Guid userId, Guid roleId)
         {
             var request = new DeleteCompanyRoleFromCompanyUserRequest { CompanyId = companyId, UserId = userId, RoleId = roleId };
 
@@ -47,7 +48,7 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPost("claims/{claimId:guid}")]
         [Authorize]
-        public Task<IActionResult> AddCompanyClaimToCompanyUser(Guid companyId, Guid userId, Guid claimId, [FromBody] AddCompanyClaimToCompanyUserRequestBase requestBase)
+        public Task<IResult> AddCompanyClaimToCompanyUser(Guid companyId, Guid userId, Guid claimId, [FromBody] AddCompanyClaimToCompanyUserRequestBase requestBase)
         {
             var request = new AddCompanyClaimToCompanyUserRequest
             {
@@ -62,7 +63,7 @@ namespace Annium.Id.Api.Controllers
 
         [HttpDelete("claims/{claimId:guid}")]
         [Authorize]
-        public Task<IActionResult> DeleteCompanyClaimFromCompanyUser(Guid companyId, Guid userId, Guid claimId)
+        public Task<IResult> DeleteCompanyClaimFromCompanyUser(Guid companyId, Guid userId, Guid claimId)
         {
             var request = new DeleteCompanyClaimFromCompanyUserRequest { CompanyId = companyId, UserId = userId, ClaimId = claimId };
 
@@ -71,7 +72,7 @@ namespace Annium.Id.Api.Controllers
 
         [HttpDelete]
         [Authorize]
-        public Task<IActionResult> DeleteUserFromCompany(Guid companyId, Guid userId)
+        public Task<IResult> DeleteUserFromCompany(Guid companyId, Guid userId)
         {
             var request = new DeleteUserFromCompanyRequest { CompanyId = companyId, UserId = userId };
 
