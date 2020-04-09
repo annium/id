@@ -16,7 +16,7 @@
         <ProjectReference Include="../../src/Annium.Id.Core/Annium.Id.Core.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Annium.Data.Operations.Serialization" Version="0.1.0" />
+        <PackageReference Include="Annium.Data.Operations.Serialization.Json" Version="0.1.0" />
         <PackageReference Include="Annium.Logging.Console" Version="0.1.0" />
         <PackageReference Include="Annium.Logging.InMemory" Version="0.1.0" />
         <PackageReference Include="Annium.Testing.Assertions" Version="0.1.0" />
