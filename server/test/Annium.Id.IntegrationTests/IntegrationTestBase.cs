@@ -34,12 +34,12 @@ namespace Annium.Id.IntegrationTests
 {
     public class IntegrationTestBase : IntegrationTest
     {
-        protected IRequest id => GetRequest<Api.Startup>(
+        protected IHttpRequest id => GetRequest<Api.Startup>(
             builder => builder.UseServicePack<Api.TestServicePack>(),
             services => services.AddSingleton<IEmailService>(emailService)
         );
 
-        protected IRequest demo(Guid appId) => GetRequest<Id.DemoClient.Startup>(
+        protected IHttpRequest demo(Guid appId) => GetRequest<Id.DemoClient.Startup>(
             builder => builder.UseServicePack<Id.DemoClient.ServicePack>(),
             (IServiceCollection services) => services
                 .AddIdAuthorization(options =>
@@ -238,7 +238,7 @@ namespace Annium.Id.IntegrationTests
             return claim;
         }
 
-        protected Task<IResponse> AddClaimToRoleAsync(
+        protected Task<IHttpResponse> AddClaimToRoleAsync(
             string accessToken,
             Guid roleId,
             Guid claimId,
@@ -352,7 +352,7 @@ namespace Annium.Id.IntegrationTests
             return claim;
         }
 
-        protected Task<IResponse> AddCompanyClaimToCompanyRoleAsync(
+        protected Task<IHttpResponse> AddCompanyClaimToCompanyRoleAsync(
             string accessToken,
             Guid roleId,
             Guid claimId,
