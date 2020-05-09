@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <PackageId>Annium.Id.ViewModels</PackageId>
+        <PackageId>Annium.Id.Api.ViewModels</PackageId>
         <PackageVersion>0.1.0</PackageVersion>
         <Description>Annium.Id.ViewModels</Description>
         <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -12,7 +12,7 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
     <ItemGroup>
-        <ProjectReference Include="../Annium.Id.Application/Annium.Id.Application.csproj" />
+        <ProjectReference Include="../Annium.Id.Api.Application/Annium.Id.Api.Application.csproj" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Annium.Architecture.ViewModel" Version="0.1.0" />

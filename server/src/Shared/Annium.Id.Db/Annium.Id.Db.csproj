@@ -12,7 +12,7 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
     <ItemGroup>
-        <ProjectReference Include="../Lib/Annium.Id.Core/Annium.Id.Core.csproj" />
+        <ProjectReference Include="../../Lib/Annium.Id.Core/Annium.Id.Core.csproj" />
         <ProjectReference Include="../Annium.Id.Domain/Annium.Id.Domain.csproj" />
     </ItemGroup>
     <ItemGroup>

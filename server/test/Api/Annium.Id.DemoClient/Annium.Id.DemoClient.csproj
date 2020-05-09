@@ -12,7 +12,7 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
     <ItemGroup>
-        <ProjectReference Include="../../src/Lib/Annium.Id.AspNetCore/Annium.Id.AspNetCore.csproj" />
+        <ProjectReference Include="../../../src/Lib/Annium.Id.AspNetCore/Annium.Id.AspNetCore.csproj" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Annium.Core.DependencyInjection" Version="0.1.0" />

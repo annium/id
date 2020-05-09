@@ -13,7 +13,7 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
     <ItemGroup>
-        <ProjectReference Include="../../src/Annium.Id.Api/Annium.Id.Api.csproj" />
+        <ProjectReference Include="../../../src/Api/Annium.Id.Api/Annium.Id.Api.csproj" />
         <ProjectReference Include="../Annium.Id.DemoClient/Annium.Id.DemoClient.csproj" />
     </ItemGroup>
     <ItemGroup>

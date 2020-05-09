@@ -12,8 +12,8 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
     <ItemGroup>
-        <ProjectReference Include="../Lib/Annium.Id.AspNetCore/Annium.Id.AspNetCore.csproj" />
-        <ProjectReference Include="../Annium.Id.ViewModels/Annium.Id.ViewModels.csproj" />
+        <ProjectReference Include="../Annium.Id.Api.ViewModels/Annium.Id.Api.ViewModels.csproj" />
+        <ProjectReference Include="../../Lib/Annium.Id.AspNetCore/Annium.Id.AspNetCore.csproj" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Annium.Architecture.Http" Version="0.1.0" />
