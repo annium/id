@@ -4,7 +4,7 @@ using Annium.Id.Core;
 using Annium.Id.Db.Repositories;
 using Annium.Id.Domain.Entities;
 
-namespace Annium.Id.Application.Queries.Me
+namespace Annium.Id.Api.Application.Queries.Me
 {
     public class GetMeQuery : IQuery
     {

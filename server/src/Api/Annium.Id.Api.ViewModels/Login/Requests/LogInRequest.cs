@@ -1,8 +1,8 @@
 using System;
 using Annium.Architecture.ViewModel;
-using Annium.Id.Application.Commands.Login;
+using Annium.Id.Api.Application.Commands.Login;
 
-namespace Annium.Id.ViewModels.Login.Requests
+namespace Annium.Id.Api.ViewModels.Login.Requests
 {
     public class LogInRequest : LogInRequestBase, IRequest<LogInCommand>
     {

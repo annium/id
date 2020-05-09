@@ -1,8 +1,8 @@
 using System;
 using System.Net;
 using System.Threading.Tasks;
-using Annium.Id.ViewModels.Claims.Requests;
-using Annium.Id.ViewModels.Claims.Responses;
+using Annium.Id.Api.ViewModels.Claims.Requests;
+using Annium.Id.Api.ViewModels.Claims.Responses;
 using Annium.Net.Http;
 using Annium.Testing;
 using Xunit;

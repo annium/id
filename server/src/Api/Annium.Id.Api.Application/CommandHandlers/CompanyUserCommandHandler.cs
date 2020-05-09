@@ -3,11 +3,11 @@ using System.Threading.Tasks;
 using Annium.Architecture.Base;
 using Annium.Architecture.CQRS.Commands;
 using Annium.Data.Operations;
-using Annium.Id.Application.Commands.CompanyUsers;
+using Annium.Id.Api.Application.Commands.CompanyUsers;
 using Annium.Id.Db.Repositories;
 using Annium.Id.Domain.Entities;
 
-namespace Annium.Id.Application.CommandHandlers
+namespace Annium.Id.Api.Application.CommandHandlers
 {
     internal class CompanyUserCommandHandler :
         ICommandHandler<AddUserToCompanyCommand>,

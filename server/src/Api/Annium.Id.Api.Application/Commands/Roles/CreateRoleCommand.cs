@@ -6,7 +6,7 @@ using Annium.Id.Core;
 using Annium.Id.Db.Repositories;
 using Annium.Id.Domain.Entities;
 
-namespace Annium.Id.Application.Commands.Roles
+namespace Annium.Id.Api.Application.Commands.Roles
 {
     public class CreateRoleCommand : ICommand
     {

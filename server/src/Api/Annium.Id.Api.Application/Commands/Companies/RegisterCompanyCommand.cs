@@ -4,7 +4,7 @@ using Annium.Extensions.Composition;
 using Annium.Extensions.Validation;
 using Annium.Id.Core;
 
-namespace Annium.Id.Application.Commands.Companies
+namespace Annium.Id.Api.Application.Commands.Companies
 {
     public class RegisterCompanyCommand : ICommand
     {

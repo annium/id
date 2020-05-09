@@ -3,7 +3,7 @@ using Annium.Configuration.Abstractions;
 using Annium.Core.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Annium.Id.Application
+namespace Annium.Id.Api.Application
 {
     public class ServicePack : ServicePackBase
     {

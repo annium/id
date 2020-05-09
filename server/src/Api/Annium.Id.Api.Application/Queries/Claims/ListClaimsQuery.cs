@@ -5,7 +5,7 @@ using Annium.Extensions.Validation;
 using Annium.Id.Db.Repositories;
 using Annium.Id.Domain.Entities;
 
-namespace Annium.Id.Application.Queries.Claims
+namespace Annium.Id.Api.Application.Queries.Claims
 {
     public class ListClaimsQuery : IQuery
     {

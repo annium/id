@@ -1,7 +1,7 @@
 using Annium.Architecture.ViewModel;
-using Annium.Id.Application.Queries.Me;
+using Annium.Id.Api.Application.Queries.Me;
 
-namespace Annium.Id.ViewModels.Me.Requests
+namespace Annium.Id.Api.ViewModels.Me.Requests
 {
     public class GetMeRequest : IRequest<GetMeQuery> { }
 }

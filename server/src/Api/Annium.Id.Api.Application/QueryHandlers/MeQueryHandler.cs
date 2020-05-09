@@ -3,10 +3,10 @@ using System.Threading.Tasks;
 using Annium.Architecture.Base;
 using Annium.Architecture.CQRS.Queries;
 using Annium.Data.Operations;
-using Annium.Id.Application.Queries.Me;
+using Annium.Id.Api.Application.Queries.Me;
 using Annium.Id.Domain.Entities;
 
-namespace Annium.Id.Application.QueryHandlers
+namespace Annium.Id.Api.Application.QueryHandlers
 {
     internal class MeQueryHandler :
         IQueryHandler<GetMeQuery, User>

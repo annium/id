@@ -1,8 +1,8 @@
 using System;
 using Annium.Architecture.ViewModel;
-using Annium.Id.Application.Commands.CompanyClaims;
+using Annium.Id.Api.Application.Commands.CompanyClaims;
 
-namespace Annium.Id.ViewModels.CompanyClaims.Requests
+namespace Annium.Id.Api.ViewModels.CompanyClaims.Requests
 {
     public class DeleteCompanyClaimRequest : IRequest<DeleteCompanyClaimCommand>
     {

@@ -1,8 +1,8 @@
 using Annium.Core.Mapper;
-using Annium.Id.Application.Commands.Apps;
-using Annium.Id.ViewModels.Apps.Requests;
+using Annium.Id.Api.Application.Commands.Apps;
+using Annium.Id.Api.ViewModels.Apps.Requests;
 
-namespace Annium.Id.ViewModels.Apps
+namespace Annium.Id.Api.ViewModels.Apps
 {
     internal class AppProfile : Profile
     {

@@ -1,8 +1,8 @@
 using System;
 using Annium.Architecture.ViewModel;
-using Annium.Id.Application.Commands.Roles;
+using Annium.Id.Api.Application.Commands.Roles;
 
-namespace Annium.Id.ViewModels.Roles.Requests
+namespace Annium.Id.Api.ViewModels.Roles.Requests
 {
     public class UpdateRoleRequest : UpdateRoleRequestBase, IRequest<UpdateRoleCommand>
     {

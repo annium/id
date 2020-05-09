@@ -5,7 +5,7 @@ using Annium.Extensions.Validation;
 using Annium.Id.Db.Repositories;
 using Annium.Id.Domain.Entities;
 
-namespace Annium.Id.Application.Commands.Me
+namespace Annium.Id.Api.Application.Commands.Me
 {
     public class ConfirmMyEmailCommand : ICommand
     {

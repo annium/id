@@ -5,14 +5,14 @@ using Annium.Architecture.Base;
 using Annium.Architecture.CQRS.Commands;
 using Annium.Data.Operations;
 using Annium.Extensions.Primitives;
-using Annium.Id.Application.Commands.Me;
-using Annium.Id.Application.Services;
-using Annium.Id.Application.Tools;
+using Annium.Id.Api.Application.Commands.Me;
+using Annium.Id.Api.Application.Services;
+using Annium.Id.Api.Application.Tools;
 using Annium.Id.Db.Repositories;
 using Annium.Id.Domain.Entities;
 using Annium.Id.Infrastructure.Email;
 
-namespace Annium.Id.Application.CommandHandlers
+namespace Annium.Id.Api.Application.CommandHandlers
 {
     internal class MeCommandHandler :
         ICommandHandler<RegisterMeCommand>,

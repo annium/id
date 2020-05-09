@@ -1,9 +1,9 @@
 using Annium.Core.Mapper;
-using Annium.Id.Application.Commands.Me;
-using Annium.Id.Application.Queries.Me;
-using Annium.Id.ViewModels.Me.Requests;
+using Annium.Id.Api.Application.Commands.Me;
+using Annium.Id.Api.Application.Queries.Me;
+using Annium.Id.Api.ViewModels.Me.Requests;
 
-namespace Annium.Id.ViewModels.Users
+namespace Annium.Id.Api.ViewModels.Users
 {
     internal class UserProfile : Profile
     {

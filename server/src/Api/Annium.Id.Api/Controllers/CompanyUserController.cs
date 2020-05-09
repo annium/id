@@ -4,7 +4,7 @@ using Annium.AspNetCore.Extensions;
 using Annium.Core.Mediator;
 using Annium.Data.Operations;
 using Annium.Id.AspNetCore;
-using Annium.Id.ViewModels.CompanyUsers.Requests;
+using Annium.Id.Api.ViewModels.CompanyUsers.Requests;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Annium.Id.Api.Controllers

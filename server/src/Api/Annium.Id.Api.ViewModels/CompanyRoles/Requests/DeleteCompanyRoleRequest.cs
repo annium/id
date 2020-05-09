@@ -1,8 +1,8 @@
 using System;
 using Annium.Architecture.ViewModel;
-using Annium.Id.Application.Commands.CompanyRoles;
+using Annium.Id.Api.Application.Commands.CompanyRoles;
 
-namespace Annium.Id.ViewModels.CompanyRoles.Requests
+namespace Annium.Id.Api.ViewModels.CompanyRoles.Requests
 {
     public class DeleteCompanyRoleRequest : IRequest<DeleteCompanyRoleCommand>
     {

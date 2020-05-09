@@ -3,7 +3,7 @@ using Annium.Architecture.CQRS.Commands;
 using Annium.Extensions.Composition;
 using Annium.Id.Core;
 
-namespace Annium.Id.Application.Commands.Me
+namespace Annium.Id.Api.Application.Commands.Me
 {
     public class UnregisterMeCommand : ICommand
     {

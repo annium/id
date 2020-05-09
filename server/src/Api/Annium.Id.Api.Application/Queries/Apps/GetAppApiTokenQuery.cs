@@ -6,7 +6,7 @@ using Annium.Id.Core;
 using Annium.Id.Db.Repositories;
 using Annium.Id.Domain.Entities;
 
-namespace Annium.Id.Application.Queries.Apps
+namespace Annium.Id.Api.Application.Queries.Apps
 {
     public class GetAppApiTokenQuery : IQuery
     {

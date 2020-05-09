@@ -1,8 +1,8 @@
 using System;
 using Annium.Architecture.ViewModel;
-using Annium.Id.Application.Commands.Me;
+using Annium.Id.Api.Application.Commands.Me;
 
-namespace Annium.Id.ViewModels.Me.Requests
+namespace Annium.Id.Api.ViewModels.Me.Requests
 {
     public class ConfirmMyEmailRequest : ConfirmMyEmailRequestBase, IRequest<ConfirmMyEmailCommand>
     {

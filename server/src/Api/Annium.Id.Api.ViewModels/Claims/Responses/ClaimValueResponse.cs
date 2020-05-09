@@ -1,6 +1,6 @@
 using System;
 
-namespace Annium.Id.ViewModels.Claims.Responses
+namespace Annium.Id.Api.ViewModels.Claims.Responses
 {
     public class ClaimValueResponse
     {

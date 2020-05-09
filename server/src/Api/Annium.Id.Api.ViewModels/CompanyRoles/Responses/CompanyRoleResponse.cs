@@ -1,9 +1,9 @@
 using System;
 using Annium.Architecture.ViewModel;
 using Annium.Id.Domain.Entities;
-using Annium.Id.ViewModels.CompanyClaims.Responses;
+using Annium.Id.Api.ViewModels.CompanyClaims.Responses;
 
-namespace Annium.Id.ViewModels.CompanyRoles.Responses
+namespace Annium.Id.Api.ViewModels.CompanyRoles.Responses
 {
     public class CompanyRoleResponse : IResponse<CompanyRole>
     {

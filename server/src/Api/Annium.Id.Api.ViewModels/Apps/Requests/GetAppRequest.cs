@@ -1,8 +1,8 @@
 using System;
 using Annium.Architecture.ViewModel;
-using Annium.Id.Application.Queries.Apps;
+using Annium.Id.Api.Application.Queries.Apps;
 
-namespace Annium.Id.ViewModels.Apps.Requests
+namespace Annium.Id.Api.ViewModels.Apps.Requests
 {
     public class GetAppRequest : IRequest<GetAppQuery>
     {

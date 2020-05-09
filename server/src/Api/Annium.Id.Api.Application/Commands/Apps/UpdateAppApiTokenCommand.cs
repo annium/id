@@ -6,7 +6,7 @@ using Annium.Id.Core;
 using Annium.Id.Db.Repositories;
 using Annium.Id.Domain.Entities;
 
-namespace Annium.Id.Application.Commands.Apps
+namespace Annium.Id.Api.Application.Commands.Apps
 {
     public class UpdateAppApiTokenCommand : ICommand
     {

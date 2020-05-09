@@ -1,8 +1,8 @@
 using System;
 using Annium.Architecture.ViewModel;
-using Annium.Id.Application.Commands.Users;
+using Annium.Id.Api.Application.Commands.Users;
 
-namespace Annium.Id.ViewModels.Users.Requests
+namespace Annium.Id.Api.ViewModels.Users.Requests
 {
     public class DeleteClaimFromUserRequest : IRequest<DeleteClaimFromUserCommand>
     {

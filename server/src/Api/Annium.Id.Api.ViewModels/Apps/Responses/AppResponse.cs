@@ -2,7 +2,7 @@ using System;
 using Annium.Architecture.ViewModel;
 using Annium.Id.Domain.Entities;
 
-namespace Annium.Id.ViewModels.Apps.Responses
+namespace Annium.Id.Api.ViewModels.Apps.Responses
 {
     public class AppResponse : IResponse<App>
     {

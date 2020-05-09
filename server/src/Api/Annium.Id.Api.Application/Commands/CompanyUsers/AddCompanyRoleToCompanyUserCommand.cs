@@ -6,7 +6,7 @@ using Annium.Id.Core;
 using Annium.Id.Db.Repositories;
 using Annium.Id.Domain.Entities;
 
-namespace Annium.Id.Application.Commands.CompanyUsers
+namespace Annium.Id.Api.Application.Commands.CompanyUsers
 {
     public class AddCompanyRoleToCompanyUserCommand : ICommand
     {

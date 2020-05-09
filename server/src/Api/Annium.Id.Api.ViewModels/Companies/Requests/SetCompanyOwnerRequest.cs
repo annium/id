@@ -1,8 +1,8 @@
 using System;
 using Annium.Architecture.ViewModel;
-using Annium.Id.Application.Commands.Companies;
+using Annium.Id.Api.Application.Commands.Companies;
 
-namespace Annium.Id.ViewModels.Companies.Requests
+namespace Annium.Id.Api.ViewModels.Companies.Requests
 {
     public class SetCompanyOwnerRequest : IRequest<SetCompanyOwnerCommand>
     {

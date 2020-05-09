@@ -2,7 +2,7 @@ using System.IO;
 using Annium.Core.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Annium.Id.Application
+namespace Annium.Id.Api.Application
 {
     public class TestServicePack : ServicePackBase
     {

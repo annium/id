@@ -3,7 +3,7 @@ using Annium.Architecture.ViewModel;
 using Annium.Id.Domain.Entities;
 using NodaTime;
 
-namespace Annium.Id.ViewModels.Login.Responses
+namespace Annium.Id.Api.ViewModels.Login.Responses
 {
     public class TokensResponse : IResponse<Tokens>
     {

@@ -1,12 +1,12 @@
 using System;
 using System.Threading.Tasks;
-using Annium.Id.Application.Tools;
+using Annium.Id.Api.Application.Tools;
 using Annium.Id.Core;
 using Annium.Id.Db.Repositories;
 using Annium.Id.Domain.Entities;
 using NodaTime;
 
-namespace Annium.Id.Application.Services
+namespace Annium.Id.Api.Application.Services
 {
     internal class LoginService : ILoginService
     {

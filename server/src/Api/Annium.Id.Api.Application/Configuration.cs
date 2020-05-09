@@ -1,4 +1,4 @@
-namespace Annium.Id.Application
+namespace Annium.Id.Api.Application
 {
     public class Configuration
     {

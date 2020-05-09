@@ -1,8 +1,8 @@
 using System;
 using Annium.Architecture.ViewModel;
-using Annium.Id.Application.Commands.CompanyUsers;
+using Annium.Id.Api.Application.Commands.CompanyUsers;
 
-namespace Annium.Id.ViewModels.CompanyUsers.Requests
+namespace Annium.Id.Api.ViewModels.CompanyUsers.Requests
 {
     public class AddCompanyClaimToCompanyUserRequest : AddCompanyClaimToCompanyUserRequestBase, IRequest<AddCompanyClaimToCompanyUserCommand>
     {

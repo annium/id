@@ -5,8 +5,8 @@ using Annium.AspNetCore.Extensions;
 using Annium.Core.Mediator;
 using Annium.Data.Operations;
 using Annium.Id.AspNetCore;
-using Annium.Id.ViewModels.Roles.Requests;
-using Annium.Id.ViewModels.Roles.Responses;
+using Annium.Id.Api.ViewModels.Roles.Requests;
+using Annium.Id.Api.ViewModels.Roles.Responses;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Annium.Id.Api.Controllers

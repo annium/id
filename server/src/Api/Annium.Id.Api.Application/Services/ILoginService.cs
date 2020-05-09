@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Annium.Id.Domain.Entities;
 
-namespace Annium.Id.Application.Services
+namespace Annium.Id.Api.Application.Services
 {
     internal interface ILoginService
     {

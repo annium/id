@@ -1,8 +1,8 @@
 using System;
 using Annium.Architecture.ViewModel;
-using Annium.Id.Application.Commands.Claims;
+using Annium.Id.Api.Application.Commands.Claims;
 
-namespace Annium.Id.ViewModels.Claims.Requests
+namespace Annium.Id.Api.ViewModels.Claims.Requests
 {
     public class CreateClaimRequest : IRequest<CreateClaimCommand>
     {

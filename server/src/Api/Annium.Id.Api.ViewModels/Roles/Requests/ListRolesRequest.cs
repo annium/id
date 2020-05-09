@@ -1,8 +1,8 @@
 using System;
 using Annium.Architecture.ViewModel;
-using Annium.Id.Application.Queries.Roles;
+using Annium.Id.Api.Application.Queries.Roles;
 
-namespace Annium.Id.ViewModels.Roles.Requests
+namespace Annium.Id.Api.ViewModels.Roles.Requests
 {
     public class ListRolesRequest : IRequest<ListRolesQuery>
     {

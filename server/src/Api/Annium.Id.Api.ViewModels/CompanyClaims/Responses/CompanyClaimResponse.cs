@@ -2,7 +2,7 @@ using System;
 using Annium.Architecture.ViewModel;
 using Annium.Id.Domain.Entities;
 
-namespace Annium.Id.ViewModels.CompanyClaims.Responses
+namespace Annium.Id.Api.ViewModels.CompanyClaims.Responses
 {
     public class CompanyClaimResponse : IResponse<CompanyClaim>
     {

@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Annium.Id.Domain.Entities;
 
-namespace Annium.Id.Application.Tools
+namespace Annium.Id.Api.Application.Tools
 {
     public interface ITokenGenerator
     {

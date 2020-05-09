@@ -1,8 +1,8 @@
 using System;
 using Annium.Architecture.ViewModel;
-using Annium.Id.Application.Queries.CompanyClaims;
+using Annium.Id.Api.Application.Queries.CompanyClaims;
 
-namespace Annium.Id.ViewModels.CompanyClaims.Requests
+namespace Annium.Id.Api.ViewModels.CompanyClaims.Requests
 {
     public class ListCompanyClaimsRequest : IRequest<ListCompanyClaimsQuery>
     {

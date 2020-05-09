@@ -1,9 +1,9 @@
 using System;
 using Annium.Core.DependencyInjection;
-using Annium.Id.Application.Tools;
+using Annium.Id.Api.Application.Tools;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Annium.Id.Application
+namespace Annium.Id.Api.Application
 {
     internal class BaseServicePack : ServicePackBase
     {

@@ -4,7 +4,7 @@ using Annium.Extensions.Composition;
 using Annium.Extensions.Validation;
 using Annium.Id.Db.Repositories;
 
-namespace Annium.Id.Application.Commands.Me
+namespace Annium.Id.Api.Application.Commands.Me
 {
     public class RegisterMeCommand : ICommand
     {

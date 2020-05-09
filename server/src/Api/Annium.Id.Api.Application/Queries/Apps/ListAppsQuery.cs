@@ -1,6 +1,6 @@
 using Annium.Architecture.CQRS.Queries;
 
-namespace Annium.Id.Application.Queries.Apps
+namespace Annium.Id.Api.Application.Queries.Apps
 {
     public class ListAppsQuery : IQuery
     {

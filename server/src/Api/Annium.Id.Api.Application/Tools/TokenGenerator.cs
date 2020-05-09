@@ -6,7 +6,7 @@ using Annium.Id.Core;
 using Annium.Id.Db.Repositories;
 using Annium.Id.Domain.Entities;
 
-namespace Annium.Id.Application.Tools
+namespace Annium.Id.Api.Application.Tools
 {
     internal class TokenGenerator : ITokenGenerator
     {

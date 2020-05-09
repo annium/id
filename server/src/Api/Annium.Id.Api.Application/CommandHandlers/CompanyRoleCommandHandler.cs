@@ -4,11 +4,11 @@ using System.Threading.Tasks;
 using Annium.Architecture.Base;
 using Annium.Architecture.CQRS.Commands;
 using Annium.Data.Operations;
-using Annium.Id.Application.Commands.CompanyRoles;
+using Annium.Id.Api.Application.Commands.CompanyRoles;
 using Annium.Id.Db.Repositories;
 using Annium.Id.Domain.Entities;
 
-namespace Annium.Id.Application.CommandHandlers
+namespace Annium.Id.Api.Application.CommandHandlers
 {
     internal class CompanyRoleCommandHandler :
         ICommandHandler<CreateCompanyRoleCommand, Guid>,

@@ -4,7 +4,7 @@ using Annium.Extensions.Composition;
 using Annium.Extensions.Validation;
 using Annium.Id.Core;
 
-namespace Annium.Id.Application.Commands.Apps
+namespace Annium.Id.Api.Application.Commands.Apps
 {
     public class CreateAppCommand : ICommand
     {

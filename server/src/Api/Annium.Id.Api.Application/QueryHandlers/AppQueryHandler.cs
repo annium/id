@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 using Annium.Architecture.Base;
 using Annium.Architecture.CQRS.Queries;
 using Annium.Data.Operations;
-using Annium.Id.Application.Queries.Apps;
+using Annium.Id.Api.Application.Queries.Apps;
 using Annium.Id.Db.Repositories;
 using Annium.Id.Domain.Entities;
 
-namespace Annium.Id.Application.QueryHandlers
+namespace Annium.Id.Api.Application.QueryHandlers
 {
     internal class AppQueryHandler :
         IQueryHandler<ListAppsQuery, IEnumerable<App>>,

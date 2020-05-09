@@ -5,7 +5,7 @@ using Annium.Extensions.Validation;
 using Annium.Id.Db.Repositories;
 using Annium.Id.Domain.Entities;
 
-namespace Annium.Id.Application.Queries.CompanyRoles
+namespace Annium.Id.Api.Application.Queries.CompanyRoles
 {
     public class ListCompanyRolesQuery : IQuery
     {

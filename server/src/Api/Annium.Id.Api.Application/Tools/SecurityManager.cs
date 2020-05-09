@@ -2,7 +2,7 @@ using System;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Annium.Id.Application.Tools
+namespace Annium.Id.Api.Application.Tools
 {
     internal class SecurityManager : ISecurityManager, IDisposable
     {
