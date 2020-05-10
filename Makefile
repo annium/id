@@ -3,8 +3,8 @@ TAG_PREFIX := registry.annium.com/$(PROJECT_NAME)
 
 
 publish-api:
-	$(call publish,api,server,src/Annium.Id.Api/Dockerfile)
-	$(call publish,migrations,server,src/Annium.Id.Api/migrations.Dockerfile)
+	$(call publish,api,server,src/Api/Annium.Id.Api/Dockerfile)
+	$(call publish,migrations,server,src/Api/Annium.Id.Api/migrations.Dockerfile)
 
 publish-site:
 	$(call publish,site,web/site,Dockerfile)
