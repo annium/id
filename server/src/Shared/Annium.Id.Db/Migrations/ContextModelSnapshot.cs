@@ -16,7 +16,7 @@ namespace Annium.Id.Db.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
-                .HasAnnotation("ProductVersion", "3.1.0")
+                .HasAnnotation("ProductVersion", "3.1.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             modelBuilder.Entity("Annium.Id.Db.Entities.App", b =>
@@ -291,6 +291,9 @@ namespace Annium.Id.Db.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<Guid?>("ReferralId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Email")
@@ -298,6 +301,8 @@ namespace Annium.Id.Db.Migrations
 
                     b.HasIndex("Login")
                         .IsUnique();
+
+                    b.HasIndex("ReferralId");
 
                     b.ToTable("Users");
 
@@ -462,7 +467,7 @@ namespace Annium.Id.Db.Migrations
                     b.HasOne("Annium.Id.Db.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -504,7 +509,7 @@ namespace Annium.Id.Db.Migrations
                     b.HasOne("Annium.Id.Db.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -532,6 +537,14 @@ namespace Annium.Id.Db.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Annium.Id.Db.Entities.User", b =>
+                {
+                    b.HasOne("Annium.Id.Db.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("ReferralId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
             modelBuilder.Entity("Annium.Id.Db.Entities.UserClaim", b =>
                 {
                     b.HasOne("Annium.Id.Db.Entities.Claim", "Claim")
@@ -543,7 +556,7 @@ namespace Annium.Id.Db.Migrations
                     b.HasOne("Annium.Id.Db.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -552,13 +565,13 @@ namespace Annium.Id.Db.Migrations
                     b.HasOne("Annium.Id.Db.Entities.App", null)
                         .WithMany()
                         .HasForeignKey("AppId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Annium.Id.Db.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -573,7 +586,7 @@ namespace Annium.Id.Db.Migrations
                     b.HasOne("Annium.Id.Db.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

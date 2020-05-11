@@ -14,11 +14,18 @@ namespace Annium.Id.Db.Migrations
                     Id = table.Column<Guid>(nullable: false),
                     Login = table.Column<string>(nullable: false),
                     PasswordHash = table.Column<string>(nullable: false),
-                    Email = table.Column<string>(nullable: false)
+                    Email = table.Column<string>(nullable: false),
+                    ReferralId = table.Column<Guid>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Users_Users_ReferralId",
+                        column: x => x.ReferralId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -168,13 +175,13 @@ namespace Annium.Id.Db.Migrations
                         column: x => x.AppId,
                         principalTable: "Apps",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_UserLogins_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -198,7 +205,7 @@ namespace Annium.Id.Db.Migrations
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -223,7 +230,7 @@ namespace Annium.Id.Db.Migrations
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -311,7 +318,7 @@ namespace Annium.Id.Db.Migrations
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -360,13 +367,13 @@ namespace Annium.Id.Db.Migrations
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "Email", "Login", "PasswordHash" },
-                values: new object[] { new Guid("baa0ad0f-91c5-4c19-963c-ea369048e67a"), "a.kreskiyan@gmail.com", "alex", "ohraPG8QMZiOnXX+MWh/45aZDwjtv/7FQMFzXxSRxQjLdSMBHpELKDSznF6cSUalufovlgCfFkn4mtR7eXB+8w==" });
+                columns: new[] { "Id", "Email", "Login", "PasswordHash", "ReferralId" },
+                values: new object[] { new Guid("baa0ad0f-91c5-4c19-963c-ea369048e67a"), "a.kreskiyan@gmail.com", "alex", "ohraPG8QMZiOnXX+MWh/45aZDwjtv/7FQMFzXxSRxQjLdSMBHpELKDSznF6cSUalufovlgCfFkn4mtR7eXB+8w==", null });
 
             migrationBuilder.InsertData(
                 table: "Apps",
@@ -484,6 +491,11 @@ namespace Annium.Id.Db.Migrations
                 table: "Users",
                 column: "Login",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_ReferralId",
+                table: "Users",
+                column: "ReferralId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
