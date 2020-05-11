@@ -55,10 +55,11 @@ namespace Annium.Id.IntegrationTests
 
         private async Task CreateUserAsync(
             string login = "demo",
-            string email = "demo@demo.com"
+            string email = "demo@demo.com",
+            Guid? referralId = null
         )
         {
-            var createUserRequest = new RegisterMeRequest { Server = "http://localhost/", Login = login, Email = email };
+            var createUserRequest = new RegisterMeRequest { Server = "http://localhost/", Login = login, Email = email, ReferralId = referralId };
             await id.Post("/me")
                 .JsonContent(createUserRequest)
                 .EnsureSuccessStatusCode()
@@ -68,10 +69,11 @@ namespace Annium.Id.IntegrationTests
         protected async Task<MeResponse> RegisterLogUserInGetUserAsync(
             string login = "demo",
             string password = "testtest",
-            string email = "demo@demo.com"
+            string email = "demo@demo.com",
+            Guid? referralId = null
         )
         {
-            var tokens = await RegisterLogUserInAsync(login, password, email);
+            var tokens = await RegisterLogUserInAsync(login, password, email, referralId);
 
             return await GetUserAsync(tokens.AccessToken);
         }
@@ -103,20 +105,22 @@ namespace Annium.Id.IntegrationTests
         protected Task<TokensResponse> RegisterLogUserInAsync(
             string login = "demo",
             string password = "testtest",
-            string email = "demo@demo.com"
+            string email = "demo@demo.com",
+            Guid? referralId = null
         )
         {
-            return RegisterLogUserInAppAsync(Constants.IdAppId, login, password, email);
+            return RegisterLogUserInAppAsync(Constants.IdAppId, login, password, email, referralId);
         }
 
         protected async Task<TokensResponse> RegisterLogUserInAppAsync(
             Guid appId,
             string login = "demo",
             string password = "testtest",
-            string email = "demo@demo.com"
+            string email = "demo@demo.com",
+            Guid? referralId = null
         )
         {
-            await CreateUserAsync(login, email);
+            await CreateUserAsync(login, email, referralId);
 
             // get id from email data
             var userId = emailService.Emails.Last().Data.As<ConfirmEmailData>().Id;

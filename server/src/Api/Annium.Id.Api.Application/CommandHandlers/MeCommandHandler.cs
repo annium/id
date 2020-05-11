@@ -51,7 +51,8 @@ namespace Annium.Id.Api.Application.CommandHandlers
             var user = new User(
                 request.Login,
                 string.Empty,
-                request.Email
+                request.Email,
+                request.ReferralId
             );
 
             user = await userRepository.CreateAsync(user);

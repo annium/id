@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -55,20 +56,35 @@ namespace Annium.Id.IntegrationTests.Controllers
         }
 
         [Fact]
+        public async Task RegisterMe_ReferralMissing_NotFound()
+        {
+            // arrange
+            var payload = new RegisterMeRequest { Server = "http://localhost/", Login = "uniquelogin", Email = "demo@demo.com", ReferralId = Guid.NewGuid() };
+
+            // act
+            var response = await id.Post("/me").JsonContent(payload).RunAsync();
+
+            // assert
+            response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        }
+
+        [Fact]
         public async Task RegisterMe_ValidData_Ok()
         {
             // arrange
+            var referral = await RegisterLogUserInGetUserAsync("master", "somepass", "master@demo.com");
             var login = "demo";
             var password = "testtest";
             var email = "demo@demo.com";
 
             // act
-            var response = await RegisterLogUserInGetUserAsync(login, password, email);
+            var response = await RegisterLogUserInGetUserAsync(login, password, email, referral.Id);
 
             // assert
             response.Id.IsNotDefault();
             response.Login.IsEqual(login);
             response.Email.IsEqual(email);
+            response.ReferralId.IsEqual(referral.Id);
         }
 
         [Fact]

@@ -3,6 +3,7 @@ using Annium.Architecture.CQRS.Commands;
 using Annium.Extensions.Composition;
 using Annium.Extensions.Validation;
 using Annium.Id.Db.Repositories;
+using Annium.Id.Domain.Entities;
 
 namespace Annium.Id.Api.Application.Commands.Me
 {
@@ -11,17 +12,21 @@ namespace Annium.Id.Api.Application.Commands.Me
         public string Server { get; }
         public string Email { get; }
         public string Login { get; }
-        public Uri ServerUri { get; private set; } = null!;
+        public Guid? ReferralId { get; }
+        public Uri ServerUri { get; private set; } = default!;
+        public User? Referral { get; private set; } = default!;
 
         public RegisterMeCommand(
             string server,
             string email,
-            string login
+            string login,
+            Guid? referralId
         )
         {
             Server = server;
             Email = email;
             Login = login;
+            ReferralId = referralId;
         }
     }
 
@@ -42,9 +47,13 @@ namespace Annium.Id.Api.Application.Commands.Me
     internal class RegisterMeCommandComposer : Composer<RegisterMeCommand>
     {
         public RegisterMeCommandComposer(
+            IUserRepository userRepository
         )
         {
             Field(e => e.ServerUri).LoadWith(ctx => new Uri(ctx.Root.Server));
+            Field(e => e.Referral)
+                .When(ctx => ctx.Root.ReferralId.HasValue)
+                .LoadWith(async ctx => await userRepository.GetByIdAsync(ctx.Root.ReferralId!.Value));
         }
     }
 }

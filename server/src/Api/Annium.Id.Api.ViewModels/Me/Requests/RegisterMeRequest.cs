@@ -1,3 +1,4 @@
+using System;
 using Annium.Architecture.ViewModel;
 using Annium.Id.Api.Application.Commands.Me;
 
@@ -8,5 +9,6 @@ namespace Annium.Id.Api.ViewModels.Me.Requests
         public string Server { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string Login { get; set; } = string.Empty;
+        public Guid? ReferralId { get; set; }
     }
 }
