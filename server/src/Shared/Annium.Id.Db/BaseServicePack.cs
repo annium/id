@@ -11,10 +11,10 @@ namespace Annium.Id.Db
             services.AddScoped<IContext>(p => p.GetRequiredService<Context>());
 
             // repositories
-            services.SelectAssemblyTypes()
+            services.AddAssemblyTypes()
                 .Where(x => x.IsClass && x.Name.EndsWith("Repository"))
                 .AsImplementedInterfaces()
-                .RegisterScoped();
+                .InstancePerScope();
         }
     }
 }

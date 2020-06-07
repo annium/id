@@ -14,10 +14,10 @@ namespace Annium.Id.Api.Application
             services.AddScoped<ITokenGenerator, TokenGenerator>();
 
             // services
-            services.SelectAssemblyTypes()
+            services.AddAssemblyTypes()
                 .Where(x => x.IsClass && x.Name.EndsWith("Service"))
                 .AsImplementedInterfaces()
-                .RegisterScoped();
+                .InstancePerScope();
         }
     }
 }
