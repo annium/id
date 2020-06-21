@@ -8,8 +8,8 @@ using Annium.Id.Api.Application.Commands.Login;
 using Annium.Id.Api.Application.Services;
 using Annium.Id.Api.Application.Tools;
 using Annium.Id.Core;
-using Annium.Id.Db.Repositories;
 using Annium.Id.Domain.Entities;
+using Annium.Id.Infrastructure.Db.Repositories;
 using NodaTime;
 
 namespace Annium.Id.Api.Application.CommandHandlers

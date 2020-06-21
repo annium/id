@@ -1,8 +1,8 @@
 using Annium.Architecture.CQRS.Queries;
 using Annium.Extensions.Composition;
 using Annium.Id.Core;
-using Annium.Id.Db.Repositories;
 using Annium.Id.Domain.Entities;
+using Annium.Id.Infrastructure.Db.Repositories;
 
 namespace Annium.Id.Api.Application.Queries.Me
 {

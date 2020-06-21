@@ -11,7 +11,7 @@ namespace Annium.Id.Api
         {
             Add<BaseServicePack>();
             Add<Application.TestServicePack>();
-            Add<Db.TestServicePack>();
+            Add<Infrastructure.Db.TestServicePack>();
             Add<Infrastructure.TestServicePack>();
         }
 

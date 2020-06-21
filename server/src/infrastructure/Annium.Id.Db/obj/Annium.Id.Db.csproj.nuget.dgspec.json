@@ -1,0 +1,221 @@
+{
+  "format": 1,
+  "restore": {
+    "/projects/annium/id/server/src/infrastructure/Annium.Id.Db/Annium.Id.Db.csproj": {}
+  },
+  "projects": {
+    "/projects/annium/id/server/src/core/Annium.Id.Domain/Annium.Id.Domain.csproj": {
+      "version": "0.1.0",
+      "restore": {
+        "projectUniqueName": "/projects/annium/id/server/src/core/Annium.Id.Domain/Annium.Id.Domain.csproj",
+        "projectName": "Annium.Id.Domain",
+        "projectPath": "/projects/annium/id/server/src/core/Annium.Id.Domain/Annium.Id.Domain.csproj",
+        "packagesPath": "/home/alex/.nuget/packages/",
+        "outputPath": "/projects/annium/id/server/src/core/Annium.Id.Domain/obj/",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "/usr/share/dotnet/sdk/NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "/home/alex/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {}
+          }
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "dependencies": {
+            "NodaTime": {
+              "target": "Package",
+              "version": "[3.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/3.1.101/RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/projects/annium/id/server/src/infrastructure/Annium.Id.Db/Annium.Id.Db.csproj": {
+      "version": "0.1.0",
+      "restore": {
+        "projectUniqueName": "/projects/annium/id/server/src/infrastructure/Annium.Id.Db/Annium.Id.Db.csproj",
+        "projectName": "Annium.Id.Db",
+        "projectPath": "/projects/annium/id/server/src/infrastructure/Annium.Id.Db/Annium.Id.Db.csproj",
+        "packagesPath": "/home/alex/.nuget/packages/",
+        "outputPath": "/projects/annium/id/server/src/infrastructure/Annium.Id.Db/obj/",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "/usr/share/dotnet/sdk/NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "/home/alex/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {
+              "/projects/annium/id/server/src/core/Annium.Id.Domain/Annium.Id.Domain.csproj": {
+                "projectPath": "/projects/annium/id/server/src/core/Annium.Id.Domain/Annium.Id.Domain.csproj"
+              },
+              "/projects/annium/id/server/src/lib/Annium.Id.Core/Annium.Id.Core.csproj": {
+                "projectPath": "/projects/annium/id/server/src/lib/Annium.Id.Core/Annium.Id.Core.csproj"
+              }
+            }
+          }
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "dependencies": {
+            "Annium.Configuration.Yaml": {
+              "target": "Package",
+              "version": "[0.1.0, )"
+            },
+            "Annium.Core.DependencyInjection": {
+              "target": "Package",
+              "version": "[0.1.0, )"
+            },
+            "Annium.Core.Mapper": {
+              "target": "Package",
+              "version": "[0.1.0, )"
+            },
+            "Annium.EntityFrameworkCore.Extensions": {
+              "target": "Package",
+              "version": "[0.1.0, )"
+            },
+            "Annium.Logging.Console": {
+              "target": "Package",
+              "version": "[0.1.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "target": "Package",
+              "version": "[3.1.4, )"
+            },
+            "Microsoft.EntityFrameworkCore.Sqlite": {
+              "target": "Package",
+              "version": "[3.1.4, )"
+            },
+            "Npgsql.EntityFrameworkCore.PostgreSQL": {
+              "target": "Package",
+              "version": "[3.1.4, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/3.1.101/RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/projects/annium/id/server/src/lib/Annium.Id.Core/Annium.Id.Core.csproj": {
+      "version": "0.1.0",
+      "restore": {
+        "projectUniqueName": "/projects/annium/id/server/src/lib/Annium.Id.Core/Annium.Id.Core.csproj",
+        "projectName": "Annium.Id.Core",
+        "projectPath": "/projects/annium/id/server/src/lib/Annium.Id.Core/Annium.Id.Core.csproj",
+        "packagesPath": "/home/alex/.nuget/packages/",
+        "outputPath": "/projects/annium/id/server/src/lib/Annium.Id.Core/obj/",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "/usr/share/dotnet/sdk/NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "/home/alex/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {}
+          }
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "dependencies": {
+            "Annium.Data.Operations": {
+              "target": "Package",
+              "version": "[0.1.0, )"
+            },
+            "Annium.Logging.Abstractions": {
+              "target": "Package",
+              "version": "[0.1.0, )"
+            },
+            "Annium.Security.Cryptography": {
+              "target": "Package",
+              "version": "[0.1.0, )"
+            },
+            "MessagePack": {
+              "target": "Package",
+              "version": "[2.1.115, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[6.6.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/3.1.101/RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

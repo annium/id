@@ -3,8 +3,8 @@ using Annium.Architecture.CQRS.Commands;
 using Annium.Extensions.Composition;
 using Annium.Extensions.Validation;
 using Annium.Id.Core;
-using Annium.Id.Db.Repositories;
 using Annium.Id.Domain.Entities;
+using Annium.Id.Infrastructure.Db.Repositories;
 
 namespace Annium.Id.Api.Application.Commands.CompanyRoles
 {

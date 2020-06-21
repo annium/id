@@ -6,8 +6,8 @@ using Annium.Architecture.Base;
 using Annium.Architecture.CQRS.Queries;
 using Annium.Data.Operations;
 using Annium.Id.Api.Application.Queries.CompanyClaims;
-using Annium.Id.Db.Repositories;
 using Annium.Id.Domain.Entities;
+using Annium.Id.Infrastructure.Db.Repositories;
 
 namespace Annium.Id.Api.Application.QueryHandlers
 {

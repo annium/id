@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Annium.Id.Core;
-using Annium.Id.Db.Repositories;
 using Annium.Id.Domain.Entities;
+using Annium.Id.Infrastructure.Db.Repositories;
 
 namespace Annium.Id.Api.Application.Tools
 {
