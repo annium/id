@@ -12,8 +12,8 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
     <ItemGroup>
-        <ProjectReference Include="../../Lib/Annium.Id.Core/Annium.Id.Core.csproj" />
-        <ProjectReference Include="../Annium.Id.Domain/Annium.Id.Domain.csproj" />
+        <ProjectReference Include="../../lib/Annium.Id.Core/Annium.Id.Core.csproj" />
+        <ProjectReference Include="../../core/Annium.Id.Domain/Annium.Id.Domain.csproj" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Annium.Configuration.Yaml" Version="0.1.0" />

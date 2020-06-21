@@ -12,9 +12,9 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
     <ItemGroup>
-        <ProjectReference Include="../../Lib/Annium.Id.Core/Annium.Id.Core.csproj" />
-        <ProjectReference Include="../../Shared/Annium.Id.Db/Annium.Id.Db.csproj" />
-        <ProjectReference Include="../../Shared/Annium.Id.Infrastructure/Annium.Id.Infrastructure.csproj" />
+        <ProjectReference Include="../../lib/Annium.Id.Core/Annium.Id.Core.csproj" />
+        <ProjectReference Include="../../infrastructure/Annium.Id.Db/Annium.Id.Db.csproj" />
+        <ProjectReference Include="../../infrastructure/Annium.Id.Infrastructure/Annium.Id.Infrastructure.csproj" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Annium.Architecture.CQRS" Version="0.1.0" />
