@@ -1,4 +1,4 @@
-namespace Annium.Id.Infrastructure
+namespace Annium.Id.Infrastructure.Email
 {
     public class Configuration
     {

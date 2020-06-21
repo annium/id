@@ -13,8 +13,8 @@
     </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="../../lib/Annium.Id.Core/Annium.Id.Core.csproj" />
-        <ProjectReference Include="../../infrastructure/Annium.Id.Infrastructure/Annium.Id.Infrastructure.csproj" />
         <ProjectReference Include="../../infrastructure/Annium.Id.Infrastructure.Db/Annium.Id.Infrastructure.Db.csproj" />
+        <ProjectReference Include="../../infrastructure/Annium.Id.Infrastructure.Email/Annium.Id.Infrastructure.Email.csproj" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Annium.Architecture.CQRS" Version="0.1.0" />

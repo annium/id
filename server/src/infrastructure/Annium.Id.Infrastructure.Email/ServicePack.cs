@@ -3,7 +3,7 @@ using Annium.Configuration.Abstractions;
 using Annium.Core.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Annium.Id.Infrastructure
+namespace Annium.Id.Infrastructure.Email
 {
     public class ServicePack : ServicePackBase
     {

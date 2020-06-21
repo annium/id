@@ -1,0 +1,124 @@
+{
+  "format": 1,
+  "restore": {
+    "/projects/annium/id/server/src/infrastructure/Annium.Id.Infrastructure/Annium.Id.Infrastructure.csproj": {}
+  },
+  "projects": {
+    "/projects/annium/id/server/src/core/Annium.Id.Domain/Annium.Id.Domain.csproj": {
+      "version": "0.1.0",
+      "restore": {
+        "projectUniqueName": "/projects/annium/id/server/src/core/Annium.Id.Domain/Annium.Id.Domain.csproj",
+        "projectName": "Annium.Id.Domain",
+        "projectPath": "/projects/annium/id/server/src/core/Annium.Id.Domain/Annium.Id.Domain.csproj",
+        "packagesPath": "/home/alex/.nuget/packages/",
+        "outputPath": "/projects/annium/id/server/src/core/Annium.Id.Domain/obj/",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "/usr/share/dotnet/sdk/NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "/home/alex/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {}
+          }
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "dependencies": {
+            "NodaTime": {
+              "target": "Package",
+              "version": "[3.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/3.1.101/RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/projects/annium/id/server/src/infrastructure/Annium.Id.Infrastructure/Annium.Id.Infrastructure.csproj": {
+      "version": "0.1.0",
+      "restore": {
+        "projectUniqueName": "/projects/annium/id/server/src/infrastructure/Annium.Id.Infrastructure/Annium.Id.Infrastructure.csproj",
+        "projectName": "Annium.Id.Infrastructure",
+        "projectPath": "/projects/annium/id/server/src/infrastructure/Annium.Id.Infrastructure/Annium.Id.Infrastructure.csproj",
+        "packagesPath": "/home/alex/.nuget/packages/",
+        "outputPath": "/projects/annium/id/server/src/infrastructure/Annium.Id.Infrastructure/obj/",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "/usr/share/dotnet/sdk/NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "/home/alex/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {
+              "/projects/annium/id/server/src/core/Annium.Id.Domain/Annium.Id.Domain.csproj": {
+                "projectPath": "/projects/annium/id/server/src/core/Annium.Id.Domain/Annium.Id.Domain.csproj"
+              }
+            }
+          }
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "dependencies": {
+            "Annium.Configuration.Yaml": {
+              "target": "Package",
+              "version": "[0.1.0, )"
+            },
+            "Annium.Net.Mail": {
+              "target": "Package",
+              "version": "[0.1.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/3.1.101/RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

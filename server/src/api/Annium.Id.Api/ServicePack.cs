@@ -12,7 +12,7 @@ namespace Annium.Id.Api
             Add<BaseServicePack>();
             Add<Application.ServicePack>();
             Add<Infrastructure.Db.ServicePack>();
-            Add<Infrastructure.ServicePack>();
+            Add<Infrastructure.Email.ServicePack>();
         }
 
         public override void Register(IServiceCollection services, IServiceProvider provider)
