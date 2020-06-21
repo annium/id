@@ -1,9 +1,0 @@
-email:
-  templates_directory: Email/Templates
-  host: in-v3.mailjet.com
-  port: 587
-  use_ssl: true
-  user: bc2552e3d4d92998cfa0c4afeeee90f4
-  password: b3ab3736a092ff612a55582327c22f9e
-  from_address: support@annium.com
-  from_display: Annium

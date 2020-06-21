@@ -1,5 +1,4 @@
 using Annium.Core.DependencyInjection;
-using Annium.Id.Infrastructure.Email.Email;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Annium.Id.Infrastructure.Email

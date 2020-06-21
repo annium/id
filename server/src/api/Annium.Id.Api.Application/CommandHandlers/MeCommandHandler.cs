@@ -11,7 +11,6 @@ using Annium.Id.Api.Application.Tools;
 using Annium.Id.Domain.Entities;
 using Annium.Id.Infrastructure.Db.Repositories;
 using Annium.Id.Infrastructure.Email;
-using Annium.Id.Infrastructure.Email.Email;
 
 namespace Annium.Id.Api.Application.CommandHandlers
 {

@@ -18,8 +18,7 @@ namespace Annium.Id.Infrastructure.Email
                 .AddYamlFile(Path.Combine("configuration", "infrastructure.yml"))
                 .Build<Configuration>();
             services.AddSingleton(cfg);
-            services.AddSingleton(cfg.Email);
-            services.AddSingleton<Net.Mail.Configuration>(cfg.Email);
+            services.AddSingleton<Net.Mail.Configuration>(cfg);
         }
 
         public override void Register(IServiceCollection services, System.IServiceProvider provider)

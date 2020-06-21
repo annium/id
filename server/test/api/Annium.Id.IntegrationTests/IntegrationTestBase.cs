@@ -23,7 +23,7 @@ using Annium.Id.Api.ViewModels.Me.Responses;
 using Annium.Id.Api.ViewModels.Roles.Requests;
 using Annium.Id.Api.ViewModels.Roles.Responses;
 using Annium.Id.Api.ViewModels.Users.Requests;
-using Annium.Id.Infrastructure.Email.Email.Models;
+using Annium.Id.Infrastructure.Email.Models;
 using Annium.Net.Http;
 using Annium.Net.Mail;
 using Annium.Testing;

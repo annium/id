@@ -14,14 +14,10 @@ namespace Annium.Id.Infrastructure.Email
         {
             var cfg = new Configuration
             {
-                Email = new Email.Configuration
-                {
-                    FromAddress = "support@annium.com",
-                    FromDisplay = "Annium",
-                },
+                FromAddress = "support@annium.com",
+                FromDisplay = "Annium",
             };
             services.AddSingleton(cfg);
-            services.AddSingleton(cfg.Email);
         }
     }
 }

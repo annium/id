@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Annium.Data.Operations;
 using Annium.Id.Domain.Entities;
 
-namespace Annium.Id.Infrastructure.Email.Email
+namespace Annium.Id.Infrastructure.Email
 {
     public class EmailService : IEmailService
     {

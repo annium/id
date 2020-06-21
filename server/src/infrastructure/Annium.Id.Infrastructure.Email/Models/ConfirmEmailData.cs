@@ -1,6 +1,6 @@
 using System;
 
-namespace Annium.Id.Infrastructure.Email.Email.Models
+namespace Annium.Id.Infrastructure.Email.Models
 {
     public class ConfirmEmailData
     {

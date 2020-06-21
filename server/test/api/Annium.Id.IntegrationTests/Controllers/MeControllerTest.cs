@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Annium.Id.Core;
 using Annium.Id.Api.ViewModels.Me.Requests;
 using Annium.Id.Api.ViewModels.Me.Responses;
-using Annium.Id.Infrastructure.Email.Email.Models;
+using Annium.Id.Infrastructure.Email.Models;
 using Annium.Net.Http;
 using Annium.Testing;
 using Xunit;
