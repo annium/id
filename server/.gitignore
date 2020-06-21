@@ -1,2 +1,4 @@
-.idea/
-*DotSettings.user
+# artifacts
+*.blob
+configuration/
+keys/

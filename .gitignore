@@ -1,5 +1,7 @@
 # editors
+.idea/
 .vscode/
+*DotSettings.user
 
 # artifacts
 /run/
