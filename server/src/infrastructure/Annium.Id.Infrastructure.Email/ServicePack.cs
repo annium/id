@@ -15,7 +15,7 @@ namespace Annium.Id.Infrastructure.Email
         public override void Configure(IServiceCollection services)
         {
             var cfg = new ConfigurationBuilder()
-                .AddYamlFile(Path.Combine("configuration", "infrastructure.yml"))
+                .AddYamlFile(Path.Combine("configuration", "email.yml"))
                 .Build<Configuration>();
             services.AddSingleton(cfg);
             services.AddSingleton<Net.Mail.Configuration>(cfg);

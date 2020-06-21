@@ -1,6 +1,6 @@
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-alpine as builder
 COPY . /code
-RUN dotnet publish -c release -o /app /code/src/Api/Annium.Id.Api
+RUN dotnet publish -c release -o /app /code/src/api/Annium.Id.Api
 
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-alpine
 WORKDIR /app

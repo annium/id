@@ -11,14 +11,14 @@ services:
     <<: *base
     build:
       context: server
-      dockerfile: src/Annium.Id.Api/Dockerfile
+      dockerfile: src/api/Annium.Id.Api/Dockerfile
     image: id_api
     container_name: id_api
     ports:
       - '9501:5000'
     volumes:
-      - './run/server/configuration:/app/configuration'
-      - './run/server/keys:/app/keys'
+      - './run/api/configuration:/app/configuration'
+      - './run/api/keys:/app/keys'
   db:
     <<: *base
     image: registry.annium.com/postgres
