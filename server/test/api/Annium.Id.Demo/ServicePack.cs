@@ -39,6 +39,7 @@ namespace Annium.Id.Demo
                     c => c.Id == companyId && c.Claims.ContainsKey("paymentsAccess") && c.Claims["paymentsAccess"] == "full"
                 )
             );
+            services.AddMapper();
         }
 
         public override void Setup(System.IServiceProvider provider)
