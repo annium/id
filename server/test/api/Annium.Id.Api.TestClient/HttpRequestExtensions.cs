@@ -4,6 +4,6 @@ namespace Annium.Id.Api.TestClient
 {
     public static class HttpRequestExtensions
     {
-        public static Client Client(this IHttpRequest request) => new Client(request);
+        public static Client ApiClient(this IHttpRequest request) => new Client(request);
     }
 }
