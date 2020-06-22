@@ -3,15 +3,17 @@ TAG_PREFIX := registry.annium.com/$(PROJECT_NAME)
 
 configure:
 	@# api
-	$(call copy,run/api/configuration server/src/api/Annium.Id.Api/configuration,application.yml db.yml email.yml)
-	$(call copy,run/api/keys server/src/api/Annium.Id.Api/keys,private.key public.key)
-	$(call copy,server/test/api/Annium.Id.IntegrationTests/keys,private.key public.key)
+	$(call copy,shared,application.yml email.yml,run/api/configuration server/src/api/Annium.Id.Api/configuration)
+	$(call copy,docker,db.yml,run/api/configuration)
+	$(call copy,local,db.yml,server/src/api/Annium.Id.Api/configuration)
+	$(call copy,shared,private.key public.key,run/api/keys server/src/api/Annium.Id.Api/keys)
+	$(call copy,shared,private.key public.key,server/test/api/Annium.Id.IntegrationTests/keys)
 
 	@# db
-	$(call copy,run/db,db.env)
+	$(call copy,docker,db.env,run/db)
 
 	@# migrator
-	$(call copy,server/src/infrastructure/Annium.Id.Infrastructure.DbMigrator/configuration,db.yml)
+	$(call copy,local,db.yml,server/src/infrastructure/Annium.Id.Infrastructure.DbMigrator/configuration)
 
 deconfigure:
 	rm -rf run
@@ -35,7 +37,7 @@ define publish
 endef
 
 define copy
-	$(foreach dir,$(1),rm -rf $(dir); mkdir -p $(dir);$(foreach file,$(2),cp cfg/$(file) $(dir);))
+	$(foreach dir,$(3),mkdir -p $(dir);$(foreach file,$(2),cp cfg/$(1)/$(file) $(dir);))
 endef
 
 define clean
