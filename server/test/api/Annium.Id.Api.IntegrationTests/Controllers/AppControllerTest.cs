@@ -1,14 +1,14 @@
 using System;
 using System.Net;
 using System.Threading.Tasks;
-using Annium.Id.Core;
 using Annium.Id.Api.ViewModels.Apps.Requests;
 using Annium.Id.Api.ViewModels.Apps.Responses;
+using Annium.Id.Core;
 using Annium.Net.Http;
 using Annium.Testing;
 using Xunit;
 
-namespace Annium.Id.IntegrationTests.Controllers
+namespace Annium.Id.Api.IntegrationTests.Controllers
 {
     public class AppControllerTest : IntegrationTestBase
     {

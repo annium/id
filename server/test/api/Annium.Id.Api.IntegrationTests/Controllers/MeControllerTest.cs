@@ -2,15 +2,15 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Annium.Id.Core;
 using Annium.Id.Api.ViewModels.Me.Requests;
 using Annium.Id.Api.ViewModels.Me.Responses;
+using Annium.Id.Core;
 using Annium.Id.Infrastructure.Email.Models;
 using Annium.Net.Http;
 using Annium.Testing;
 using Xunit;
 
-namespace Annium.Id.IntegrationTests.Controllers
+namespace Annium.Id.Api.IntegrationTests.Controllers
 {
     public class MeControllerTest : IntegrationTestBase
     {

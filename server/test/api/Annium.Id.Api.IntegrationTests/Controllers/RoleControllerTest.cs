@@ -1,26 +1,26 @@
 using System;
 using System.Net;
 using System.Threading.Tasks;
-using Annium.Id.Api.ViewModels.CompanyClaims.Responses;
-using Annium.Id.Api.ViewModels.CompanyRoles.Requests;
-using Annium.Id.Api.ViewModels.CompanyRoles.Responses;
+using Annium.Id.Api.ViewModels.Claims.Responses;
+using Annium.Id.Api.ViewModels.Roles.Requests;
+using Annium.Id.Api.ViewModels.Roles.Responses;
 using Annium.Net.Http;
 using Annium.Testing;
 using Xunit;
 
-namespace Annium.Id.IntegrationTests.Controllers
+namespace Annium.Id.Api.IntegrationTests.Controllers
 {
-    public class CompanyRoleControllerTest : IntegrationTestBase
+    public class RoleControllerTest : IntegrationTestBase
     {
         [Fact]
         public async Task Create_InvalidPayload_BadRequest()
         {
             // arrange
             var tokens = await RegisterLogUserInAsync();
-            var p = new CreateCompanyRoleRequest() { AppId = Guid.NewGuid(), Key = "one" };
+            var p = new CreateRoleRequest() { Key = "one" };
 
             // act
-            var response = await id.Post($"/companies/roles").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
+            var response = await id.Post("/roles").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
@@ -31,10 +31,10 @@ namespace Annium.Id.IntegrationTests.Controllers
         {
             // arrange
             var tokens = await RegisterLogUserInAsync();
-            var p = new CreateCompanyRoleRequest() { AppId = Guid.NewGuid(), Key = "one", Name = "First Role" };
+            var p = new CreateRoleRequest() { AppId = Guid.NewGuid(), Key = "one", Name = "First Role" };
 
             // act
-            var response = await id.Post($"/companies/roles").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
+            var response = await id.Post("/roles").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -47,10 +47,10 @@ namespace Annium.Id.IntegrationTests.Controllers
             var ownerTokens = await RegisterLogUserInAsync("owner", "superpass", "some@email.com");
             var app = await CreateAppAsync(ownerTokens.AccessToken);
             var tokens = await RegisterLogUserInAsync();
-            var p = new CreateCompanyRoleRequest() { AppId = app.Id, Key = "one", Name = "First Role" };
+            var p = new CreateRoleRequest() { AppId = app.Id, Key = "one", Name = "First Role" };
 
             // act
-            var response = await id.Post($"/companies/roles").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
+            var response = await id.Post("/roles").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -64,11 +64,11 @@ namespace Annium.Id.IntegrationTests.Controllers
             var app = await CreateAppAsync(tokens.AccessToken);
             var roleKey = "one";
             var roleName = "First Role";
-            await CreateCompanyRoleAsync(tokens.AccessToken, app.Id, roleKey, roleName);
-            var p = new CreateCompanyRoleRequest() { AppId = app.Id, Key = "one", Name = "First Role" };
+            await CreateRoleAsync(tokens.AccessToken, app.Id, roleKey, roleName);
+            var p = new CreateRoleRequest() { AppId = app.Id, Key = roleKey, Name = roleName };
 
             // act
-            var response = await id.Post($"/companies/roles").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
+            var response = await id.Post("/roles").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
@@ -84,7 +84,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var roleName = "First Role";
 
             // act
-            var role = await CreateCompanyRoleAsync(tokens.AccessToken, app.Id, roleKey, roleName);
+            var role = await CreateRoleAsync(tokens.AccessToken, app.Id, roleKey, roleName);
 
             // assert
             role.Id.IsNotDefault();
@@ -98,7 +98,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var tokens = await RegisterLogUserInAsync();
 
             // act
-            var response = await id.Get($"/companies/roles").BearerAuthorization(tokens.AccessToken).Param("appId", Guid.NewGuid()).RunAsync();
+            var response = await id.Get("/roles").BearerAuthorization(tokens.AccessToken).Param("appId", Guid.NewGuid()).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -112,16 +112,23 @@ namespace Annium.Id.IntegrationTests.Controllers
             var app = await CreateAppAsync(tokens.AccessToken);
             var roleKey = "one";
             var roleName = "First Role";
-            var role = await CreateCompanyRoleAsync(tokens.AccessToken, app.Id, roleKey, roleName);
+            var role = await CreateRoleAsync(tokens.AccessToken, app.Id, roleKey, roleName);
 
             // act
-            var roles =
-                (await id.Get($"/companies/roles").BearerAuthorization(tokens.AccessToken).Param("appId", app.Id).AsResultAsync<CompanyRoleResponse[]>()).Data;
+            var roles = (await id.Get("/roles").BearerAuthorization(tokens.AccessToken).Param("appId", app.Id).AsResultAsync<RoleResponse[]>()).Data;
 
             // assert
-            roles.Has(1);
-            roles[0].Id.IsEqual(role.Id);
-            roles[0].Claims.IsEmpty();
+            roles.IsEqual(new[]
+            {
+                new RoleResponse
+                {
+                    Id = role.Id,
+                    AppId = app.Id,
+                    Key = roleKey,
+                    Name = roleName,
+                    Claims = Array.Empty<ClaimValueResponse>(),
+                }
+            });
         }
 
         [Fact]
@@ -129,10 +136,12 @@ namespace Annium.Id.IntegrationTests.Controllers
         {
             // arrange
             var tokens = await RegisterLogUserInAsync();
-            var u = new UpdateCompanyRoleRequest { Key = "one" };
+            var app = await CreateAppAsync(tokens.AccessToken);
+            var role = await CreateRoleAsync(tokens.AccessToken, app.Id);
+            var u = new UpdateRoleRequest { Key = "one" };
 
             // act
-            var response = await id.Put($"/companies/roles/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
+            var response = await id.Put($"/roles/{role.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
@@ -143,30 +152,13 @@ namespace Annium.Id.IntegrationTests.Controllers
         {
             // arrange
             var tokens = await RegisterLogUserInAsync();
-            var u = new UpdateCompanyRoleRequest { Key = "one", Name = "One Role" };
+            var u = new UpdateRoleRequest { Key = "one", Name = "One Role" };
 
             // act
-            var response = await id.Put($"/companies/roles/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
+            var response = await id.Put($"/roles/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
-        }
-
-        [Fact]
-        public async Task Update_NotOwner_Forbidden()
-        {
-            // arrange
-            var ownerTokens = await RegisterLogUserInAsync("owner", "superpass", "some@email.com");
-            var app = await CreateAppAsync(ownerTokens.AccessToken);
-            var role = await CreateCompanyRoleAsync(ownerTokens.AccessToken, app.Id);
-            var tokens = await RegisterLogUserInAsync();
-            var u = new UpdateCompanyRoleRequest { Key = "one", Name = "One Role" };
-
-            // act
-            var response = await id.Put($"/companies/roles/{role.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
-
-            // assert
-            response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
         }
 
         [Fact]
@@ -175,15 +167,32 @@ namespace Annium.Id.IntegrationTests.Controllers
             // arrange
             var tokens = await RegisterLogUserInAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
-            var role = await CreateCompanyRoleAsync(tokens.AccessToken, app.Id);
-            await CreateCompanyRoleAsync(tokens.AccessToken, app.Id, "other", "One Role");
-            var u = new UpdateCompanyRoleRequest { Key = "other", Name = "FirstRole" };
+            await CreateRoleAsync(tokens.AccessToken, app.Id, "other");
+            var role = await CreateRoleAsync(tokens.AccessToken, app.Id);
+            var u = new UpdateRoleRequest { Key = "other", Name = "FirstRole" };
 
             // act
-            var response = await id.Put($"/companies/roles/{role.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
+            var response = await id.Put($"/roles/{role.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Conflict);
+        }
+
+        [Fact]
+        public async Task Update_NotOwner_Forbidden()
+        {
+            // arrange
+            var ownerTokens = await RegisterLogUserInAsync("owner", "superpass", "some@email.com");
+            var app = await CreateAppAsync(ownerTokens.AccessToken);
+            var role = await CreateRoleAsync(ownerTokens.AccessToken, app.Id);
+            var tokens = await RegisterLogUserInAsync();
+            var u = new UpdateRoleRequest { Key = "one", Name = "One Role" };
+
+            // act
+            var response = await id.Put($"/roles/{role.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
+
+            // assert
+            response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
         }
 
         [Fact]
@@ -192,11 +201,11 @@ namespace Annium.Id.IntegrationTests.Controllers
             // arrange
             var tokens = await RegisterLogUserInAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
-            var role = await CreateCompanyRoleAsync(tokens.AccessToken, app.Id);
-            var u = new UpdateCompanyRoleRequest { Key = "one", Name = "One Role" };
+            var role = await CreateRoleAsync(tokens.AccessToken, app.Id);
+            var u = new UpdateRoleRequest { Key = "one", Name = "One Role" };
 
             // act
-            var response = await id.Put($"/companies/roles/{role.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
+            var response = await id.Put($"/roles/{role.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.OK);
@@ -207,11 +216,13 @@ namespace Annium.Id.IntegrationTests.Controllers
         {
             // arrange
             var tokens = await RegisterLogUserInAsync();
-            var p = new AddCompanyClaimToCompanyRoleRequest { Value = "S" };
+            var app = await CreateAppAsync(tokens.AccessToken);
+            var role = await CreateRoleAsync(tokens.AccessToken, app.Id);
+            var claim = await CreateClaimAsync(tokens.AccessToken, app.Id);
+            var p = new AddClaimToRoleRequest { Value = "S" };
 
             // act
-            var response = await id.Post($"/companies/roles/{Guid.NewGuid()}/claims/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).JsonContent(p)
-                .RunAsync();
+            var response = await id.Post($"/roles/{role.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
@@ -222,11 +233,10 @@ namespace Annium.Id.IntegrationTests.Controllers
         {
             // arrange
             var tokens = await RegisterLogUserInAsync();
-            var p = new AddCompanyClaimToCompanyRoleRequest { Value = "Some" };
+            var p = new AddClaimToRoleRequest { Value = "Some" };
 
             // act
-            var response = await id.Post($"/companies/roles/{Guid.NewGuid()}/claims/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).JsonContent(p)
-                .RunAsync();
+            var response = await id.Post($"/roles/{Guid.NewGuid()}/claims/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -238,12 +248,11 @@ namespace Annium.Id.IntegrationTests.Controllers
             // arrange
             var tokens = await RegisterLogUserInAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
-            var role = await CreateCompanyRoleAsync(tokens.AccessToken, app.Id);
-            var p = new AddCompanyClaimToCompanyRoleRequest { Value = "Some" };
+            var role = await CreateRoleAsync(tokens.AccessToken, app.Id);
+            var p = new AddClaimToRoleRequest { Value = "Some" };
 
             // act
-            var response = await id.Post($"/companies/roles/{role.Id}/claims/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).JsonContent(p)
-                .RunAsync();
+            var response = await id.Post($"/roles/{role.Id}/claims/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -255,13 +264,13 @@ namespace Annium.Id.IntegrationTests.Controllers
             // arrange
             var ownerTokens = await RegisterLogUserInAsync("owner", "superpass", "some@email.com");
             var app = await CreateAppAsync(ownerTokens.AccessToken);
-            var role = await CreateCompanyRoleAsync(ownerTokens.AccessToken, app.Id);
-            var claim = await CreateCompanyClaimAsync(ownerTokens.AccessToken, app.Id);
+            var role = await CreateRoleAsync(ownerTokens.AccessToken, app.Id);
+            var claim = await CreateClaimAsync(ownerTokens.AccessToken, app.Id);
             var tokens = await RegisterLogUserInAsync();
-            var p = new AddCompanyClaimToCompanyRoleRequest { Value = "Some" };
+            var p = new AddClaimToRoleRequest { Value = "Some" };
 
             // act
-            var response = await id.Post($"/companies/roles/{role.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
+            var response = await id.Post($"/roles/{role.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -274,12 +283,12 @@ namespace Annium.Id.IntegrationTests.Controllers
             var tokens = await RegisterLogUserInAsync();
             var app1 = await CreateAppAsync(tokens.AccessToken);
             var app2 = await CreateAppAsync(tokens.AccessToken, "Other App");
-            var role = await CreateCompanyRoleAsync(tokens.AccessToken, app2.Id);
-            var claim = await CreateCompanyClaimAsync(tokens.AccessToken, app1.Id);
-            var p = new AddCompanyClaimToCompanyRoleRequest { Value = "Some" };
+            var role = await CreateRoleAsync(tokens.AccessToken, app2.Id);
+            var claim = await CreateClaimAsync(tokens.AccessToken, app1.Id);
+            var p = new AddClaimToRoleRequest { Value = "Some" };
 
             // act
-            var response = await id.Post($"/companies/roles/{role.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
+            var response = await id.Post($"/roles/{role.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -291,21 +300,20 @@ namespace Annium.Id.IntegrationTests.Controllers
             // arrange
             var tokens = await RegisterLogUserInAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
-            var role = await CreateCompanyRoleAsync(tokens.AccessToken, app.Id);
-            var claim = await CreateCompanyClaimAsync(tokens.AccessToken, app.Id);
+            var role = await CreateRoleAsync(tokens.AccessToken, app.Id);
+            var claim = await CreateClaimAsync(tokens.AccessToken, app.Id);
             var claimValue = "Some";
 
             // act
-            var response = await AddCompanyClaimToCompanyRoleAsync(tokens.AccessToken, role.Id, claim.Id, claimValue);
-            var roles =
-                (await id.Get($"/companies/roles").BearerAuthorization(tokens.AccessToken).Param("appId", app.Id).AsResultAsync<CompanyRoleResponse[]>()).Data;
+            var response = await AddClaimToRoleAsync(tokens.AccessToken, role.Id, claim.Id, claimValue);
+            var roles = (await id.Get("/roles").BearerAuthorization(tokens.AccessToken).Param("appId", app.Id).AsResultAsync<RoleResponse[]>()).Data;
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.OK);
             roles.Has(1);
             roles[0].Id.IsEqual(role.Id);
             var c = roles[0].Claims.At(0);
-            c.IsEqual(new CompanyClaimValueResponse { Id = claim.Id, Key = claim.Key, Name = claim.Name, Value = claimValue });
+            c.IsEqual(new ClaimValueResponse { Id = claim.Id, Key = claim.Key, Name = claim.Name, Value = claimValue });
         }
 
         [Fact]
@@ -315,7 +323,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var tokens = await RegisterLogUserInAsync();
 
             // act
-            var response = await id.Delete($"/companies/roles/{Guid.NewGuid()}/claims/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await id.Delete($"/roles/{Guid.NewGuid()}/claims/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -327,10 +335,10 @@ namespace Annium.Id.IntegrationTests.Controllers
             // arrange
             var tokens = await RegisterLogUserInAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
-            var role = await CreateCompanyRoleAsync(tokens.AccessToken, app.Id);
+            var role = await CreateRoleAsync(tokens.AccessToken, app.Id);
 
             // act
-            var response = await id.Delete($"/companies/roles/{role.Id}/claims/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await id.Delete($"/roles/{role.Id}/claims/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -342,12 +350,12 @@ namespace Annium.Id.IntegrationTests.Controllers
             // arrange
             var ownerTokens = await RegisterLogUserInAsync("owner", "superpass", "some@email.com");
             var app = await CreateAppAsync(ownerTokens.AccessToken);
-            var role = await CreateCompanyRoleAsync(ownerTokens.AccessToken, app.Id);
-            var claim = await CreateCompanyClaimAsync(ownerTokens.AccessToken, app.Id);
+            var role = await CreateRoleAsync(ownerTokens.AccessToken, app.Id);
+            var claim = await CreateClaimAsync(ownerTokens.AccessToken, app.Id);
             var tokens = await RegisterLogUserInAsync();
 
             // act
-            var response = await id.Delete($"/companies/roles/{role.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await id.Delete($"/roles/{role.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -360,11 +368,11 @@ namespace Annium.Id.IntegrationTests.Controllers
             var tokens = await RegisterLogUserInAsync();
             var app1 = await CreateAppAsync(tokens.AccessToken);
             var app2 = await CreateAppAsync(tokens.AccessToken, "Other App");
-            var role = await CreateCompanyRoleAsync(tokens.AccessToken, app2.Id);
-            var claim = await CreateCompanyClaimAsync(tokens.AccessToken, app1.Id);
+            var role = await CreateRoleAsync(tokens.AccessToken, app2.Id);
+            var claim = await CreateClaimAsync(tokens.AccessToken, app1.Id);
 
             // act
-            var response = await id.Delete($"/companies/roles/{role.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await id.Delete($"/roles/{role.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -376,11 +384,11 @@ namespace Annium.Id.IntegrationTests.Controllers
             // arrange
             var tokens = await RegisterLogUserInAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
-            var role = await CreateCompanyRoleAsync(tokens.AccessToken, app.Id);
-            var claim = await CreateCompanyClaimAsync(tokens.AccessToken, app.Id);
+            var role = await CreateRoleAsync(tokens.AccessToken, app.Id);
+            var claim = await CreateClaimAsync(tokens.AccessToken, app.Id);
 
             // act
-            var response = await id.Delete($"/companies/roles/{role.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await id.Delete($"/roles/{role.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.OK);
@@ -393,7 +401,7 @@ namespace Annium.Id.IntegrationTests.Controllers
             var tokens = await RegisterLogUserInAsync();
 
             // act
-            var response = await id.Delete($"/companies/roles/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await id.Delete($"/roles/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -405,11 +413,11 @@ namespace Annium.Id.IntegrationTests.Controllers
             // arrange
             var ownerTokens = await RegisterLogUserInAsync("owner", "superpass", "some@email.com");
             var app = await CreateAppAsync(ownerTokens.AccessToken);
-            var role = await CreateCompanyRoleAsync(ownerTokens.AccessToken, app.Id);
             var tokens = await RegisterLogUserInAsync();
+            var role = await CreateRoleAsync(ownerTokens.AccessToken, app.Id);
 
             // act
-            var response = await id.Delete($"/companies/roles/{role.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await id.Delete($"/roles/{role.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -421,10 +429,10 @@ namespace Annium.Id.IntegrationTests.Controllers
             // arrange
             var tokens = await RegisterLogUserInAsync();
             var app = await CreateAppAsync(tokens.AccessToken);
-            var role = await CreateCompanyRoleAsync(tokens.AccessToken, app.Id);
+            var role = await CreateRoleAsync(tokens.AccessToken, app.Id);
 
             // act
-            var response = await id.Delete($"/companies/roles/{role.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await id.Delete($"/roles/{role.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.OK);

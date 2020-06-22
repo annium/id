@@ -7,7 +7,7 @@ using Annium.Net.Http;
 using Annium.Testing;
 using Xunit;
 
-namespace Annium.Id.IntegrationTests.Controllers
+namespace Annium.Id.Api.IntegrationTests.Controllers
 {
     public class CompanyClaimControllerTest : IntegrationTestBase
     {

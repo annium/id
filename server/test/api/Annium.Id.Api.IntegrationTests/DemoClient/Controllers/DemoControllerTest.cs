@@ -5,7 +5,7 @@ using Annium.Net.Http;
 using Annium.Testing;
 using Xunit;
 
-namespace Annium.Id.IntegrationTests.DemoClient.Controllers
+namespace Annium.Id.Api.IntegrationTests.DemoClient.Controllers
 {
     public class DemoControllerTest : IntegrationTestBase
     {

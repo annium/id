@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Annium.AspNetCore.IntegrationTesting;
 using Annium.Core.DependencyInjection;
-using Annium.Id.Core;
 using Annium.Id.Api.ViewModels.Apps.Requests;
 using Annium.Id.Api.ViewModels.Apps.Responses;
 using Annium.Id.Api.ViewModels.Claims.Requests;
@@ -23,6 +22,7 @@ using Annium.Id.Api.ViewModels.Me.Responses;
 using Annium.Id.Api.ViewModels.Roles.Requests;
 using Annium.Id.Api.ViewModels.Roles.Responses;
 using Annium.Id.Api.ViewModels.Users.Requests;
+using Annium.Id.Core;
 using Annium.Id.Infrastructure.Email.Models;
 using Annium.Net.Http;
 using Annium.Net.Mail;
@@ -30,7 +30,7 @@ using Annium.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
 
-namespace Annium.Id.IntegrationTests
+namespace Annium.Id.Api.IntegrationTests
 {
     public class IntegrationTestBase : IntegrationTest
     {
