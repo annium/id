@@ -16,6 +16,7 @@
         <ProjectReference Include="../../../src/api/Annium.Id.Api/Annium.Id.Api.csproj" />
         <ProjectReference Include="../Annium.Id.Api.TestClient/Annium.Id.Api.TestClient.csproj" />
         <ProjectReference Include="../Annium.Id.Demo/Annium.Id.Demo.csproj" />
+        <ProjectReference Include="../Annium.Id.Demo.TestClient/Annium.Id.Demo.TestClient.csproj" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Annium.AspNetCore.IntegrationTesting" Version="0.1.0" />

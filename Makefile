@@ -28,8 +28,11 @@ deconfigure:
 	$(call clean,/configuration/ /keys/)
 
 
-gen-dotnet-test-client:
+gen-api-test-client:
 	xrest dotnet gen -s http://localhost:9501 -a server/src/api/Annium.Id.Api/bin/Debug/netcoreapp3.1/Annium.Id.Api.dll -o server/test/api/Annium.Id.Api.TestClient -t -trace
+
+gen-demo-test-client:
+	xrest dotnet gen -s http://localhost:5000 -a server/test/api/Annium.Id.Demo/bin/Debug/netcoreapp3.1/Annium.Id.Demo.dll -o server/test/api/Annium.Id.Demo.TestClient -t -trace
 
 
 publish-api:
