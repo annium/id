@@ -1,0 +1,57 @@
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Annium.Data.Operations;
+using Annium.Id.Api.ViewModels.CompanyClaims.Requests;
+using Annium.Id.Api.ViewModels.CompanyClaims.Responses;
+using Annium.Net.Http;
+
+namespace Annium.Id.Api.TestClient.Clients
+{
+    public class CompanyClaimClient : ClientBase
+    {
+        public CompanyClaimClient(IHttpRequest request) : base(request)
+        {
+        }
+
+        public async Task<IHttpResponse<IResult<Guid>>> CreateCompanyClaim(
+            CreateCompanyClaimRequest body
+        )
+        {
+            return await Request.Clone()
+                .Post("companies/claims")
+                .JsonContent(body)
+                .AsResponseAsync<IResult<Guid>>();
+        }
+
+        public async Task<IHttpResponse<IResult<IEnumerable<CompanyClaimResponse>>>> ListCompanyClaims(
+            Guid appId
+        )
+        {
+            return await Request.Clone()
+                .Get("companies/claims")
+                .Param("appId", appId)
+                .AsResponseAsync<IResult<IEnumerable<CompanyClaimResponse>>>();
+        }
+
+        public async Task<IHttpResponse<IResult>> UpdateCompanyClaim(
+            Guid claimId,
+            UpdateCompanyClaimRequestBase body
+        )
+        {
+            return await Request.Clone()
+                .Put($"companies/claims/{claimId:guid}")
+                .JsonContent(body)
+                .AsResponseAsync<IResult>();
+        }
+
+        public async Task<IHttpResponse<IResult>> DeleteCompanyClaim(
+            Guid claimId
+        )
+        {
+            return await Request.Clone()
+                .Delete($"companies/claims/{claimId:guid}")
+                .AsResponseAsync<IResult>();
+        }
+    }
+}

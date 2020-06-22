@@ -7,7 +7,6 @@ configure:
 	$(call copy,docker,db.yml,run/api/configuration)
 	$(call copy,local,db.yml,server/src/api/Annium.Id.Api/configuration)
 	$(call copy,shared,private.key public.key,run/api/keys server/src/api/Annium.Id.Api/keys)
-	$(call copy,shared,private.key public.key,server/test/api/Annium.Id.IntegrationTests/keys)
 
 	@# db
 	$(call copy,docker,db.env,run/db)
@@ -15,9 +14,16 @@ configure:
 	@# migrator
 	$(call copy,local,db.yml,server/src/infrastructure/Annium.Id.Infrastructure.DbMigrator/configuration)
 
+	@# api
+	$(call copy,shared,private.key public.key,server/test/api/Annium.Id.Api.IntegrationTests/keys server/test/lib/Annium.Id.Core.Tests/keys)
+
 deconfigure:
 	rm -rf run
 	$(call clean,/configuration/ /keys/)
+
+
+gen-dotnet-test-client:
+	xrest dotnet gen -s http://localhost:9501 -a server/src/api/Annium.Id.Api/bin/Debug/netcoreapp3.1/Annium.Id.Api.dll -o server/test/api/Annium.Id.Api.TestClient -t -trace
 
 
 publish-api:
