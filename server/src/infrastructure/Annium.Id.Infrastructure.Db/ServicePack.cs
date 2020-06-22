@@ -35,7 +35,7 @@ namespace Annium.Id.Infrastructure.Db
                         {
                             $"Host={cfg.Host}",
                             $"Port={cfg.Port}",
-                            $"Database={cfg.Name}",
+                            $"Database={cfg.Database}",
                             $"Username={cfg.User}",
                             $"Password={cfg.Password}",
                             $"SSL Mode=Prefer",
