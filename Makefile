@@ -10,8 +10,8 @@ configure:
 	@# db
 	$(call copy,run/db,db.env)
 
-	# @# migrator
-	# $(call copy,server/src/shared/Crypted.Infrastructure.DbMigrator/configuration,db.yml)
+	@# migrator
+	$(call copy,server/src/infrastructure/Annium.Id.Infrastructure.DbMigrator/configuration,db.yml)
 
 deconfigure:
 	rm -rf run

@@ -40,7 +40,12 @@ namespace Annium.Id.Infrastructure.Db
                             $"Password={cfg.Password}",
                             $"SSL Mode=Prefer",
                             $"Trust Server Certificate=true",
-                        })
+                        }),
+                        options =>
+                        {
+                            options.EnableRetryOnFailure(10, TimeSpan.FromSeconds(30), Array.Empty<string>());
+                            options.MigrationsAssembly("Annium.Id.Infrastructure.DbMigrator");
+                        }
                     );
                 });
 

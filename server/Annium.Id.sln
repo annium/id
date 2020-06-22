@@ -41,6 +41,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Annium.Id.Infrastructure.Db
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Annium.Id.Infrastructure.Email", "src\infrastructure\Annium.Id.Infrastructure.Email\Annium.Id.Infrastructure.Email.csproj", "{6BFFA461-0D23-4F58-A3A6-704A4542746D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Annium.Id.Infrastructure.DbMigrator", "src\infrastructure\Annium.Id.Infrastructure.DbMigrator\Annium.Id.Infrastructure.DbMigrator.csproj", "{F997E989-208D-4FD1-B9D6-35C465AE6C68}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +73,7 @@ Global
 		{D142578E-4587-4374-B9D4-5EB8F0377EE2} = {3721B9F8-FCFC-4BAF-B833-20E323EDB094}
 		{D2AA3D5B-D795-4A4A-AD92-13EE9064FB63} = {D142578E-4587-4374-B9D4-5EB8F0377EE2}
 		{6BFFA461-0D23-4F58-A3A6-704A4542746D} = {D142578E-4587-4374-B9D4-5EB8F0377EE2}
+		{F997E989-208D-4FD1-B9D6-35C465AE6C68} = {D142578E-4587-4374-B9D4-5EB8F0377EE2}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{5DB9A2C8-13BE-49FB-9142-639953E54694}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -205,5 +208,17 @@ Global
 		{6BFFA461-0D23-4F58-A3A6-704A4542746D}.Release|x64.Build.0 = Release|Any CPU
 		{6BFFA461-0D23-4F58-A3A6-704A4542746D}.Release|x86.ActiveCfg = Release|Any CPU
 		{6BFFA461-0D23-4F58-A3A6-704A4542746D}.Release|x86.Build.0 = Release|Any CPU
+		{F997E989-208D-4FD1-B9D6-35C465AE6C68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F997E989-208D-4FD1-B9D6-35C465AE6C68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F997E989-208D-4FD1-B9D6-35C465AE6C68}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F997E989-208D-4FD1-B9D6-35C465AE6C68}.Debug|x64.Build.0 = Debug|Any CPU
+		{F997E989-208D-4FD1-B9D6-35C465AE6C68}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F997E989-208D-4FD1-B9D6-35C465AE6C68}.Debug|x86.Build.0 = Debug|Any CPU
+		{F997E989-208D-4FD1-B9D6-35C465AE6C68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F997E989-208D-4FD1-B9D6-35C465AE6C68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F997E989-208D-4FD1-B9D6-35C465AE6C68}.Release|x64.ActiveCfg = Release|Any CPU
+		{F997E989-208D-4FD1-B9D6-35C465AE6C68}.Release|x64.Build.0 = Release|Any CPU
+		{F997E989-208D-4FD1-B9D6-35C465AE6C68}.Release|x86.ActiveCfg = Release|Any CPU
+		{F997E989-208D-4FD1-B9D6-35C465AE6C68}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
