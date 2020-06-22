@@ -1,4 +1,5 @@
 using System;
+using Annium.Core.DependencyInjection;
 using Annium.Id.Core;
 using Annium.Id.Infrastructure.Db.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +29,9 @@ namespace Annium.Id.Infrastructure.Db
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfigurationsFromAssembly(GetType().Assembly);
+            builder.UseSnakeCase();
+            builder.UseDateTimeUtc();
+            builder.UseDeleteBehavior(DeleteBehavior.Restrict);
 
             builder.Entity<User>().HasData(new User
             {

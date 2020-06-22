@@ -1,5 +1,4 @@
 using Annium.Id.Infrastructure.Db.Entities;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Annium.Id.Infrastructure.Db.Configurations
@@ -13,7 +12,7 @@ namespace Annium.Id.Infrastructure.Db.Configurations
             builder.HasIndex(m => new { m.AppId, m.Key }).IsUnique();
 
             builder.HasOne<App>().WithMany().IsRequired()
-                .HasForeignKey(x => x.AppId).OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(x => x.AppId);
             builder.HasMany(x => x.Claims);
         }
     }

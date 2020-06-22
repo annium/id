@@ -1,5 +1,4 @@
 using Annium.Id.Infrastructure.Db.Entities;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Annium.Id.Infrastructure.Db.Configurations
@@ -11,7 +10,7 @@ namespace Annium.Id.Infrastructure.Db.Configurations
             base.Configure(builder);
 
             builder.HasOne<User>().WithMany()
-                .HasForeignKey(m => m.ReferralId).OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(m => m.ReferralId);
 
             builder.HasIndex(m => m.Login).IsUnique();
             builder.HasIndex(m => m.Email).IsUnique();
