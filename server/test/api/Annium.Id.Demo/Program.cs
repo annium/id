@@ -3,7 +3,7 @@ using Annium.Core.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace Annium.Id.DemoClient
+namespace Annium.Id.Demo
 {
     internal class Program
     {

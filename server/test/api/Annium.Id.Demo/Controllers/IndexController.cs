@@ -3,7 +3,7 @@ using Annium.Id.AspNetCore;
 using Annium.Id.Core;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Annium.Id.DemoClient.Controllers
+namespace Annium.Id.Demo.Controllers
 {
     [Route("/")]
     public class IndexController : ControllerBase

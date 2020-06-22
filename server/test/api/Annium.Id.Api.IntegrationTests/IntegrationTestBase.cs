@@ -39,8 +39,8 @@ namespace Annium.Id.Api.IntegrationTests
             services => services.AddSingleton<IEmailService>(emailService)
         );
 
-        protected IHttpRequest demo(Guid appId) => GetRequest<Id.DemoClient.Startup>(
-            builder => builder.UseServicePack<Id.DemoClient.ServicePack>(),
+        protected IHttpRequest demo(Guid appId) => GetRequest<Demo.Startup>(
+            builder => builder.UseServicePack<Demo.ServicePack>(),
             (IServiceCollection services) => services
                 .AddIdAuthorization(options =>
                 {

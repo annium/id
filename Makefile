@@ -14,8 +14,14 @@ configure:
 	@# migrator
 	$(call copy,local,db.yml,server/src/infrastructure/Annium.Id.Infrastructure.DbMigrator/configuration)
 
-	@# api
-	$(call copy,shared,private.key public.key,server/test/api/Annium.Id.Api.IntegrationTests/keys server/test/lib/Annium.Id.Core.Tests/keys)
+	@# tests api
+	$(call copy,shared,private.key public.key,server/test/api/Annium.Id.Api.IntegrationTests/keys)
+
+	@# tests demo
+	$(call copy,shared,private.key public.key,server/test/api/Annium.Id.DemoClient/keys)
+
+	@# tests core
+	$(call copy,shared,private.key public.key,server/test/lib/Annium.Id.Core.Tests/keys)
 
 deconfigure:
 	rm -rf run

@@ -4,7 +4,7 @@ using Annium.Core.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
 
-namespace Annium.Id.DemoClient
+namespace Annium.Id.Demo
 {
     public class ServicePack : ServicePackBase
     {

@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
     <PropertyGroup>
-        <PackageId>Annium.Id.DemoClient</PackageId>
+        <PackageId>Annium.Id.Demo</PackageId>
         <PackageVersion>0.1.0</PackageVersion>
         <Description>Annium.Id.DemoClient</Description>
         <TargetFramework>netcoreapp3.1</TargetFramework>
