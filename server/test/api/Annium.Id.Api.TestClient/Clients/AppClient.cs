@@ -52,7 +52,7 @@ namespace Annium.Id.Api.TestClient.Clients
 
         public async Task<IHttpResponse<IResult>> UpdateApp(
             Guid appId,
-            UpdateAppRequestBase body
+            UpdateAppRequestBody body
         )
         {
             return await Request.Clone()

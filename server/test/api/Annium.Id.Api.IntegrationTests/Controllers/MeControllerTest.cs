@@ -21,7 +21,8 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
             var payload = new RegisterMeRequest { Login = "demo" };
 
             // act
-            var response = await id.Post("/me").JsonContent(payload).RunAsync();
+            var response = await Id().Me.RegisterMe(payload);
+            // var response = await id.Post("/me").JsonContent(payload).RunAsync();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
@@ -96,7 +97,7 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
 
             // act
             await id.Post($"/me/{Constants.IdAppId}/restore-access")
-                .JsonContent(new RestoreMyAccessRequestBase { Server = "http://localhost/", Email = "someemail@email.com" })
+                .JsonContent(new RestoreMyAccessRequestBody { Server = "http://localhost/", Email = "someemail@email.com" })
                 .EnsureSuccessStatusCode()
                 .RunAsync();
             var accessToken = emailService.Emails.Last().Data.As<RestoreAccessData>().Tokens.AccessToken;

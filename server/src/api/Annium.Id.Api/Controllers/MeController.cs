@@ -27,25 +27,25 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpPost("{appId:guid}/confirm-email")]
-        public Task<IResult<TokensResponse>> ConfirmMyEmail(Guid appId, [FromBody] ConfirmMyEmailRequestBase requestBase)
+        public Task<IResult<TokensResponse>> ConfirmMyEmail(Guid appId, [FromBody] ConfirmMyEmailRequestBody RequestBody)
         {
             var request = new ConfirmMyEmailRequest
             {
                 AppId = appId,
-                Id = requestBase.Id,
+                Id = RequestBody.Id,
             };
 
             return HandleAsync<ConfirmMyEmailRequest, TokensResponse>(request);
         }
 
         [HttpPost("{appId:guid}/restore-access")]
-        public Task<IResult> RestoreMyAccess(Guid appId, [FromBody] RestoreMyAccessRequestBase requestBase)
+        public Task<IResult> RestoreMyAccess(Guid appId, [FromBody] RestoreMyAccessRequestBody RequestBody)
         {
             var request = new RestoreMyAccessRequest
             {
                 AppId = appId,
-                Server = requestBase.Server,
-                Email = requestBase.Email,
+                Server = RequestBody.Server,
+                Email = RequestBody.Email,
             };
 
             return HandleAsync(request);

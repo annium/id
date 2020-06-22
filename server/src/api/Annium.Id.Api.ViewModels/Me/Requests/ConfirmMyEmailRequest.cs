@@ -4,12 +4,12 @@ using Annium.Id.Api.Application.Commands.Me;
 
 namespace Annium.Id.Api.ViewModels.Me.Requests
 {
-    public class ConfirmMyEmailRequest : ConfirmMyEmailRequestBase, IRequest<ConfirmMyEmailCommand>
+    public class ConfirmMyEmailRequest : ConfirmMyEmailRequestBody, IRequest<ConfirmMyEmailCommand>
     {
         public Guid AppId { get; set; }
     }
 
-    public class ConfirmMyEmailRequestBase
+    public class ConfirmMyEmailRequestBody
     {
         public Guid Id { get; set; }
     }

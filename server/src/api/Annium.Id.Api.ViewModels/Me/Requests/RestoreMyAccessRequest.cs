@@ -4,12 +4,12 @@ using Annium.Id.Api.Application.Commands.Me;
 
 namespace Annium.Id.Api.ViewModels.Me.Requests
 {
-    public class RestoreMyAccessRequest : RestoreMyAccessRequestBase, IRequest<RestoreMyAccessCommand>
+    public class RestoreMyAccessRequest : RestoreMyAccessRequestBody, IRequest<RestoreMyAccessCommand>
     {
         public Guid AppId { get; set; }
     }
 
-    public class RestoreMyAccessRequestBase
+    public class RestoreMyAccessRequestBody
     {
         public string Server { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;

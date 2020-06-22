@@ -15,7 +15,7 @@ namespace Annium.Id.Api.TestClient.Clients
 
         public async Task<IHttpResponse<IResult<TokensResponse>>> LogIn(
             Guid appId,
-            LogInRequestBase body
+            LogInRequestBody body
         )
         {
             return await Request.Clone()

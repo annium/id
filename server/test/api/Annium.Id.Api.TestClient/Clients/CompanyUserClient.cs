@@ -48,7 +48,7 @@ namespace Annium.Id.Api.TestClient.Clients
             Guid claimId,
             Guid companyId,
             Guid userId,
-            AddCompanyClaimToCompanyUserRequestBase body
+            AddCompanyClaimToCompanyUserRequestBody body
         )
         {
             return await Request.Clone()

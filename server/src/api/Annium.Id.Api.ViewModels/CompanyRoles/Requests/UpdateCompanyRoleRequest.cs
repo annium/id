@@ -4,12 +4,12 @@ using Annium.Id.Api.Application.Commands.CompanyRoles;
 
 namespace Annium.Id.Api.ViewModels.CompanyRoles.Requests
 {
-    public class UpdateCompanyRoleRequest : UpdateCompanyRoleRequestBase, IRequest<UpdateCompanyRoleCommand>
+    public class UpdateCompanyRoleRequest : UpdateCompanyRoleRequestBody, IRequest<UpdateCompanyRoleCommand>
     {
         public Guid RoleId { get; set; }
     }
 
-    public class UpdateCompanyRoleRequestBase
+    public class UpdateCompanyRoleRequestBody
     {
         public string Key { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;

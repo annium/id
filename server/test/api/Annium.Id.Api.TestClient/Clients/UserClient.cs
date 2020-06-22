@@ -35,7 +35,7 @@ namespace Annium.Id.Api.TestClient.Clients
         public async Task<IHttpResponse<IResult>> AddClaimToUser(
             Guid claimId,
             Guid userId,
-            AddClaimToUserRequestBase body
+            AddClaimToUserRequestBody body
         )
         {
             return await Request.Clone()

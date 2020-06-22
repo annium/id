@@ -26,7 +26,7 @@ namespace Annium.Id.Api.TestClient.Clients
 
         public async Task<IHttpResponse<IResult<TokensResponse>>> ConfirmMyEmail(
             Guid appId,
-            ConfirmMyEmailRequestBase body
+            ConfirmMyEmailRequestBody body
         )
         {
             return await Request.Clone()
@@ -37,7 +37,7 @@ namespace Annium.Id.Api.TestClient.Clients
 
         public async Task<IHttpResponse<IResult>> RestoreMyAccess(
             Guid appId,
-            RestoreMyAccessRequestBase body
+            RestoreMyAccessRequestBody body
         )
         {
             return await Request.Clone()

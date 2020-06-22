@@ -39,13 +39,13 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPost("claims/{claimId:guid}")]
         [Authorize]
-        public Task<IResult> AddClaimToUser(Guid userId, Guid claimId, [FromBody] AddClaimToUserRequestBase requestBase)
+        public Task<IResult> AddClaimToUser(Guid userId, Guid claimId, [FromBody] AddClaimToUserRequestBody RequestBody)
         {
             var request = new AddClaimToUserRequest
             {
                 UserId = userId,
                 ClaimId = claimId,
-                Value = requestBase.Value,
+                Value = RequestBody.Value,
             };
 
             return HandleAsync(request);

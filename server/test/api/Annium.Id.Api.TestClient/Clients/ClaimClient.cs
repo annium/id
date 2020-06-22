@@ -36,7 +36,7 @@ namespace Annium.Id.Api.TestClient.Clients
 
         public async Task<IHttpResponse<IResult>> UpdateClaim(
             Guid claimId,
-            UpdateClaimRequestBase body
+            UpdateClaimRequestBody body
         )
         {
             return await Request.Clone()

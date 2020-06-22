@@ -4,12 +4,12 @@ using Annium.Id.Api.Application.Commands.Apps;
 
 namespace Annium.Id.Api.ViewModels.Apps.Requests
 {
-    public class UpdateAppRequest : UpdateAppRequestBase, IRequest<UpdateAppCommand>
+    public class UpdateAppRequest : UpdateAppRequestBody, IRequest<UpdateAppCommand>
     {
         public Guid AppId { get; set; }
     }
 
-    public class UpdateAppRequestBase
+    public class UpdateAppRequestBody
     {
         public string Name { get; set; } = string.Empty;
     }

@@ -45,7 +45,7 @@ namespace Annium.Id.Api.TestClient.Clients
 
         public async Task<IHttpResponse<IResult>> UpdateCompany(
             Guid companyId,
-            UpdateCompanyRequestBase body
+            UpdateCompanyRequestBody body
         )
         {
             return await Request.Clone()

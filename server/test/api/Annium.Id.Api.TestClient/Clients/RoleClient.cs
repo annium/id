@@ -36,7 +36,7 @@ namespace Annium.Id.Api.TestClient.Clients
 
         public async Task<IHttpResponse<IResult>> UpdateRole(
             Guid roleId,
-            UpdateRoleRequestBase body
+            UpdateRoleRequestBody body
         )
         {
             return await Request.Clone()
@@ -48,7 +48,7 @@ namespace Annium.Id.Api.TestClient.Clients
         public async Task<IHttpResponse<IResult>> AddClaimToRole(
             Guid claimId,
             Guid roleId,
-            AddClaimToRoleRequestBase body
+            AddClaimToRoleRequestBody body
         )
         {
             return await Request.Clone()
