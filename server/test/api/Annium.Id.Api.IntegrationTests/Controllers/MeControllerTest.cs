@@ -30,7 +30,7 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task RegisterMe_LoginIsNotUnique_BadRequest()
         {
             // arrange
-            var user = await RegisterLogUserInGetUserAsync();
+            var user = await Id().RegisterLogInGetUser();
             var request = new RegisterMeRequest { Server = "http://localhost/", Login = user.Login, Email = "asd1@demo.com" };
 
             // act
@@ -44,7 +44,7 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task RegisterMe_EmailIsNotUnique_BadRequest()
         {
             // arrange
-            var user = await RegisterLogUserInGetUserAsync();
+            var user = await Id().RegisterLogInGetUser();
             var request = new RegisterMeRequest { Server = "http://localhost/", Login = "uniqueLogin", Email = user.Email };
 
             // act
@@ -71,13 +71,13 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task RegisterMe_ValidData_Ok()
         {
             // arrange
-            var referral = await Id().GetOtherUser();
+            var referral = await Id().RegisterLogInGetOtherUser();
             var login = "demo";
             var email = "demo@demo.com";
             var password = "test1test";
 
             // act
-            var response = await Id().GetUser(login, email, password, referral.Id);
+            var response = await Id().RegisterLogInGetUser(login, email, password, referral.Id);
 
             // assert
             response.Id.IsNotDefault();
@@ -90,7 +90,7 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task RestoreMyAccess_ValidEmail_Ok()
         {
             // arrange
-            var token = await Id().LogUserIn();
+            var token = await Id().RegisterLogUserIn();
             var user = await Id(token).Me.GetMe();
             var request = new RestoreMyAccessRequestBody { Server = "http://localhost/", Email = user.Data.Data.Email };
 
@@ -107,7 +107,7 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task GetMe_AuthenticatedUser_Ok()
         {
             // arrange
-            var token = await Id().LogUserIn();
+            var token = await Id().RegisterLogUserIn();
 
             // act
             var response = await Id(token).Me.GetMe();
@@ -120,7 +120,7 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task UpdateMyProfile_IncorrectPayload_BadRequest()
         {
             // arrange
-            var token = await Id().LogUserIn();
+            var token = await Id().RegisterLogUserIn();
             var request = new UpdateMyProfileRequest { Login = "demo" };
 
             // act
@@ -134,8 +134,8 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task UpdateMyProfile_LoginIsNotUnique_BadRequest()
         {
             // arrange
-            var token = await Id().LogUserIn();
-            var other = await RegisterLogUserInGetUserAsync("uniqueLogin", "SomePassHere000", "asd1@demo.com");
+            var token = await Id().RegisterLogUserIn();
+            var other = await Id().RegisterLogInGetOtherUser();
             var request = new UpdateMyProfileRequest { Login = other.Login, Email = "asd2@demo.com" };
 
             // act
@@ -149,8 +149,8 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task UpdateMyProfile_EmailIsNotUnique_BadRequest()
         {
             // arrange
-            var token = await Id().LogUserIn();
-            var other = await RegisterLogUserInGetUserAsync("uniqueLogin", "SomePassHere000", "asd1@demo.com");
+            var token = await Id().RegisterLogUserIn();
+            var other = await Id().RegisterLogInGetOtherUser();
             var request = new UpdateMyProfileRequest { Login = "otherLogin", Email = other.Email };
 
             // act
@@ -164,7 +164,7 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task UpdateMyProfile_ValidData_Ok()
         {
             // arrange
-            var token = await Id().LogUserIn();
+            var token = await Id().RegisterLogUserIn();
             var request = new UpdateMyProfileRequest { Login = "other", Email = "other@other.com" };
 
             // act
@@ -178,7 +178,7 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task UpdateMyPassword_IncorrectPayload_BadRequest()
         {
             // arrange
-            var token = await Id().LogUserIn();
+            var token = await Id().RegisterLogUserIn();
             var request = new UpdateMyPasswordRequest { Password = "demo" };
 
             // act
@@ -192,7 +192,7 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task UpdateMyPassword_ValidData_Ok()
         {
             // arrange
-            var token = await Id().LogUserIn();
+            var token = await Id().RegisterLogUserIn();
             var request = new UpdateMyPasswordRequest { Password = "MoreSecurePass###" };
 
             // act
@@ -206,7 +206,7 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task UnregisterMe_ValidData_Ok()
         {
             // arrange
-            var token = await Id().LogUserIn();
+            var token = await Id().RegisterLogUserIn();
 
             // act
             var response = await Id(token).Me.UnregisterMe();

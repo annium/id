@@ -26,37 +26,81 @@ namespace Annium.Id.Api.TestClient
             Guid? referralId = null
         ) => client.RegisterUserInternal(Constants.IdAppId, login, email, referralId);
 
-        public static Task<string> LogUserIn(
+        public static Task<string> RegisterLogUserIn(
+            this ExtendedClient client,
+            Guid appId,
+            string login = "demo",
+            string email = "demo@demo.com",
+            string password = "test1test",
+            Guid? referralId = null
+        ) => client.RegisterLogUserInInternal(appId, login, email, password, referralId);
+
+        public static Task<string> RegisterLogOtherUserIn(
+            this ExtendedClient client,
+            Guid appId,
+            string login = "demo2",
+            string email = "demo2@demo.com",
+            string password = "test2test",
+            Guid? referralId = null
+        ) => client.RegisterLogUserInInternal(appId, login, email, password, referralId);
+
+        public static Task<string> RegisterLogUserIn(
             this ExtendedClient client,
             string login = "demo",
             string email = "demo@demo.com",
             string password = "test1test",
             Guid? referralId = null
-        ) => client.LogUserInInternal(Constants.IdAppId, login, email, password, referralId);
+        ) => client.RegisterLogUserInInternal(Constants.IdAppId, login, email, password, referralId);
+
+        public static Task<string> RegisterLogOtherUserIn(
+            this ExtendedClient client,
+            string login = "demo2",
+            string email = "demo2@demo.com",
+            string password = "test2test",
+            Guid? referralId = null
+        ) => client.RegisterLogUserInInternal(Constants.IdAppId, login, email, password, referralId);
+
+        public static Task<string> LogUserIn(
+            this ExtendedClient client,
+            Guid appId,
+            string login = "demo",
+            string password = "test1test"
+        ) => client.LogUserInInternal(appId, login, password);
+
+        public static Task<string> LogOtherUserIn(
+            this ExtendedClient client,
+            Guid appId,
+            string login = "demo2",
+            string password = "test2test"
+        ) => client.LogUserInInternal(appId, login, password);
+
+        public static Task<string> LogUserIn(
+            this ExtendedClient client,
+            string login = "demo",
+            string password = "test1test"
+        ) => client.LogUserInInternal(Constants.IdAppId, login, password);
 
         public static Task<string> LogOtherUserIn(
             this ExtendedClient client,
             string login = "demo2",
-            string email = "demo2@demo.com",
-            string password = "test2test",
-            Guid? referralId = null
-        ) => client.LogUserInInternal(Constants.IdAppId, login, email, password, referralId);
+            string password = "test2test"
+        ) => client.LogUserInInternal(Constants.IdAppId, login, password);
 
-        public static Task<MeResponse> GetUser(
+        public static Task<MeResponse> RegisterLogInGetUser(
             this ExtendedClient client,
             string login = "demo",
             string email = "demo@demo.com",
             string password = "test1test",
             Guid? referralId = null
-        ) => client.GetUserInternal(Constants.IdAppId, login, email, password, referralId);
+        ) => client.RegisterLogInGetUserInternal(Constants.IdAppId, login, email, password, referralId);
 
-        public static Task<MeResponse> GetOtherUser(
+        public static Task<MeResponse> RegisterLogInGetOtherUser(
             this ExtendedClient client,
             string login = "demo2",
             string email = "demo2@demo.com",
             string password = "test2test",
             Guid? referralId = null
-        ) => client.GetUserInternal(Constants.IdAppId, login, email, password, referralId);
+        ) => client.RegisterLogInGetUserInternal(Constants.IdAppId, login, email, password, referralId);
 
         private static async Task<string> RegisterUserInternal(
             this ExtendedClient client,
@@ -84,7 +128,7 @@ namespace Annium.Id.Api.TestClient
             return tokens.Data.Data.AccessToken;
         }
 
-        private static async Task<string> LogUserInInternal(
+        private static async Task<string> RegisterLogUserInInternal(
             this ExtendedClient client,
             Guid appId,
             string login = "demo",
@@ -104,7 +148,20 @@ namespace Annium.Id.Api.TestClient
             return tokens.Data.Data.AccessToken;
         }
 
-        private static async Task<MeResponse> GetUserInternal(
+        private static async Task<string> LogUserInInternal(
+            this ExtendedClient client,
+            Guid appId,
+            string login = "demo",
+            string password = "test1test"
+        )
+        {
+            // perform regular login
+            var tokens = await client.Login.LogIn(appId, new LogInRequestBody { Login = login, Password = password });
+
+            return tokens.Data.Data.AccessToken;
+        }
+
+        private static async Task<MeResponse> RegisterLogInGetUserInternal(
             this ExtendedClient client,
             Guid appId,
             string login = "demo",
@@ -113,7 +170,7 @@ namespace Annium.Id.Api.TestClient
             Guid? referralId = null
         )
         {
-            var token = await client.LogUserInInternal(appId, login, email, password, referralId);
+            var token = await client.RegisterLogUserInInternal(appId, login, email, password, referralId);
 
             var me = await client.WithToken(token).Me.GetMe();
 
