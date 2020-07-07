@@ -12,7 +12,7 @@ namespace Annium.Id.Api.TestClient.Clients
             this ClaimClient client,
             Guid appId,
             string key = "one",
-            string name = "First role"
+            string name = "First claim"
         )
         {
             var request = new CreateClaimRequest { AppId = appId, Key = key, Name = name };
@@ -26,7 +26,7 @@ namespace Annium.Id.Api.TestClient.Clients
             this ClaimClient client,
             Guid appId,
             string key = "two",
-            string name = "Second role"
+            string name = "Second claim"
         ) => client.Register(appId, key, name);
     }
 }
