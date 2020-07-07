@@ -90,14 +90,14 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task RestoreMyAccess_ValidEmail_Ok()
         {
             // arrange
-            var accessToken = await Id().LogUserIn();
-            var user = await Id(accessToken).Me.GetMe();
+            var token = await Id().LogUserIn();
+            var user = await Id(token).Me.GetMe();
             var request = new RestoreMyAccessRequestBody { Server = "http://localhost/", Email = user.Data.Data.Email };
 
             // act
-            await Id(accessToken).Me.RestoreMyAccess(Constants.IdAppId, request);
-            accessToken = emailService.Emails.Last().Data.As<RestoreAccessData>().Tokens.AccessToken;
-            var response = await Id(accessToken).Me.GetMe();
+            await Id(token).Me.RestoreMyAccess(Constants.IdAppId, request);
+            token = emailService.Emails.Last().Data.As<RestoreAccessData>().Tokens.AccessToken;
+            var response = await Id(token).Me.GetMe();
 
             // assert
             response.Data.Data.Id.IsEqual(user.Data.Data.Id);
@@ -107,10 +107,10 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task GetMe_AuthenticatedUser_Ok()
         {
             // arrange
-            var accessToken = await Id().LogUserIn();
+            var token = await Id().LogUserIn();
 
             // act
-            var response = await Id(accessToken).Me.GetMe();
+            var response = await Id(token).Me.GetMe();
 
             // assert
             response.Data.Data.Id.IsNotDefault();
@@ -120,11 +120,11 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task UpdateMyProfile_IncorrectPayload_BadRequest()
         {
             // arrange
-            var accessToken = await Id().LogUserIn();
+            var token = await Id().LogUserIn();
             var request = new UpdateMyProfileRequest { Login = "demo" };
 
             // act
-            var response = await Id(accessToken).Me.UpdateMyProfile(request);
+            var response = await Id(token).Me.UpdateMyProfile(request);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
@@ -134,12 +134,12 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task UpdateMyProfile_LoginIsNotUnique_BadRequest()
         {
             // arrange
-            var accessToken = await Id().LogUserIn();
+            var token = await Id().LogUserIn();
             var other = await RegisterLogUserInGetUserAsync("uniqueLogin", "SomePassHere000", "asd1@demo.com");
             var request = new UpdateMyProfileRequest { Login = other.Login, Email = "asd2@demo.com" };
 
             // act
-            var response = await Id(accessToken).Me.UpdateMyProfile(request);
+            var response = await Id(token).Me.UpdateMyProfile(request);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Conflict);
@@ -149,12 +149,12 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task UpdateMyProfile_EmailIsNotUnique_BadRequest()
         {
             // arrange
-            var accessToken = await Id().LogUserIn();
+            var token = await Id().LogUserIn();
             var other = await RegisterLogUserInGetUserAsync("uniqueLogin", "SomePassHere000", "asd1@demo.com");
             var request = new UpdateMyProfileRequest { Login = "otherLogin", Email = other.Email };
 
             // act
-            var response = await Id(accessToken).Me.UpdateMyProfile(request);
+            var response = await Id(token).Me.UpdateMyProfile(request);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Conflict);
@@ -164,11 +164,11 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task UpdateMyProfile_ValidData_Ok()
         {
             // arrange
-            var accessToken = await Id().LogUserIn();
+            var token = await Id().LogUserIn();
             var request = new UpdateMyProfileRequest { Login = "other", Email = "other@other.com" };
 
             // act
-            var response = await Id(accessToken).Me.UpdateMyProfile(request);
+            var response = await Id(token).Me.UpdateMyProfile(request);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.OK);
@@ -178,11 +178,11 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task UpdateMyPassword_IncorrectPayload_BadRequest()
         {
             // arrange
-            var accessToken = await Id().LogUserIn();
+            var token = await Id().LogUserIn();
             var request = new UpdateMyPasswordRequest { Password = "demo" };
 
             // act
-            var response = await Id(accessToken).Me.UpdateMyPassword(request);
+            var response = await Id(token).Me.UpdateMyPassword(request);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
@@ -192,11 +192,11 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task UpdateMyPassword_ValidData_Ok()
         {
             // arrange
-            var accessToken = await Id().LogUserIn();
+            var token = await Id().LogUserIn();
             var request = new UpdateMyPasswordRequest { Password = "MoreSecurePass###" };
 
             // act
-            var response = await Id(accessToken).Me.UpdateMyPassword(request);
+            var response = await Id(token).Me.UpdateMyPassword(request);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.OK);
@@ -206,10 +206,10 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task UnregisterMe_ValidData_Ok()
         {
             // arrange
-            var accessToken = await Id().LogUserIn();
+            var token = await Id().LogUserIn();
 
             // act
-            var response = await Id(accessToken).Me.UnregisterMe();
+            var response = await Id(token).Me.UnregisterMe();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.OK);
