@@ -1,10 +1,11 @@
 using System;
 using System.Net;
 using System.Threading.Tasks;
+using Annium.Id.Api.TestClient;
+using Annium.Id.Api.TestClient.Clients;
 using Annium.Id.Api.ViewModels.Apps.Requests;
 using Annium.Id.Api.ViewModels.Apps.Responses;
 using Annium.Id.Core;
-using Annium.Net.Http;
 using Annium.Testing;
 using Xunit;
 
@@ -16,11 +17,11 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task Create_InvalidPayload_BadRequest()
         {
             // arrange
-            var tokens = await RegisterLogUserInAsync();
-            var payload = new CreateAppRequest() { Name = "x" };
+            var token = await Id().RegisterLogUserIn();
+            var request = new CreateAppRequest { Name = "x" };
 
             // act
-            var response = await id.Post("/apps").BearerAuthorization(tokens.AccessToken).JsonContent(payload).RunAsync();
+            var response = await Id(token).App.CreateApp(request);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
@@ -30,15 +31,15 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task Create_ValidPayload_Ok()
         {
             // arrange
-            var tokens = await RegisterLogUserInAsync();
+            var token = await Id().RegisterLogUserIn();
             var appName = "Demo App";
 
             // act
-            var app = await CreateAppAsync(tokens.AccessToken, appName);
-            var apps = (await id.Get("/apps").AsResultAsync<AppResponse[]>()).Data;
+            var app = await Id(token).App.Register(appName);
+            var apps = await Id(token).App.ListApps();
 
             // assert
-            apps.Has(2);
+            apps.Data.Data.Has(2);
             app.Name.IsEqual(appName);
         }
 
@@ -46,10 +47,10 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task GetApiToken_Missing_NotFound()
         {
             // arrange
-            var tokens = await RegisterLogUserInAsync();
+            var token = await Id().RegisterLogUserIn();
 
             // act
-            var response = await id.Get($"/apps/{Guid.NewGuid()}/token").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await Id(token).App.GetAppApiToken(Guid.NewGuid());
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -59,12 +60,12 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task GetApiToken_NotOwner_Forbidden()
         {
             // arrange
-            var ownerTokens = await RegisterLogUserInAsync("owner", "superpass", "some@email.com");
-            var app = await CreateAppAsync(ownerTokens.AccessToken);
-            var tokens = await RegisterLogUserInAsync();
+            var otherToken = await Id().RegisterLogOtherUserIn();
+            var app = await Id(otherToken).App.Register();
+            var token = await Id().RegisterLogUserIn();
 
             // act
-            var response = await id.Get($"/apps/{app.Id}/token").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await Id(token).App.GetAppApiToken(app.Id);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -74,11 +75,11 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task GetApiToken_Valid_Ok()
         {
             // arrange
-            var tokens = await RegisterLogUserInAsync();
-            var app = await CreateAppAsync(tokens.AccessToken);
+            var token = await Id().RegisterLogUserIn();
+            var app = await Id(token).App.Register();
 
             // act
-            var response = (await id.Get($"/apps/{app.Id}/token").BearerAuthorization(tokens.AccessToken).AsResultAsync<Guid>()).Data;
+            var response = await Id(token).App.GetAppApiToken(app.Id).GetData();
 
             // assert
             response.IsNotDefault();
@@ -88,10 +89,10 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task UpdateApiToken_Missing_NotFound()
         {
             // arrange
-            var tokens = await RegisterLogUserInAsync();
+            var token = await Id().RegisterLogUserIn();
 
             // act
-            var response = await id.Put($"/apps/{Guid.NewGuid()}/token").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await Id(token).App.UpdateAppApiToken(Guid.NewGuid());
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -101,12 +102,12 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task UpdateApiToken_NotOwner_Forbidden()
         {
             // arrange
-            var ownerTokens = await RegisterLogUserInAsync("owner", "superpass", "some@email.com");
-            var app = await CreateAppAsync(ownerTokens.AccessToken);
-            var tokens = await RegisterLogUserInAsync();
+            var otherToken = await Id().RegisterLogOtherUserIn();
+            var app = await Id(otherToken).App.Register();
+            var token = await Id().RegisterLogUserIn();
 
             // act
-            var response = await id.Put($"/apps/{app.Id}/token").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await Id(token).App.UpdateAppApiToken(app.Id);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -116,21 +117,21 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task UpdateApiToken_Valid_Ok()
         {
             // arrange
-            var tokens = await RegisterLogUserInAsync();
-            var app = await CreateAppAsync(tokens.AccessToken);
+            var token = await Id().RegisterLogUserIn();
+            var app = await Id(token).App.Register();
 
             // act
-            var response = (await id.Put($"/apps/{app.Id}/token").BearerAuthorization(tokens.AccessToken).AsResultAsync<Guid>()).Data;
+            var response = await Id(token).App.UpdateAppApiToken(app.Id);
 
             // assert
-            response.IsNotDefault();
+            response.Data.Data.IsNotDefault();
         }
 
         [Fact]
         public async Task List_Ok()
         {
             // act
-            var response = (await id.Get("/apps").AsResultAsync<AppResponse[]>()).Data;
+            var response = await Id().App.ListApps().GetData();
 
             // assert
             response.Has(1);
@@ -141,12 +142,12 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task Update_IncorrectPayload_BadRequest()
         {
             // arrange
-            var tokens = await RegisterLogUserInAsync();
-            var app = await CreateAppAsync(tokens.AccessToken);
-            var u = new UpdateAppRequest { Name = "d" };
+            var token = await Id().RegisterLogUserIn();
+            var app = await Id(token).App.Register();
+            var request = new UpdateAppRequestBody { Name = "d" };
 
             // act
-            var response = await id.Put($"/apps/{app.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
+            var response = await Id(token).App.UpdateApp(app.Id, request);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
@@ -156,11 +157,11 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task Update_Missing_NotFound()
         {
             // arrange
-            var tokens = await RegisterLogUserInAsync();
-            var u = new UpdateAppRequest { Name = "Demo App" };
+            var token = await Id().RegisterLogUserIn();
+            var request = new UpdateAppRequestBody { Name = "Demo App" };
 
             // act
-            var response = await id.Put($"/apps/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
+            var response = await Id(token).App.UpdateApp(Guid.NewGuid(), request);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -170,13 +171,13 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task Update_NotOwner_Forbidden()
         {
             // arrange
-            var ownerTokens = await RegisterLogUserInAsync("owner", "superpass", "some@email.com");
-            var app = await CreateAppAsync(ownerTokens.AccessToken);
-            var tokens = await RegisterLogUserInAsync();
-            var u = new UpdateAppRequest { Name = "Demo App" };
+            var otherToken = await Id().RegisterLogOtherUserIn();
+            var app = await Id(otherToken).App.Register();
+            var token = await Id().RegisterLogUserIn();
+            var request = new UpdateAppRequestBody { Name = "Demo App" };
 
             // act
-            var response = await id.Put($"/apps/{app.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
+            var response = await Id(token).App.UpdateApp(app.Id, request);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -186,27 +187,27 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task Update_Valid_Ok()
         {
             // arrange
-            var tokens = await RegisterLogUserInAsync();
-            var app = await CreateAppAsync(tokens.AccessToken, "Demo App");
-            var u = new UpdateAppRequest { Name = "Medo App" };
+            var token = await Id().RegisterLogUserIn();
+            var app = await Id(token).App.Register();
+            var request = new UpdateAppRequestBody { Name = "Demo App Updated" };
 
             // act
-            var updateResponse = await id.Put($"/apps/{app.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(u).RunAsync();
-            updateResponse.StatusCode.IsEqual(HttpStatusCode.OK);
-            var response = (await id.Get($"/apps/{app.Id}").BearerAuthorization(tokens.AccessToken).AsResultAsync<AppResponse>()).Data;
+            var response = await Id(token).App.UpdateApp(app.Id, request);
+            var result = await Id(token).App.GetApp(app.Id).GetData();
 
             // assert
-            response.IsEqual(new AppResponse { Id = app.Id, Name = u.Name });
+            response.StatusCode.IsEqual(HttpStatusCode.OK);
+            result.IsEqual(new AppResponse { Id = app.Id, Name = request.Name });
         }
 
         [Fact]
         public async Task SetOwner_MissingApp_NotFound()
         {
             // arrange
-            var tokens = await RegisterLogUserInAsync();
+            var token = await Id().RegisterLogUserIn();
 
             // act
-            var response = await id.Put($"/apps/{Guid.NewGuid()}/owner/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await Id(token).App.SetAppOwner(Guid.NewGuid(), Guid.NewGuid());
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -216,13 +217,13 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task SetOwner_NotOwner_Forbidden()
         {
             // arrange
-            var ownerTokens = await RegisterLogUserInAsync("owner", "superpass", "some@email.com");
-            var app = await CreateAppAsync(ownerTokens.AccessToken, "Demo App");
-            var tokens = await RegisterLogUserInAsync();
-            var user = await GetUserAsync(tokens.AccessToken);
+            var otherToken = await Id().RegisterLogOtherUserIn();
+            var app = await Id(otherToken).App.Register();
+            var token = await Id().RegisterLogUserIn();
+            var me = await Id(token).Me.GetMe().GetData();
 
             // act
-            var response = await id.Put($"/apps/{app.Id}/owner/{user.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await Id(token).App.SetAppOwner(app.Id, me.Id);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -232,11 +233,11 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task SetOwner_MissingSuccessor_NotFound()
         {
             // arrange
-            var ownerTokens = await RegisterLogUserInAsync("owner", "superpass", "some@email.com");
-            var app = await CreateAppAsync(ownerTokens.AccessToken, "Demo App");
+            var token = await Id().RegisterLogUserIn();
+            var app = await Id(token).App.Register();
 
             // act
-            var response = await id.Put($"/apps/{app.Id}/owner/{Guid.NewGuid()}").BearerAuthorization(ownerTokens.AccessToken).RunAsync();
+            var response = await Id(token).App.SetAppOwner(app.Id, Guid.NewGuid());
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -246,17 +247,17 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task SetOwner_Valid_Ok()
         {
             // arrange
-            var ownerTokens = await RegisterLogUserInAsync("owner", "superpass", "some@email.com");
-            var app = await CreateAppAsync(ownerTokens.AccessToken, "Demo App");
-            var tokens = await RegisterLogUserInAsync();
-            var user = await GetUserAsync(tokens.AccessToken);
+            var token = await Id().RegisterLogUserIn();
+            var app = await Id(token).App.Register();
+            var otherToken = await Id().RegisterLogOtherUserIn();
+            var user = await Id(otherToken).Me.GetMe().GetData();
 
             // act
-            var response = await id.Put($"/apps/{app.Id}/owner/{user.Id}").BearerAuthorization(ownerTokens.AccessToken).RunAsync();
-            response.StatusCode.IsEqual(HttpStatusCode.OK);
-            var appTokenResult = await id.Get($"/apps/{app.Id}/token").BearerAuthorization(tokens.AccessToken).AsResultAsync<Guid>();
+            var response = await Id(token).App.SetAppOwner(app.Id, user.Id);
+            var appTokenResult = await Id(otherToken).App.GetAppApiToken(app.Id).GetResult();
 
             // assert
+            response.StatusCode.IsEqual(HttpStatusCode.OK);
             appTokenResult.HasErrors.IsFalse();
             appTokenResult.Data.IsNotDefault();
         }
@@ -265,10 +266,10 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task Delete_MissingApp_NotFound()
         {
             // arrange
-            var tokens = await RegisterLogUserInAsync();
+            var token = await Id().RegisterLogUserIn();
 
             // act
-            var response = await id.Delete($"/apps/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await Id(token).App.DeleteApp(Guid.NewGuid());
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -278,12 +279,12 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task Delete_NotOwner_Forbidden()
         {
             // arrange
-            var ownerTokens = await RegisterLogUserInAsync("owner", "superpass", "some@email.com");
-            var app = await CreateAppAsync(ownerTokens.AccessToken, "Demo App");
-            var tokens = await RegisterLogUserInAsync();
+            var otherToken = await Id().RegisterLogOtherUserIn();
+            var app = await Id(otherToken).App.Register();
+            var token = await Id().RegisterLogUserIn();
 
             // act
-            var response = await id.Delete($"/apps/{app.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await Id(token).App.DeleteApp(app.Id);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -293,11 +294,11 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task Delete_Valid_Ok()
         {
             // arrange
-            var tokens = await RegisterLogUserInAsync();
-            var app = await CreateAppAsync(tokens.AccessToken, "Demo App");
+            var token = await Id().RegisterLogUserIn();
+            var app = await Id(token).App.Register();
 
             // act
-            var response = await id.Delete($"/apps/{app.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await Id(token).App.DeleteApp(app.Id);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.OK);
