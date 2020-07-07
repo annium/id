@@ -40,7 +40,7 @@ namespace Annium.Id.Api.TestClient.Clients
         )
         {
             return await Request.Clone()
-                .Put($"roles/{roleId:guid}")
+                .Put($"roles/{roleId}")
                 .JsonContent(body)
                 .AsResponseAsync<IResult>();
         }
@@ -52,7 +52,7 @@ namespace Annium.Id.Api.TestClient.Clients
         )
         {
             return await Request.Clone()
-                .Post($"roles/{roleId:guid}/claims/{claimId:guid}")
+                .Post($"roles/{roleId}/claims/{claimId}")
                 .JsonContent(body)
                 .AsResponseAsync<IResult>();
         }
@@ -63,7 +63,7 @@ namespace Annium.Id.Api.TestClient.Clients
         )
         {
             return await Request.Clone()
-                .Delete($"roles/{roleId:guid}/claims/{claimId:guid}")
+                .Delete($"roles/{roleId}/claims/{claimId}")
                 .AsResponseAsync<IResult>();
         }
 
@@ -72,7 +72,7 @@ namespace Annium.Id.Api.TestClient.Clients
         )
         {
             return await Request.Clone()
-                .Delete($"roles/{roleId:guid}")
+                .Delete($"roles/{roleId}")
                 .AsResponseAsync<IResult>();
         }
     }

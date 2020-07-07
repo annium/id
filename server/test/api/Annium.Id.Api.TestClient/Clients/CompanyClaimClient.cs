@@ -40,7 +40,7 @@ namespace Annium.Id.Api.TestClient.Clients
         )
         {
             return await Request.Clone()
-                .Put($"companies/claims/{claimId:guid}")
+                .Put($"companies/claims/{claimId}")
                 .JsonContent(body)
                 .AsResponseAsync<IResult>();
         }
@@ -50,7 +50,7 @@ namespace Annium.Id.Api.TestClient.Clients
         )
         {
             return await Request.Clone()
-                .Delete($"companies/claims/{claimId:guid}")
+                .Delete($"companies/claims/{claimId}")
                 .AsResponseAsync<IResult>();
         }
     }

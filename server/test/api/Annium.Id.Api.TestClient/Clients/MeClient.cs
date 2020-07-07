@@ -30,7 +30,7 @@ namespace Annium.Id.Api.TestClient.Clients
         )
         {
             return await Request.Clone()
-                .Post($"me/{appId:guid}/confirm-email")
+                .Post($"me/{appId}/confirm-email")
                 .JsonContent(body)
                 .AsResponseAsync<IResult<TokensResponse>>();
         }
@@ -41,7 +41,7 @@ namespace Annium.Id.Api.TestClient.Clients
         )
         {
             return await Request.Clone()
-                .Post($"me/{appId:guid}/restore-access")
+                .Post($"me/{appId}/restore-access")
                 .JsonContent(body)
                 .AsResponseAsync<IResult>();
         }

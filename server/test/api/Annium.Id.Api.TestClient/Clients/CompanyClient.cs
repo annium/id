@@ -30,7 +30,7 @@ namespace Annium.Id.Api.TestClient.Clients
         )
         {
             return await Request.Clone()
-                .Get($"companies/{companyId:guid}")
+                .Get($"companies/{companyId}")
                 .AsResponseAsync<IResult<CompanyResponse>>();
         }
 
@@ -39,7 +39,7 @@ namespace Annium.Id.Api.TestClient.Clients
         )
         {
             return await Request.Clone()
-                .Get($"companies/{companyId:guid}/users")
+                .Get($"companies/{companyId}/users")
                 .AsResponseAsync<IResult<IEnumerable<UserResponse>>>();
         }
 
@@ -49,7 +49,7 @@ namespace Annium.Id.Api.TestClient.Clients
         )
         {
             return await Request.Clone()
-                .Put($"companies/{companyId:guid}")
+                .Put($"companies/{companyId}")
                 .JsonContent(body)
                 .AsResponseAsync<IResult>();
         }
@@ -60,7 +60,7 @@ namespace Annium.Id.Api.TestClient.Clients
         )
         {
             return await Request.Clone()
-                .Put($"companies/{companyId:guid}/owner/{userId:guid}")
+                .Put($"companies/{companyId}/owner/{userId}")
                 .AsResponseAsync<IResult>();
         }
 
@@ -69,7 +69,7 @@ namespace Annium.Id.Api.TestClient.Clients
         )
         {
             return await Request.Clone()
-                .Delete($"companies/{companyId:guid}")
+                .Delete($"companies/{companyId}")
                 .AsResponseAsync<IResult>();
         }
     }

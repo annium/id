@@ -40,7 +40,7 @@ namespace Annium.Id.Demo.TestClient.Clients
         )
         {
             return await Request.Clone()
-                .Get($"hasCompanyPaymentsAccess/{companyId:guid}")
+                .Get($"hasCompanyPaymentsAccess/{companyId}")
                 .AsResponseAsync<IActionResult>();
         }
     }

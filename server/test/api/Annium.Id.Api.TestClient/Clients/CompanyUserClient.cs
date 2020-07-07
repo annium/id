@@ -18,7 +18,7 @@ namespace Annium.Id.Api.TestClient.Clients
         )
         {
             return await Request.Clone()
-                .Post($"companies/{companyId:guid}/users/{userId:guid}")
+                .Post($"companies/{companyId}/users/{userId}")
                 .AsResponseAsync<IResult>();
         }
 
@@ -29,7 +29,7 @@ namespace Annium.Id.Api.TestClient.Clients
         )
         {
             return await Request.Clone()
-                .Post($"companies/{companyId:guid}/users/{userId:guid}/roles/{roleId:guid}")
+                .Post($"companies/{companyId}/users/{userId}/roles/{roleId}")
                 .AsResponseAsync<IResult>();
         }
 
@@ -40,7 +40,7 @@ namespace Annium.Id.Api.TestClient.Clients
         )
         {
             return await Request.Clone()
-                .Delete($"companies/{companyId:guid}/users/{userId:guid}/roles/{roleId:guid}")
+                .Delete($"companies/{companyId}/users/{userId}/roles/{roleId}")
                 .AsResponseAsync<IResult>();
         }
 
@@ -52,7 +52,7 @@ namespace Annium.Id.Api.TestClient.Clients
         )
         {
             return await Request.Clone()
-                .Post($"companies/{companyId:guid}/users/{userId:guid}/claims/{claimId:guid}")
+                .Post($"companies/{companyId}/users/{userId}/claims/{claimId}")
                 .JsonContent(body)
                 .AsResponseAsync<IResult>();
         }
@@ -64,7 +64,7 @@ namespace Annium.Id.Api.TestClient.Clients
         )
         {
             return await Request.Clone()
-                .Delete($"companies/{companyId:guid}/users/{userId:guid}/claims/{claimId:guid}")
+                .Delete($"companies/{companyId}/users/{userId}/claims/{claimId}")
                 .AsResponseAsync<IResult>();
         }
 
@@ -74,7 +74,7 @@ namespace Annium.Id.Api.TestClient.Clients
         )
         {
             return await Request.Clone()
-                .Delete($"companies/{companyId:guid}/users/{userId:guid}")
+                .Delete($"companies/{companyId}/users/{userId}")
                 .AsResponseAsync<IResult>();
         }
     }

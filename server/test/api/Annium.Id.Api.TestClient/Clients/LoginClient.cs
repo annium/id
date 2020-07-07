@@ -19,7 +19,7 @@ namespace Annium.Id.Api.TestClient.Clients
         )
         {
             return await Request.Clone()
-                .Post($"me/{appId:guid}/login")
+                .Post($"me/{appId}/login")
                 .JsonContent(body)
                 .AsResponseAsync<IResult<TokensResponse>>();
         }
@@ -30,7 +30,7 @@ namespace Annium.Id.Api.TestClient.Clients
         )
         {
             return await Request.Clone()
-                .Put($"me/{appId:guid}/token")
+                .Put($"me/{appId}/token")
                 .Param("refreshToken", refreshToken)
                 .AsResponseAsync<IResult<TokensResponse>>();
         }
@@ -40,7 +40,7 @@ namespace Annium.Id.Api.TestClient.Clients
         )
         {
             return await Request.Clone()
-                .Delete($"me/{appId:guid}/logout")
+                .Delete($"me/{appId}/logout")
                 .AsResponseAsync<IResult>();
         }
     }

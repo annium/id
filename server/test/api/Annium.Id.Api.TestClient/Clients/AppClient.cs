@@ -37,7 +37,7 @@ namespace Annium.Id.Api.TestClient.Clients
         )
         {
             return await Request.Clone()
-                .Get($"apps/{appId:guid}")
+                .Get($"apps/{appId}")
                 .AsResponseAsync<IResult<AppResponse>>();
         }
 
@@ -46,7 +46,7 @@ namespace Annium.Id.Api.TestClient.Clients
         )
         {
             return await Request.Clone()
-                .Get($"apps/{appId:guid}/token")
+                .Get($"apps/{appId}/token")
                 .AsResponseAsync<IResult<Guid>>();
         }
 
@@ -56,7 +56,7 @@ namespace Annium.Id.Api.TestClient.Clients
         )
         {
             return await Request.Clone()
-                .Put($"apps/{appId:guid}")
+                .Put($"apps/{appId}")
                 .JsonContent(body)
                 .AsResponseAsync<IResult>();
         }
@@ -67,7 +67,7 @@ namespace Annium.Id.Api.TestClient.Clients
         )
         {
             return await Request.Clone()
-                .Put($"apps/{appId:guid}/owner/{newOwnerId:guid}")
+                .Put($"apps/{appId}/owner/{newOwnerId}")
                 .AsResponseAsync<IResult>();
         }
 
@@ -76,7 +76,7 @@ namespace Annium.Id.Api.TestClient.Clients
         )
         {
             return await Request.Clone()
-                .Put($"apps/{appId:guid}/token")
+                .Put($"apps/{appId}/token")
                 .AsResponseAsync<IResult<Guid>>();
         }
 
@@ -85,7 +85,7 @@ namespace Annium.Id.Api.TestClient.Clients
         )
         {
             return await Request.Clone()
-                .Delete($"apps/{appId:guid}")
+                .Delete($"apps/{appId}")
                 .AsResponseAsync<IResult>();
         }
     }
