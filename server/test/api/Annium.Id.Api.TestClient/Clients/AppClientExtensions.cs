@@ -17,5 +17,10 @@ namespace Annium.Id.Api.TestClient.Clients
 
             return getResponse.Data.Data;
         }
+
+        public static Task<AppResponse> RegisterOther(
+            this AppClient client,
+            string name = "Other App"
+        ) => client.Register(name);
     }
 }
