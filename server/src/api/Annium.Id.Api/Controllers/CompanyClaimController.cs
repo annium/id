@@ -39,13 +39,13 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPut("{claimId:guid}")]
         [Authorize]
-        public Task<IResult> UpdateCompanyClaim(Guid claimId, [FromBody] UpdateCompanyClaimRequestBody RequestBody)
+        public Task<IResult> UpdateCompanyClaim(Guid claimId, [FromBody] UpdateCompanyClaimRequestBody requestBody)
         {
             var request = new UpdateCompanyClaimRequest
             {
                 ClaimId = claimId,
-                Key = RequestBody.Key,
-                Name = RequestBody.Name,
+                Key = requestBody.Key,
+                Name = requestBody.Name,
             };
 
             return HandleAsync(request);

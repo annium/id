@@ -53,12 +53,12 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPut("{appId:guid}")]
         [Authorize]
-        public Task<IResult> UpdateApp(Guid appId, [FromBody] UpdateAppRequestBody RequestBody)
+        public Task<IResult> UpdateApp(Guid appId, [FromBody] UpdateAppRequestBody requestBody)
         {
             var request = new UpdateAppRequest
             {
                 AppId = appId,
-                Name = RequestBody.Name,
+                Name = requestBody.Name,
             };
 
             return HandleAsync(request);

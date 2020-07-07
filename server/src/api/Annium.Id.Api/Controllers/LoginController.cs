@@ -20,13 +20,13 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpPost("login")]
-        public Task<IResult<TokensResponse>> LogIn(Guid appId, [FromBody] LogInRequestBody RequestBody)
+        public Task<IResult<TokensResponse>> LogIn(Guid appId, [FromBody] LogInRequestBody requestBody)
         {
             var request = new LogInRequest
             {
                 AppId = appId,
-                Login = RequestBody.Login,
-                Password = RequestBody.Password,
+                Login = requestBody.Login,
+                Password = requestBody.Password,
             };
 
             return HandleAsync<LogInRequest, TokensResponse>(request);
@@ -34,12 +34,12 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPut("token")]
         [Authorize(AuthPolicy.CanRefreshToken, validateAudience: false, validateExpiration: false)]
-        public Task<IResult<TokensResponse>> UpdateToken(Guid appId, [FromQuery] UpdateTokensRequestBody RequestBody)
+        public Task<IResult<TokensResponse>> UpdateToken(Guid appId, [FromQuery] UpdateTokensRequestBody requestBody)
         {
             var request = new UpdateTokensRequest
             {
                 AppId = appId,
-                RefreshToken = RequestBody.RefreshToken,
+                RefreshToken = requestBody.RefreshToken,
             };
 
             return HandleAsync<UpdateTokensRequest, TokensResponse>(request);

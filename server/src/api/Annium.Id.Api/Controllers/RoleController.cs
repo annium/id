@@ -39,13 +39,13 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPut("{roleId:guid}")]
         [Authorize]
-        public Task<IResult> UpdateRole(Guid roleId, [FromBody] UpdateRoleRequestBody RequestBody)
+        public Task<IResult> UpdateRole(Guid roleId, [FromBody] UpdateRoleRequestBody requestBody)
         {
             var request = new UpdateRoleRequest
             {
                 RoleId = roleId,
-                Key = RequestBody.Key,
-                Name = RequestBody.Name,
+                Key = requestBody.Key,
+                Name = requestBody.Name,
             };
 
             return HandleAsync(request);
@@ -53,13 +53,13 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPost("{roleId:guid}/claims/{claimId:guid}")]
         [Authorize]
-        public Task<IResult> AddClaimToRole(Guid roleId, Guid claimId, [FromBody] AddClaimToRoleRequestBody RequestBody)
+        public Task<IResult> AddClaimToRole(Guid roleId, Guid claimId, [FromBody] AddClaimToRoleRequestBody requestBody)
         {
             var request = new AddClaimToRoleRequest
             {
                 RoleId = roleId,
                 ClaimId = claimId,
-                Value = RequestBody.Value,
+                Value = requestBody.Value,
             };
 
             return HandleAsync(request);
