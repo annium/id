@@ -1,9 +1,8 @@
 using System;
 using System.Net;
 using System.Threading.Tasks;
-using Annium.Id.Api.ViewModels.CompanyUsers.Requests;
-using Annium.Id.Api.ViewModels.Users.Responses;
-using Annium.Net.Http;
+using Annium.Id.Api.TestClient;
+using Annium.Id.Api.TestClient.Clients;
 using Annium.Testing;
 using Xunit;
 
@@ -15,10 +14,10 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task AddUser_MissingCompany_NotFound()
         {
             // arrange
-            var tokens = await RegisterLogUserInAsync();
+            var token = await Id().RegisterLogUserIn();
 
             // act
-            var response = await id.Post($"/companies/{Guid.NewGuid()}/users/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await Id(token).CompanyUser.AddUser(Guid.NewGuid(), Guid.NewGuid());
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -28,13 +27,13 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task AddUser_NotOwner_Forbidden()
         {
             // arrange
-            var ownerTokens = await RegisterLogUserInAsync("owner", "superpass", "some@email.com");
-            var company = await CreateCompanyAsync(ownerTokens.AccessToken);
-            var tokens = await RegisterLogUserInAsync();
-            var user = await GetUserAsync(tokens.AccessToken);
+            var otherToken = await Id().RegisterLogOtherUserIn();
+            var company = await Id(otherToken).Company.Register();
+            var token = await Id().RegisterLogUserIn();
+            var user = await Id(token).Me.GetMe().GetData();
 
             // act
-            var response = await id.Post($"/companies/{company.Id}/users/{user.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await Id(token).CompanyUser.AddUser(company.Id, user.Id);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -44,11 +43,11 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task AddUser_MissingUser_NotFound()
         {
             // arrange
-            var ownerTokens = await RegisterLogUserInAsync("owner", "superpass", "some@email.com");
-            var company = await CreateCompanyAsync(ownerTokens.AccessToken);
+            var otherToken = await Id().RegisterLogOtherUserIn();
+            var company = await Id(otherToken).Company.Register();
 
             // act
-            var response = await id.Post($"/companies/{company.Id}/users/{Guid.NewGuid()}").BearerAuthorization(ownerTokens.AccessToken).RunAsync();
+            var response = await Id(otherToken).CompanyUser.AddUser(company.Id, Guid.NewGuid());
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -58,19 +57,19 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task AddUser_Valid_Ok()
         {
             // arrange
-            var ownerTokens = await RegisterLogUserInAsync("owner", "superpass", "some@email.com");
-            var company = await CreateCompanyAsync(ownerTokens.AccessToken);
-            var tokens = await RegisterLogUserInAsync();
-            var user = await GetUserAsync(tokens.AccessToken);
+            var otherToken = await Id().RegisterLogOtherUserIn();
+            var company = await Id(otherToken).Company.Register();
+            var token = await Id().RegisterLogUserIn();
+            var user = await Id(token).Me.GetMe().GetData();
 
             // act
-            var response = await id.Post($"/companies/{company.Id}/users/{user.Id}").BearerAuthorization(ownerTokens.AccessToken).RunAsync();
-            var members = (await id.Get($"/companies/{company.Id}/users").AsResultAsync<UserResponse[]>()).Data;
+            var response = await Id(otherToken).CompanyUser.AddUser(company.Id, user.Id);
+            var members = await Id(token).Company.GetCompanyUsers(company.Id).GetData();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.OK);
             members.Has(1);
-            var member = members[0];
+            var member = members.At(0);
             member.Id.IsEqual(user.Id);
         }
 
@@ -78,10 +77,10 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task AddUserRole_MissingCompany_NotFound()
         {
             // arrange
-            var tokens = await RegisterLogUserInAsync();
+            var token = await Id().RegisterLogUserIn();
 
             // act
-            var response = await id.Post($"/companies/{Guid.NewGuid()}/users/{Guid.NewGuid()}/roles/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await Id(token).CompanyUser.AddUserRole(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -91,15 +90,15 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task AddUserRole_NotOwner_Forbidden()
         {
             // arrange
-            var ownerTokens = await RegisterLogUserInAsync("owner", "superpass", "some@email.com");
-            var app = await CreateAppAsync(ownerTokens.AccessToken);
-            var role = await CreateCompanyRoleAsync(ownerTokens.AccessToken, app.Id);
-            var company = await CreateCompanyAsync(ownerTokens.AccessToken);
-            var tokens = await RegisterLogUserInAsync();
-            var user = await GetUserAsync(tokens.AccessToken);
+            var otherToken = await Id().RegisterLogOtherUserIn();
+            var app = await Id(otherToken).App.Register();
+            var role = await Id(otherToken).CompanyRole.Register(app.Id);
+            var company = await Id(otherToken).Company.Register();
+            var token = await Id().RegisterLogUserIn();
+            var user = await Id(token).Me.GetMe().GetData();
 
             // act
-            var response = await id.Post($"/companies/{company.Id}/users/{user.Id}/roles/{role.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await Id(token).CompanyUser.AddUserRole(company.Id, user.Id, role.Id);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -109,11 +108,11 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task AddUserRole_MissingUser_NotFound()
         {
             // arrange
-            var ownerTokens = await RegisterLogUserInAsync("owner", "superpass", "some@email.com");
-            var company = await CreateCompanyAsync(ownerTokens.AccessToken);
+            var otherToken = await Id().RegisterLogOtherUserIn();
+            var company = await Id(otherToken).Company.Register();
 
             // act
-            var response = await id.Post($"/companies/{company.Id}/users/{Guid.NewGuid()}/roles/{Guid.NewGuid()}").BearerAuthorization(ownerTokens.AccessToken).RunAsync();
+            var response = await Id(otherToken).CompanyUser.AddUserRole(company.Id, Guid.NewGuid(), Guid.NewGuid());
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -123,15 +122,15 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task AddUserRole_NotMember_Forbidden()
         {
             // arrange
-            var ownerTokens = await RegisterLogUserInAsync("owner", "superpass", "some@email.com");
-            var app = await CreateAppAsync(ownerTokens.AccessToken);
-            var role = await CreateCompanyRoleAsync(ownerTokens.AccessToken, app.Id);
-            var company = await CreateCompanyAsync(ownerTokens.AccessToken);
-            var tokens = await RegisterLogUserInAsync();
-            var user = await GetUserAsync(tokens.AccessToken);
+            var otherToken = await Id().RegisterLogOtherUserIn();
+            var app = await Id(otherToken).App.Register();
+            var role = await Id(otherToken).CompanyRole.Register(app.Id);
+            var company = await Id(otherToken).Company.Register();
+            var token = await Id().RegisterLogUserIn();
+            var user = await Id(token).Me.GetMe().GetData();
 
             // act
-            var response = await id.Post($"/companies/{company.Id}/users/{user.Id}/roles/{role.Id}").BearerAuthorization(ownerTokens.AccessToken).RunAsync();
+            var response = await Id(otherToken).CompanyUser.AddUserRole(company.Id, user.Id, role.Id);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -141,15 +140,14 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task AddUserRole_MissingRole_NotFound()
         {
             // arrange
-            var ownerTokens = await RegisterLogUserInAsync("owner", "superpass", "some@email.com");
-            var company = await CreateCompanyAsync(ownerTokens.AccessToken);
-            var tokens = await RegisterLogUserInAsync();
-            var user = await GetUserAsync(tokens.AccessToken);
-            await AddUserToCompanyAsync(ownerTokens.AccessToken, company.Id, user.Id);
+            var otherToken = await Id().RegisterLogOtherUserIn();
+            var company = await Id(otherToken).Company.Register();
+            var token = await Id().RegisterLogUserIn();
+            var user = await Id(token).Me.GetMe().GetData();
+            await Id(otherToken).CompanyUser.AddUser(company.Id, user.Id);
 
             // act
-            var response = await id.Post($"/companies/{company.Id}/users/{user.Id}/roles/{Guid.NewGuid()}").BearerAuthorization(ownerTokens.AccessToken).RunAsync();
-
+            var response = await Id(otherToken).CompanyUser.AddUserRole(company.Id, user.Id, Guid.NewGuid());
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
         }
@@ -158,16 +156,16 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task AddUserRole_Valid_Ok()
         {
             // arrange
-            var ownerTokens = await RegisterLogUserInAsync("owner", "superpass", "some@email.com");
-            var app = await CreateAppAsync(ownerTokens.AccessToken);
-            var role = await CreateCompanyRoleAsync(ownerTokens.AccessToken, app.Id);
-            var company = await CreateCompanyAsync(ownerTokens.AccessToken);
-            var tokens = await RegisterLogUserInAsync();
-            var user = await GetUserAsync(tokens.AccessToken);
-            await AddUserToCompanyAsync(ownerTokens.AccessToken, company.Id, user.Id);
+            var otherToken = await Id().RegisterLogOtherUserIn();
+            var app = await Id(otherToken).App.Register();
+            var role = await Id(otherToken).CompanyRole.Register(app.Id);
+            var company = await Id(otherToken).Company.Register();
+            var token = await Id().RegisterLogUserIn();
+            var user = await Id(token).Me.GetMe().GetData();
+            await Id(otherToken).CompanyUser.AddUser(company.Id, user.Id);
 
             // act
-            var response = await id.Post($"/companies/{company.Id}/users/{user.Id}/roles/{role.Id}").BearerAuthorization(ownerTokens.AccessToken).RunAsync();
+            var response = await Id(otherToken).CompanyUser.AddUserRole(company.Id, user.Id, role.Id);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.OK);
@@ -177,10 +175,10 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task DeleteUserRole_MissingCompany_NotFound()
         {
             // arrange
-            var tokens = await RegisterLogUserInAsync();
+            var token = await Id().RegisterLogUserIn();
 
             // act
-            var response = await id.Delete($"/companies/{Guid.NewGuid()}/users/{Guid.NewGuid()}/roles/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await Id(token).CompanyUser.DeleteCompanyRoleFromCompanyUser(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -190,15 +188,15 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task DeleteUserRole_NotOwner_Forbidden()
         {
             // arrange
-            var ownerTokens = await RegisterLogUserInAsync("owner", "superpass", "some@email.com");
-            var app = await CreateAppAsync(ownerTokens.AccessToken);
-            var role = await CreateCompanyRoleAsync(ownerTokens.AccessToken, app.Id);
-            var company = await CreateCompanyAsync(ownerTokens.AccessToken);
-            var tokens = await RegisterLogUserInAsync();
-            var user = await GetUserAsync(tokens.AccessToken);
+            var otherToken = await Id().RegisterLogOtherUserIn();
+            var app = await Id(otherToken).App.Register();
+            var role = await Id(otherToken).CompanyRole.Register(app.Id);
+            var company = await Id(otherToken).Company.Register();
+            var token = await Id().RegisterLogUserIn();
+            var user = await Id(token).Me.GetMe().GetData();
 
             // act
-            var response = await id.Delete($"/companies/{company.Id}/users/{user.Id}/roles/{role.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await Id(token).CompanyUser.DeleteCompanyRoleFromCompanyUser(company.Id, role.Id, user.Id);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -208,11 +206,11 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task DeleteUserRole_MissingUser_NotFound()
         {
             // arrange
-            var ownerTokens = await RegisterLogUserInAsync("owner", "superpass", "some@email.com");
-            var company = await CreateCompanyAsync(ownerTokens.AccessToken);
+            var otherToken = await Id().RegisterLogOtherUserIn();
+            var company = await Id(otherToken).Company.Register();
 
             // act
-            var response = await id.Delete($"/companies/{company.Id}/users/{Guid.NewGuid()}/roles/{Guid.NewGuid()}").BearerAuthorization(ownerTokens.AccessToken).RunAsync();
+            var response = await Id(otherToken).CompanyUser.DeleteCompanyRoleFromCompanyUser(company.Id, Guid.NewGuid(), Guid.NewGuid());
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -222,15 +220,15 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task DeleteUserRole_NotMember_Forbidden()
         {
             // arrange
-            var ownerTokens = await RegisterLogUserInAsync("owner", "superpass", "some@email.com");
-            var app = await CreateAppAsync(ownerTokens.AccessToken);
-            var role = await CreateCompanyRoleAsync(ownerTokens.AccessToken, app.Id);
-            var company = await CreateCompanyAsync(ownerTokens.AccessToken);
-            var tokens = await RegisterLogUserInAsync();
-            var user = await GetUserAsync(tokens.AccessToken);
+            var otherToken = await Id().RegisterLogOtherUserIn();
+            var app = await Id(otherToken).App.Register();
+            var role = await Id(otherToken).CompanyRole.Register(app.Id);
+            var company = await Id(otherToken).Company.Register();
+            var token = await Id().RegisterLogUserIn();
+            var user = await Id(token).Me.GetMe().GetData();
 
             // act
-            var response = await id.Delete($"/companies/{company.Id}/users/{user.Id}/roles/{role.Id}").BearerAuthorization(ownerTokens.AccessToken).RunAsync();
+            var response = await Id(otherToken).CompanyUser.DeleteCompanyRoleFromCompanyUser(company.Id, role.Id, user.Id);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -240,14 +238,14 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task DeleteUserRole_MissingRole_NotFound()
         {
             // arrange
-            var ownerTokens = await RegisterLogUserInAsync("owner", "superpass", "some@email.com");
-            var company = await CreateCompanyAsync(ownerTokens.AccessToken);
-            var tokens = await RegisterLogUserInAsync();
-            var user = await GetUserAsync(tokens.AccessToken);
-            await AddUserToCompanyAsync(ownerTokens.AccessToken, company.Id, user.Id);
+            var otherToken = await Id().RegisterLogOtherUserIn();
+            var company = await Id(otherToken).Company.Register();
+            var token = await Id().RegisterLogUserIn();
+            var user = await Id(token).Me.GetMe().GetData();
+            await Id(otherToken).CompanyUser.AddUser(company.Id, user.Id);
 
             // act
-            var response = await id.Delete($"/companies/{company.Id}/users/{user.Id}/roles/{Guid.NewGuid()}").BearerAuthorization(ownerTokens.AccessToken).RunAsync();
+            var response = await Id(otherToken).CompanyUser.DeleteCompanyRoleFromCompanyUser(company.Id, Guid.NewGuid(), user.Id);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -257,17 +255,17 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task DeleteUserRole_Valid_Ok()
         {
             // arrange
-            var ownerTokens = await RegisterLogUserInAsync("owner", "superpass", "some@email.com");
-            var app = await CreateAppAsync(ownerTokens.AccessToken);
-            var role = await CreateCompanyRoleAsync(ownerTokens.AccessToken, app.Id);
-            var company = await CreateCompanyAsync(ownerTokens.AccessToken);
-            var tokens = await RegisterLogUserInAsync();
-            var user = await GetUserAsync(tokens.AccessToken);
-            await AddUserToCompanyAsync(ownerTokens.AccessToken, company.Id, user.Id);
-            await AddCompanyRoleToCompanyUserAsync(ownerTokens.AccessToken, company.Id, user.Id, role.Id);
+            var otherToken = await Id().RegisterLogOtherUserIn();
+            var app = await Id(otherToken).App.Register();
+            var role = await Id(otherToken).CompanyRole.Register(app.Id);
+            var company = await Id(otherToken).Company.Register();
+            var token = await Id().RegisterLogUserIn();
+            var user = await Id(token).Me.GetMe().GetData();
+            await Id(otherToken).CompanyUser.AddUser(company.Id, user.Id);
+            await Id(otherToken).CompanyUser.AddUserRole(company.Id, user.Id, role.Id);
 
             // act
-            var response = await id.Delete($"/companies/{company.Id}/users/{user.Id}/roles/{role.Id}").BearerAuthorization(ownerTokens.AccessToken).RunAsync();
+            var response = await Id(otherToken).CompanyUser.DeleteCompanyRoleFromCompanyUser(company.Id, role.Id, user.Id);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.OK);
@@ -277,12 +275,10 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task AddUserClaim_IncorrectPayload_BadRequest()
         {
             // arrange
-            var tokens = await RegisterLogUserInAsync();
-            var p = new AddCompanyClaimToCompanyUserRequest { Value = "S" };
+            var token = await Id().RegisterLogUserIn();
 
             // act
-            var response = await id.Post($"/companies/{Guid.NewGuid()}/users/{Guid.NewGuid()}/claims/{Guid.NewGuid()}")
-                .BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
+            var response = await Id(token).CompanyUser.AddUserClaim(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), "x");
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
@@ -292,12 +288,10 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task AddUserClaim_MissingCompany_NotFound()
         {
             // arrange
-            var tokens = await RegisterLogUserInAsync();
-            var p = new AddCompanyClaimToCompanyUserRequest { Value = "Some" };
+            var token = await Id().RegisterLogUserIn();
 
             // act
-            var response = await id.Post($"/companies/{Guid.NewGuid()}/users/{Guid.NewGuid()}/claims/{Guid.NewGuid()}")
-                .BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
+            var response = await Id(token).CompanyUser.AddUserClaim(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -307,17 +301,15 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task AddUserClaim_NotOwner_Forbidden()
         {
             // arrange
-            var ownerTokens = await RegisterLogUserInAsync("owner", "superpass", "some@email.com");
-            var app = await CreateAppAsync(ownerTokens.AccessToken);
-            var claim = await CreateCompanyClaimAsync(ownerTokens.AccessToken, app.Id);
-            var company = await CreateCompanyAsync(ownerTokens.AccessToken);
-            var tokens = await RegisterLogUserInAsync();
-            var user = await GetUserAsync(tokens.AccessToken);
-            var p = new AddCompanyClaimToCompanyUserRequest { Value = "Some" };
+            var otherToken = await Id().RegisterLogOtherUserIn();
+            var app = await Id(otherToken).App.Register();
+            var claim = await Id(otherToken).CompanyClaim.Register(app.Id);
+            var company = await Id(otherToken).Company.Register();
+            var token = await Id().RegisterLogUserIn();
+            var user = await Id(token).Me.GetMe().GetData();
 
             // act
-            var response = await id.Post($"/companies/{company.Id}/users/{user.Id}/claims/{claim.Id}")
-                .BearerAuthorization(ownerTokens.AccessToken).JsonContent(p).RunAsync();
+            var response = await Id(token).CompanyUser.AddUserClaim(company.Id, user.Id, claim.Id);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -327,13 +319,11 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task AddUserClaim_MissingUser_NotFound()
         {
             // arrange
-            var ownerTokens = await RegisterLogUserInAsync("owner", "superpass", "some@email.com");
-            var company = await CreateCompanyAsync(ownerTokens.AccessToken);
-            var p = new AddCompanyClaimToCompanyUserRequest { Value = "Some" };
+            var otherToken = await Id().RegisterLogOtherUserIn();
+            var company = await Id(otherToken).Company.Register();
 
             // act
-            var response = await id.Post($"/companies/{company.Id}/users/{Guid.NewGuid()}/claims/{Guid.NewGuid()}")
-                .BearerAuthorization(ownerTokens.AccessToken).JsonContent(p).RunAsync();
+            var response = await Id(otherToken).CompanyUser.AddUserClaim(company.Id, Guid.NewGuid(), Guid.NewGuid());
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -343,17 +333,15 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task AddUserClaim_NotMember_Forbidden()
         {
             // arrange
-            var ownerTokens = await RegisterLogUserInAsync("owner", "superpass", "some@email.com");
-            var app = await CreateAppAsync(ownerTokens.AccessToken);
-            var claim = await CreateCompanyClaimAsync(ownerTokens.AccessToken, app.Id);
-            var company = await CreateCompanyAsync(ownerTokens.AccessToken);
-            var tokens = await RegisterLogUserInAsync();
-            var user = await GetUserAsync(tokens.AccessToken);
-            var p = new AddCompanyClaimToCompanyUserRequest { Value = "Some" };
+            var otherToken = await Id().RegisterLogOtherUserIn();
+            var app = await Id(otherToken).App.Register();
+            var claim = await Id(otherToken).CompanyClaim.Register(app.Id);
+            var company = await Id(otherToken).Company.Register();
+            var token = await Id().RegisterLogUserIn();
+            var user = await Id(token).Me.GetMe().GetData();
 
             // act
-            var response = await id.Post($"/companies/{company.Id}/users/{user.Id}/claims/{claim.Id}")
-                .BearerAuthorization(ownerTokens.AccessToken).JsonContent(p).RunAsync();
+            var response = await Id(otherToken).CompanyUser.AddUserClaim(company.Id, user.Id, claim.Id);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -363,16 +351,14 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task AddUserClaim_MissingClaim_NotFound()
         {
             // arrange
-            var ownerTokens = await RegisterLogUserInAsync("owner", "superpass", "some@email.com");
-            var company = await CreateCompanyAsync(ownerTokens.AccessToken);
-            var tokens = await RegisterLogUserInAsync();
-            var user = await GetUserAsync(tokens.AccessToken);
-            await AddUserToCompanyAsync(ownerTokens.AccessToken, company.Id, user.Id);
-            var p = new AddCompanyClaimToCompanyUserRequest { Value = "Some" };
+            var otherToken = await Id().RegisterLogOtherUserIn();
+            var company = await Id(otherToken).Company.Register();
+            var token = await Id().RegisterLogUserIn();
+            var user = await Id(token).Me.GetMe().GetData();
+            await Id(otherToken).CompanyUser.AddUser(company.Id, user.Id);
 
             // act
-            var response = await id.Post($"/companies/{company.Id}/users/{user.Id}/claims/{Guid.NewGuid()}")
-                .BearerAuthorization(ownerTokens.AccessToken).JsonContent(p).RunAsync();
+            var response = await Id(otherToken).CompanyUser.AddUserClaim(company.Id, user.Id, Guid.NewGuid());
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -382,18 +368,16 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task AddUserClaim_Valid_Ok()
         {
             // arrange
-            var ownerTokens = await RegisterLogUserInAsync("owner", "superpass", "some@email.com");
-            var app = await CreateAppAsync(ownerTokens.AccessToken);
-            var claim = await CreateCompanyClaimAsync(ownerTokens.AccessToken, app.Id);
-            var company = await CreateCompanyAsync(ownerTokens.AccessToken);
-            var tokens = await RegisterLogUserInAsync();
-            var user = await GetUserAsync(tokens.AccessToken);
-            await AddUserToCompanyAsync(ownerTokens.AccessToken, company.Id, user.Id);
-            var p = new AddCompanyClaimToCompanyUserRequest { Value = "Some" };
+            var otherToken = await Id().RegisterLogOtherUserIn();
+            var app = await Id(otherToken).App.Register();
+            var claim = await Id(otherToken).CompanyClaim.Register(app.Id);
+            var company = await Id(otherToken).Company.Register();
+            var token = await Id().RegisterLogUserIn();
+            var user = await Id(token).Me.GetMe().GetData();
+            await Id(otherToken).CompanyUser.AddUser(company.Id, user.Id);
 
             // act
-            var response = await id.Post($"/companies/{company.Id}/users/{user.Id}/claims/{claim.Id}")
-                .BearerAuthorization(ownerTokens.AccessToken).JsonContent(p).RunAsync();
+            var response = await Id(otherToken).CompanyUser.AddUserClaim(company.Id, user.Id, claim.Id);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.OK);
@@ -403,10 +387,10 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task DeleteUserClaim_MissingCompany_NotFound()
         {
             // arrange
-            var tokens = await RegisterLogUserInAsync();
+            var token = await Id().RegisterLogUserIn();
 
             // act
-            var response = await id.Delete($"/companies/{Guid.NewGuid()}/users/{Guid.NewGuid()}/claims/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await Id(token).CompanyUser.AddUserClaim(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -416,15 +400,15 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task DeleteUserClaim_NotOwner_Forbidden()
         {
             // arrange
-            var ownerTokens = await RegisterLogUserInAsync("owner", "superpass", "some@email.com");
-            var app = await CreateAppAsync(ownerTokens.AccessToken);
-            var claim = await CreateCompanyClaimAsync(ownerTokens.AccessToken, app.Id);
-            var company = await CreateCompanyAsync(ownerTokens.AccessToken);
-            var tokens = await RegisterLogUserInAsync();
-            var user = await GetUserAsync(tokens.AccessToken);
+            var otherToken = await Id().RegisterLogOtherUserIn();
+            var app = await Id(otherToken).App.Register();
+            var claim = await Id(otherToken).CompanyClaim.Register(app.Id);
+            var company = await Id(otherToken).Company.Register();
+            var token = await Id().RegisterLogUserIn();
+            var user = await Id(token).Me.GetMe().GetData();
 
             // act
-            var response = await id.Delete($"/companies/{company.Id}/users/{user.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await Id(otherToken).CompanyUser.DeleteCompanyClaimFromCompanyUser(claim.Id, company.Id, user.Id);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -434,11 +418,11 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task DeleteUserClaim_MissingUser_NotFound()
         {
             // arrange
-            var ownerTokens = await RegisterLogUserInAsync("owner", "superpass", "some@email.com");
-            var company = await CreateCompanyAsync(ownerTokens.AccessToken);
+            var otherToken = await Id().RegisterLogOtherUserIn();
+            var company = await Id(otherToken).Company.Register();
 
             // act
-            var response = await id.Delete($"/companies/{company.Id}/users/{Guid.NewGuid()}/claims/{Guid.NewGuid()}").BearerAuthorization(ownerTokens.AccessToken).RunAsync();
+            var response = await Id(otherToken).CompanyUser.DeleteCompanyClaimFromCompanyUser(Guid.NewGuid(), company.Id, Guid.NewGuid());
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -448,15 +432,15 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task DeleteUserClaim_NotMember_Forbidden()
         {
             // arrange
-            var ownerTokens = await RegisterLogUserInAsync("owner", "superpass", "some@email.com");
-            var app = await CreateAppAsync(ownerTokens.AccessToken);
-            var claim = await CreateCompanyClaimAsync(ownerTokens.AccessToken, app.Id);
-            var company = await CreateCompanyAsync(ownerTokens.AccessToken);
-            var tokens = await RegisterLogUserInAsync();
-            var user = await GetUserAsync(tokens.AccessToken);
+            var otherToken = await Id().RegisterLogOtherUserIn();
+            var app = await Id(otherToken).App.Register();
+            var claim = await Id(otherToken).CompanyClaim.Register(app.Id);
+            var company = await Id(otherToken).Company.Register();
+            var token = await Id().RegisterLogUserIn();
+            var user = await Id(token).Me.GetMe().GetData();
 
             // act
-            var response = await id.Delete($"/companies/{company.Id}/users/{user.Id}/claims/{claim.Id}").BearerAuthorization(ownerTokens.AccessToken).RunAsync();
+            var response = await Id(otherToken).CompanyUser.DeleteCompanyClaimFromCompanyUser(claim.Id, company.Id, user.Id);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -466,14 +450,14 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task DeleteUserClaim_MissingClaim_NotFound()
         {
             // arrange
-            var ownerTokens = await RegisterLogUserInAsync("owner", "superpass", "some@email.com");
-            var company = await CreateCompanyAsync(ownerTokens.AccessToken);
-            var tokens = await RegisterLogUserInAsync();
-            var user = await GetUserAsync(tokens.AccessToken);
-            await AddUserToCompanyAsync(ownerTokens.AccessToken, company.Id, user.Id);
+            var otherToken = await Id().RegisterLogOtherUserIn();
+            var company = await Id(otherToken).Company.Register();
+            var token = await Id().RegisterLogUserIn();
+            var user = await Id(token).Me.GetMe().GetData();
+            await Id(otherToken).CompanyUser.AddUser(company.Id, user.Id);
 
             // act
-            var response = await id.Delete($"/companies/{company.Id}/users/{user.Id}/claims/{Guid.NewGuid()}").BearerAuthorization(ownerTokens.AccessToken).RunAsync();
+            var response = await Id(otherToken).CompanyUser.DeleteCompanyClaimFromCompanyUser(Guid.NewGuid(), company.Id, user.Id);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -483,17 +467,17 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task DeleteUserClaim_Valid_Ok()
         {
             // arrange
-            var ownerTokens = await RegisterLogUserInAsync("owner", "superpass", "some@email.com");
-            var app = await CreateAppAsync(ownerTokens.AccessToken);
-            var claim = await CreateCompanyClaimAsync(ownerTokens.AccessToken, app.Id);
-            var company = await CreateCompanyAsync(ownerTokens.AccessToken);
-            var tokens = await RegisterLogUserInAsync();
-            var user = await GetUserAsync(tokens.AccessToken);
-            await AddUserToCompanyAsync(ownerTokens.AccessToken, company.Id, user.Id);
-            await AddCompanyClaimToCompanyUserAsync(ownerTokens.AccessToken, company.Id, user.Id, claim.Id);
+            var otherToken = await Id().RegisterLogOtherUserIn();
+            var app = await Id(otherToken).App.Register();
+            var claim = await Id(otherToken).CompanyClaim.Register(app.Id);
+            var company = await Id(otherToken).Company.Register();
+            var token = await Id().RegisterLogUserIn();
+            var user = await Id(token).Me.GetMe().GetData();
+            await Id(otherToken).CompanyUser.AddUser(company.Id, user.Id);
+            await Id(otherToken).CompanyUser.AddUserClaim(company.Id, user.Id, claim.Id);
 
             // act
-            var response = await id.Delete($"/companies/{company.Id}/users/{user.Id}/claims/{claim.Id}").BearerAuthorization(ownerTokens.AccessToken).RunAsync();
+            var response = await Id(otherToken).CompanyUser.DeleteCompanyClaimFromCompanyUser(claim.Id, company.Id, user.Id);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.OK);
@@ -503,10 +487,10 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task DeleteUser_MissingCompany_NotFound()
         {
             // arrange
-            var tokens = await RegisterLogUserInAsync();
+            var token = await Id().RegisterLogUserIn();
 
             // act
-            var response = await id.Delete($"/companies/{Guid.NewGuid()}/users/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await Id(token).CompanyUser.DeleteUserFromCompany(Guid.NewGuid(), Guid.NewGuid());
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -516,13 +500,13 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task DeleteUser_NotOwner_Forbidden()
         {
             // arrange
-            var ownerTokens = await RegisterLogUserInAsync("owner", "superpass", "some@email.com");
-            var company = await CreateCompanyAsync(ownerTokens.AccessToken);
-            var tokens = await RegisterLogUserInAsync();
-            var user = await GetUserAsync(tokens.AccessToken);
+            var otherToken = await Id().RegisterLogOtherUserIn();
+            var company = await Id(otherToken).Company.Register();
+            var token = await Id().RegisterLogUserIn();
+            var user = await Id(token).Me.GetMe().GetData();
 
             // act
-            var response = await id.Delete($"/companies/{company.Id}/users/{user.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await Id(token).CompanyUser.DeleteUserFromCompany(company.Id, user.Id);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -532,11 +516,11 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task DeleteUser_MissingUser_NotFound()
         {
             // arrange
-            var ownerTokens = await RegisterLogUserInAsync("owner", "superpass", "some@email.com");
-            var company = await CreateCompanyAsync(ownerTokens.AccessToken);
+            var otherToken = await Id().RegisterLogOtherUserIn();
+            var company = await Id(otherToken).Company.Register();
 
             // act
-            var response = await id.Delete($"/companies/{company.Id}/users/{Guid.NewGuid()}").BearerAuthorization(ownerTokens.AccessToken).RunAsync();
+            var response = await Id(otherToken).CompanyUser.DeleteUserFromCompany(company.Id, Guid.NewGuid());
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -546,13 +530,13 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task DeleteUser_NotMember_Forbidden()
         {
             // arrange
-            var ownerTokens = await RegisterLogUserInAsync("owner", "superpass", "some@email.com");
-            var company = await CreateCompanyAsync(ownerTokens.AccessToken);
-            var tokens = await RegisterLogUserInAsync();
-            var user = await GetUserAsync(tokens.AccessToken);
+            var otherToken = await Id().RegisterLogOtherUserIn();
+            var company = await Id(otherToken).Company.Register();
+            var token = await Id().RegisterLogUserIn();
+            var user = await Id(token).Me.GetMe().GetData();
 
             // act
-            var response = await id.Delete($"/companies/{company.Id}/users/{user.Id}").BearerAuthorization(ownerTokens.AccessToken).RunAsync();
+            var response = await Id(otherToken).CompanyUser.DeleteUserFromCompany(company.Id, user.Id);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -562,14 +546,14 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task DeleteUser_Valid_Ok()
         {
             // arrange
-            var ownerTokens = await RegisterLogUserInAsync("owner", "superpass", "some@email.com");
-            var company = await CreateCompanyAsync(ownerTokens.AccessToken);
-            var tokens = await RegisterLogUserInAsync();
-            var user = await GetUserAsync(tokens.AccessToken);
-            await AddUserToCompanyAsync(ownerTokens.AccessToken, company.Id, user.Id);
+            var otherToken = await Id().RegisterLogOtherUserIn();
+            var company = await Id(otherToken).Company.Register();
+            var token = await Id().RegisterLogUserIn();
+            var user = await Id(token).Me.GetMe().GetData();
+            await Id(otherToken).CompanyUser.AddUser(company.Id, user.Id);
 
             // act
-            var response = await id.Delete($"/companies/{company.Id}/users/{user.Id}").BearerAuthorization(ownerTokens.AccessToken).RunAsync();
+            var response = await Id(otherToken).CompanyUser.DeleteUserFromCompany(company.Id, user.Id);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.OK);
