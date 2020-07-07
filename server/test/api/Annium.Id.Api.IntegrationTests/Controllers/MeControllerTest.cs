@@ -2,11 +2,10 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Annium.Id.Api.TestClient;
 using Annium.Id.Api.ViewModels.Me.Requests;
-using Annium.Id.Api.ViewModels.Me.Responses;
 using Annium.Id.Core;
 using Annium.Id.Infrastructure.Email.Models;
-using Annium.Net.Http;
 using Annium.Testing;
 using Xunit;
 
@@ -18,11 +17,10 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task RegisterMe_IncorrectPayload_BadRequest()
         {
             // arrange
-            var payload = new RegisterMeRequest { Login = "demo" };
+            var request = new RegisterMeRequest { Login = "demo" };
 
             // act
-            var response = await Id().Me.RegisterMe(payload);
-            // var response = await id.Post("/me").JsonContent(payload).RunAsync();
+            var response = await Id().Me.RegisterMe(request);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
@@ -33,10 +31,10 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         {
             // arrange
             var user = await RegisterLogUserInGetUserAsync();
-            var payload = new RegisterMeRequest { Server = "http://localhost/", Login = user.Login, Email = "asd1@demo.com" };
+            var request = new RegisterMeRequest { Server = "http://localhost/", Login = user.Login, Email = "asd1@demo.com" };
 
             // act
-            var response = await id.Post("/me").JsonContent(payload).RunAsync();
+            var response = await Id().Me.RegisterMe(request);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
@@ -47,10 +45,10 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         {
             // arrange
             var user = await RegisterLogUserInGetUserAsync();
-            var payload = new RegisterMeRequest { Server = "http://localhost/", Login = "uniquelogin", Email = user.Email };
+            var request = new RegisterMeRequest { Server = "http://localhost/", Login = "uniqueLogin", Email = user.Email };
 
             // act
-            var response = await id.Post("/me").JsonContent(payload).RunAsync();
+            var response = await Id().Me.RegisterMe(request);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
@@ -60,10 +58,10 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task RegisterMe_ReferralMissing_NotFound()
         {
             // arrange
-            var payload = new RegisterMeRequest { Server = "http://localhost/", Login = "uniquelogin", Email = "demo@demo.com", ReferralId = Guid.NewGuid() };
+            var request = new RegisterMeRequest { Server = "http://localhost/", Login = "uniqueLogin", Email = "demo@demo.com", ReferralId = Guid.NewGuid() };
 
             // act
-            var response = await id.Post("/me").JsonContent(payload).RunAsync();
+            var response = await Id().Me.RegisterMe(request);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -73,13 +71,13 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task RegisterMe_ValidData_Ok()
         {
             // arrange
-            var referral = await RegisterLogUserInGetUserAsync("master", "somepass", "master@demo.com");
+            var referral = await Id().GetOtherUser();
             var login = "demo";
-            var password = "testtest";
             var email = "demo@demo.com";
+            var password = "test1test";
 
             // act
-            var response = await RegisterLogUserInGetUserAsync(login, password, email, referral.Id);
+            var response = await Id().GetUser(login, email, password, referral.Id);
 
             // assert
             response.Id.IsNotDefault();
@@ -92,44 +90,41 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task RestoreMyAccess_ValidEmail_Ok()
         {
             // arrange
-            var tokens = await RegisterLogUserInAsync(email: "someemail@email.com");
-            var user = await GetUserAsync(tokens.AccessToken);
+            var accessToken = await Id().LogUserIn();
+            var user = await Id(accessToken).Me.GetMe();
+            var request = new RestoreMyAccessRequestBody { Server = "http://localhost/", Email = user.Data.Data.Email };
 
             // act
-            await id.Post($"/me/{Constants.IdAppId}/restore-access")
-                .JsonContent(new RestoreMyAccessRequestBody { Server = "http://localhost/", Email = "someemail@email.com" })
-                .EnsureSuccessStatusCode()
-                .RunAsync();
-            var accessToken = emailService.Emails.Last().Data.As<RestoreAccessData>().Tokens.AccessToken;
-            var response = await id.Get("/me").BearerAuthorization(accessToken).AsResultAsync<MeResponse>();
+            await Id(accessToken).Me.RestoreMyAccess(Constants.IdAppId, request);
+            accessToken = emailService.Emails.Last().Data.As<RestoreAccessData>().Tokens.AccessToken;
+            var response = await Id(accessToken).Me.GetMe();
 
             // assert
-            response.Data.Id.IsEqual(user.Id);
+            response.Data.Data.Id.IsEqual(user.Data.Data.Id);
         }
 
         [Fact]
         public async Task GetMe_AuthenticatedUser_Ok()
         {
             // arrange
-            var tokens = await RegisterLogUserInAsync();
-            var user = await GetUserAsync(tokens.AccessToken);
+            var accessToken = await Id().LogUserIn();
 
             // act
-            var response = await id.Get("/me").BearerAuthorization(tokens.AccessToken).AsResultAsync<MeResponse>();
+            var response = await Id(accessToken).Me.GetMe();
 
             // assert
-            response.Data.Id.IsEqual(user.Id);
+            response.Data.Data.Id.IsNotDefault();
         }
 
         [Fact]
         public async Task UpdateMyProfile_IncorrectPayload_BadRequest()
         {
             // arrange
-            var tokens = await RegisterLogUserInAsync();
-            var payload = new UpdateMyProfileRequest { Login = "demo" };
+            var accessToken = await Id().LogUserIn();
+            var request = new UpdateMyProfileRequest { Login = "demo" };
 
             // act
-            var response = await id.Put("/me/profile").BearerAuthorization(tokens.AccessToken).JsonContent(payload).RunAsync();
+            var response = await Id(accessToken).Me.UpdateMyProfile(request);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
@@ -139,12 +134,12 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task UpdateMyProfile_LoginIsNotUnique_BadRequest()
         {
             // arrange
-            var tokens = await RegisterLogUserInAsync();
-            var other = await RegisterLogUserInGetUserAsync("uniquelogin", "asdasdsdd", "asd1@demo.com");
-            var update = new UpdateMyProfileRequest { Login = other.Login, Email = "asd2@demo.com" };
+            var accessToken = await Id().LogUserIn();
+            var other = await RegisterLogUserInGetUserAsync("uniqueLogin", "SomePassHere000", "asd1@demo.com");
+            var request = new UpdateMyProfileRequest { Login = other.Login, Email = "asd2@demo.com" };
 
             // act
-            var response = await id.Put("/me/profile").BearerAuthorization(tokens.AccessToken).JsonContent(update).RunAsync();
+            var response = await Id(accessToken).Me.UpdateMyProfile(request);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Conflict);
@@ -154,12 +149,12 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task UpdateMyProfile_EmailIsNotUnique_BadRequest()
         {
             // arrange
-            var tokens = await RegisterLogUserInAsync();
-            var other = await RegisterLogUserInGetUserAsync("uniquelogin", "asdasdsdd", "asd1@demo.com");
-            var update = new UpdateMyProfileRequest { Login = "otherlogin", Email = other.Email };
+            var accessToken = await Id().LogUserIn();
+            var other = await RegisterLogUserInGetUserAsync("uniqueLogin", "SomePassHere000", "asd1@demo.com");
+            var request = new UpdateMyProfileRequest { Login = "otherLogin", Email = other.Email };
 
             // act
-            var response = await id.Put("/me/profile").BearerAuthorization(tokens.AccessToken).JsonContent(update).RunAsync();
+            var response = await Id(accessToken).Me.UpdateMyProfile(request);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Conflict);
@@ -169,11 +164,11 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task UpdateMyProfile_ValidData_Ok()
         {
             // arrange
-            var tokens = await RegisterLogUserInAsync();
-            var payload = new UpdateMyProfileRequest { Login = "medo", Email = "medo@medo.com" };
+            var accessToken = await Id().LogUserIn();
+            var request = new UpdateMyProfileRequest { Login = "other", Email = "other@other.com" };
 
             // act
-            var response = await id.Put("/me/profile").BearerAuthorization(tokens.AccessToken).JsonContent(payload).RunAsync();
+            var response = await Id(accessToken).Me.UpdateMyProfile(request);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.OK);
@@ -183,11 +178,11 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task UpdateMyPassword_IncorrectPayload_BadRequest()
         {
             // arrange
-            var tokens = await RegisterLogUserInAsync();
-            var payload = new UpdateMyPasswordRequest { Password = "demo" };
+            var accessToken = await Id().LogUserIn();
+            var request = new UpdateMyPasswordRequest { Password = "demo" };
 
             // act
-            var response = await id.Put("/me/password").BearerAuthorization(tokens.AccessToken).JsonContent(payload).RunAsync();
+            var response = await Id(accessToken).Me.UpdateMyPassword(request);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
@@ -197,11 +192,11 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task UpdateMyPassword_ValidData_Ok()
         {
             // arrange
-            var tokens = await RegisterLogUserInAsync();
-            var payload = new UpdateMyPasswordRequest { Password = "setsetset" };
+            var accessToken = await Id().LogUserIn();
+            var request = new UpdateMyPasswordRequest { Password = "MoreSecurePass###" };
 
             // act
-            var response = await id.Put("/me/password").BearerAuthorization(tokens.AccessToken).JsonContent(payload).RunAsync();
+            var response = await Id(accessToken).Me.UpdateMyPassword(request);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.OK);
@@ -211,10 +206,10 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task UnregisterMe_ValidData_Ok()
         {
             // arrange
-            var tokens = await RegisterLogUserInAsync();
+            var accessToken = await Id().LogUserIn();
 
             // act
-            var response = await id.Delete("/me").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await Id(accessToken).Me.UnregisterMe();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.OK);

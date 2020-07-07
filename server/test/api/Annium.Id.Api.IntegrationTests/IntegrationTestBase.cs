@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Annium.AspNetCore.IntegrationTesting;
 using Annium.Core.DependencyInjection;
+using Annium.Id.Api.TestClient;
 using Annium.Id.Api.ViewModels.Apps.Requests;
 using Annium.Id.Api.ViewModels.Apps.Responses;
 using Annium.Id.Api.ViewModels.Claims.Requests;
@@ -23,6 +24,7 @@ using Annium.Id.Api.ViewModels.Roles.Requests;
 using Annium.Id.Api.ViewModels.Roles.Responses;
 using Annium.Id.Api.ViewModels.Users.Requests;
 using Annium.Id.Core;
+using Annium.Id.Demo.TestClient;
 using Annium.Id.Infrastructure.Email.Models;
 using Annium.Net.Http;
 using Annium.Net.Mail;
@@ -34,14 +36,39 @@ namespace Annium.Id.Api.IntegrationTests
 {
     public class IntegrationTestBase : IntegrationTest
     {
-        protected IHttpRequest id => GetRequest<Api.Startup>(
-            builder => builder.UseServicePack<Api.TestServicePack>(),
+        #region id
+
+        public IHttpRequest IdApi => GetRequest<Startup>(
+            builder => builder.UseServicePack<TestServicePack>(),
+            services => services.AddSingleton<IEmailService>(emailService)
+        );
+
+        public ExtendedClient Id() => IdApi.ApiClient(emailService);
+
+        public ExtendedClient Id(string token) => IdApi.BearerAuthorization(token).ApiClient(emailService);
+
+        protected readonly TestEmailService emailService = new TestEmailService();
+
+        #endregion
+
+        #region demo
+
+        public IHttpRequest DemoApi => GetRequest<Demo.Startup>(builder => builder.UseServicePack<Demo.ServicePack>());
+
+        public Demo.TestClient.Client Demo() => DemoApi.DemoClient();
+
+        public Demo.TestClient.Client Demo(string token) => DemoApi.BearerAuthorization(token).DemoClient();
+
+        #endregion
+
+        protected IHttpRequest id => GetRequest<Startup>(
+            builder => builder.UseServicePack<TestServicePack>(),
             services => services.AddSingleton<IEmailService>(emailService)
         );
 
         protected IHttpRequest demo(Guid appId) => GetRequest<Demo.Startup>(
             builder => builder.UseServicePack<Demo.ServicePack>(),
-            (IServiceCollection services) => services
+            services => services
                 .AddIdAuthorization(options =>
                 {
                     options.Audience = appId;
@@ -51,7 +78,6 @@ namespace Annium.Id.Api.IntegrationTests
                 })
         );
 
-        protected TestEmailService emailService = new TestEmailService();
 
         private async Task CreateUserAsync(
             string login = "demo",
@@ -76,14 +102,6 @@ namespace Annium.Id.Api.IntegrationTests
             var tokens = await RegisterLogUserInAsync(login, password, email, referralId);
 
             return await GetUserAsync(tokens.AccessToken);
-        }
-
-        protected Task<TokensResponse> LogUserInAsync(
-            string login = "demo",
-            string password = "testtest"
-        )
-        {
-            return LogUserInAppAsync(Constants.IdAppId, login, password);
         }
 
         protected async Task<TokensResponse> LogUserInAppAsync(
@@ -127,7 +145,7 @@ namespace Annium.Id.Api.IntegrationTests
 
             // confirm email
             var token = (await id.Post($"/me/{appId}/confirm-email")
-                .JsonContent(new ConfirmMyEmailRequestBase { Id = userId })
+                .JsonContent(new ConfirmMyEmailRequestBody { Id = userId })
                 .EnsureSuccessStatusCode()
                 .AsResultAsync<TokensResponse>()).Data;
 
