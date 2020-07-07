@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Annium.Id.Infrastructure.DbMigrator.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20200622061925_Init")]
+    [Migration("20200707043501_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

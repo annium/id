@@ -39,6 +39,7 @@ namespace Annium.Id.Infrastructure.Db
                 Login = "alex",
                 PasswordHash = "ohraPG8QMZiOnXX+MWh/45aZDwjtv/7FQMFzXxSRxQjLdSMBHpELKDSznF6cSUalufovlgCfFkn4mtR7eXB+8w==",
                 Email = "a.kreskiyan@gmail.com",
+                ReferralId = default,
             });
 
             builder.Entity<App>().HasData(new App
