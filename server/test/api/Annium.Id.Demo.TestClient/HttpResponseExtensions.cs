@@ -12,5 +12,12 @@ namespace Annium.Id.Demo.TestClient
 
             return response.Data.Data;
         }
+
+        public static async Task<IResult<T>> GetResult<T>(this Task<IHttpResponse<IResult<T>>> task)
+        {
+            var response = await task;
+
+            return response.Data;
+        }
     }
 }
