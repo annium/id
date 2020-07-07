@@ -95,14 +95,14 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
             var password = "test1test";
             var token = await Id().RegisterLogUserIn(login, email, password);
             var app = await Id(token).App.Register();
-            var tokens = await Id(token).Login.LogIn(app.Id, new LogInRequestBody { Login = login, Password = password });
+            var tokens = await Id(token).Login.LogIn(app.Id, new LogInRequestBody { Login = login, Password = password }).GetData();
 
             // act
-            var response = await Id(tokens.Data.Data.AccessToken).Login.UpdateToken(app.Id, tokens.Data.Data.RefreshToken);
+            var response = await Id(tokens.AccessToken).Login.UpdateToken(app.Id, tokens.RefreshToken).GetData();
 
             // assert
-            response.Data.Data.AccessToken.IsNotDefault().IsNotEqual(tokens.Data.Data.AccessToken);
-            response.Data.Data.RefreshToken.IsNotDefault().IsNotEqual(tokens.Data.Data.RefreshToken);
+            response.AccessToken.IsNotDefault().IsNotEqual(tokens.AccessToken);
+            response.RefreshToken.IsNotDefault().IsNotEqual(tokens.RefreshToken);
         }
 
         [Fact]

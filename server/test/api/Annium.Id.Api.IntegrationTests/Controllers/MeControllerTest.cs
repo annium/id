@@ -91,16 +91,16 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         {
             // arrange
             var token = await Id().RegisterLogUserIn();
-            var user = await Id(token).Me.GetMe();
-            var request = new RestoreMyAccessRequestBody { Server = "http://localhost/", Email = user.Data.Data.Email };
+            var user = await Id(token).Me.GetMe().GetData();
+            var request = new RestoreMyAccessRequestBody { Server = "http://localhost/", Email = user.Email };
 
             // act
             await Id(token).Me.RestoreMyAccess(Constants.IdAppId, request);
             token = emailService.Emails.Last().Data.As<RestoreAccessData>().Tokens.AccessToken;
-            var response = await Id(token).Me.GetMe();
+            var response = await Id(token).Me.GetMe().GetData();
 
             // assert
-            response.Data.Data.Id.IsEqual(user.Data.Data.Id);
+            response.Id.IsEqual(user.Id);
         }
 
         [Fact]
@@ -110,10 +110,10 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
             var token = await Id().RegisterLogUserIn();
 
             // act
-            var response = await Id(token).Me.GetMe();
+            var response = await Id(token).Me.GetMe().GetData();
 
             // assert
-            response.Data.Data.Id.IsNotDefault();
+            response.Id.IsNotDefault();
         }
 
         [Fact]
