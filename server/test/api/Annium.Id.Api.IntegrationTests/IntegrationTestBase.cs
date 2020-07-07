@@ -304,26 +304,6 @@ namespace Annium.Id.Api.IntegrationTests
                 .RunAsync();
         }
 
-        protected async Task<CompanyResponse> CreateCompanyAsync(
-            string accessToken,
-            string name = "Demo Company",
-            Guid? parentId = null
-        )
-        {
-            var request = new RegisterCompanyRequest { ParentId = parentId, Name = name };
-
-            var companyId = (await id.Post("/companies")
-                .BearerAuthorization(accessToken)
-                .JsonContent(request)
-                .EnsureSuccessStatusCode()
-                .AsResultAsync<Guid>()).Data;
-
-            return (await id.Get($"/companies/{companyId}")
-                .BearerAuthorization(accessToken)
-                .EnsureSuccessStatusCode()
-                .AsResultAsync<CompanyResponse>()).Data;
-        }
-
         protected async Task<CompanyRoleResponse> CreateCompanyRoleAsync(
             string accessToken,
             Guid appId,
@@ -384,48 +364,6 @@ namespace Annium.Id.Api.IntegrationTests
             var request = new AddCompanyClaimToCompanyRoleRequest { Value = value };
 
             return id.Post($"/companies/roles/{roleId}/claims/{claimId}")
-                .BearerAuthorization(accessToken)
-                .JsonContent(request)
-                .EnsureSuccessStatusCode()
-                .RunAsync();
-        }
-
-        protected Task AddUserToCompanyAsync(
-            string accessToken,
-            Guid companyId,
-            Guid userId
-        )
-        {
-            return id.Post($"/companies/{companyId}/users/{userId}")
-                .BearerAuthorization(accessToken)
-                .EnsureSuccessStatusCode()
-                .RunAsync();
-        }
-
-        protected Task AddCompanyRoleToCompanyUserAsync(
-            string accessToken,
-            Guid companyId,
-            Guid userId,
-            Guid roleId
-        )
-        {
-            return id.Post($"/companies/{companyId}/users/{userId}/roles/{roleId}")
-                .BearerAuthorization(accessToken)
-                .EnsureSuccessStatusCode()
-                .RunAsync();
-        }
-
-        protected Task AddCompanyClaimToCompanyUserAsync(
-            string accessToken,
-            Guid companyId,
-            Guid userId,
-            Guid claimId,
-            string value = "Some"
-        )
-        {
-            var request = new AddCompanyClaimToCompanyUserRequest { Value = value };
-
-            return id.Post($"/companies/{companyId}/users/{userId}/claims/{claimId}")
                 .BearerAuthorization(accessToken)
                 .JsonContent(request)
                 .EnsureSuccessStatusCode()
