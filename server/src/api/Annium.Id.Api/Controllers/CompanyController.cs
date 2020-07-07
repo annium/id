@@ -30,6 +30,7 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpGet("{companyId:guid}")]
+        [Authorize]
         public Task<IResult<CompanyResponse>> GetCompanyInfo(Guid companyId)
         {
             var request = new GetCompanyRequest { CompanyId = companyId };
@@ -38,6 +39,7 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpGet("{companyId:guid}/users")]
+        [Authorize]
         public Task<IResult<IEnumerable<UserResponse>>> GetCompanyUsers(Guid companyId)
         {
             var request = new GetCompanyUsersRequest { CompanyId = companyId };
