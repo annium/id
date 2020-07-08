@@ -17,13 +17,13 @@ namespace Annium.Id.Core
         public AppToken App { get; }
 
         [Key(3)]
-        public IEnumerable<CompanyToken> Companies { get; }
+        public IReadOnlyCollection<CompanyToken> Companies { get; }
 
         public IdToken(
             Guid userId,
             Guid loginId,
             AppToken app,
-            IEnumerable<CompanyToken> companies
+            IReadOnlyCollection<CompanyToken> companies
         )
         {
             UserId = userId;
@@ -40,14 +40,14 @@ namespace Annium.Id.Core
         public Guid Id { get; }
 
         [Key(1)]
-        public IEnumerable<string> Roles { get; }
+        public IReadOnlyCollection<string> Roles { get; }
 
         [Key(2)]
         public IReadOnlyDictionary<string, string> Claims { get; }
 
         public AppToken(
             Guid id,
-            IEnumerable<string> roles,
+            IReadOnlyCollection<string> roles,
             IReadOnlyDictionary<string, string> claims
         )
         {
@@ -64,14 +64,14 @@ namespace Annium.Id.Core
         public Guid Id { get; }
 
         [Key(1)]
-        public IEnumerable<string> Roles { get; }
+        public IReadOnlyCollection<string> Roles { get; }
 
         [Key(2)]
         public IReadOnlyDictionary<string, string> Claims { get; }
 
         public CompanyToken(
             Guid id,
-            IEnumerable<string> roles,
+            IReadOnlyCollection<string> roles,
             IReadOnlyDictionary<string, string> claims
         )
         {

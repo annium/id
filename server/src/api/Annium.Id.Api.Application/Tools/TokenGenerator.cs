@@ -55,7 +55,7 @@ namespace Annium.Id.Api.Application.Tools
                 company,
                 companyUserRoles.ContainsKey(company.Id) ? companyUserRoles[company.Id] : Array.Empty<CompanyRole>(),
                 companyUserClaims.ContainsKey(company.Id) ? companyUserClaims[company.Id] : Array.Empty<ClaimValue>()
-            ));
+            )).ToArray();
 
             var token = new IdToken(login.UserId, login.Id, appToken, companyTokens);
 
