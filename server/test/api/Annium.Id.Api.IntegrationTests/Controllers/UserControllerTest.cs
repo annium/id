@@ -1,8 +1,8 @@
 using System;
 using System.Net;
 using System.Threading.Tasks;
-using Annium.Id.Api.ViewModels.Users.Requests;
-using Annium.Net.Http;
+using Annium.Id.Api.TestClient;
+using Annium.Id.Api.TestClient.Clients;
 using Annium.Testing;
 using Xunit;
 
@@ -14,10 +14,10 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task AddRole_MissingApp_NotFound()
         {
             // arrange
-            var tokens = await RegisterLogUserInAsync();
+            var token = await Id().RegisterLogUserIn();
 
             // act
-            var response = await id.Post($"/users/{Guid.NewGuid()}/roles/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await Id(token).User.AddRoleToUser(Guid.NewGuid(), Guid.NewGuid());
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -27,15 +27,15 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task AddRole_NotOwner_Forbidden()
         {
             // arrange
-            var ownerTokens = await RegisterLogUserInAsync("owner", "superpass", "some@email.com");
-            var app = await CreateAppAsync(ownerTokens.AccessToken);
-            var role = await CreateRoleAsync(ownerTokens.AccessToken, app.Id);
+            var otherToken = await Id().RegisterLogOtherUserIn();
+            var app = await Id(otherToken).App.Register();
+            var role = await Id(otherToken).Role.Register(app.Id);
 
-            var tokens = await RegisterLogUserInAsync();
-            var user = await GetUserAsync(tokens.AccessToken);
+            var token = await Id().RegisterLogUserIn();
+            var user = await Id(token).Me.GetMe().GetData();
 
             // act
-            var response = await id.Post($"/users/{user.Id}/roles/{role.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await Id(token).User.AddRoleToUser(role.Id, user.Id);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -45,10 +45,10 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task AddRole_MissingUser_Forbidden()
         {
             // arrange
-            var tokens = await RegisterLogUserInAsync();
+            var token = await Id().RegisterLogUserIn();
 
             // act
-            var response = await id.Post($"/users/{Guid.NewGuid()}/roles/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await Id(token).User.AddRoleToUser(Guid.NewGuid(), Guid.NewGuid());
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -58,11 +58,11 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task AddRole_MissingRole_Forbidden()
         {
             // arrange
-            var tokens = await RegisterLogUserInAsync();
-            var other = await RegisterLogUserInGetUserAsync("other", "superpass", "some@email.com");
+            var token = await Id().RegisterLogUserIn();
+            var other = await Id().RegisterLogInGetOtherUser();
 
             // act
-            var response = await id.Post($"/users/{other.Id}/roles/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await Id(token).User.AddRoleToUser(Guid.NewGuid(), other.Id);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -72,13 +72,13 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task AddRole_Valid_Ok()
         {
             // arrange
-            var tokens = await RegisterLogUserInAsync();
-            var app = await CreateAppAsync(tokens.AccessToken);
-            var role = await CreateRoleAsync(tokens.AccessToken, app.Id);
-            var other = await RegisterLogUserInGetUserAsync("other", "superpass", "some@email.com");
+            var token = await Id().RegisterLogUserIn();
+            var app = await Id(token).App.Register();
+            var role = await Id(token).Role.Register(app.Id);
+            var other = await Id().RegisterLogInGetOtherUser();
 
             // act
-            var response = await id.Post($"/users/{other.Id}/roles/{role.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await Id(token).User.AddRoleToUser(role.Id, other.Id);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.OK);
@@ -88,10 +88,10 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task DeleteRole_MissingApp_NotFound()
         {
             // arrange
-            var tokens = await RegisterLogUserInAsync();
+            var token = await Id().RegisterLogUserIn();
 
             // act
-            var response = await id.Delete($"/users/{Guid.NewGuid()}/roles/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await Id(token).User.DeleteRoleFromUser(Guid.NewGuid(), Guid.NewGuid());
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -101,14 +101,14 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task DeleteRole_NotOwner_Forbidden()
         {
             // arrange
-            var ownerTokens = await RegisterLogUserInAsync("owner", "superpass", "some@email.com");
-            var owner = await GetUserAsync(ownerTokens.AccessToken);
-            var app = await CreateAppAsync(ownerTokens.AccessToken);
-            var role = await CreateRoleAsync(ownerTokens.AccessToken, app.Id);
-            var tokens = await RegisterLogUserInAsync();
+            var otherToken = await Id().RegisterLogOtherUserIn();
+            var owner = await Id(otherToken).Me.GetMe().GetData();
+            var app = await Id(otherToken).App.Register();
+            var role = await Id(otherToken).Role.Register(app.Id);
+            var token = await Id().RegisterLogUserIn();
 
             // act
-            var response = await id.Delete($"/users/{owner.Id}/roles/{role.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await Id(token).User.DeleteRoleFromUser(role.Id, owner.Id);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -118,10 +118,10 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task DeleteRole_MissingUser_Forbidden()
         {
             // arrange
-            var tokens = await RegisterLogUserInAsync();
+            var token = await Id().RegisterLogUserIn();
 
             // act
-            var response = await id.Delete($"/users/{Guid.NewGuid()}/roles/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await Id(token).User.DeleteRoleFromUser(Guid.NewGuid(), Guid.NewGuid());
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -131,11 +131,11 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task DeleteRole_MissingRole_Forbidden()
         {
             // arrange
-            var tokens = await RegisterLogUserInAsync();
-            var other = await RegisterLogUserInGetUserAsync("other", "superpass", "some@email.com");
+            var token = await Id().RegisterLogUserIn();
+            var other = await Id().RegisterLogInGetOtherUser();
 
             // act
-            var response = await id.Delete($"/users/{other.Id}/roles/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await Id(token).User.DeleteRoleFromUser(Guid.NewGuid(), other.Id);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -145,13 +145,13 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task DeleteRole_Valid_Ok()
         {
             // arrange
-            var tokens = await RegisterLogUserInAsync();
-            var app = await CreateAppAsync(tokens.AccessToken);
-            var role = await CreateRoleAsync(tokens.AccessToken, app.Id);
-            var other = await RegisterLogUserInGetUserAsync("other", "superpass", "some@email.com");
+            var token = await Id().RegisterLogUserIn();
+            var app = await Id(token).App.Register();
+            var role = await Id(token).Role.Register(app.Id);
+            var other = await Id().RegisterLogInGetOtherUser();
 
             // act
-            var response = await id.Delete($"/users/{other.Id}/roles/{role.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await Id(token).User.DeleteRoleFromUser(role.Id, other.Id);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.OK);
@@ -161,46 +161,30 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task AddClaim_IncorrectPayload_BadRequest()
         {
             // arrange
-            var tokens = await RegisterLogUserInAsync();
-            var app = await CreateAppAsync(tokens.AccessToken);
-            var claim = await CreateClaimAsync(tokens.AccessToken, app.Id);
-            var other = await RegisterLogUserInGetUserAsync("other", "superpass", "some@email.com");
-            var p = new AddClaimToUserRequest { Value = "S" };
+            var token = await Id().RegisterLogUserIn();
+            var app = await Id(token).App.Register();
+            var claim = await Id(token).Claim.Register(app.Id);
+            var other = await Id().RegisterLogInGetOtherUser();
 
             // act
-            var response = await id.Post($"/users/{other.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
+            var response = await Id(token).User.AddUserClaim(other.Id, claim.Id, "S");
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
         }
 
         [Fact]
-        public async Task AddClaim_MissingApp_NotFound()
-        {
-            // arrange
-            var tokens = await RegisterLogUserInAsync();
-            var p = new AddClaimToUserRequest { Value = "Some" };
-
-            // act
-            var response = await id.Post($"/users/{Guid.NewGuid()}/claims/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
-
-            // assert
-            response.StatusCode.IsEqual(HttpStatusCode.NotFound);
-        }
-
-        [Fact]
         public async Task AddClaim_NotOwner_Forbidden()
         {
             // arrange
-            var ownerTokens = await RegisterLogUserInAsync("owner", "superpass", "some@email.com");
-            var app = await CreateAppAsync(ownerTokens.AccessToken);
-            var claim = await CreateClaimAsync(ownerTokens.AccessToken, app.Id);
-            var tokens = await RegisterLogUserInAsync();
-            var user = await GetUserAsync(tokens.AccessToken);
-            var p = new AddClaimToUserRequest { Value = "Some" };
+            var otherToken = await Id().RegisterLogOtherUserIn();
+            var app = await Id(otherToken).App.Register();
+            var claim = await Id(otherToken).Claim.Register(app.Id);
+            var token = await Id().RegisterLogUserIn();
+            var user = await Id(token).Me.GetMe().GetData();
 
             // act
-            var response = await id.Post($"/users/{user.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
+            var response = await Id(token).User.AddUserClaim(user.Id, claim.Id);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -210,11 +194,10 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task AddClaim_MissingUser_Forbidden()
         {
             // arrange
-            var tokens = await RegisterLogUserInAsync();
-            var p = new AddClaimToUserRequest { Value = "Some" };
+            var token = await Id().RegisterLogUserIn();
 
             // act
-            var response = await id.Post($"/users/{Guid.NewGuid()}/claims/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
+            var response = await Id(token).User.AddUserClaim(Guid.NewGuid(), Guid.NewGuid());
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -224,12 +207,11 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task AddClaim_MissingClaim_Forbidden()
         {
             // arrange
-            var tokens = await RegisterLogUserInAsync();
-            var other = await RegisterLogUserInGetUserAsync("other", "superpass", "some@email.com");
-            var p = new AddClaimToUserRequest { Value = "Some" };
+            var token = await Id().RegisterLogUserIn();
+            var other = await Id().RegisterLogInGetOtherUser();
 
             // act
-            var response = await id.Post($"/users/{other.Id}/claims/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
+            var response = await Id(token).User.AddUserClaim(other.Id, Guid.NewGuid());
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -239,14 +221,13 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task AddClaim_Valid_Ok()
         {
             // arrange
-            var tokens = await RegisterLogUserInAsync();
-            var app = await CreateAppAsync(tokens.AccessToken);
-            var claim = await CreateClaimAsync(tokens.AccessToken, app.Id);
-            var other = await RegisterLogUserInGetUserAsync("other", "superpass", "some@email.com");
-            var p = new AddClaimToUserRequest { Value = "Some" };
+            var token = await Id().RegisterLogUserIn();
+            var app = await Id(token).App.Register();
+            var claim = await Id(token).Claim.Register(app.Id);
+            var other = await Id().RegisterLogInGetOtherUser();
 
             // act
-            var response = await id.Post($"/users/{other.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).JsonContent(p).RunAsync();
+            var response = await Id(token).User.AddUserClaim(other.Id, claim.Id);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.OK);
@@ -256,10 +237,10 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task DeleteClaim_MissingApp_NotFound()
         {
             // arrange
-            var tokens = await RegisterLogUserInAsync();
+            var token = await Id().RegisterLogUserIn();
 
             // act
-            var response = await id.Delete($"/users/{Guid.NewGuid()}/claims/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await Id(token).User.DeleteClaimFromUser(Guid.NewGuid(), Guid.NewGuid());
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -269,14 +250,14 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task DeleteClaim_NotOwner_Forbidden()
         {
             // arrange
-            var ownerTokens = await RegisterLogUserInAsync("owner", "superpass", "some@email.com");
-            var owner = await GetUserAsync(ownerTokens.AccessToken);
-            var app = await CreateAppAsync(ownerTokens.AccessToken);
-            var claim = await CreateClaimAsync(ownerTokens.AccessToken, app.Id);
-            var tokens = await RegisterLogUserInAsync();
+            var otherToken = await Id().RegisterLogOtherUserIn();
+            var owner = await Id(otherToken).Me.GetMe().GetData();
+            var app = await Id(otherToken).App.Register();
+            var claim = await Id(otherToken).Claim.Register(app.Id);
+            var token = await Id().RegisterLogUserIn();
 
             // act
-            var response = await id.Delete($"/users/{owner.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await Id(token).User.DeleteClaimFromUser(claim.Id, owner.Id);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -286,10 +267,10 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task DeleteClaim_MissingUser_Forbidden()
         {
             // arrange
-            var tokens = await RegisterLogUserInAsync();
+            var token = await Id().RegisterLogUserIn();
 
             // act
-            var response = await id.Delete($"/users/{Guid.NewGuid()}/claims/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await Id(token).User.DeleteClaimFromUser(Guid.NewGuid(), Guid.NewGuid());
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -299,11 +280,11 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task DeleteClaim_MissingClaim_Forbidden()
         {
             // arrange
-            var tokens = await RegisterLogUserInAsync();
-            var other = await RegisterLogUserInGetUserAsync("other", "superpass", "some@email.com");
+            var token = await Id().RegisterLogUserIn();
+            var other = await Id().RegisterLogInGetOtherUser();
 
             // act
-            var response = await id.Delete($"/users/{other.Id}/claims/{Guid.NewGuid()}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await Id(token).User.DeleteClaimFromUser(Guid.NewGuid(), other.Id);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.NotFound);
@@ -313,13 +294,13 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task DeleteClaim_Valid_Ok()
         {
             // arrange
-            var tokens = await RegisterLogUserInAsync();
-            var app = await CreateAppAsync(tokens.AccessToken);
-            var claim = await CreateClaimAsync(tokens.AccessToken, app.Id);
-            var other = await RegisterLogUserInGetUserAsync("other", "superpass", "some@email.com");
+            var token = await Id().RegisterLogUserIn();
+            var app = await Id(token).App.Register();
+            var claim = await Id(token).Claim.Register(app.Id);
+            var other = await Id().RegisterLogInGetOtherUser();
 
             // act
-            var response = await id.Delete($"/users/{other.Id}/claims/{claim.Id}").BearerAuthorization(tokens.AccessToken).RunAsync();
+            var response = await Id(token).User.DeleteClaimFromUser(claim.Id, other.Id);
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.OK);

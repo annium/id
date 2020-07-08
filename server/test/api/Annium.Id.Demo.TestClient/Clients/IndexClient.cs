@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
+using Annium.Id.Demo.ViewModels;
 using Annium.Net.Http;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Annium.Id.Demo.TestClient.Clients
 {
@@ -11,37 +11,37 @@ namespace Annium.Id.Demo.TestClient.Clients
         {
         }
 
-        public async Task<IHttpResponse<IActionResult>> Base(
+        public async Task<IHttpResponse<IdTokenResponse>> Base(
         )
         {
             return await Request.Clone()
                 .Get("base")
-                .AsResponseAsync<IActionResult>();
+                .AsResponseAsync<IdTokenResponse>();
         }
 
-        public async Task<IHttpResponse<IActionResult>> IsAdmin(
+        public async Task<IHttpResponse<IdTokenResponse>> IsAdmin(
         )
         {
             return await Request.Clone()
                 .Get("isAdmin")
-                .AsResponseAsync<IActionResult>();
+                .AsResponseAsync<IdTokenResponse>();
         }
 
-        public async Task<IHttpResponse<IActionResult>> HasPaymentsAccess(
+        public async Task<IHttpResponse<IdTokenResponse>> HasPaymentsAccess(
         )
         {
             return await Request.Clone()
                 .Get("hasPaymentsAccess")
-                .AsResponseAsync<IActionResult>();
+                .AsResponseAsync<IdTokenResponse>();
         }
 
-        public async Task<IHttpResponse<IActionResult>> HasCompanyPaymentsAccess(
+        public async Task<IHttpResponse<IdTokenResponse>> HasCompanyPaymentsAccess(
             Guid companyId
         )
         {
             return await Request.Clone()
                 .Get($"hasCompanyPaymentsAccess/{companyId}")
-                .AsResponseAsync<IActionResult>();
+                .AsResponseAsync<IdTokenResponse>();
         }
     }
 }

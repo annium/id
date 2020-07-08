@@ -1,7 +1,8 @@
 using System;
 using System.Net;
 using System.Threading.Tasks;
-using Annium.Net.Http;
+using Annium.Id.Api.TestClient;
+using Annium.Id.Api.TestClient.Clients;
 using Annium.Testing;
 using Xunit;
 
@@ -13,7 +14,7 @@ namespace Annium.Id.Api.IntegrationTests.DemoClient.Controllers
         public async Task IdAuthorization_Unauthorized_ReturnsUnauthorized()
         {
             // act
-            var response = await demo(Guid.NewGuid()).Get("/base").RunAsync();
+            var response = await Demo(Guid.NewGuid()).Index.Base();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Unauthorized);
@@ -23,16 +24,17 @@ namespace Annium.Id.Api.IntegrationTests.DemoClient.Controllers
         public async Task IdAuthorization_Authorized_Works()
         {
             // arrange
-            var (_, app, _) = await RegisterLogUserInCreateAppLogInAppAsync();
-            var appTokens = await LogUserInAppAsync(app.Id);
+            var token = await Id().RegisterLogUserIn();
+            var app = await Id(token).App.Register();
+            token = await Id().LogUserIn(app.Id);
 
             // act
-            var response = await demo(app.Id).Get("/base").BearerAuthorization(appTokens.AccessToken).RunAsync();
+            var response = await Demo(app.Id, token).Index.Base();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.OK);
             // FIXME: use, when System.Text.Json supports Deserialize with non-default constructor
-            // var token = await demo(app.Id).Get("/base").BearerAuthorization(appTokens.AccessToken).AsAsync<IdToken>();
+            // var token = await Demo(app.Id).Get("/base").BearerAuthorization(appTokens.AccessToken).AsAsync<IdToken>();
 
             // // assert
             // token.IsNotDefault();
@@ -44,7 +46,7 @@ namespace Annium.Id.Api.IntegrationTests.DemoClient.Controllers
         public async Task IdAuthorization_CheckRole_Unauthorized_ReturnsUnauthorized()
         {
             // act
-            var response = await demo(Guid.NewGuid()).Get("/isAdmin").RunAsync();
+            var response = await Demo(Guid.NewGuid()).Index.IsAdmin();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Unauthorized);
@@ -54,11 +56,12 @@ namespace Annium.Id.Api.IntegrationTests.DemoClient.Controllers
         public async Task IdAuthorization_CheckRole_HasNoAccess_ReturnsForbidden()
         {
             // arrange
-            var (_, app, _) = await RegisterLogUserInCreateAppLogInAppAsync();
-            var appTokens = await LogUserInAppAsync(app.Id);
+            var token = await Id().RegisterLogUserIn();
+            var app = await Id(token).App.Register();
+            token = await Id().LogUserIn(app.Id);
 
             // act
-            var response = await demo(app.Id).Get("/isAdmin").BearerAuthorization(appTokens.AccessToken).RunAsync();
+            var response = await Demo(app.Id, token).Index.IsAdmin();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
@@ -68,13 +71,15 @@ namespace Annium.Id.Api.IntegrationTests.DemoClient.Controllers
         public async Task IdAuthorization_CheckRole_HasAccess_Works()
         {
             // arrange
-            var (user, app, tokens) = await RegisterLogUserInCreateAppLogInAppAsync();
-            var role = await CreateRoleAsync(tokens.AccessToken, app.Id, "admin", "Administrator");
-            await AddRoleToUserAsync(tokens.AccessToken, user.Id, role.Id);
-            var appTokens = await LogUserInAppAsync(app.Id);
+            var token = await Id().RegisterLogUserIn();
+            var user = await Id(token).Me.GetMe().GetData();
+            var app = await Id(token).App.Register();
+            var role = await Id(token).Role.Register(app.Id, "admin", "Administrator");
+            await Id(token).User.AddRoleToUser(role.Id, user.Id);
+            token = await Id().LogUserIn(app.Id);
 
             // act
-            var response = await demo(app.Id).Get("/isAdmin").BearerAuthorization(appTokens.AccessToken).RunAsync();
+            var response = await Demo(app.Id, token).Index.IsAdmin();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.OK);
@@ -84,16 +89,17 @@ namespace Annium.Id.Api.IntegrationTests.DemoClient.Controllers
         public async Task IdAuthorization_CheckClaim_HasRoleAccess_Works()
         {
             // arrange
-            // for test completeness -
-            var (user, app, tokens) = await RegisterLogUserInCreateAppLogInAppAsync();
-            var role = await CreateRoleAsync(tokens.AccessToken, app.Id, "coo", "Chief Operations Officer");
-            await AddRoleToUserAsync(tokens.AccessToken, user.Id, role.Id);
-            var claim = await CreateClaimAsync(tokens.AccessToken, app.Id, "paymentsAccess", "Payments Access");
-            await AddClaimToRoleAsync(tokens.AccessToken, role.Id, claim.Id, "full");
-            var appTokens = await LogUserInAppAsync(app.Id);
+            var token = await Id().RegisterLogUserIn();
+            var user = await Id(token).Me.GetMe().GetData();
+            var app = await Id(token).App.Register();
+            var role = await Id(token).Role.Register(app.Id, "coo", "Chief Operations Officer");
+            await Id(token).User.AddRoleToUser(role.Id, user.Id);
+            var claim = await Id(token).Claim.Register(app.Id, "paymentsAccess", "Payments Access");
+            await Id(token).Role.AddClaimToRole(claim.Id, role.Id, "full");
+            token = await Id().LogUserIn(app.Id);
 
             // act
-            var response = await demo(app.Id).Get("/hasPaymentsAccess/").BearerAuthorization(appTokens.AccessToken).RunAsync();
+            var response = await Demo(app.Id, token).Index.HasPaymentsAccess();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.OK);
@@ -103,14 +109,15 @@ namespace Annium.Id.Api.IntegrationTests.DemoClient.Controllers
         public async Task IdAuthorization_CheckClaim_HasClaimAccess_Works()
         {
             // arrange
-            // for test completeness -
-            var (user, app, tokens) = await RegisterLogUserInCreateAppLogInAppAsync();
-            var claim = await CreateClaimAsync(tokens.AccessToken, app.Id, "paymentsAccess", "Payments Access");
-            await AddClaimToUserAsync(tokens.AccessToken, user.Id, claim.Id, "full");
-            var appTokens = await LogUserInAppAsync(app.Id);
+            var token = await Id().RegisterLogUserIn();
+            var user = await Id(token).Me.GetMe().GetData();
+            var app = await Id(token).App.Register();
+            var claim = await Id(token).Claim.Register(app.Id, "paymentsAccess", "Payments Access");
+            await Id(token).User.AddUserClaim(user.Id, claim.Id, "full");
+            token = await Id().LogUserIn(app.Id);
 
             // act
-            var response = await demo(app.Id).Get("/hasPaymentsAccess/").BearerAuthorization(appTokens.AccessToken).RunAsync();
+            var response = await Demo(app.Id, token).Index.HasPaymentsAccess();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.OK);
@@ -120,16 +127,17 @@ namespace Annium.Id.Api.IntegrationTests.DemoClient.Controllers
         public async Task IdAuthorization_CheckClaim_HasRoleClaimAccess_Works()
         {
             // arrange
-            // for test completeness -
-            var (user, app, tokens) = await RegisterLogUserInCreateAppLogInAppAsync();
-            var role = await CreateRoleAsync(tokens.AccessToken, app.Id, "coo", "Chief Operations Officer");
-            var claim = await CreateClaimAsync(tokens.AccessToken, app.Id, "paymentsAccess", "Payments Access");
-            await AddClaimToRoleAsync(tokens.AccessToken, role.Id, claim.Id, "limited");
-            await AddClaimToUserAsync(tokens.AccessToken, user.Id, claim.Id, "full");
-            var appTokens = await LogUserInAppAsync(app.Id);
+            var token = await Id().RegisterLogUserIn();
+            var user = await Id(token).Me.GetMe().GetData();
+            var app = await Id(token).App.Register();
+            var role = await Id(token).Role.Register(app.Id, "coo", "Chief Operations Officer");
+            var claim = await Id(token).Claim.Register(app.Id, "paymentsAccess", "Payments Access");
+            await Id(token).Role.AddClaimToRole(claim.Id, role.Id, "limited");
+            await Id(token).User.AddUserClaim(user.Id, claim.Id, "full");
+            token = await Id().LogUserIn(app.Id);
 
             // act
-            var response = await demo(app.Id).Get("/hasPaymentsAccess/").BearerAuthorization(appTokens.AccessToken).RunAsync();
+            var response = await Demo(app.Id, token).Index.HasPaymentsAccess();
 
             // assert
             response.StatusCode.IsEqual(HttpStatusCode.OK);

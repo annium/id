@@ -1,6 +1,8 @@
 using System;
+using Annium.Core.Mapper;
 using Annium.Id.AspNetCore;
 using Annium.Id.Core;
+using Annium.Id.Demo.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Annium.Id.Demo.Controllers
@@ -8,41 +10,44 @@ namespace Annium.Id.Demo.Controllers
     [Route("/")]
     public class IndexController : ControllerBase
     {
-        private readonly ITokenAccessor tokenAccessor;
+        private readonly ITokenAccessor _tokenAccessor;
+        private readonly IMapper _mapper;
 
         public IndexController(
-            ITokenAccessor tokenAccessor
+            ITokenAccessor tokenAccessor,
+            IMapper mapper
         )
         {
-            this.tokenAccessor = tokenAccessor;
+            _tokenAccessor = tokenAccessor;
+            _mapper = mapper;
         }
 
         [HttpGet("base")]
         [Authorize]
-        public IActionResult Base()
+        public IdTokenResponse Base()
         {
-            return new JsonResult(tokenAccessor.GetToken());
+            return _mapper.Map<IdTokenResponse>(_tokenAccessor.GetToken());
         }
 
         [HttpGet("isAdmin")]
         [Authorize("isAdmin")]
-        public IActionResult IsAdmin()
+        public IdTokenResponse IsAdmin()
         {
-            return new JsonResult(tokenAccessor.GetToken());
+            return _mapper.Map<IdTokenResponse>(_tokenAccessor.GetToken());
         }
 
         [HttpGet("hasPaymentsAccess")]
         [Authorize("hasPaymentsAccess")]
-        public IActionResult HasPaymentsAccess()
+        public IdTokenResponse HasPaymentsAccess()
         {
-            return new JsonResult(tokenAccessor.GetToken());
+            return _mapper.Map<IdTokenResponse>(_tokenAccessor.GetToken());
         }
 
         [HttpGet("hasCompanyPaymentsAccess/{companyId:guid}")]
         [Authorize("hasCompanyPaymentsAccess")]
-        public IActionResult HasCompanyPaymentsAccess(Guid companyId)
+        public IdTokenResponse HasCompanyPaymentsAccess(Guid companyId)
         {
-            return new JsonResult(tokenAccessor.GetToken());
+            return _mapper.Map<IdTokenResponse>(_tokenAccessor.GetToken());
         }
     }
 }
