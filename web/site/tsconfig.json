@@ -1,0 +1,11 @@
+{
+  "extends": "@annium/env-tsconfig-app-react",
+  "compilerOptions": {
+    "baseUrl": "src",
+    "rootDir": "src",
+    "module": "esnext"
+  },
+  "include": [
+    "src"
+  ]
+}
