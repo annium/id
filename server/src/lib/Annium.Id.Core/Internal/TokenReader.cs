@@ -41,8 +41,43 @@ namespace Annium.Id.Core.Internal
         {
             var handler = new JwtSecurityTokenHandler();
             if (!handler.CanReadToken(tokenString))
-                return fail(TokenReadStatus.BadSource, "Token is not valid JWT");
+                return Fail(TokenReadStatus.BadSource, "Token is not valid JWT");
 
+            var tvp = GetTokenValidationParameters(options);
+
+            try
+            {
+                handler.ValidateToken(tokenString, tvp, out var securityToken);
+                var jwt = (JwtSecurityToken) securityToken;
+                if (!options.ValidateExpiration)
+                {
+                    var now = getInstant().ToDateTimeUtc();
+                    if (jwt.ValidFrom > now)
+                        return Fail(TokenReadStatus.Failed, "Token is not yet valid");
+                }
+
+                var idClaim = jwt.Claims.FirstOrDefault(c => c.Type == Claims.Id);
+                if (idClaim is null)
+                    return Fail(TokenReadStatus.BadSource, "Token id is missing");
+
+                var rawToken = Convert.FromBase64String(idClaim.Value);
+                var token = MessagePackSerializer.Deserialize<IdToken>(
+                    rawToken,
+                    MessagePackSerializerOptions.Standard.WithCompression(MessagePackCompression.Lz4BlockArray)
+                );
+
+                return Result.Status(TokenReadStatus.Ok, token);
+            }
+            catch (Exception exception)
+            {
+                var (status, error) = HandleValidationFailure(exception);
+
+                return Fail(status, error);
+            }
+        }
+
+        private TokenValidationParameters GetTokenValidationParameters(TokenReadOptions options)
+        {
             var tvp = new TokenValidationParameters
             {
                 IssuerSigningKey = signingKey,
@@ -72,86 +107,34 @@ namespace Annium.Id.Core.Internal
                 tvp.ValidateLifetime = false;
             }
 
-            try
-            {
-                handler.ValidateToken(tokenString, tvp, out var securityToken);
-                var jwt = (JwtSecurityToken) securityToken;
-                if (!options.ValidateExpiration)
-                {
-                    var now = getInstant().ToDateTimeUtc();
-                    if (jwt.ValidFrom > now)
-                        return fail(TokenReadStatus.Failed, "Token is not yet valid");
-                }
-
-                var idClaim = jwt.Claims.FirstOrDefault(c => c.Type == Claims.Id);
-                if (idClaim is null)
-                    return fail(TokenReadStatus.BadSource, "Token id is missing");
-
-                var rawToken = Convert.FromBase64String(idClaim.Value);
-                var token = MessagePackSerializer.Deserialize<IdToken>(
-                    rawToken,
-                    MessagePackSerializerOptions.Standard.WithCompression(MessagePackCompression.Lz4BlockArray)
-                );
-
-                return Result.Status(TokenReadStatus.Ok, token);
-            }
-            catch (SecurityTokenDecompressionFailedException)
-            {
-                return fail(TokenReadStatus.Failed, "Token decompression failed");
-            }
-            catch (SecurityTokenEncryptionKeyNotFoundException)
-            {
-                logger.Error("Token encryption key not found");
-
-                return fail(TokenReadStatus.Failed, "Token decryption failed");
-            }
-            catch (SecurityTokenDecryptionFailedException)
-            {
-                return fail(TokenReadStatus.Failed, "Token decryption failed");
-            }
-            catch (SecurityTokenNoExpirationException)
-            {
-                return fail(TokenReadStatus.Failed, "Token has no expiration claim");
-            }
-            catch (SecurityTokenExpiredException)
-            {
-                return fail(TokenReadStatus.Failed, "Token is expired");
-            }
-            catch (SecurityTokenNotYetValidException)
-            {
-                return fail(TokenReadStatus.Failed, "Token is not yet valid");
-            }
-            catch (SecurityTokenInvalidLifetimeException)
-            {
-                return fail(TokenReadStatus.Failed, "Token has invalid lifetime");
-            }
-            catch (SecurityTokenInvalidAudienceException)
-            {
-                return fail(TokenReadStatus.Failed, "Token has invalid audience");
-            }
-            catch (SecurityTokenInvalidIssuerException)
-            {
-                return fail(TokenReadStatus.Failed, "Token has invalid issuer");
-            }
-            catch (SecurityTokenSignatureKeyNotFoundException)
-            {
-                logger.Error("Token signature key not found");
-
-                return fail(TokenReadStatus.Failed, "Token has invalid signature");
-            }
-            catch (SecurityTokenInvalidSignatureException)
-            {
-                return fail(TokenReadStatus.Failed, "Token has invalid signature");
-            }
-            catch (Exception exception)
-            {
-                logger.Error($"Token validation failed: {exception}");
-
-                return fail(TokenReadStatus.BadSource, "Token is invalid");
-            }
-
-            static IStatusResult<TokenReadStatus, IdToken> fail(TokenReadStatus status, string error) =>
-                Result.Status<TokenReadStatus, IdToken>(status, null!).Error(error);
+            return tvp;
         }
+
+        private ValueTuple<TokenReadStatus, string> HandleValidationFailure(Exception exception) => exception switch
+        {
+            SecurityTokenDecompressionFailedException _   => (TokenReadStatus.Failed, "Token decompression failed"),
+            SecurityTokenEncryptionKeyNotFoundException _ => Log(TokenReadStatus.Failed, "Token decryption failed", "Token encryption key not found"),
+            SecurityTokenDecryptionFailedException _      => (TokenReadStatus.Failed, "Token decryption failed"),
+            SecurityTokenNoExpirationException _          => (TokenReadStatus.Failed, "Token has no expiration claim"),
+            SecurityTokenExpiredException _               => (TokenReadStatus.Failed, "Token is expired"),
+            SecurityTokenNotYetValidException _           => (TokenReadStatus.Failed, "Token is not yet valid"),
+            SecurityTokenInvalidLifetimeException _       => (TokenReadStatus.Failed, "Token has invalid lifetime"),
+            SecurityTokenInvalidAudienceException _       => (TokenReadStatus.Failed, "Token has invalid audience"),
+            SecurityTokenInvalidIssuerException _         => (TokenReadStatus.Failed, "Token has invalid issuer"),
+            SecurityTokenSignatureKeyNotFoundException _  => Log(TokenReadStatus.Failed, "Token has invalid signature", "Token signature key not found"),
+            SecurityTokenInvalidSignatureException _      => (TokenReadStatus.Failed, "Token has invalid signature"),
+            _                                             => Log(TokenReadStatus.BadSource, "Token is invalid", $"Token validation failed: {exception}"),
+        };
+
+
+        private ValueTuple<TokenReadStatus, string> Log(TokenReadStatus status, string error, string message)
+        {
+            logger.Error(message);
+
+            return (status, error);
+        }
+
+        private IStatusResult<TokenReadStatus, IdToken> Fail(TokenReadStatus status, string error) =>
+            Result.Status<TokenReadStatus, IdToken>(status, null!).Error(error);
     }
 }
