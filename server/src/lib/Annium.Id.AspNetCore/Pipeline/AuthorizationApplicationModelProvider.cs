@@ -27,7 +27,9 @@ namespace Annium.Id.AspNetCore.Pipeline
             this.mapper = mapper;
         }
 
-        public void OnProvidersExecuted(ApplicationModelProviderContext context) { }
+        public void OnProvidersExecuted(ApplicationModelProviderContext context)
+        {
+        }
 
         public void OnProvidersExecuting(ApplicationModelProviderContext context)
         {

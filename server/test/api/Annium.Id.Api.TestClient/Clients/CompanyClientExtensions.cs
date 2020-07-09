@@ -24,6 +24,9 @@ namespace Annium.Id.Api.TestClient.Clients
             this CompanyClient client,
             Guid? parentId = default,
             string name = "Second Company"
-        ) => client.Register(parentId, name);
+        )
+        {
+            return client.Register(parentId, name);
+        }
     }
 }

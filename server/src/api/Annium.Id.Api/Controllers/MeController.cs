@@ -32,7 +32,7 @@ namespace Annium.Id.Api.Controllers
             var request = new ConfirmMyEmailRequest
             {
                 AppId = appId,
-                Id = requestBody.Id,
+                Id = requestBody.Id
             };
 
             return HandleAsync<ConfirmMyEmailRequest, TokensResponse>(request);
@@ -45,14 +45,14 @@ namespace Annium.Id.Api.Controllers
             {
                 AppId = appId,
                 Server = requestBody.Server,
-                Email = requestBody.Email,
+                Email = requestBody.Email
             };
 
             return HandleAsync(request);
         }
 
         [HttpGet]
-        [Authorize(validateAudience: false)]
+        [Authorize(false)]
         public Task<IResult<MeResponse>> GetMe()
         {
             // TODO: perhaps, add info about companies, user is member of
@@ -60,21 +60,21 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpPut("profile")]
-        [Authorize(validateAudience: false)]
+        [Authorize(false)]
         public Task<IResult> UpdateMyProfile([FromBody] UpdateMyProfileRequest request)
         {
             return HandleAsync(request);
         }
 
         [HttpPut("password")]
-        [Authorize(validateAudience: false)]
+        [Authorize(false)]
         public Task<IResult> UpdateMyPassword([FromBody] UpdateMyPasswordRequest request)
         {
             return HandleAsync(request);
         }
 
         [HttpDelete]
-        [Authorize(validateAudience: false)]
+        [Authorize(false)]
         public Task<IResult> UnregisterMe()
         {
             return HandleAsync(new UnregisterMeRequest());

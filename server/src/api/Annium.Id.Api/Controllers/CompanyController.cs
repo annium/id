@@ -19,7 +19,6 @@ namespace Annium.Id.Api.Controllers
             IMediator mediator
         ) : base(mediator)
         {
-
         }
 
         [HttpPost]
@@ -55,7 +54,7 @@ namespace Annium.Id.Api.Controllers
             {
                 CompanyId = companyId,
                 ParentId = requestBody.ParentId,
-                Name = requestBody.Name,
+                Name = requestBody.Name
             };
 
             return HandleAsync(request);

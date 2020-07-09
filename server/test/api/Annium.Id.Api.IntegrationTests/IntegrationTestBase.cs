@@ -21,9 +21,15 @@ namespace Annium.Id.Api.IntegrationTests
             services => services.AddSingleton<IEmailService>(emailService)
         );
 
-        public ExtendedClient Id() => IdApi.ApiClient(emailService);
+        public ExtendedClient Id()
+        {
+            return IdApi.ApiClient(emailService);
+        }
 
-        public ExtendedClient Id(string token) => IdApi.BearerAuthorization(token).ApiClient(emailService);
+        public ExtendedClient Id(string token)
+        {
+            return IdApi.BearerAuthorization(token).ApiClient(emailService);
+        }
 
         protected readonly TestEmailService emailService = new TestEmailService();
 
@@ -31,21 +37,30 @@ namespace Annium.Id.Api.IntegrationTests
 
         #region demo
 
-        public IHttpRequest DemoApi(Guid appId) => GetRequest<Demo.Startup>(
-            builder => builder.UseServicePack<Demo.ServicePack>(),
-            services => services
-                .AddIdAuthorization(options =>
-                {
-                    options.Audience = appId;
-                    options.PublicKeyFile = Path.Combine("keys", "public.key");
-                    options.AccessTokenLifeTime = Duration.FromMinutes(5);
-                    options.RefreshTokenLifeTime = Duration.FromMinutes(5);
-                })
-        );
+        public IHttpRequest DemoApi(Guid appId)
+        {
+            return GetRequest<Demo.Startup>(
+                builder => builder.UseServicePack<Demo.ServicePack>(),
+                services => services
+                    .AddIdAuthorization(options =>
+                    {
+                        options.Audience = appId;
+                        options.PublicKeyFile = Path.Combine("keys", "public.key");
+                        options.AccessTokenLifeTime = Duration.FromMinutes(5);
+                        options.RefreshTokenLifeTime = Duration.FromMinutes(5);
+                    })
+            );
+        }
 
-        public Demo.TestClient.Client Demo(Guid appId) => DemoApi(appId).DemoClient();
+        public Demo.TestClient.Client Demo(Guid appId)
+        {
+            return DemoApi(appId).DemoClient();
+        }
 
-        public Demo.TestClient.Client Demo(Guid appId, string token) => DemoApi(appId).BearerAuthorization(token).DemoClient();
+        public Demo.TestClient.Client Demo(Guid appId, string token)
+        {
+            return DemoApi(appId).BearerAuthorization(token).DemoClient();
+        }
 
         #endregion
     }

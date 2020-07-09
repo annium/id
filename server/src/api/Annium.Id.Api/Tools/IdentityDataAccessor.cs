@@ -22,9 +22,7 @@ namespace Annium.Id.Api.Tools
             var context = httpContextAccessor.HttpContext;
 
             var ipAddress = context.Connection.RemoteIpAddress ?? IPAddress.Loopback;
-            var client = context.Request.Headers.ContainsKey("User-Agent") ?
-                context.Request.Headers["User-Agent"].First() :
-                string.Empty;
+            var client = context.Request.Headers.ContainsKey("User-Agent") ? context.Request.Headers["User-Agent"].First() : string.Empty;
 
             return new IdentityData(ipAddress, client);
         }

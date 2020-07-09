@@ -123,10 +123,10 @@ namespace Annium.Id.Api.Application.CommandHandlers
         {
             var user = request.User;
 
-            if (request.Login != user.Login && (await userRepository.FindByLoginAsync(request.Login)) != null)
+            if (request.Login != user.Login && await userRepository.FindByLoginAsync(request.Login) != null)
                 return Result.Status(OperationStatus.Conflict).Error($"Login {request.Login} is already used");
 
-            if (request.Email != user.Email && (await userRepository.FindByEmailAsync(request.Email)) != null)
+            if (request.Email != user.Email && await userRepository.FindByEmailAsync(request.Email) != null)
                 return Result.Status(OperationStatus.Conflict).Error($"Email {request.Email} is already used");
 
             user.Login = request.Login;

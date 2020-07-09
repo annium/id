@@ -16,7 +16,6 @@ namespace Annium.Id.Api.Controllers
             IMediator mediator
         ) : base(mediator)
         {
-
         }
 
         [HttpPost("roles/{roleId:guid}")]
@@ -45,7 +44,7 @@ namespace Annium.Id.Api.Controllers
             {
                 UserId = userId,
                 ClaimId = claimId,
-                Value = requestBody.Value,
+                Value = requestBody.Value
             };
 
             return HandleAsync(request);

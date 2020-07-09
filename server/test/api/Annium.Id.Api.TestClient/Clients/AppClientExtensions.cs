@@ -21,6 +21,9 @@ namespace Annium.Id.Api.TestClient.Clients
         public static Task<AppResponse> RegisterOther(
             this AppClient client,
             string name = "Other App"
-        ) => client.Register(name);
+        )
+        {
+            return client.Register(name);
+        }
     }
 }

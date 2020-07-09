@@ -72,8 +72,8 @@ namespace Annium.Id.Api.Application.Tools
 
             var claims = new Dictionary<string, string>();
             foreach (var role in userRoles.OrderBy(ur => ur.Key))
-                foreach (var roleClaim in role.Claims)
-                    claims[roleClaim.Key] = roleClaim.Value;
+            foreach (var roleClaim in role.Claims)
+                claims[roleClaim.Key] = roleClaim.Value;
             foreach (var userClaim in userClaims)
                 claims[userClaim.Key] = userClaim.Value;
 
@@ -90,8 +90,8 @@ namespace Annium.Id.Api.Application.Tools
 
             var claims = new Dictionary<string, string>();
             foreach (var role in userRoles.OrderBy(ur => ur.Key))
-                foreach (var roleClaim in role.Claims)
-                    claims[roleClaim.Key] = roleClaim.Value;
+            foreach (var roleClaim in role.Claims)
+                claims[roleClaim.Key] = roleClaim.Value;
             foreach (var userClaim in userClaims)
                 claims[userClaim.Key] = userClaim.Value;
 

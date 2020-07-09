@@ -12,7 +12,6 @@ namespace Annium.Id.Api.Application.Queries.Me
 
         public GetMeQuery()
         {
-
         }
     }
 

@@ -8,7 +8,7 @@ namespace Annium.Id.Api.TestClient
 
         protected ClientBase(IHttpRequest request)
         {
-           Request = request;
+            Request = request;
         }
     }
 }

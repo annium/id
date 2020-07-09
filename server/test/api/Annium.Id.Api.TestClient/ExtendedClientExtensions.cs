@@ -17,14 +17,20 @@ namespace Annium.Id.Api.TestClient
             string login = "demo",
             string email = "demo@demo.com",
             Guid? referralId = null
-        ) => client.RegisterUserInternal(Constants.IdAppId, login, email, referralId);
+        )
+        {
+            return client.RegisterUserInternal(Constants.IdAppId, login, email, referralId);
+        }
 
         private static Task<string> RegisterOtherUser(
             this ExtendedClient client,
             string login = "demo2",
             string email = "demo2@demo.com",
             Guid? referralId = null
-        ) => client.RegisterUserInternal(Constants.IdAppId, login, email, referralId);
+        )
+        {
+            return client.RegisterUserInternal(Constants.IdAppId, login, email, referralId);
+        }
 
         public static Task<string> RegisterLogUserIn(
             this ExtendedClient client,
@@ -33,7 +39,10 @@ namespace Annium.Id.Api.TestClient
             string email = "demo@demo.com",
             string password = "test1test",
             Guid? referralId = null
-        ) => client.RegisterLogUserInInternal(appId, login, email, password, referralId);
+        )
+        {
+            return client.RegisterLogUserInInternal(appId, login, email, password, referralId);
+        }
 
         public static Task<string> RegisterLogOtherUserIn(
             this ExtendedClient client,
@@ -42,7 +51,10 @@ namespace Annium.Id.Api.TestClient
             string email = "demo2@demo.com",
             string password = "test2test",
             Guid? referralId = null
-        ) => client.RegisterLogUserInInternal(appId, login, email, password, referralId);
+        )
+        {
+            return client.RegisterLogUserInInternal(appId, login, email, password, referralId);
+        }
 
         public static Task<string> RegisterLogUserIn(
             this ExtendedClient client,
@@ -50,7 +62,10 @@ namespace Annium.Id.Api.TestClient
             string email = "demo@demo.com",
             string password = "test1test",
             Guid? referralId = null
-        ) => client.RegisterLogUserInInternal(Constants.IdAppId, login, email, password, referralId);
+        )
+        {
+            return client.RegisterLogUserInInternal(Constants.IdAppId, login, email, password, referralId);
+        }
 
         public static Task<string> RegisterLogOtherUserIn(
             this ExtendedClient client,
@@ -58,33 +73,48 @@ namespace Annium.Id.Api.TestClient
             string email = "demo2@demo.com",
             string password = "test2test",
             Guid? referralId = null
-        ) => client.RegisterLogUserInInternal(Constants.IdAppId, login, email, password, referralId);
+        )
+        {
+            return client.RegisterLogUserInInternal(Constants.IdAppId, login, email, password, referralId);
+        }
 
         public static Task<string> LogUserIn(
             this ExtendedClient client,
             Guid appId,
             string login = "demo",
             string password = "test1test"
-        ) => client.LogUserInInternal(appId, login, password);
+        )
+        {
+            return client.LogUserInInternal(appId, login, password);
+        }
 
         public static Task<string> LogOtherUserIn(
             this ExtendedClient client,
             Guid appId,
             string login = "demo2",
             string password = "test2test"
-        ) => client.LogUserInInternal(appId, login, password);
+        )
+        {
+            return client.LogUserInInternal(appId, login, password);
+        }
 
         public static Task<string> LogUserIn(
             this ExtendedClient client,
             string login = "demo",
             string password = "test1test"
-        ) => client.LogUserInInternal(Constants.IdAppId, login, password);
+        )
+        {
+            return client.LogUserInInternal(Constants.IdAppId, login, password);
+        }
 
         public static Task<string> LogOtherUserIn(
             this ExtendedClient client,
             string login = "demo2",
             string password = "test2test"
-        ) => client.LogUserInInternal(Constants.IdAppId, login, password);
+        )
+        {
+            return client.LogUserInInternal(Constants.IdAppId, login, password);
+        }
 
         public static Task<MeResponse> RegisterLogInGetUser(
             this ExtendedClient client,
@@ -92,7 +122,10 @@ namespace Annium.Id.Api.TestClient
             string email = "demo@demo.com",
             string password = "test1test",
             Guid? referralId = null
-        ) => client.RegisterLogInGetUserInternal(Constants.IdAppId, login, email, password, referralId);
+        )
+        {
+            return client.RegisterLogInGetUserInternal(Constants.IdAppId, login, email, password, referralId);
+        }
 
         public static Task<MeResponse> RegisterLogInGetOtherUser(
             this ExtendedClient client,
@@ -100,7 +133,10 @@ namespace Annium.Id.Api.TestClient
             string email = "demo2@demo.com",
             string password = "test2test",
             Guid? referralId = null
-        ) => client.RegisterLogInGetUserInternal(Constants.IdAppId, login, email, password, referralId);
+        )
+        {
+            return client.RegisterLogInGetUserInternal(Constants.IdAppId, login, email, password, referralId);
+        }
 
         private static async Task<string> RegisterUserInternal(
             this ExtendedClient client,
@@ -116,7 +152,7 @@ namespace Annium.Id.Api.TestClient
                 Server = "http://localhost/",
                 Login = login,
                 Email = email,
-                ReferralId = referralId,
+                ReferralId = referralId
             });
 
             // get id from email data
@@ -180,6 +216,9 @@ namespace Annium.Id.Api.TestClient
         private static ExtendedClient WithToken(
             this ExtendedClient client,
             string accessToken
-        ) => client.Request.BearerAuthorization(accessToken).ApiClient(client.EmailService);
+        )
+        {
+            return client.Request.BearerAuthorization(accessToken).ApiClient(client.EmailService);
+        }
     }
 }

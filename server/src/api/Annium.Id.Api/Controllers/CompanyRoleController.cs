@@ -44,7 +44,7 @@ namespace Annium.Id.Api.Controllers
             {
                 RoleId = roleId,
                 Key = requestBody.Key,
-                Name = requestBody.Name,
+                Name = requestBody.Name
             };
 
             return HandleAsync(request);
@@ -58,7 +58,7 @@ namespace Annium.Id.Api.Controllers
             {
                 RoleId = roleId,
                 ClaimId = claimId,
-                Value = requestBody.Value,
+                Value = requestBody.Value
             };
 
             return HandleAsync(request);

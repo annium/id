@@ -13,7 +13,7 @@ namespace Annium.Id.Core.Internal
             IReadOnlyDictionary<string, Type> parameters
         )
         {
-            foreach (var(name, type) in policy.Parameters)
+            foreach (var (name, type) in policy.Parameters)
                 if (!parameters.Any(p => p.Key == name && p.Value == type))
                     throw new ArgumentException(
                         $"Policy {policy.Name}, requested by {endpoint} can't be bound due to missing {type} {name} parameter"
@@ -24,7 +24,7 @@ namespace Annium.Id.Core.Internal
         {
             var token = Expression.Parameter(typeof(IdToken), "token");
             var args = Expression.Parameter(typeof(IReadOnlyDictionary<string, object>), "args");
-            var parameters = new [] { token, args };
+            var parameters = new[] { token, args };
 
             var initializers = new Expression[] { token }
                 .Concat(policy.Parameters.Select(p => Expression.Property(args, "Item", Expression.Constant(p.Key))))

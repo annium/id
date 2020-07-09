@@ -32,7 +32,7 @@ namespace Annium.Id.Demo
             services.AddIdPolicy(
                 "hasPaymentsAccess",
                 token => token.App.Claims.ContainsKey("paymentsAccess") &&
-                token.App.Claims["paymentsAccess"] == "full"
+                    token.App.Claims["paymentsAccess"] == "full"
             );
             services.AddIdPolicy<Guid>(
                 "hasCompanyPaymentsAccess",
@@ -43,7 +43,7 @@ namespace Annium.Id.Demo
             services.AddMapper();
         }
 
-        public override void Setup(System.IServiceProvider provider)
+        public override void Setup(IServiceProvider provider)
         {
             // setup post-configured services
         }

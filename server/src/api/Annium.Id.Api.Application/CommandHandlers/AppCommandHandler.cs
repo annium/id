@@ -73,7 +73,6 @@ namespace Annium.Id.Api.Application.CommandHandlers
             await appRepository.UpdateAsync(app);
 
             return Result.Status(OperationStatus.OK);
-
         }
 
         public async Task<IStatusResult<OperationStatus, Guid>> HandleAsync(

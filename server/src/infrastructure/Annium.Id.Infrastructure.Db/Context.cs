@@ -24,7 +24,9 @@ namespace Annium.Id.Infrastructure.Db
         public DbSet<UserLogin> UserLogins { get; set; } = null!;
         public DbSet<UserRole> UserRoles { get; set; } = null!;
 
-        public Context(DbContextOptions contextOptions) : base(contextOptions) { }
+        public Context(DbContextOptions contextOptions) : base(contextOptions)
+        {
+        }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -39,15 +41,15 @@ namespace Annium.Id.Infrastructure.Db
                 Login = "alex",
                 PasswordHash = "ohraPG8QMZiOnXX+MWh/45aZDwjtv/7FQMFzXxSRxQjLdSMBHpELKDSznF6cSUalufovlgCfFkn4mtR7eXB+8w==",
                 Email = "a.kreskiyan@gmail.com",
-                ReferralId = default,
+                ReferralId = default
             });
 
             builder.Entity<App>().HasData(new App
             {
                 Id = Constants.IdAppId,
-               Name = "Annium ID",
+                Name = "Annium ID",
                 OwnerId = Guid.Parse("baa0ad0f-91c5-4c19-963c-ea369048e67a"),
-                ApiToken = Guid.Parse("b62acd2a-2f1b-4da1-9273-abab4b9da7f7"),
+                ApiToken = Guid.Parse("b62acd2a-2f1b-4da1-9273-abab4b9da7f7")
             });
         }
     }

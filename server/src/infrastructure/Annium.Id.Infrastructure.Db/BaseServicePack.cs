@@ -4,6 +4,7 @@ using Annium.Core.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 
 [assembly: InternalsVisibleTo("Annium.Id.Infrastructure.DbMigrator")]
+
 namespace Annium.Id.Infrastructure.Db
 {
     internal class BaseServicePack : ServicePackBase

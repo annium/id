@@ -4,6 +4,6 @@ namespace Annium.Id.Core
     {
         BadSource,
         Failed,
-        Ok,
+        Ok
     }
 }

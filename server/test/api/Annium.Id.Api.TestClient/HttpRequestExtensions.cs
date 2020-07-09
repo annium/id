@@ -8,6 +8,9 @@ namespace Annium.Id.Api.TestClient
         public static ExtendedClient ApiClient(
             this IHttpRequest request,
             TestEmailService emailService
-        ) => new ExtendedClient(request, emailService);
+        )
+        {
+            return new ExtendedClient(request, emailService);
+        }
     }
 }

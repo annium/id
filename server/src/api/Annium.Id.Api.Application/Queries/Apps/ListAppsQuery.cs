@@ -4,6 +4,5 @@ namespace Annium.Id.Api.Application.Queries.Apps
 {
     public class ListAppsQuery : IQuery
     {
-
     }
 }

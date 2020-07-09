@@ -28,7 +28,7 @@ namespace Annium.Id.Infrastructure.Email
             var data = new Models.ConfirmEmailData
             {
                 Server = server.GetLeftPart(UriPartial.Authority),
-                Id = user.Id,
+                Id = user.Id
             };
 
             return await emailService.SendAsync(message, "confirm-email", data);
@@ -42,7 +42,7 @@ namespace Annium.Id.Infrastructure.Email
             var data = new Models.RestoreAccessData
             {
                 Server = server.GetLeftPart(UriPartial.Authority),
-                Tokens = tokens,
+                Tokens = tokens
             };
 
             return await emailService.SendAsync(message, "restore-access", data);
@@ -53,7 +53,7 @@ namespace Annium.Id.Infrastructure.Email
             return new MailMessage
             {
                 From = new MailAddress(cfg.FromAddress, cfg.FromDisplay),
-                Subject = subject,
+                Subject = subject
             };
         }
     }

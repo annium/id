@@ -39,7 +39,7 @@ namespace Annium.Id.Infrastructure.Db
                             $"Username={cfg.User}",
                             $"Password={cfg.Password}",
                             $"SSL Mode=Prefer",
-                            $"Trust Server Certificate=true",
+                            $"Trust Server Certificate=true"
                         }),
                         options =>
                         {

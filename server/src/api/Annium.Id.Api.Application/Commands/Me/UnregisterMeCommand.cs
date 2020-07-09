@@ -11,7 +11,6 @@ namespace Annium.Id.Api.Application.Commands.Me
 
         public UnregisterMeCommand()
         {
-
         }
     }
 

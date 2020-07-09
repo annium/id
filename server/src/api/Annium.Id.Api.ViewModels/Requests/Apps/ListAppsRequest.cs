@@ -5,6 +5,5 @@ namespace Annium.Id.Api.ViewModels.Requests.Apps
 {
     public class ListAppsRequest : IRequest<ListAppsQuery>
     {
-
     }
 }

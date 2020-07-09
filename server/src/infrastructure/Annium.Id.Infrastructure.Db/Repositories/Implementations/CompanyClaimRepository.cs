@@ -77,7 +77,8 @@ namespace Annium.Id.Infrastructure.Db.Repositories.Implementations
             if (entity is null)
                 return;
 
-            context.CompanyClaims.Remove(entity);;
+            context.CompanyClaims.Remove(entity);
+            ;
 
             await context.SaveChangesAsync();
         }

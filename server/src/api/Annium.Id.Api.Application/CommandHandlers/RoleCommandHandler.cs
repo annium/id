@@ -67,7 +67,7 @@ namespace Annium.Id.Api.Application.CommandHandlers
             if (myId != app.OwnerId)
                 return Result.Status(OperationStatus.Forbidden).Error($"Need to be application owner to update role");
 
-            if (request.Key != role.Key && (await roleRepository.FindByKeyAsync(app.Id, request.Key)) != null)
+            if (request.Key != role.Key && await roleRepository.FindByKeyAsync(app.Id, request.Key) != null)
                 return Result.Status(OperationStatus.Conflict).Error($"Role key {request.Key} is already used");
 
             role.Key = request.Key;

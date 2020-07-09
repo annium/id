@@ -48,23 +48,38 @@ namespace Annium.Id.AspNetCore
             return services;
         }
 
-        public static IServiceCollection AddIdPolicy(this IServiceCollection services, string name, Expression<Func<IdToken, bool>> expression) =>
-            AddPolicy(services, name, expression);
+        public static IServiceCollection AddIdPolicy(this IServiceCollection services, string name, Expression<Func<IdToken, bool>> expression)
+        {
+            return AddPolicy(services, name, expression);
+        }
 
-        public static IServiceCollection AddIdPolicy<T>(this IServiceCollection services, string name, Expression<Func<IdToken, T, bool>> expression) =>
-            AddPolicy(services, name, expression);
+        public static IServiceCollection AddIdPolicy<T>(this IServiceCollection services, string name, Expression<Func<IdToken, T, bool>> expression)
+        {
+            return AddPolicy(services, name, expression);
+        }
 
-        public static IServiceCollection AddIdPolicy<T1, T2>(this IServiceCollection services, string name, Expression<Func<IdToken, T1, T2, bool>> expression) =>
-            AddPolicy(services, name, expression);
+        public static IServiceCollection AddIdPolicy<T1, T2>(this IServiceCollection services, string name, Expression<Func<IdToken, T1, T2, bool>> expression)
+        {
+            return AddPolicy(services, name, expression);
+        }
 
-        public static IServiceCollection AddIdPolicy<T1, T2, T3>(this IServiceCollection services, string name, Expression<Func<IdToken, T1, T2, T3, bool>> expression) =>
-            AddPolicy(services, name, expression);
+        public static IServiceCollection AddIdPolicy<T1, T2, T3>(this IServiceCollection services, string name,
+            Expression<Func<IdToken, T1, T2, T3, bool>> expression)
+        {
+            return AddPolicy(services, name, expression);
+        }
 
-        public static IServiceCollection AddIdPolicy<T1, T2, T3, T4>(this IServiceCollection services, string name, Expression<Func<IdToken, T1, T2, T3, T4, bool>> expression) =>
-            AddPolicy(services, name, expression);
+        public static IServiceCollection AddIdPolicy<T1, T2, T3, T4>(this IServiceCollection services, string name,
+            Expression<Func<IdToken, T1, T2, T3, T4, bool>> expression)
+        {
+            return AddPolicy(services, name, expression);
+        }
 
-        public static IServiceCollection AddIdPolicy<T1, T2, T3, T4, T5>(this IServiceCollection services, string name, Expression<Func<IdToken, T1, T2, T3, T4, T5, bool>> expression) =>
-            AddPolicy(services, name, expression);
+        public static IServiceCollection AddIdPolicy<T1, T2, T3, T4, T5>(this IServiceCollection services, string name,
+            Expression<Func<IdToken, T1, T2, T3, T4, T5, bool>> expression)
+        {
+            return AddPolicy(services, name, expression);
+        }
 
         private static IServiceCollection AddPolicy(
             this IServiceCollection services,

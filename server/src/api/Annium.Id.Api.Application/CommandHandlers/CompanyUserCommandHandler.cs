@@ -25,7 +25,6 @@ namespace Annium.Id.Api.Application.CommandHandlers
             ICompanyUserRepository companyUserRepository,
             ICompanyUserRoleRepository companyUserRoleRepository,
             ICompanyUserClaimRepository companyUserClaimRepository
-
         )
         {
             this.companyUserRepository = companyUserRepository;
@@ -64,7 +63,7 @@ namespace Annium.Id.Api.Application.CommandHandlers
             if (myId != company.OwnerId)
                 return Result.Status(OperationStatus.Forbidden).Error("Need to be company owner to add company role to company user");
 
-            if ((await companyUserRepository.GetByIdAsync(company.Id, user.Id)) is null)
+            if (await companyUserRepository.GetByIdAsync(company.Id, user.Id) is null)
                 return Result.Status(OperationStatus.Forbidden).Error("User is not company member");
 
             var companyUserRole = new CompanyUserRole(company.Id, user.Id, role.Id);
@@ -86,7 +85,7 @@ namespace Annium.Id.Api.Application.CommandHandlers
             if (myId != company.OwnerId)
                 return Result.Status(OperationStatus.Forbidden).Error("Need to be company owner to delete company role from company user");
 
-            if ((await companyUserRepository.GetByIdAsync(company.Id, user.Id)) is null)
+            if (await companyUserRepository.GetByIdAsync(company.Id, user.Id) is null)
                 return Result.Status(OperationStatus.Forbidden).Error("User is not company member");
 
             await companyUserRoleRepository.DeleteByIdAsync(company.Id, user.Id, role.Id);
@@ -107,7 +106,7 @@ namespace Annium.Id.Api.Application.CommandHandlers
             if (myId != company.OwnerId)
                 return Result.Status(OperationStatus.Forbidden).Error("Need to be company owner to add company claim to company user");
 
-            if ((await companyUserRepository.GetByIdAsync(company.Id, user.Id)) is null)
+            if (await companyUserRepository.GetByIdAsync(company.Id, user.Id) is null)
                 return Result.Status(OperationStatus.Forbidden).Error("User is not company member");
 
             var companyUserClaim = new CompanyUserClaim(company.Id, user.Id, claim.Id, request.Value);
@@ -129,7 +128,7 @@ namespace Annium.Id.Api.Application.CommandHandlers
             if (myId != company.OwnerId)
                 return Result.Status(OperationStatus.Forbidden).Error("Need to be company owner to delete company claim from company user");
 
-            if ((await companyUserRepository.GetByIdAsync(company.Id, user.Id)) is null)
+            if (await companyUserRepository.GetByIdAsync(company.Id, user.Id) is null)
                 return Result.Status(OperationStatus.Forbidden).Error("User is not company member");
 
             await companyUserClaimRepository.DeleteByIdAsync(company.Id, user.Id, claim.Id);
@@ -149,7 +148,7 @@ namespace Annium.Id.Api.Application.CommandHandlers
             if (myId != company.OwnerId)
                 return Result.Status(OperationStatus.Forbidden).Error("Need to be company owner to delete user from company");
 
-            if ((await companyUserRepository.GetByIdAsync(company.Id, user.Id)) is null)
+            if (await companyUserRepository.GetByIdAsync(company.Id, user.Id) is null)
                 return Result.Status(OperationStatus.Forbidden).Error("User is not company member");
 
             await companyUserRepository.DeleteByIdAsync(company.Id, user.Id);

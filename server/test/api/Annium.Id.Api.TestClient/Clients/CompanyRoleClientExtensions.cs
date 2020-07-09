@@ -29,13 +29,19 @@ namespace Annium.Id.Api.TestClient.Clients
             Guid appId,
             string key = "two",
             string name = "Second role"
-        ) => client.Register(appId, key, name);
+        )
+        {
+            return client.Register(appId, key, name);
+        }
 
         public static Task<IHttpResponse<IResult>> AddClaimToRole(
             this CompanyRoleClient client,
             Guid claimId,
             Guid roleId,
             string value = "Some"
-        ) => client.AddClaimToRole(claimId, roleId, new AddCompanyClaimToCompanyRoleRequestBody { Value = value });
+        )
+        {
+            return client.AddClaimToRole(claimId, roleId, new AddCompanyClaimToCompanyRoleRequestBody { Value = value });
+        }
     }
 }

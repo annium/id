@@ -52,9 +52,9 @@ namespace Annium.Id.Core.Internal
             };
 
             var jwt = new JwtSecurityToken(
-                issuer: Constants.Issuer,
-                audience: token.App.Id.ToString(),
-                claims: claims,
+                Constants.Issuer,
+                token.App.Id.ToString(),
+                claims,
                 expires: expires,
                 notBefore: now,
                 signingCredentials: new SigningCredentials(signingKey, SecurityAlgorithms.RsaSha256)

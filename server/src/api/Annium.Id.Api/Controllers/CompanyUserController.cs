@@ -16,7 +16,6 @@ namespace Annium.Id.Api.Controllers
             IMediator mediator
         ) : base(mediator)
         {
-
         }
 
         [HttpPost]
@@ -48,14 +47,15 @@ namespace Annium.Id.Api.Controllers
 
         [HttpPost("claims/{claimId:guid}")]
         [Authorize]
-        public Task<IResult> AddCompanyClaimToCompanyUser(Guid companyId, Guid userId, Guid claimId, [FromBody] AddCompanyClaimToCompanyUserRequestBody requestBody)
+        public Task<IResult> AddCompanyClaimToCompanyUser(Guid companyId, Guid userId, Guid claimId,
+            [FromBody] AddCompanyClaimToCompanyUserRequestBody requestBody)
         {
             var request = new AddCompanyClaimToCompanyUserRequest
             {
                 CompanyId = companyId,
                 UserId = userId,
                 ClaimId = claimId,
-                Value = requestBody.Value,
+                Value = requestBody.Value
             };
 
             return HandleAsync(request);

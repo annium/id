@@ -27,6 +27,9 @@ namespace Annium.Id.Api.TestClient.Clients
             Guid appId,
             string key = "two",
             string name = "Second claim"
-        ) => client.Register(appId, key, name);
+        )
+        {
+            return client.Register(appId, key, name);
+        }
     }
 }

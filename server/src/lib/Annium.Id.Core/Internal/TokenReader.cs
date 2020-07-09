@@ -84,7 +84,7 @@ namespace Annium.Id.Core.Internal
                 RequireSignedTokens = true,
                 ValidateIssuer = true,
                 ValidIssuer = Constants.Issuer,
-                ValidateIssuerSigningKey = true,
+                ValidateIssuerSigningKey = true
             };
 
             if (options.ValidateAudience)
@@ -93,7 +93,9 @@ namespace Annium.Id.Core.Internal
                 tvp.ValidAudience = authOptions.Audience.ToString();
             }
             else
+            {
                 tvp.ValidateAudience = false;
+            }
 
             if (options.ValidateExpiration)
             {
@@ -110,21 +112,24 @@ namespace Annium.Id.Core.Internal
             return tvp;
         }
 
-        private ValueTuple<TokenReadStatus, string> HandleValidationFailure(Exception exception) => exception switch
+        private ValueTuple<TokenReadStatus, string> HandleValidationFailure(Exception exception)
         {
-            SecurityTokenDecompressionFailedException _   => (TokenReadStatus.Failed, "Token decompression failed"),
-            SecurityTokenEncryptionKeyNotFoundException _ => Log(TokenReadStatus.Failed, "Token decryption failed", "Token encryption key not found"),
-            SecurityTokenDecryptionFailedException _      => (TokenReadStatus.Failed, "Token decryption failed"),
-            SecurityTokenNoExpirationException _          => (TokenReadStatus.Failed, "Token has no expiration claim"),
-            SecurityTokenExpiredException _               => (TokenReadStatus.Failed, "Token is expired"),
-            SecurityTokenNotYetValidException _           => (TokenReadStatus.Failed, "Token is not yet valid"),
-            SecurityTokenInvalidLifetimeException _       => (TokenReadStatus.Failed, "Token has invalid lifetime"),
-            SecurityTokenInvalidAudienceException _       => (TokenReadStatus.Failed, "Token has invalid audience"),
-            SecurityTokenInvalidIssuerException _         => (TokenReadStatus.Failed, "Token has invalid issuer"),
-            SecurityTokenSignatureKeyNotFoundException _  => Log(TokenReadStatus.Failed, "Token has invalid signature", "Token signature key not found"),
-            SecurityTokenInvalidSignatureException _      => (TokenReadStatus.Failed, "Token has invalid signature"),
-            _                                             => Log(TokenReadStatus.BadSource, "Token is invalid", $"Token validation failed: {exception}"),
-        };
+            return exception switch
+            {
+                SecurityTokenDecompressionFailedException _   => (TokenReadStatus.Failed, "Token decompression failed"),
+                SecurityTokenEncryptionKeyNotFoundException _ => Log(TokenReadStatus.Failed, "Token decryption failed", "Token encryption key not found"),
+                SecurityTokenDecryptionFailedException _      => (TokenReadStatus.Failed, "Token decryption failed"),
+                SecurityTokenNoExpirationException _          => (TokenReadStatus.Failed, "Token has no expiration claim"),
+                SecurityTokenExpiredException _               => (TokenReadStatus.Failed, "Token is expired"),
+                SecurityTokenNotYetValidException _           => (TokenReadStatus.Failed, "Token is not yet valid"),
+                SecurityTokenInvalidLifetimeException _       => (TokenReadStatus.Failed, "Token has invalid lifetime"),
+                SecurityTokenInvalidAudienceException _       => (TokenReadStatus.Failed, "Token has invalid audience"),
+                SecurityTokenInvalidIssuerException _         => (TokenReadStatus.Failed, "Token has invalid issuer"),
+                SecurityTokenSignatureKeyNotFoundException _  => Log(TokenReadStatus.Failed, "Token has invalid signature", "Token signature key not found"),
+                SecurityTokenInvalidSignatureException _      => (TokenReadStatus.Failed, "Token has invalid signature"),
+                _                                             => Log(TokenReadStatus.BadSource, "Token is invalid", $"Token validation failed: {exception}")
+            };
+        }
 
 
         private ValueTuple<TokenReadStatus, string> Log(TokenReadStatus status, string error, string message)
@@ -134,7 +139,9 @@ namespace Annium.Id.Core.Internal
             return (status, error);
         }
 
-        private IStatusResult<TokenReadStatus, IdToken> Fail(TokenReadStatus status, string error) =>
-            Result.Status<TokenReadStatus, IdToken>(status, null!).Error(error);
+        private IStatusResult<TokenReadStatus, IdToken> Fail(TokenReadStatus status, string error)
+        {
+            return Result.Status<TokenReadStatus, IdToken>(status, null!).Error(error);
+        }
     }
 }

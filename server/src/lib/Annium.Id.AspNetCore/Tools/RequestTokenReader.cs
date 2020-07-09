@@ -19,14 +19,16 @@ namespace Annium.Id.AspNetCore.Tools
             if (authorization.Length != 2)
                 return fail(HttpStatusCode.Unauthorized, "Authorization format is invalid.");
 
-            var(type, token) = (authorization[0], authorization[1]);
+            var (type, token) = (authorization[0], authorization[1]);
             if (type != "Bearer")
                 return fail(HttpStatusCode.Unauthorized, "Bearer authorization required.");
 
             return (token, null);
 
-            static(string, IActionResult) fail(HttpStatusCode statusCode, string message) =>
-                (string.Empty, new ObjectResult(Result.Failure().Error(message)) { StatusCode = (int) statusCode });
+            static (string, IActionResult) fail(HttpStatusCode statusCode, string message)
+            {
+                return (string.Empty, new ObjectResult(Result.Failure().Error(message)) { StatusCode = (int) statusCode });
+            }
         }
     }
 }

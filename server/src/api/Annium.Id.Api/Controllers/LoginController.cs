@@ -26,27 +26,27 @@ namespace Annium.Id.Api.Controllers
             {
                 AppId = appId,
                 Login = requestBody.Login,
-                Password = requestBody.Password,
+                Password = requestBody.Password
             };
 
             return HandleAsync<LogInRequest, TokensResponse>(request);
         }
 
         [HttpPut("token")]
-        [Authorize(AuthPolicy.CanRefreshToken, validateAudience: false, validateExpiration: false)]
+        [Authorize(AuthPolicy.CanRefreshToken, false, false)]
         public Task<IResult<TokensResponse>> UpdateToken(Guid appId, [FromQuery] UpdateTokensRequestBody requestBody)
         {
             var request = new UpdateTokensRequest
             {
                 AppId = appId,
-                RefreshToken = requestBody.RefreshToken,
+                RefreshToken = requestBody.RefreshToken
             };
 
             return HandleAsync<UpdateTokensRequest, TokensResponse>(request);
         }
 
         [HttpDelete("logout")]
-        [Authorize(AuthPolicy.CanLogOut, validateAudience: false)]
+        [Authorize(AuthPolicy.CanLogOut, false)]
         public Task<IResult> LogOut(Guid appId)
         {
             var request = new LogOutRequest { AppId = appId };

@@ -18,7 +18,6 @@ namespace Annium.Id.Api.Controllers
             IMediator mediator
         ) : base(mediator)
         {
-
         }
 
         [HttpPost]
@@ -58,7 +57,7 @@ namespace Annium.Id.Api.Controllers
             var request = new UpdateAppRequest
             {
                 AppId = appId,
-                Name = requestBody.Name,
+                Name = requestBody.Name
             };
 
             return HandleAsync(request);

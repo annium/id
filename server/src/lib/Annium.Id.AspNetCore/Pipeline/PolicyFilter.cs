@@ -52,7 +52,9 @@ namespace Annium.Id.AspNetCore.Pipeline
             }
         }
 
-        public void OnActionExecuted(ActionExecutedContext context) { }
+        public void OnActionExecuted(ActionExecutedContext context)
+        {
+        }
 
         private IdToken? GetToken()
         {
@@ -66,7 +68,9 @@ namespace Annium.Id.AspNetCore.Pipeline
             }
         }
 
-        private IActionResult GetFailure(string error) =>
-            new ObjectResult(Result.New(OperationStatus.Forbidden).Error(error)) { StatusCode = (int) HttpStatusCode.Forbidden };
+        private IActionResult GetFailure(string error)
+        {
+            return new ObjectResult(Result.New(OperationStatus.Forbidden).Error(error)) { StatusCode = (int) HttpStatusCode.Forbidden };
+        }
     }
 }

@@ -127,7 +127,7 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
                     AppId = app.Id,
                     Key = roleKey,
                     Name = roleName,
-                    Claims = Array.Empty<ClaimValueResponse>(),
+                    Claims = Array.Empty<ClaimValueResponse>()
                 }
             });
         }

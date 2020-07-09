@@ -15,7 +15,7 @@ namespace Annium.Id.Infrastructure.Email
             var cfg = new Configuration
             {
                 FromAddress = "support@annium.com",
-                FromDisplay = "Annium",
+                FromDisplay = "Annium"
             };
             services.AddSingleton(cfg);
         }

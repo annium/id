@@ -33,7 +33,7 @@ namespace Annium.Id.Core.Tests
             // arrange
             var appId = Guid.NewGuid();
             var source = GenerateToken(appId);
-            var token = WriteToken(source, expired: true);
+            var token = WriteToken(source, true);
 
             // act
             var result = ReadToken(token, appId);
