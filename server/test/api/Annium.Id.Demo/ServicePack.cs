@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Annium.Core.DependencyInjection;
+using Annium.Id.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
 

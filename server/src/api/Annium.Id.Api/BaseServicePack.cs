@@ -3,6 +3,7 @@ using Annium.Core.DependencyInjection;
 using Annium.Core.Mediator;
 using Annium.Id.Api.Tools;
 using Annium.Id.Api.Application.Tools;
+using Annium.Id.AspNetCore;
 using Annium.Id.Core;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;

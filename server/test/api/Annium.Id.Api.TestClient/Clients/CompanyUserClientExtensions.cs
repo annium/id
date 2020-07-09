@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Annium.Data.Operations;
-using Annium.Id.Api.ViewModels.CompanyUsers.Requests;
+using Annium.Id.Api.ViewModels.Requests.CompanyUsers;
 using Annium.Net.Http;
 
 namespace Annium.Id.Api.TestClient.Clients

@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Annium.Data.Operations;
-using Annium.Id.Api.ViewModels.Companies.Requests;
-using Annium.Id.Api.ViewModels.Companies.Responses;
-using Annium.Id.Api.ViewModels.Users.Responses;
+using Annium.Id.Api.ViewModels.Requests.Companies;
+using Annium.Id.Api.ViewModels.Responses.Companies;
+using Annium.Id.Api.ViewModels.Responses.Users;
 using Annium.Net.Http;
 
 namespace Annium.Id.Api.TestClient.Clients

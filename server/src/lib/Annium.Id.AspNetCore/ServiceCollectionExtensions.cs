@@ -9,7 +9,7 @@ using Annium.Id.Core;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Annium.Core.DependencyInjection
+namespace Annium.Id.AspNetCore
 {
     public static class AuthorizationExtensions
     {

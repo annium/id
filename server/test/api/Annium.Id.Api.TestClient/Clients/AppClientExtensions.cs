@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
-using Annium.Id.Api.ViewModels.Apps.Requests;
-using Annium.Id.Api.ViewModels.Apps.Responses;
+using Annium.Id.Api.ViewModels.Requests.Apps;
+using Annium.Id.Api.ViewModels.Responses.Apps;
 
 namespace Annium.Id.Api.TestClient.Clients
 {

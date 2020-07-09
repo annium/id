@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 using Annium.AspNetCore.Extensions;
 using Annium.Core.Mediator;
 using Annium.Data.Operations;
+using Annium.Id.Api.ViewModels.Requests.CompanyClaims;
+using Annium.Id.Api.ViewModels.Responses.CompanyClaims;
 using Annium.Id.AspNetCore;
-using Annium.Id.Api.ViewModels.CompanyClaims.Requests;
-using Annium.Id.Api.ViewModels.CompanyClaims.Responses;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Annium.Id.Api.Controllers

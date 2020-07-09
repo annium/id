@@ -1,0 +1,14 @@
+using System;
+using Annium.Architecture.ViewModel;
+using Annium.Id.Domain.Entities;
+using NodaTime;
+
+namespace Annium.Id.Api.ViewModels.Responses.Login
+{
+    public class TokensResponse : IResponse<Tokens>
+    {
+        public string AccessToken { get; set; } = string.Empty;
+        public Guid RefreshToken { get; set; }
+        public Instant RefreshTokenExpires { get; set; }
+    }
+}

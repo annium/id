@@ -4,10 +4,10 @@ using System.Threading.Tasks;
 using Annium.AspNetCore.Extensions;
 using Annium.Core.Mediator;
 using Annium.Data.Operations;
+using Annium.Id.Api.ViewModels.Requests.Companies;
+using Annium.Id.Api.ViewModels.Responses.Companies;
+using Annium.Id.Api.ViewModels.Responses.Users;
 using Annium.Id.AspNetCore;
-using Annium.Id.Api.ViewModels.Companies.Requests;
-using Annium.Id.Api.ViewModels.Companies.Responses;
-using Annium.Id.Api.ViewModels.Users.Responses;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Annium.Id.Api.Controllers

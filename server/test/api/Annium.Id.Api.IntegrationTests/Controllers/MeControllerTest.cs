@@ -3,7 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Annium.Id.Api.TestClient;
-using Annium.Id.Api.ViewModels.Me.Requests;
+using Annium.Id.Api.ViewModels.Requests.Me;
 using Annium.Id.Core;
 using Annium.Id.Infrastructure.Email.Models;
 using Annium.Testing;

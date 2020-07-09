@@ -1,8 +1,8 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Annium.Id.Api.ViewModels.CompanyClaims.Requests;
-using Annium.Id.Api.ViewModels.CompanyClaims.Responses;
+using Annium.Id.Api.ViewModels.Requests.CompanyClaims;
+using Annium.Id.Api.ViewModels.Responses.CompanyClaims;
 
 namespace Annium.Id.Api.TestClient.Clients
 {

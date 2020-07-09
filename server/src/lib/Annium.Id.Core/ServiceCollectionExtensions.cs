@@ -1,10 +1,9 @@
 using System;
 using System.IO;
-using Annium.Id.Core;
 using Annium.Id.Core.Internal;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Annium.Core.DependencyInjection
+namespace Annium.Id.Core
 {
     public static class ServiceCollectionExtensions
     {

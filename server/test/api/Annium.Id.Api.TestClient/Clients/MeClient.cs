@@ -1,9 +1,9 @@
 using System;
 using System.Threading.Tasks;
 using Annium.Data.Operations;
-using Annium.Id.Api.ViewModels.Login.Responses;
-using Annium.Id.Api.ViewModels.Me.Requests;
-using Annium.Id.Api.ViewModels.Me.Responses;
+using Annium.Id.Api.ViewModels.Requests.Me;
+using Annium.Id.Api.ViewModels.Responses.Login;
+using Annium.Id.Api.ViewModels.Responses.Me;
 using Annium.Net.Http;
 
 namespace Annium.Id.Api.TestClient.Clients

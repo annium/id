@@ -3,9 +3,9 @@ using System.Net;
 using System.Threading.Tasks;
 using Annium.Id.Api.TestClient;
 using Annium.Id.Api.TestClient.Clients;
-using Annium.Id.Api.ViewModels.Claims.Responses;
-using Annium.Id.Api.ViewModels.Roles.Requests;
-using Annium.Id.Api.ViewModels.Roles.Responses;
+using Annium.Id.Api.ViewModels.Requests.Roles;
+using Annium.Id.Api.ViewModels.Responses.Claims;
+using Annium.Id.Api.ViewModels.Responses.Roles;
 using Annium.Testing;
 using Xunit;
 

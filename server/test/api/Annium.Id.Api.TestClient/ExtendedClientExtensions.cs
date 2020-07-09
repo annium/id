@@ -1,9 +1,9 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Annium.Id.Api.ViewModels.Login.Requests;
-using Annium.Id.Api.ViewModels.Me.Requests;
-using Annium.Id.Api.ViewModels.Me.Responses;
+using Annium.Id.Api.ViewModels.Requests.Login;
+using Annium.Id.Api.ViewModels.Requests.Me;
+using Annium.Id.Api.ViewModels.Responses.Me;
 using Annium.Id.Core;
 using Annium.Id.Infrastructure.Email.Models;
 using Annium.Net.Http;

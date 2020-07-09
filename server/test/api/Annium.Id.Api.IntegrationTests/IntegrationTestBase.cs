@@ -3,6 +3,7 @@ using System.IO;
 using Annium.AspNetCore.IntegrationTesting;
 using Annium.Core.DependencyInjection;
 using Annium.Id.Api.TestClient;
+using Annium.Id.AspNetCore;
 using Annium.Id.Demo.TestClient;
 using Annium.Net.Http;
 using Annium.Net.Mail;

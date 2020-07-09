@@ -2,8 +2,8 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Annium.Data.Operations;
-using Annium.Id.Api.ViewModels.Roles.Requests;
-using Annium.Id.Api.ViewModels.Roles.Responses;
+using Annium.Id.Api.ViewModels.Requests.Roles;
+using Annium.Id.Api.ViewModels.Responses.Roles;
 using Annium.Net.Http;
 
 namespace Annium.Id.Api.TestClient.Clients
