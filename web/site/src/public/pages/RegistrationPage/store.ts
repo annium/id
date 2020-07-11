@@ -4,7 +4,7 @@ import { INotificationStore } from '@annium/utils/dist/stores'
 import { action, observable } from 'mobx'
 import { lazyInject } from 'public/config/di/container'
 import { services } from 'public/config/di/services'
-import { idMeService } from 'shared/api/id/meService'
+import { idMeService } from 'shared/api/server/meService'
 
 
 export type Data = { email: string; login: string }

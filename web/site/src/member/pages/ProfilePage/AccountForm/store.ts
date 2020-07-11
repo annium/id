@@ -4,7 +4,7 @@ import { INotificationStore } from '@annium/utils/dist/stores'
 import { lazyInject } from 'member/config/di/container'
 import { services } from 'member/config/di/services'
 import { action, observable, toJS } from 'mobx'
-import { idMeService } from 'shared/api/id/meService'
+import { idMeService } from 'shared/api/server/meService'
 import { meService } from 'shared/api/server/meService'
 import { IMeStore } from 'shared/stores/MeStore'
 
