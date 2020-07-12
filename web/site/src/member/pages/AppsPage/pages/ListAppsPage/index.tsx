@@ -1,0 +1,54 @@
+import Button from '@material-ui/core/Button'
+import Grid from '@material-ui/core/Grid'
+import Paper from '@material-ui/core/Paper'
+import Table from '@material-ui/core/Table'
+import TableBody from '@material-ui/core/TableBody'
+import TableCell from '@material-ui/core/TableCell'
+import TableContainer from '@material-ui/core/TableContainer'
+import TableHead from '@material-ui/core/TableHead'
+import TableRow from '@material-ui/core/TableRow'
+import { BreadcrumbItems, Breadcrumbs } from 'member/components/Breadcrumbs'
+import { CentricGrid } from 'member/layouts/CentricGrid'
+import { routes } from 'member/routes'
+import { observer } from 'mobx-react-lite'
+import React from 'react'
+import { Link } from 'shared/components/Link'
+import { Loader } from 'shared/components/Loader'
+
+import { Store } from '../../store'
+
+
+export type ListAppsPageProps = { store: Store }
+
+export const ListAppsPage = observer(({ store }: ListAppsPageProps) => {
+  const breadcrumbs: BreadcrumbItems = { Apps: null }
+
+  return (
+    <CentricGrid>
+      <Grid container={true} alignItems="flex-end" justify="space-between">
+        <Breadcrumbs items={breadcrumbs} />
+        <Link to={routes.apps.create} underline="none">
+          <Button color="primary">Create</Button>
+        </Link>
+      </Grid>
+      <Loader direction="column" align="stretch" justify="flex-start" isLoading={store.apps.isLoading}>
+        <TableContainer component={Paper}>
+          <Table aria-label="keys table">
+            <TableHead>
+              <TableRow>
+                <TableCell>Name</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {store.apps.data.map(app => (
+                <TableRow key={app.id}>
+                  <TableCell component="th" scope="row">{app.name}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Loader>
+    </CentricGrid>
+  )
+})

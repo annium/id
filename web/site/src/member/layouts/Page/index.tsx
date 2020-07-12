@@ -2,8 +2,7 @@ import { useStore } from '@annium/utils/dist/helpers'
 import Divider from '@material-ui/core/Divider'
 import Drawer from '@material-ui/core/Drawer'
 import List from '@material-ui/core/List'
-import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet'
-import AccountTreeIcon from '@material-ui/icons/AccountTree'
+import AppsIcon from '@material-ui/icons/Apps'
 import DashboardIcon from '@material-ui/icons/Dashboard'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 import PeopleIcon from '@material-ui/icons/People'
@@ -48,9 +47,8 @@ export const Page = observer(({ children }: { children?: ReactNode }) => {
         <Divider />
         <List>
           <LinkItem label="Dashboard" icon={<DashboardIcon />} to={routes.dashboard} />
-          <LinkItem label="Accounts" icon={<AccountBalanceWalletIcon />} to={routes.accounts.list} />
+          <LinkItem label="Apps" icon={<AppsIcon />} to={routes.apps.list} />
           <LinkItem label="Following" icon={<PeopleIcon />} to={routes.following.list} />
-          <LinkItem label="Followers" icon={<AccountTreeIcon />} to={routes.followers.listAll} />
           <LinkItem label="Profile" icon={<PersonIcon />} to={routes.profile} />
         </List>
         <Divider />
