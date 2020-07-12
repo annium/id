@@ -46,6 +46,7 @@ export const PasswordForm = observer(() => {
                     required={true}
                     label="Password"
                     onKeyDown={handleChangeSubmit}
+                    fullWidth={true}
                   />
                 </ValueField>
               </Grid>

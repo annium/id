@@ -41,7 +41,7 @@ export const AccountForm = observer(() => {
       <Loader direction="column" align="stretch" justify="flex-start" isLoading={state.isLoading}>
         <Form state={form} onChange={validate(DataValidator)}>
           <Paper className={classes.paper}>
-            <Grid container={true} spacing={3} justify="space-between" alignItems="flex-end">
+            <Grid container={true} spacing={2} justify="space-between" alignItems="flex-end">
               <Grid item={true} xs={12} sm={6}>
                 <ValueField field={form.login}>
                   <TextField
@@ -49,6 +49,7 @@ export const AccountForm = observer(() => {
                     label="Name"
                     autoFocus={true}
                     onKeyDown={handleChangeSubmit}
+                    fullWidth={true}
                   />
                 </ValueField>
               </Grid>
@@ -58,6 +59,7 @@ export const AccountForm = observer(() => {
                     required={true}
                     label="Email"
                     onKeyDown={handleChangeSubmit}
+                    fullWidth={true}
                   />
                 </ValueField>
               </Grid>
