@@ -27,7 +27,8 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpPost("{appId:guid}/confirm-email")]
-        public Task<IResult<TokensResponse>> ConfirmMyEmail(Guid appId, [FromBody] ConfirmMyEmailRequestBody requestBody)
+        public Task<IResult<TokensResponse>> ConfirmMyEmail(Guid appId,
+            [FromBody] ConfirmMyEmailRequestBody requestBody)
         {
             var request = new ConfirmMyEmailRequest
             {
@@ -55,8 +56,14 @@ namespace Annium.Id.Api.Controllers
         [Authorize(false)]
         public Task<IResult<MeResponse>> GetMe()
         {
-            // TODO: perhaps, add info about companies, user is member of
             return HandleAsync<GetMeRequest, MeResponse>(new GetMeRequest());
+        }
+
+        [HttpGet("token")]
+        [Authorize(false)]
+        public Task<IResult<IdTokenResponse>> GetMyToken()
+        {
+            return HandleAsync<GetMyTokenRequest, IdTokenResponse>(new GetMyTokenRequest());
         }
 
         [HttpPut("profile")]

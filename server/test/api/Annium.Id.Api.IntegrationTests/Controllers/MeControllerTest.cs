@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Annium.Id.Api.TestClient;
+using Annium.Id.Api.TestClient.Clients;
 using Annium.Id.Api.ViewModels.Requests.Me;
 using Annium.Id.Core;
 using Annium.Id.Infrastructure.Email.Models;
@@ -31,7 +32,8 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         {
             // arrange
             var user = await Id().RegisterLogInGetUser();
-            var request = new RegisterMeRequest { Server = "http://localhost/", Login = user.Login, Email = "asd1@demo.com" };
+            var request = new RegisterMeRequest
+                { Server = "http://localhost/", Login = user.Login, Email = "asd1@demo.com" };
 
             // act
             var response = await Id().Me.RegisterMe(request);
@@ -45,7 +47,8 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         {
             // arrange
             var user = await Id().RegisterLogInGetUser();
-            var request = new RegisterMeRequest { Server = "http://localhost/", Login = "uniqueLogin", Email = user.Email };
+            var request = new RegisterMeRequest
+                { Server = "http://localhost/", Login = "uniqueLogin", Email = user.Email };
 
             // act
             var response = await Id().Me.RegisterMe(request);
@@ -58,7 +61,11 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         public async Task RegisterMe_ReferralMissing_NotFound()
         {
             // arrange
-            var request = new RegisterMeRequest { Server = "http://localhost/", Login = "uniqueLogin", Email = "demo@demo.com", ReferralId = Guid.NewGuid() };
+            var request = new RegisterMeRequest
+            {
+                Server = "http://localhost/", Login = "uniqueLogin", Email = "demo@demo.com",
+                ReferralId = Guid.NewGuid()
+            };
 
             // act
             var response = await Id().Me.RegisterMe(request);
@@ -114,6 +121,26 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
 
             // assert
             response.Id.IsNotDefault();
+        }
+
+        [Fact]
+        public async Task GetMyToken_AuthenticatedUser_Ok()
+        {
+            // arrange
+            var token = await Id().RegisterLogUserIn();
+            var me = await Id(token).Me.GetMe().GetData();
+            var app = await Id(token).App.Register();
+            token = await Id().LogUserIn(app.Id);
+
+            // act
+            var response = await Id(token).Me.GetMyToken();
+            var idToken = response.Data.Data;
+
+            // assert
+            response.StatusCode.IsEqual(HttpStatusCode.OK);
+            idToken.UserId.IsEqual(me.Id);
+            idToken.LoginId.IsNotDefault();
+            idToken.App.Id.IsEqual(app.Id);
         }
 
         [Fact]

@@ -54,6 +54,14 @@ namespace Annium.Id.Api.TestClient.Clients
                 .AsResponseAsync<IResult<MeResponse>>();
         }
 
+        public async Task<IHttpResponse<IResult<IdTokenResponse>>> GetMyToken(
+        )
+        {
+            return await Request.Clone()
+                .Get("me/token")
+                .AsResponseAsync<IResult<IdTokenResponse>>();
+        }
+
         public async Task<IHttpResponse<IResult>> UpdateMyProfile(
             UpdateMyProfileRequest body
         )

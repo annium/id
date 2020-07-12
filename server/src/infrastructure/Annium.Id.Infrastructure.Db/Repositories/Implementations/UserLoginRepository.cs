@@ -35,7 +35,7 @@ namespace Annium.Id.Infrastructure.Db.Repositories.Implementations
         public async Task<UserLogin> GetByIdAsync(Guid id)
         {
             var entity = await context.UserLogins.AsNoTracking()
-                .FirstOrDefaultAsync(x => x.RefreshToken == id);
+                .FirstOrDefaultAsync(x => x.Id == id);
 
             return mapper.Map<UserLogin>(entity);
         }
