@@ -9,64 +9,64 @@ namespace Annium.Id.Infrastructure.Db.Repositories.Implementations
 {
     internal class CompanyUserRepository : ICompanyUserRepository
     {
-        private readonly IContext context;
-        private readonly IMapper mapper;
+        private readonly IContext _context;
+        private readonly IMapper _mapper;
 
         public CompanyUserRepository(
             IContext context,
             IMapper mapper
         )
         {
-            this.context = context;
-            this.mapper = mapper;
+            _context = context;
+            _mapper = mapper;
         }
 
         public async Task<CompanyUser> SaveAsync(CompanyUser companyUser)
         {
-            var entity = await context.CompanyUsers
+            var entity = await _context.CompanyUsers
                 .FirstOrDefaultAsync(x => x.CompanyId == companyUser.CompanyId && x.UserId == companyUser.UserId);
 
             if (entity is null)
             {
-                entity = mapper.Map<Entities.CompanyUser>(companyUser);
-                context.CompanyUsers.Add(entity);
+                entity = _mapper.Map<Entities.CompanyUser>(companyUser);
+                _context.CompanyUsers.Add(entity);
 
-                await context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
             }
 
-            return mapper.Map<CompanyUser>(entity);
+            return _mapper.Map<CompanyUser>(entity);
         }
 
         public async Task<CompanyUser> GetByIdAsync(Guid companyId, Guid userId)
         {
-            var entity = await context.CompanyUsers.AsNoTracking()
+            var entity = await _context.CompanyUsers.AsNoTracking()
                 .FirstOrDefaultAsync(x => x.CompanyId == companyId && x.UserId == userId);
 
-            return mapper.Map<CompanyUser>(entity);
+            return _mapper.Map<CompanyUser>(entity);
         }
 
         public async Task<User[]> GetAllAsync(Guid companyId)
         {
-            var users = await context.CompanyUsers.AsNoTracking()
+            var users = await _context.CompanyUsers.AsNoTracking()
                 .Include(x => x.User)
                 .Where(x => x.CompanyId == companyId)
                 .Select(x => x.User)
                 .ToListAsync();
 
-            return users.Select(mapper.Map<User>).ToArray();
+            return users.Select(_mapper.Map<User>).ToArray();
         }
 
         public async Task DeleteByIdAsync(Guid companyId, Guid userId)
         {
-            var entity = await context.CompanyUsers
+            var entity = await _context.CompanyUsers
                 .FirstOrDefaultAsync(x => x.CompanyId == companyId && x.UserId == userId);
 
             if (entity is null)
                 return;
 
-            context.CompanyUsers.Remove(entity);
+            _context.CompanyUsers.Remove(entity);
 
-            await context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
     }
 }

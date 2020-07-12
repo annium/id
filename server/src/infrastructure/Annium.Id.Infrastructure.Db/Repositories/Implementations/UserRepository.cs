@@ -8,77 +8,77 @@ namespace Annium.Id.Infrastructure.Db.Repositories.Implementations
 {
     internal class UserRepository : IUserRepository
     {
-        private readonly IContext context;
-        private readonly IMapper mapper;
+        private readonly IContext _context;
+        private readonly IMapper _mapper;
 
         public UserRepository(
             IContext context,
             IMapper mapper
         )
         {
-            this.context = context;
-            this.mapper = mapper;
+            _context = context;
+            _mapper = mapper;
         }
 
         public async Task<User> CreateAsync(User user)
         {
-            var entity = mapper.Map<Entities.User>(user);
+            var entity = _mapper.Map<Entities.User>(user);
 
-            context.Users.Add(entity);
-            await context.SaveChangesAsync();
+            _context.Users.Add(entity);
+            await _context.SaveChangesAsync();
 
-            return mapper.Map<User>(entity);
+            return _mapper.Map<User>(entity);
         }
 
         public async Task<User> GetByIdAsync(Guid id)
         {
-            var entity = await context.Users.AsNoTracking()
+            var entity = await _context.Users.AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id);
 
-            return mapper.Map<User>(entity);
+            return _mapper.Map<User>(entity);
         }
 
         public async Task<User> FindByLoginAsync(string login)
         {
-            var entity = await context.Users.AsNoTracking()
+            var entity = await _context.Users.AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Login == login);
 
-            return mapper.Map<User>(entity);
+            return _mapper.Map<User>(entity);
         }
 
         public async Task<User> FindByEmailAsync(string email)
         {
-            var entity = await context.Users.AsNoTracking()
+            var entity = await _context.Users.AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Email == email);
 
-            return mapper.Map<User>(entity);
+            return _mapper.Map<User>(entity);
         }
 
         public async Task<User> UpdateAsync(User user)
         {
-            var entity = await context.Users
+            var entity = await _context.Users
                 .FirstOrDefaultAsync(x => x.Id == user.Id);
 
             entity.Login = user.Login;
             entity.PasswordHash = user.PasswordHash;
             entity.Email = user.Email;
 
-            await context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
-            return mapper.Map<User>(entity);
+            return _mapper.Map<User>(entity);
         }
 
         public async Task DeleteByIdAsync(Guid id)
         {
-            var entity = await context.Users.AsNoTracking()
+            var entity = await _context.Users.AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             if (entity is null)
                 return;
 
-            context.Users.Remove(entity);
+            _context.Users.Remove(entity);
 
-            await context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
     }
 }

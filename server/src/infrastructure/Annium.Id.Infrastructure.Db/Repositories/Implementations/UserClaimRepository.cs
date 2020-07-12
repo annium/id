@@ -9,59 +9,59 @@ namespace Annium.Id.Infrastructure.Db.Repositories.Implementations
 {
     internal class UserClaimRepository : IUserClaimRepository
     {
-        private readonly IContext context;
-        private readonly IMapper mapper;
+        private readonly IContext _context;
+        private readonly IMapper _mapper;
 
         public UserClaimRepository(
             IContext context,
             IMapper mapper
         )
         {
-            this.context = context;
-            this.mapper = mapper;
+            _context = context;
+            _mapper = mapper;
         }
 
         public async Task<UserClaim> SaveAsync(UserClaim claim)
         {
-            var entity = await context.UserClaims
+            var entity = await _context.UserClaims
                 .FirstOrDefaultAsync(x => x.UserId == claim.UserId && x.ClaimId == claim.ClaimId);
 
             if (entity is null)
             {
-                entity = mapper.Map<Entities.UserClaim>(claim);
-                context.UserClaims.Add(entity);
+                entity = _mapper.Map<Entities.UserClaim>(claim);
+                _context.UserClaims.Add(entity);
             }
             else
             {
                 entity.Value = claim.Value;
             }
 
-            await context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
-            return mapper.Map<UserClaim>(entity);
+            return _mapper.Map<UserClaim>(entity);
         }
 
         public async Task<ClaimValue[]> GetUserClaimsAsync(Guid appId, Guid userId)
         {
-            var raw = await context.UserClaims.AsNoTracking()
+            var raw = await _context.UserClaims.AsNoTracking()
                 .Include(x => x.Claim)
                 .Where(x => x.Claim.AppId == appId && x.UserId == userId)
                 .ToListAsync();
 
-            return raw.Select(mapper.Map<ClaimValue>).ToArray();
+            return raw.Select(_mapper.Map<ClaimValue>).ToArray();
         }
 
         public async Task DeleteByIdAsync(Guid userId, Guid claimId)
         {
-            var entity = await context.UserClaims
+            var entity = await _context.UserClaims
                 .FirstOrDefaultAsync(x => x.UserId == userId && x.ClaimId == claimId);
 
             if (entity is null)
                 return;
 
-            context.UserClaims.Remove(entity);
+            _context.UserClaims.Remove(entity);
 
-            await context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
     }
 }

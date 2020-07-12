@@ -9,78 +9,78 @@ namespace Annium.Id.Infrastructure.Db.Repositories.Implementations
 {
     internal class CompanyRoleRepository : ICompanyRoleRepository
     {
-        private readonly IContext context;
-        private readonly IMapper mapper;
+        private readonly IContext _context;
+        private readonly IMapper _mapper;
 
         public CompanyRoleRepository(
             IContext context,
             IMapper mapper
         )
         {
-            this.context = context;
-            this.mapper = mapper;
+            _context = context;
+            _mapper = mapper;
         }
 
         public async Task<CompanyRole> CreateAsync(CompanyRole role)
         {
-            var entity = mapper.Map<Entities.CompanyRole>(role);
+            var entity = _mapper.Map<Entities.CompanyRole>(role);
 
-            context.CompanyRoles.Add(entity);
-            await context.SaveChangesAsync();
+            _context.CompanyRoles.Add(entity);
+            await _context.SaveChangesAsync();
 
-            return mapper.Map<CompanyRole>(entity);
+            return _mapper.Map<CompanyRole>(entity);
         }
 
         public async Task<CompanyRole[]> GetAllAsync(Guid appId)
         {
-            var raw = await context.CompanyRoles.AsNoTracking()
+            var raw = await _context.CompanyRoles.AsNoTracking()
                 .Include(x => x.Claims).ThenInclude(x => x.Claim)
                 .ToListAsync();
 
-            return raw.Select(mapper.Map<CompanyRole>).ToArray();
+            return raw.Select(_mapper.Map<CompanyRole>).ToArray();
         }
 
         public async Task<CompanyRole> GetByIdAsync(Guid id)
         {
-            var role = await context.CompanyRoles.AsNoTracking()
+            var role = await _context.CompanyRoles.AsNoTracking()
                 .FirstOrDefaultAsync(c => c.Id == id);
 
-            return mapper.Map<CompanyRole>(role);
+            return _mapper.Map<CompanyRole>(role);
         }
 
         public async Task<CompanyRole> FindByKeyAsync(Guid appId, string key)
         {
-            var role = await context.CompanyRoles.AsNoTracking()
+            var role = await _context.CompanyRoles.AsNoTracking()
                 .FirstOrDefaultAsync(c => c.AppId == appId && c.Key == key);
 
-            return mapper.Map<CompanyRole>(role);
+            return _mapper.Map<CompanyRole>(role);
         }
 
         public async Task<CompanyRole> UpdateAsync(CompanyRole role)
         {
-            var entity = await context.CompanyRoles
+            var entity = await _context.CompanyRoles
                 .Include(x => x.Claims).ThenInclude(x => x.Claim)
                 .SingleAsync(x => x.Id == role.Id);
 
             entity.Key = role.Key;
             entity.Name = role.Name;
 
-            await context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
-            return mapper.Map<CompanyRole>(entity);
+            return _mapper.Map<CompanyRole>(entity);
         }
 
         public async Task DeleteByIdAsync(Guid id)
         {
-            var entity = await context.CompanyRoles
+            var entity = await _context.CompanyRoles
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             if (entity is null)
                 return;
 
-            context.CompanyRoles.Remove(entity);
+            _context.CompanyRoles.Remove(entity);
 
-            await context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
     }
 }

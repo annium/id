@@ -9,69 +9,69 @@ namespace Annium.Id.Infrastructure.Db.Repositories.Implementations
 {
     internal class CompanyRepository : ICompanyRepository
     {
-        private readonly IContext context;
-        private readonly IMapper mapper;
+        private readonly IContext _context;
+        private readonly IMapper _mapper;
 
         public CompanyRepository(
             IContext context,
             IMapper mapper
         )
         {
-            this.context = context;
-            this.mapper = mapper;
+            _context = context;
+            _mapper = mapper;
         }
 
         public async Task<Company> CreateAsync(Company company)
         {
-            var entity = mapper.Map<Entities.Company>(company);
+            var entity = _mapper.Map<Entities.Company>(company);
 
-            context.Companies.Add(entity);
-            await context.SaveChangesAsync();
+            _context.Companies.Add(entity);
+            await _context.SaveChangesAsync();
 
-            return mapper.Map<Company>(entity);
+            return _mapper.Map<Company>(entity);
         }
 
         public async Task<Company[]> GetAllByIdsAsync(Guid[] ids)
         {
-            var companies = await context.Companies.AsNoTracking()
+            var companies = await _context.Companies.AsNoTracking()
                 .Where(x => ids.Contains(x.Id))
                 .ToArrayAsync();
 
-            return companies.Select(mapper.Map<Company>).ToArray();
+            return companies.Select(_mapper.Map<Company>).ToArray();
         }
 
         public async Task<Company> GetByIdAsync(Guid id)
         {
-            var company = await context.Companies.AsNoTracking()
+            var company = await _context.Companies.AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id);
 
-            return mapper.Map<Company>(company);
+            return _mapper.Map<Company>(company);
         }
 
         public async Task<Company> UpdateAsync(Company company)
         {
-            var entity = await context.Companies
+            var entity = await _context.Companies
                 .SingleAsync(x => x.Id == company.Id);
 
             entity.OwnerId = company.OwnerId;
             entity.Name = company.Name;
 
-            await context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
-            return mapper.Map<Company>(entity);
+            return _mapper.Map<Company>(entity);
         }
 
         public async Task DeleteByIdAsync(Guid id)
         {
-            var entity = await context.Companies
+            var entity = await _context.Companies
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             if (entity is null)
                 return;
 
-            context.Companies.Remove(entity);
+            _context.Companies.Remove(entity);
 
-            await context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
     }
 }

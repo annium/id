@@ -9,36 +9,36 @@ namespace Annium.Id.Infrastructure.Db.Repositories.Implementations
 {
     internal class UserRoleRepository : IUserRoleRepository
     {
-        private readonly IContext context;
-        private readonly IMapper mapper;
+        private readonly IContext _context;
+        private readonly IMapper _mapper;
 
         public UserRoleRepository(
             IContext context,
             IMapper mapper
         )
         {
-            this.context = context;
-            this.mapper = mapper;
+            _context = context;
+            _mapper = mapper;
         }
 
         public async Task<UserRole> SaveAsync(UserRole userRole)
         {
-            var entity = await context.UserRoles
+            var entity = await _context.UserRoles
                 .FirstOrDefaultAsync(x => x.UserId == userRole.UserId && x.RoleId == userRole.RoleId);
 
             if (entity is null)
             {
-                entity = mapper.Map<Entities.UserRole>(userRole);
-                context.UserRoles.Add(entity);
-                await context.SaveChangesAsync();
+                entity = _mapper.Map<Entities.UserRole>(userRole);
+                _context.UserRoles.Add(entity);
+                await _context.SaveChangesAsync();
             }
 
-            return mapper.Map<UserRole>(entity);
+            return _mapper.Map<UserRole>(entity);
         }
 
         public async Task<Role[]> GetUserRolesAsync(Guid appId, Guid userId)
         {
-            var raw = await context.UserRoles.AsNoTracking()
+            var raw = await _context.UserRoles.AsNoTracking()
                 .Include(x => x.Role).ThenInclude(x => x.Claims).ThenInclude(x => x.Claim)
                 .Where(x => x.Role.AppId == appId && x.UserId == userId)
                 .ToListAsync();
@@ -53,15 +53,15 @@ namespace Annium.Id.Infrastructure.Db.Repositories.Implementations
 
         public async Task DeleteByIdAsync(Guid userId, Guid roleId)
         {
-            var entity = await context.UserRoles
+            var entity = await _context.UserRoles
                 .FirstOrDefaultAsync(x => x.UserId == userId && x.RoleId == roleId);
 
             if (entity is null)
                 return;
 
-            context.UserRoles.Remove(entity);
+            _context.UserRoles.Remove(entity);
 
-            await context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
     }
 }

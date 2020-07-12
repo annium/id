@@ -10,98 +10,98 @@ namespace Annium.Id.Infrastructure.Db.Repositories.Implementations
 {
     internal class UserLoginRepository : IUserLoginRepository
     {
-        private readonly IContext context;
-        private readonly IMapper mapper;
+        private readonly IContext _context;
+        private readonly IMapper _mapper;
 
         public UserLoginRepository(
             IContext context,
             IMapper mapper
         )
         {
-            this.context = context;
-            this.mapper = mapper;
+            _context = context;
+            _mapper = mapper;
         }
 
         public async Task<UserLogin> CreateAsync(UserLogin login)
         {
-            var entity = mapper.Map<Entities.UserLogin>(login);
+            var entity = _mapper.Map<Entities.UserLogin>(login);
 
-            context.UserLogins.Add(entity);
-            await context.SaveChangesAsync();
+            _context.UserLogins.Add(entity);
+            await _context.SaveChangesAsync();
 
-            return mapper.Map<UserLogin>(entity);
+            return _mapper.Map<UserLogin>(entity);
         }
 
         public async Task<UserLogin> GetByIdAsync(Guid id)
         {
-            var entity = await context.UserLogins.AsNoTracking()
+            var entity = await _context.UserLogins.AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id);
 
-            return mapper.Map<UserLogin>(entity);
+            return _mapper.Map<UserLogin>(entity);
         }
 
         public async Task<UserLogin> FindByRefreshTokenAsync(Guid token)
         {
-            var entity = await context.UserLogins.AsNoTracking()
+            var entity = await _context.UserLogins.AsNoTracking()
                 .FirstOrDefaultAsync(x => x.RefreshToken == token);
 
-            return mapper.Map<UserLogin>(entity);
+            return _mapper.Map<UserLogin>(entity);
         }
 
         public async Task<UserLogin> UpdateRefreshTokenAsync(UserLogin login)
         {
-            var entity = await context.UserLogins
+            var entity = await _context.UserLogins
                 .SingleAsync(x => x.Id == login.Id);
 
             entity.RefreshToken = login.RefreshToken;
-            entity.RefreshTokenExpires = mapper.Map<DateTime>(login.RefreshTokenExpires);
+            entity.RefreshTokenExpires = _mapper.Map<DateTime>(login.RefreshTokenExpires);
 
-            await context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
-            return mapper.Map<UserLogin>(entity);
+            return _mapper.Map<UserLogin>(entity);
         }
 
         public async Task DeleteByIdAsync(Guid id)
         {
-            var entity = await context.UserLogins
+            var entity = await _context.UserLogins
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             if (entity is null)
                 return;
 
-            context.UserLogins.Remove(entity);
+            _context.UserLogins.Remove(entity);
 
-            await context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteExpiredByUserIdAsync(Guid userId, Instant instant)
         {
-            var expires = mapper.Map<DateTime>(instant);
+            var expires = _mapper.Map<DateTime>(instant);
 
-            var entities = await context.UserLogins
+            var entities = await _context.UserLogins
                 .Where(x => x.UserId == userId && x.RefreshTokenExpires <= expires)
                 .ToListAsync();
 
             if (entities.Count == 0)
                 return;
 
-            context.UserLogins.RemoveRange(entities);
+            _context.UserLogins.RemoveRange(entities);
 
-            await context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAllByUserIdAsync(Guid userId)
         {
-            var entities = await context.UserLogins
+            var entities = await _context.UserLogins
                 .Where(x => x.UserId == userId)
                 .ToListAsync();
 
             if (entities.Count == 0)
                 return;
 
-            context.UserLogins.RemoveRange(entities);
+            _context.UserLogins.RemoveRange(entities);
 
-            await context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
     }
 }
