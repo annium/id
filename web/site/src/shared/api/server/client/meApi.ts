@@ -4,9 +4,30 @@ import { HttpClient, HttpResponse } from '@annium/client-http'
 import {
   TokensResponse,
 } from './shared'
+
 // exports
+
+export type AppTokenResponse = {
+  id: string
+  roles: string[]
+  claims: Record<string, string>
+}
+
+export type CompanyTokenResponse = {
+  id: string
+  roles: string[]
+  claims: Record<string, string>
+}
+
 export type ConfirmMyEmailRequestBody = {
   id: string
+}
+
+export type IdTokenResponse = {
+  userId: string
+  loginId: string
+  app: AppTokenResponse
+  companies: CompanyTokenResponse[]
 }
 
 export type MeResponse = {
@@ -57,6 +78,9 @@ export const meApi = (client: HttpClient) => ({
   getMe: (
   ): Promise<HttpResponse<MeResponse>> => client
     .get(`me`, {}),
+  getMyToken: (
+  ): Promise<HttpResponse<IdTokenResponse>> => client
+    .get(`me/token`, {}),
   updateMyProfile: (
     body: UpdateMyProfileRequest,
   ): Promise<HttpResponse> => client

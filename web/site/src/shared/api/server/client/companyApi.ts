@@ -2,7 +2,9 @@
 import { HttpClient, HttpResponse } from '@annium/client-http'
 
 
+
 // exports
+
 export type CompanyResponse = {
   id: string
   name: string
