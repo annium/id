@@ -4,14 +4,18 @@ import { INotificationStore } from '@annium/utils/dist/stores'
 import { action, observable } from 'mobx'
 import { lazyInject } from 'public/config/di/container'
 import { services } from 'public/config/di/services'
-import { idMeService } from 'shared/api/server/meService'
+import { meService } from 'shared/api/server/meService'
 
 
-export type Data = { email: string; login: string }
+export type Data = {
+  email: string
+  login: string
+  referralId: string
+}
 
 export class Store {
   @observable
-  public form: State<Data> = createState<Data>({ email: '', login: '' })
+  public form: State<Data> = createState<Data>({ email: '', login: '', referralId: '' })
   @observable
   public state: AsyncState = new AsyncState()
   @lazyInject(services.NotificationStore)
@@ -25,7 +29,11 @@ export class Store {
   public async register() {
     this.state.start()
 
-    const result = await idMeService.register(this.form.email.value, this.form.login.value)
+    const result = await meService.register(
+      this.form.email.value,
+      this.form.login.value,
+      this.form.referralId.value || null,
+    )
 
     if (result.isFailure) {
       this.state.failure(result)

@@ -2,9 +2,9 @@ import { Result } from '@annium/data'
 import { AsyncState } from '@annium/utils/dist/async'
 import { injectable } from 'inversify'
 import { action, computed, observable } from 'mobx'
-import { idLoginService } from 'shared/api/server/loginService'
-import { tokenStorage } from 'shared/api/server/tokenStorage'
+import { loginService } from 'shared/api/server/loginService'
 import { meService } from 'shared/api/server/meService'
+import { tokenStorage } from 'shared/api/server/tokenStorage'
 import { User } from 'shared/models/User'
 import { getLog } from 'shared/utils/log'
 
@@ -43,7 +43,7 @@ export class MeStore implements IMeStore {
     this.state.start()
 
     log('logout', 'api start')
-    await idLoginService.logout()
+    await loginService.logout()
     log('logout', 'api end')
 
     this.state.reset()
@@ -83,7 +83,7 @@ export class MeStore implements IMeStore {
       log('_load', 'success')
     } else {
       log('_load', 'logout api start')
-      await idLoginService.logout()
+      await loginService.logout()
       log('_load', 'logout api end')
       this.state.failure(result)
       log('_load', 'failure')

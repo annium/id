@@ -3,7 +3,6 @@ import { AsyncDataState } from '@annium/utils/dist/async'
 import { action, observable } from 'mobx'
 import { lazyInject } from 'public/config/di/container'
 import { services } from 'public/config/di/services'
-import { idMeService } from 'shared/api/server/meService'
 import { meService } from 'shared/api/server/meService'
 import { IMeStore } from 'shared/stores/MeStore'
 import { IRouterStore } from 'shared/stores/RouterStore'
@@ -57,17 +56,13 @@ export class Store {
   }
 
   private async confirmAndRegister(id: string): Promise<IResultBase> {
-    const confirmationResult = await idMeService.confirmEmail(id)
+    const confirmationResult = await meService.confirmEmail(id)
     if (confirmationResult.isFailure)
       return confirmationResult
 
-    const userResult = await idMeService.load()
+    const userResult = await meService.load()
     if (userResult.isFailure)
       return userResult
-
-    const syncResult = await meService.syncMe(userResult.data)
-    if (syncResult.isFailure)
-      return syncResult
 
     console.log('load me')
     await this.me.load()

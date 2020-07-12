@@ -8,8 +8,8 @@ import { Account, AccountResponseSchema } from 'member/models/Account'
 import { routes } from 'member/routes'
 import { getLog } from 'member/utils/log'
 import { action, IObservableValue, observable, runInAction, toJS } from 'mobx'
-import { accountService } from 'shared/api/server/accountService'
-import { Exchange } from 'shared/api/server/client/shared'
+// import { accountService } from 'shared/api/server/accountService'
+// import { Exchange } from 'shared/api/server/client/shared'
 import { IRouterStore } from 'shared/stores/RouterStore'
 
 

@@ -1,8 +1,8 @@
 import { AsyncDataState } from '@annium/utils/dist/async'
-import { mapResponseArray } from '@annium/utils/dist/helpers'
-import { AccountPublicResponseSchema, PublicAccount } from 'member/models/PublicAccount'
+import { PublicAccount } from 'member/models/PublicAccount'
 import { action, observable } from 'mobx'
-import { accountService } from 'shared/api/server/accountService'
+
+// import { accountService } from 'shared/api/server/accountService'
 
 
 export class Store {
@@ -16,12 +16,13 @@ export class Store {
 
     this.accounts.start()
 
-    const result = await accountService.listAccounts(userId)
-      .then(mapResponseArray(AccountPublicResponseSchema))
-
-    if (result.isSuccess)
-      this.accounts.success(result.data)
-    else
-      this.accounts.failure(result)
+    this.accounts.success([])
+    // const result = await accountService.listAccounts(userId)
+    //   .then(mapResponseArray(AccountPublicResponseSchema))
+    //
+    // if (result.isSuccess)
+    //   this.accounts.success(result.data)
+    // else
+    //   this.accounts.failure(result)
   }
 }

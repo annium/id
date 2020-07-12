@@ -1,6 +1,6 @@
 import { HttpResponse } from '@annium/client-http'
 
-import { meApi, MeResponse } from './client/meApi'
+import { meApi, MeResponse, RegisterMeRequest } from './client/meApi'
 import { TokensResponse } from './client/shared'
 import { appKey, privateClient, publicClient } from './clients'
 import { tokenStorage } from './tokenStorage'
@@ -8,9 +8,9 @@ import { tokenStorage } from './tokenStorage'
 const publicApi = meApi(publicClient)
 const privateApi = meApi(privateClient)
 
-export const idMeService = {
-  register: (email: string, login: string): Promise<HttpResponse> => {
-    const payload = { server: window.location.origin, email, login }
+export const meService = {
+  register: (email: string, login: string, referralId: string | null): Promise<HttpResponse> => {
+    const payload: RegisterMeRequest = { server: window.location.origin, email, login, referralId }
 
     return publicApi.registerMe(payload)
   },
@@ -26,6 +26,8 @@ export const idMeService = {
   },
   restoreAccess: (email: string): Promise<HttpResponse> =>
     publicApi.restoreMyAccess(appKey, { server: window.location.origin, email }),
+  getMe: (): Promise<HttpResponse<MeResponse>> =>
+    privateApi.getMe(),
   updateProfile: async (request: { login: string, email: string }): Promise<HttpResponse> =>
     privateApi.updateMyProfile(request),
   updatePassword: async (request: { password: string }): Promise<HttpResponse> =>

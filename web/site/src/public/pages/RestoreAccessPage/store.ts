@@ -4,7 +4,7 @@ import { INotificationStore } from '@annium/utils/dist/stores'
 import { action, observable } from 'mobx'
 import { lazyInject } from 'public/config/di/container'
 import { services } from 'public/config/di/services'
-import { idMeService } from 'shared/api/server/meService'
+import { meService } from 'shared/api/server/meService'
 
 
 export type Data = { email: string }
@@ -27,7 +27,7 @@ export class Store {
   public async restoreAccess() {
     this.state.start()
 
-    const result = await idMeService.restoreAccess(this.form.email.value)
+    const result = await meService.restoreAccess(this.form.email.value)
 
     if (result.isFailure) {
       this.state.failure(result)

@@ -4,9 +4,7 @@ import { INotificationStore } from '@annium/utils/dist/stores'
 import { action, observable } from 'mobx'
 import { lazyInject } from 'public/config/di/container'
 import { services } from 'public/config/di/services'
-import { idLoginService } from 'shared/api/server/loginService'
-import { idMeService } from 'shared/api/server/meService'
-import { meService } from 'shared/api/server/meService'
+import { loginService } from 'shared/api/server/loginService'
 import { IMeStore } from 'shared/stores/MeStore'
 import { IRouterStore } from 'shared/stores/RouterStore'
 
@@ -35,7 +33,7 @@ export class Store {
   public async login() {
     this.state.start()
 
-    const result = await idLoginService.login(this.form.login.value, this.form.password.value)
+    const result = await loginService.login(this.form.login.value, this.form.password.value)
 
     if (result.isFailure) {
       this.state.failure(result)
@@ -49,9 +47,6 @@ export class Store {
 
       return
     }
-
-    const me = await idMeService.load()
-    await meService.syncMe(me.data)
 
     await this.me.load()
     if (this.me.hasAccess) {

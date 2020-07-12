@@ -4,7 +4,7 @@ import { INotificationStore } from '@annium/utils/dist/stores'
 import { lazyInject } from 'member/config/di/container'
 import { services } from 'member/config/di/services'
 import { action, observable, toJS } from 'mobx'
-import { idMeService } from 'shared/api/server/meService'
+import { meService } from 'shared/api/server/meService'
 import { IMeStore } from 'shared/stores/MeStore'
 
 
@@ -31,7 +31,7 @@ export class Store {
   public async save() {
     this.state.start()
 
-    const result = await idMeService.updatePassword(toJS(this.form.value))
+    const result = await meService.updatePassword(toJS(this.form.value))
 
     if (result.isSuccess) {
       this.state.success()

@@ -9,7 +9,7 @@ const publicApi = loginApi(publicClient)
 const privateApi = loginApi(privateClient)
 const privateBaseApi = loginApi(privateBaseClient)
 
-export const idLoginService = {
+export const loginService = {
   login: async (login: string, password: string): Promise<HttpResponse<TokensResponse>> => {
     const response = await publicApi.logIn(appKey, { login, password })
 
