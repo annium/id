@@ -20,4 +20,7 @@ export const useStyles = makeStyles(theme => ({
   credentials: {
     marginTop: theme.spacing(3),
   },
+  link: {
+    color: 'inherit',
+  },
 }))
