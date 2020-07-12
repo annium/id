@@ -10,13 +10,13 @@ namespace Annium.Id.Api.Application.Tools
 {
     internal class TokenGenerator : ITokenGenerator
     {
-        private readonly IAppRepository appRepository;
-        private readonly IUserRoleRepository userRoleRepository;
-        private readonly IUserClaimRepository userClaimRepository;
-        private readonly ICompanyRepository companyRepository;
-        private readonly ICompanyUserRoleRepository companyUserRoleRepository;
-        private readonly ICompanyUserClaimRepository companyUserClaimRepository;
-        private readonly ITokenWriter tokenWriter;
+        private readonly IAppRepository _appRepository;
+        private readonly IUserRoleRepository _userRoleRepository;
+        private readonly IUserClaimRepository _userClaimRepository;
+        private readonly ICompanyRepository _companyRepository;
+        private readonly ICompanyUserRoleRepository _companyUserRoleRepository;
+        private readonly ICompanyUserClaimRepository _companyUserClaimRepository;
+        private readonly ITokenWriter _tokenWriter;
 
         public TokenGenerator(
             IAppRepository appRepository,
@@ -28,29 +28,29 @@ namespace Annium.Id.Api.Application.Tools
             ITokenWriter tokenWriter
         )
         {
-            this.appRepository = appRepository;
-            this.userRoleRepository = userRoleRepository;
-            this.userClaimRepository = userClaimRepository;
-            this.companyRepository = companyRepository;
-            this.companyUserRoleRepository = companyUserRoleRepository;
-            this.companyUserClaimRepository = companyUserClaimRepository;
-            this.tokenWriter = tokenWriter;
+            _appRepository = appRepository;
+            _userRoleRepository = userRoleRepository;
+            _userClaimRepository = userClaimRepository;
+            _companyRepository = companyRepository;
+            _companyUserRoleRepository = companyUserRoleRepository;
+            _companyUserClaimRepository = companyUserClaimRepository;
+            _tokenWriter = tokenWriter;
         }
 
-        public async Task<string> GenerateToken(UserLogin login)
+        public async Task<IdToken> GenerateToken(UserLogin login)
         {
-            var app = await appRepository.GetByIdAsync(login.AppId);
+            var app = await _appRepository.GetByIdAsync(login.AppId);
 
-            var userRoles = await userRoleRepository.GetUserRolesAsync(app.Id, login.UserId);
-            var userClaims = await userClaimRepository.GetUserClaimsAsync(app.Id, login.UserId);
+            var userRoles = await _userRoleRepository.GetUserRolesAsync(app.Id, login.UserId);
+            var userClaims = await _userClaimRepository.GetUserClaimsAsync(app.Id, login.UserId);
 
             var appToken = BuildAppToken(app, userRoles, userClaims);
 
-            var companyUserRoles = await companyUserRoleRepository.GetCompaniesUserRolesAsync(app.Id, login.UserId);
-            var companyUserClaims = await companyUserClaimRepository.GetCompaniesUserClaimsAsync(app.Id, login.UserId);
+            var companyUserRoles = await _companyUserRoleRepository.GetCompaniesUserRolesAsync(app.Id, login.UserId);
+            var companyUserClaims = await _companyUserClaimRepository.GetCompaniesUserClaimsAsync(app.Id, login.UserId);
 
             var companyIds = companyUserRoles.Keys.Union(companyUserClaims.Keys).ToArray();
-            var companies = await companyRepository.GetAllByIdsAsync(companyIds);
+            var companies = await _companyRepository.GetAllByIdsAsync(companyIds);
             var companyTokens = companies.Select(company => BuildCompanyToken(
                 company,
                 companyUserRoles.ContainsKey(company.Id) ? companyUserRoles[company.Id] : Array.Empty<CompanyRole>(),
@@ -59,7 +59,14 @@ namespace Annium.Id.Api.Application.Tools
 
             var token = new IdToken(login.UserId, login.Id, appToken, companyTokens);
 
-            return tokenWriter.WriteToken(token);
+            return token;
+        }
+
+        public async Task<string> GenerateTokenString(UserLogin login)
+        {
+            var token = await GenerateToken(login);
+
+            return _tokenWriter.WriteToken(token);
         }
 
         private AppToken BuildAppToken(
