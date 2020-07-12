@@ -1,0 +1,32 @@
+Apps
+- my apps
+- list apps
+- app page
+App page
+- user (me)
+-- roles
+-- claims
+-- companies
+- users
+-- users search
+- roles
+-- roles crud
+-- role page
+- claims
+-- claims crud
+-- claim page
+- companies
+-- list companies
+-- company page
+Company page
+- user (me)
+-- roles
+-- claims
+- users
+-- users search
+- roles
+-- roles crud
+-- role page
+- claims
+-- claims crud
+-- claim page
