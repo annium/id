@@ -48,7 +48,7 @@ namespace Annium.Id.Api.Application.Services
             await userLoginRepository.DeleteExpiredByUserIdAsync(user.Id, instant);
             login = await userLoginRepository.CreateAsync(login);
 
-            var token = await tokenGenerator.GenerateToken(login);
+            var token = await tokenGenerator.GenerateTokenString(login);
 
             return new Tokens(token, login.RefreshToken, login.RefreshTokenExpires);
         }

@@ -72,7 +72,7 @@ namespace Annium.Id.Api.Application.CommandHandlers
             login.RefreshToken = Guid.NewGuid();
             login.RefreshTokenExpires = getInstant() + options.RefreshTokenLifeTime;
             await userLoginRepository.UpdateRefreshTokenAsync(login);
-            var token = await tokenGenerator.GenerateToken(login);
+            var token = await tokenGenerator.GenerateTokenString(login);
 
             return Result.Status(OperationStatus.OK, new Tokens(token, login.RefreshToken, login.RefreshTokenExpires));
         }
