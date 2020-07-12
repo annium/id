@@ -43,7 +43,6 @@ export class Store {
     if (result.isSuccess) {
       this.state.success()
 
-      await meService.syncMe(payload)
       await this.me.reload()
 
       return
