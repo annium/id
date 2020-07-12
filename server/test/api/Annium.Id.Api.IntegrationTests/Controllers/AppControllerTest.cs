@@ -1,6 +1,7 @@
 using System;
 using System.Net;
 using System.Threading.Tasks;
+using Annium.Data.Models.Extensions;
 using Annium.Id.Api.TestClient;
 using Annium.Id.Api.TestClient.Clients;
 using Annium.Id.Api.ViewModels.Requests.Apps;
@@ -136,6 +137,20 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
             // assert
             response.Has(1);
             response.At(0).Id.IsEqual(Constants.IdAppId);
+        }
+
+        [Fact]
+        public async Task ListMy_Ok()
+        {
+            // arrange
+            var token = await Id().RegisterLogUserIn();
+            var app = await Id(token).App.Register();
+
+            // act
+            var response = await Id(token).App.ListMyApps().GetData();
+
+            // assert
+            response.IsShallowEqual(new[] { app });
         }
 
         [Fact]

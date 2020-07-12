@@ -9,7 +9,7 @@ namespace Annium.Id.Api.Application.Queries.Me
 {
     public class GetMyTokenQuery : IQuery
     {
-        public UserLogin Login { get; private set; }
+        public UserLogin Login { get; private set; } = default!;
 
         public GetMyTokenQuery(
         )

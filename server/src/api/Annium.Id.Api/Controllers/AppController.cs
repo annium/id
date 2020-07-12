@@ -33,6 +33,13 @@ namespace Annium.Id.Api.Controllers
             return HandleAsync<ListAppsRequest, IEnumerable<AppResponse>>(new ListAppsRequest());
         }
 
+        [HttpGet("my")]
+        [Authorize]
+        public Task<IResult<IEnumerable<AppResponse>>> ListMyApps()
+        {
+            return HandleAsync<ListMyAppsRequest, IEnumerable<AppResponse>>(new ListMyAppsRequest());
+        }
+
         [HttpGet("{appId:guid}")]
         public Task<IResult<AppResponse>> GetApp(Guid appId)
         {

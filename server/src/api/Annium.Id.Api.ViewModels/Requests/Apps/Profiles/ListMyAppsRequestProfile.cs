@@ -1,5 +1,5 @@
 using Annium.Core.Mapper;
-using Annium.Id.Api.Application.Commands.Apps;
+using Annium.Id.Api.Application.Queries.Apps;
 
 namespace Annium.Id.Api.ViewModels.Requests.Apps.Profiles
 {
@@ -7,7 +7,7 @@ namespace Annium.Id.Api.ViewModels.Requests.Apps.Profiles
     {
         public SetAppOwnerRequestProfile()
         {
-            Map<SetAppOwnerRequest, SetAppOwnerCommand>(r => new SetAppOwnerCommand(r.AppId, r.NewOwnerId));
+            Map<ListMyAppsRequest, ListMyAppsQuery>(r => new ListMyAppsQuery());
         }
     }
 }

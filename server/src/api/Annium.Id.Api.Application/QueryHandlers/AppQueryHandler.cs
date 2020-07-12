@@ -14,16 +14,17 @@ namespace Annium.Id.Api.Application.QueryHandlers
 {
     internal class AppQueryHandler :
         IQueryHandler<ListAppsQuery, IEnumerable<App>>,
+        IQueryHandler<ListMyAppsQuery, IEnumerable<App>>,
         IQueryHandler<GetAppQuery, App>,
         IQueryHandler<GetAppApiTokenQuery, Guid>
     {
-        private readonly IAppRepository appRepository;
+        private readonly IAppRepository _appRepository;
 
         public AppQueryHandler(
             IAppRepository appRepository
         )
         {
-            this.appRepository = appRepository;
+            _appRepository = appRepository;
         }
 
         public async Task<IStatusResult<OperationStatus, IEnumerable<App>>> HandleAsync(
@@ -31,7 +32,17 @@ namespace Annium.Id.Api.Application.QueryHandlers
             CancellationToken cancellationToken
         )
         {
-            var apps = await appRepository.GetAllAsync();
+            var apps = await _appRepository.FindAllAsync();
+
+            return Result.Status(OperationStatus.OK, apps.AsEnumerable());
+        }
+
+        public async Task<IStatusResult<OperationStatus, IEnumerable<App>>> HandleAsync(
+            ListMyAppsQuery request,
+            CancellationToken cancellationToken
+        )
+        {
+            var apps = await _appRepository.FindMyAsync(request.User.Id);
 
             return Result.Status(OperationStatus.OK, apps.AsEnumerable());
         }
