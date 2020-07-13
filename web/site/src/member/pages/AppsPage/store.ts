@@ -19,6 +19,8 @@ export class Store {
   @observable
   public apps: AsyncDataState<App[]> = new AsyncDataState<App[]>([])
   @observable
+  public myApps: AsyncDataState<App[]> = new AsyncDataState<App[]>([])
+  @observable
   public form: State<App> = createState<App>({
     id: '',
     name: '',
@@ -48,5 +50,18 @@ export class Store {
       this.apps.success(result.data)
     else
       this.apps.failure(result)
+  }
+
+  @action.bound
+  public async loadMy() {
+    this.myApps.start()
+    log('load')
+
+    const result = await appService.listMy().then(mapResponseArray(AppResponseSchema))
+
+    if (result.isSuccess)
+      this.myApps.success(result.data)
+    else
+      this.myApps.failure(result)
   }
 }

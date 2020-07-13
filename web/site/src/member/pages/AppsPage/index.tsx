@@ -17,6 +17,7 @@ export const AppsPage = observer(() => {
 
   useEffect(() => {
     store.load()
+    store.loadMy()
   }, [store])
 
   return (
