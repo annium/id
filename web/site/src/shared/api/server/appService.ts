@@ -8,4 +8,6 @@ const privateApi = appApi(privateClient)
 export const appService = {
   list: (): Promise<HttpResponse<AppResponse[]>> =>
     privateApi.listApps(),
+  listMy: (): Promise<HttpResponse<AppResponse[]>> =>
+    privateApi.listMyApps(),
 }

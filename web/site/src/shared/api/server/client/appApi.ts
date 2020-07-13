@@ -28,6 +28,9 @@ export const appApi = (client: HttpClient) => ({
   listApps: (
   ): Promise<HttpResponse<AppResponse[]>> => client
     .get(`apps`, {}),
+  listMyApps: (
+  ): Promise<HttpResponse<AppResponse[]>> => client
+    .get(`apps/my`, {}),
   getApp: (
     appId: string,
   ): Promise<HttpResponse<AppResponse>> => client
