@@ -1,15 +1,14 @@
-import { createState, State } from '@annium/forms'
+import { createState, resultToStatus, State } from '@annium/forms'
 import { AsyncDataState, AsyncState } from '@annium/utils/dist/async'
 import { mapResponseArray } from '@annium/utils/dist/helpers'
 import { INotificationStore } from '@annium/utils/dist/stores'
 import { lazyInject } from 'member/config/di/container'
 import { services } from 'member/config/di/services'
 import { App, AppResponseSchema } from 'member/models/App'
+import { routes } from 'member/routes'
 import { getLog } from 'member/utils/log'
-import { action, IObservableValue, observable } from 'mobx'
+import { action, IObservableValue, observable, toJS } from 'mobx'
 import { appService } from 'shared/api/server/appService'
-// import { accountService } from 'shared/api/server/accountService'
-// import { Exchange } from 'shared/api/server/client/shared'
 import { IRouterStore } from 'shared/stores/RouterStore'
 
 
@@ -63,5 +62,29 @@ export class Store {
       this.myApps.success(result.data)
     else
       this.myApps.failure(result)
+  }
+
+  @action.bound
+  public async create() {
+    this.state.start()
+
+    const result = await appService.create(toJS(this.form.value))
+
+    if (result.isSuccess) {
+      this.state.success()
+      this.form.reset()
+
+      this.router.go(routes.apps.list)
+
+      return
+    }
+
+    this.state.failure(result)
+
+    this.form.setStatus(resultToStatus(result))
+    if (result.plainErrors.length)
+      this.notifications.error(result.plainErrors.join(', '))
+    else if (result.labeledErrors.user)
+      this.notifications.error(result.labeledErrors.user.join(', '))
   }
 }

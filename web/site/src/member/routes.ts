@@ -1,9 +1,4 @@
 export const routes = {
-  accounts: {
-    list: '/member/apps',
-    create: '/member/apps/create',
-    update: '/member/apps/:id',
-  },
   apps: {
     list: '/member/apps',
     create: '/member/apps/create',

@@ -3,10 +3,10 @@ import { useStore } from '@annium/utils/dist/helpers'
 import { Page } from 'member/layouts/Page'
 import { routes } from 'member/routes'
 import { observer } from 'mobx-react-lite'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Switch } from 'react-router-dom'
 
-// import { CreateAccountPage, CreateAccountPageProps } from './pages/CreateAccountPage'
+import { CreateAppPage, CreateAppPageProps } from './pages/CreateAppPage'
 import { ListAppsPage, ListAppsPageProps } from './pages/ListAppsPage'
 // import { UpdateAccountPage, UpdateAccountPageProps } from './pages/UpdateAccountPage'
 import { Store } from './store'
@@ -15,26 +15,21 @@ import { Store } from './store'
 export const AppsPage = observer(() => {
   const store = useStore(new Store())
 
-  useEffect(() => {
-    store.load()
-    store.loadMy()
-  }, [store])
-
   return (
     <Page>
       <Switch>
         <Route<ListAppsPageProps>
-          path={routes.accounts.list}
+          path={routes.apps.list}
           exact={true}
           component={ListAppsPage}
           store={store}
         />
-        {/*<Route<CreateAccountPageProps>*/}
-        {/*  path={routes.accounts.create}*/}
-        {/*  exact={true}*/}
-        {/*  component={CreateAccountPage}*/}
-        {/*  store={store}*/}
-        {/*/>*/}
+        <Route<CreateAppPageProps>
+          path={routes.apps.create}
+          exact={true}
+          component={CreateAppPage}
+          store={store}
+        />
         {/*<Route<UpdateAccountPageProps>*/}
         {/*  path={routes.accounts.update}*/}
         {/*  component={UpdateAccountPage}*/}

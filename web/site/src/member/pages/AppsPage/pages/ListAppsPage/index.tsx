@@ -15,7 +15,7 @@ import { BreadcrumbItems, Breadcrumbs } from 'member/components/Breadcrumbs'
 import { CentricGrid } from 'member/layouts/CentricGrid'
 import { routes } from 'member/routes'
 import { observer } from 'mobx-react-lite'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'shared/components/Link'
 import { Loader } from 'shared/components/Loader'
 
@@ -33,6 +33,11 @@ export const ListAppsPage = observer(({ store }: ListAppsPageProps) => {
   const breadcrumbs: BreadcrumbItems = { Apps: null }
   const [tab, setState] = useState<PageTab>(PageTab.apps)
   const setTab = (_: unknown, val: PageTab) => setState(val)
+
+  useEffect(() => {
+    store.load()
+    store.loadMy()
+  }, [store])
 
   return (
     <CentricGrid>
