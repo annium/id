@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Annium.Data.Operations;
 using Annium.Id.Api.ViewModels.Requests.Users;
+using Annium.Id.Api.ViewModels.Responses.Users;
 using Annium.Net.Http;
 
 namespace Annium.Id.Api.TestClient.Clients
@@ -10,6 +12,18 @@ namespace Annium.Id.Api.TestClient.Clients
     {
         public UserClient(IHttpRequest request) : base(request)
         {
+        }
+
+        public async Task<IHttpResponse<IResult<IEnumerable<UserResponse>>>> FindUsers(
+            int limit,
+            string query
+        )
+        {
+            return await Request.Clone()
+                .Get("users")
+                .Param("limit", limit)
+                .Param("query", query)
+                .AsResponseAsync<IResult<IEnumerable<UserResponse>>>();
         }
 
         public async Task<IHttpResponse<IResult>> AddRoleToUser(

@@ -1,8 +1,10 @@
 using System;
 using System.Net;
 using System.Threading.Tasks;
+using Annium.Data.Models.Extensions;
 using Annium.Id.Api.TestClient;
 using Annium.Id.Api.TestClient.Clients;
+using Annium.Id.Api.ViewModels.Responses.Users;
 using Annium.Testing;
 using Xunit;
 
@@ -10,6 +12,26 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
 {
     public class UserControllerTest : IntegrationTestBase
     {
+        [Fact]
+        public async Task FindUsers_Ok()
+        {
+            // arrange
+            var me = await Id().RegisterLogInGetUser();
+
+            // act
+            var response = await Id().User.FindUsers(1, me.Login).GetData();
+
+            // assert
+            response.IsShallowEqual(new[]
+            {
+                new UserResponse
+                {
+                    Id = me.Id,
+                    Login = me.Login,
+                }
+            });
+        }
+
         [Fact]
         public async Task AddRole_MissingApp_NotFound()
         {

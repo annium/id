@@ -1,15 +1,17 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Annium.AspNetCore.Extensions;
 using Annium.Core.Mediator;
 using Annium.Data.Operations;
 using Annium.Id.Api.ViewModels.Requests.Users;
+using Annium.Id.Api.ViewModels.Responses.Users;
 using Annium.Id.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Annium.Id.Api.Controllers
 {
-    [Route("users/{userId:guid}")]
+    [Route("users")]
     public class UserController : ServerController
     {
         public UserController(
@@ -18,7 +20,13 @@ namespace Annium.Id.Api.Controllers
         {
         }
 
-        [HttpPost("roles/{roleId:guid}")]
+        [HttpGet]
+        public Task<IResult<IEnumerable<UserResponse>>> FindUsers([FromQuery]FindUsersRequest request)
+        {
+            return HandleAsync<FindUsersRequest, IEnumerable<UserResponse>>(request);
+        }
+
+        [HttpPost("{userId:guid}/roles/{roleId:guid}")]
         [Authorize]
         public Task<IResult> AddRoleToUser(Guid userId, Guid roleId)
         {
@@ -27,7 +35,7 @@ namespace Annium.Id.Api.Controllers
             return HandleAsync(request);
         }
 
-        [HttpDelete("roles/{roleId:guid}")]
+        [HttpDelete("{userId:guid}/roles/{roleId:guid}")]
         [Authorize]
         public Task<IResult> DeleteRoleFromUser(Guid userId, Guid roleId)
         {
@@ -36,7 +44,7 @@ namespace Annium.Id.Api.Controllers
             return HandleAsync(request);
         }
 
-        [HttpPost("claims/{claimId:guid}")]
+        [HttpPost("{userId:guid}/claims/{claimId:guid}")]
         [Authorize]
         public Task<IResult> AddClaimToUser(Guid userId, Guid claimId, [FromBody] AddClaimToUserRequestBody requestBody)
         {
@@ -50,7 +58,7 @@ namespace Annium.Id.Api.Controllers
             return HandleAsync(request);
         }
 
-        [HttpDelete("claims/{claimId:guid}")]
+        [HttpDelete("{userId:guid}/claims/{claimId:guid}")]
         [Authorize]
         public Task<IResult> DeleteClaimFromUser(Guid userId, Guid claimId)
         {

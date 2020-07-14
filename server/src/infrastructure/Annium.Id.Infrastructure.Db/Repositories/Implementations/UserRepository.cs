@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Annium.Core.Mapper;
 using Annium.Id.Domain.Entities;
@@ -36,6 +37,16 @@ namespace Annium.Id.Infrastructure.Db.Repositories.Implementations
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             return _mapper.Map<User>(entity);
+        }
+
+        public async Task<User[]> FindAllByQueryAsync(string query, int limit)
+        {
+            var entities = await _context.Users.AsNoTracking()
+                .Where(x => x.Login.StartsWith(query))
+                .Take(limit)
+                .ToArrayAsync();
+
+            return _mapper.Map<User[]>(entities);
         }
 
         public async Task<User> FindByLoginAsync(string login)
