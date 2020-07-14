@@ -1,7 +1,9 @@
 // imports
 import { HttpClient, HttpResponse } from '@annium/client-http'
 
-
+import {
+  UserResponse,
+} from './shared'
 
 // exports
 
@@ -18,11 +20,6 @@ export type RegisterCompanyRequest = {
 export type UpdateCompanyRequestBody = {
   parentId: string | null
   name: string
-}
-
-export type UserResponse = {
-  id: string
-  login: string
 }
 
 

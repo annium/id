@@ -3,3 +3,7 @@ export type TokensResponse = {
   refreshToken: string
   refreshTokenExpires: string
 }
+export type UserResponse = {
+  id: string
+  login: string
+}

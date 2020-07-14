@@ -1,7 +1,9 @@
 // imports
 import { HttpClient, HttpResponse } from '@annium/client-http'
 
-
+import {
+  UserResponse,
+} from './shared'
 
 // exports
 
@@ -12,6 +14,11 @@ export type AddClaimToUserRequestBody = {
 
 // api
 export const userApi = (client: HttpClient) => ({
+  findUsers: (
+    limit: number,
+    query: string,
+  ): Promise<HttpResponse<UserResponse[]>> => client
+    .get(`users`, { limit,  query }),
   addRoleToUser: (
     roleId: string,
     userId: string,
