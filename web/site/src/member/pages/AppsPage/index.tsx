@@ -8,7 +8,7 @@ import { Switch } from 'react-router-dom'
 
 import { CreateAppPage, CreateAppPageProps } from './pages/CreateAppPage'
 import { ListAppsPage, ListAppsPageProps } from './pages/ListAppsPage'
-// import { UpdateAccountPage, UpdateAccountPageProps } from './pages/UpdateAccountPage'
+import { UpdateAppPage, UpdateAppPageProps } from './pages/UpdateAppPage'
 import { Store } from './store'
 
 
@@ -30,11 +30,11 @@ export const AppsPage = observer(() => {
           component={CreateAppPage}
           store={store}
         />
-        {/*<Route<UpdateAccountPageProps>*/}
-        {/*  path={routes.accounts.update}*/}
-        {/*  component={UpdateAccountPage}*/}
-        {/*  store={store}*/}
-        {/*/>*/}
+        <Route<UpdateAppPageProps>
+          path={routes.apps.update}
+          component={UpdateAppPage}
+          store={store}
+        />
       </Switch>
     </Page>
   )

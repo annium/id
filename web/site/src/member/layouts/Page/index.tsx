@@ -5,7 +5,6 @@ import List from '@material-ui/core/List'
 import AppsIcon from '@material-ui/icons/Apps'
 import DashboardIcon from '@material-ui/icons/Dashboard'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
-import PeopleIcon from '@material-ui/icons/People'
 import PersonIcon from '@material-ui/icons/Person'
 import cx from 'classnames'
 import { routes } from 'member/routes'
@@ -48,7 +47,6 @@ export const Page = observer(({ children }: { children?: ReactNode }) => {
         <List>
           <LinkItem label="Dashboard" icon={<DashboardIcon />} to={routes.dashboard} />
           <LinkItem label="Apps" icon={<AppsIcon />} to={routes.apps.list} />
-          <LinkItem label="Following" icon={<PeopleIcon />} to={routes.following.list} />
           <LinkItem label="Profile" icon={<PersonIcon />} to={routes.profile} />
         </List>
         <Divider />

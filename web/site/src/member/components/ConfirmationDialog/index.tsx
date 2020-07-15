@@ -31,7 +31,7 @@ export const ConfirmationDialog = ({ isOpen, title, children, onConfirm, onCance
         <Button onClick={onConfirm} color="secondary" autoFocus={true}>
           Confirm
         </Button>
-        <Button onClick={onCancel} color="default">
+        <Button onClick={onCancel} color="inherit">
           Cancel
         </Button>
       </DialogActions>
