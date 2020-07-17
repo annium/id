@@ -10,6 +10,8 @@ export const appService = {
     privateApi.listApps(),
   listMy: (): Promise<HttpResponse<AppResponse[]>> =>
     privateApi.listMyApps(),
+  get: (id: string): Promise<HttpResponse<AppResponse>> =>
+    privateApi.getApp(id),
   create: (body: CreateAppRequest): Promise<HttpResponse<string>> =>
     privateApi.createApp(body),
   update: (id: string, body: UpdateAppRequestBody): Promise<HttpResponse> =>

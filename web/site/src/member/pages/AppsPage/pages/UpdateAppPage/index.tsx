@@ -1,6 +1,7 @@
 import { Status } from '@annium/forms'
 import { Form } from '@annium/forms-react'
 import { ValueField } from '@annium/forms-react-mui'
+import { useStore } from '@annium/utils/dist/helpers'
 import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
 import Paper from '@material-ui/core/Paper'
@@ -14,21 +15,19 @@ import { Link } from 'shared/components/Link'
 import { Loader } from 'shared/components/Loader'
 import { validate } from 'shared/utils/forms'
 
-import { Store } from '../../store'
-
+import { Store } from './store'
 import { useStyles } from './styles'
 import { DataValidator } from './validators'
 
 
-export type UpdateAppPageProps = { store: Store }
-
-export const UpdateAppPage = observer(({ store }: UpdateAppPageProps) => {
+export const UpdateAppPage = observer(() => {
+  const store = useStore(new Store())
   const form = store.form
   const state = store.state
   const classes = useStyles()
 
   useEffect(() => {
-    store.edit()
+    store.load()
   }, [store])
 
   const breadcrumbs: BreadcrumbItems = {
@@ -40,7 +39,7 @@ export const UpdateAppPage = observer(({ store }: UpdateAppPageProps) => {
     form.name.value
   const handleChangeSubmit = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && isFormSubmittable)
-      store.create()
+      store.update()
   }, [isFormSubmittable, store])
 
   useEffect(() => () => form.reset(), [form])
@@ -72,7 +71,7 @@ export const UpdateAppPage = observer(({ store }: UpdateAppPageProps) => {
                 >
                   Update
                 </Button>
-                <Link to={routes.apps.list} underline="none">
+                <Link to={routes.apps.listMy} underline="none">
                   <Button
                     disableElevation={true}
                     variant="contained"

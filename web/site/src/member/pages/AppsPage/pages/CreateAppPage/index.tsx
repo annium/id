@@ -1,6 +1,7 @@
 import { Status } from '@annium/forms'
 import { Form } from '@annium/forms-react'
 import { ValueField } from '@annium/forms-react-mui'
+import { useStore } from '@annium/utils/dist/helpers'
 import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
 import Paper from '@material-ui/core/Paper'
@@ -14,18 +15,17 @@ import { Link } from 'shared/components/Link'
 import { Loader } from 'shared/components/Loader'
 import { validate } from 'shared/utils/forms'
 
-import { Store } from '../../store'
-
+import { Store } from './store'
 import { useStyles } from './styles'
 import { DataValidator } from './validators'
 
 
-export type CreateAppPageProps = { store: Store }
-
-export const CreateAppPage = observer(({ store }: CreateAppPageProps) => {
+export const CreateAppPage = observer(() => {
+  const store = useStore(new Store())
   const form = store.form
   const state = store.state
   const classes = useStyles()
+
   const breadcrumbs: BreadcrumbItems = {
     Accounts: routes.apps.list,
     Create: null,
@@ -67,7 +67,7 @@ export const CreateAppPage = observer(({ store }: CreateAppPageProps) => {
                 >
                   Create
                 </Button>
-                <Link to={routes.apps.list} underline="none">
+                <Link to={routes.apps.listMy} underline="none">
                   <Button
                     disableElevation={true}
                     variant="contained"

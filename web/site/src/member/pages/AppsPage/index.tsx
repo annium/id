@@ -1,41 +1,21 @@
-import { Route } from '@annium/utils/dist/components'
-import { useStore } from '@annium/utils/dist/helpers'
 import { Page } from 'member/layouts/Page'
 import { routes } from 'member/routes'
 import { observer } from 'mobx-react-lite'
 import React from 'react'
-import { Switch } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
 
-import { CreateAppPage, CreateAppPageProps } from './pages/CreateAppPage'
-import { ListAppsPage, ListAppsPageProps } from './pages/ListAppsPage'
-import { UpdateAppPage, UpdateAppPageProps } from './pages/UpdateAppPage'
-import { Store } from './store'
+import { CreateAppPage } from './pages/CreateAppPage'
+import { ListAppsPage } from './pages/ListAppsPage'
+import { UpdateAppPage } from './pages/UpdateAppPage'
 
 
-export const AppsPage = observer(() => {
-  const store = useStore(new Store())
-
-  return (
-    <Page>
-      <Switch>
-        <Route<ListAppsPageProps>
-          path={routes.apps.list}
-          exact={true}
-          component={ListAppsPage}
-          store={store}
-        />
-        <Route<CreateAppPageProps>
-          path={routes.apps.create}
-          exact={true}
-          component={CreateAppPage}
-          store={store}
-        />
-        <Route<UpdateAppPageProps>
-          path={routes.apps.update}
-          component={UpdateAppPage}
-          store={store}
-        />
-      </Switch>
-    </Page>
-  )
-})
+export const AppsPage = observer(() => (
+  <Page>
+    <Switch>
+      <Route path={routes.apps.list} exact={true} component={ListAppsPage} />
+      <Route path={routes.apps.listMy} exact={true} component={ListAppsPage} />
+      <Route path={routes.apps.create} exact={true} component={CreateAppPage} />
+      <Route path={routes.apps.update} component={UpdateAppPage} />
+    </Switch>
+  </Page>
+))

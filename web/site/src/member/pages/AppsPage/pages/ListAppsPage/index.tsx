@@ -1,55 +1,35 @@
 import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
-import IconButton from '@material-ui/core/IconButton'
-import Paper from '@material-ui/core/Paper'
 import Tab from '@material-ui/core/Tab'
-import Table from '@material-ui/core/Table'
-import TableBody from '@material-ui/core/TableBody'
-import TableCell from '@material-ui/core/TableCell'
-import TableContainer from '@material-ui/core/TableContainer'
-import TableHead from '@material-ui/core/TableHead'
-import TableRow from '@material-ui/core/TableRow'
 import Tabs from '@material-ui/core/Tabs'
-import DeleteIcon from '@material-ui/icons/Delete'
-import EditIcon from '@material-ui/icons/Edit'
 import TabContext from '@material-ui/lab/TabContext'
-import TabPanel from '@material-ui/lab/TabPanel'
 import { BreadcrumbItems, Breadcrumbs } from 'member/components/Breadcrumbs'
-import { ConfirmationDialog } from 'member/components/ConfirmationDialog'
 import { useInjection } from 'member/config/di'
 import { services } from 'member/config/di/services'
 import { CentricGrid } from 'member/layouts/CentricGrid'
 import { routes } from 'member/routes'
 import { observer } from 'mobx-react-lite'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
+import { Route, Switch } from 'react-router-dom'
 import { Link } from 'shared/components/Link'
-import { Loader } from 'shared/components/Loader'
 import { IRouterStore } from 'shared/stores/RouterStore'
 
-import { Store } from '../../store'
+import { Apps } from './components/Apps'
+import { MyApps } from './components/MyApps'
 
-import { useStyles } from './styles'
 
+const TABS = [
+  routes.apps.list,
+  routes.apps.listMy,
+]
 
-export type ListAppsPageProps = { store: Store }
-
-export enum PageTab {
-  apps = 'apps',
-  myApps = 'my-apps',
-}
-
-export const ListAppsPage = observer(({ store }: ListAppsPageProps) => {
+export const ListAppsPage = observer(() => {
   const router = useInjection<IRouterStore>(services.RouterStore)
-  const classes = useStyles()
 
   const breadcrumbs: BreadcrumbItems = { Apps: null }
-  const [tab, setState] = useState<PageTab>(PageTab.apps)
-  const setTab = (_: unknown, val: PageTab) => setState(val)
-
-  useEffect(() => {
-    store.load()
-    store.loadMy()
-  }, [store])
+  const tab = TABS.indexOf(router.location.pathname)
+  if (tab < 0)
+    return null
 
   return (
     <CentricGrid>
@@ -59,73 +39,36 @@ export const ListAppsPage = observer(({ store }: ListAppsPageProps) => {
           <Button color="primary">Create</Button>
         </Link>
       </Grid>
-      <TabContext value={tab}>
+      <TabContext value={router.location.pathname}>
         <div>
-          <Tabs value={tab} onChange={setTab}>
-            <Tab label="Apps" value={PageTab.apps} />
-            <Tab label="My Apps" value={PageTab.myApps} />
+          <Tabs value={tab}>
+            <LinkTab router={router} label="Apps" href={routes.apps.list} />
+            <LinkTab router={router} label="My Apps" href={routes.apps.listMy} />
           </Tabs>
         </div>
-        <TabPanel value={PageTab.apps}>
-          <Loader direction="column" align="stretch" justify="flex-start" isLoading={store.apps.isLoading}>
-            <TableContainer component={Paper}>
-              <Table aria-label="keys table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Name</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {store.apps.data.map(app => (
-                    <TableRow key={app.id}>
-                      <TableCell component="th" scope="row">{app.name}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Loader>
-        </TabPanel>
-        <TabPanel value={PageTab.myApps}>
-          <Loader direction="column" align="stretch" justify="flex-start" isLoading={store.myApps.isLoading}>
-            <TableContainer component={Paper}>
-              <Table aria-label="keys table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Name</TableCell>
-                    <TableCell>&nbsp;</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {store.myApps.data.map(app => (
-                    <TableRow key={app.id}>
-                      <TableCell scope="row">{app.name}</TableCell>
-                      <TableCell className={classes.itemActions}>
-                        <Link to={router.path(routes.apps.update, { id: app.id })}>
-                          <IconButton component="button" size="small">
-                            <EditIcon />
-                          </IconButton>
-                        </Link>
-                        <IconButton component="button" size="small" onClick={store.setDeleteCandidate(app.id)}>
-                          <DeleteIcon />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Loader>
-        </TabPanel>
+        <Switch>
+          <Route path={routes.apps.list} exact={true} component={Apps} />
+          <Route path={routes.apps.listMy} exact={true} component={MyApps} />
+        </Switch>
       </TabContext>
-      <ConfirmationDialog
-        isOpen={Boolean(store.deleteCandidate.get())}
-        title="Delete account?"
-        onConfirm={store.delete}
-        onCancel={store.setDeleteCandidate(null)}
-      >
-        Removing account is irreversible.
-      </ConfirmationDialog>
     </CentricGrid>
   )
 })
+
+type LinkTabProps = {
+  router: IRouterStore
+  label: string
+  href: string
+}
+
+function LinkTab(props: LinkTabProps) {
+  const { router, href } = props
+  const handleClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+    event.preventDefault()
+    router.go(href)
+  }
+
+  return (
+    <Tab component="a" onClick={handleClick} {...props} />
+  )
+}
