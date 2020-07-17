@@ -1,9 +1,9 @@
 import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
-import Tab from '@material-ui/core/Tab'
 import Tabs from '@material-ui/core/Tabs'
 import TabContext from '@material-ui/lab/TabContext'
 import { BreadcrumbItems, Breadcrumbs } from 'member/components/Breadcrumbs'
+import { LinkTab } from 'member/components/LinkTab'
 import { useInjection } from 'member/config/di'
 import { services } from 'member/config/di/services'
 import { CentricGrid } from 'member/layouts/CentricGrid'
@@ -52,21 +52,3 @@ export const ListAppsPage = observer(() => {
     </CentricGrid>
   )
 })
-
-type LinkTabProps = {
-  router: IRouterStore
-  label: string
-  href: string
-}
-
-function LinkTab(props: LinkTabProps) {
-  const { router, href } = props
-  const handleClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-    event.preventDefault()
-    router.go(href)
-  }
-
-  return (
-    <Tab component="a" onClick={handleClick} {...props} value={href} />
-  )
-}
