@@ -27,9 +27,7 @@ export const ListAppsPage = observer(() => {
   const router = useInjection<IRouterStore>(services.RouterStore)
 
   const breadcrumbs: BreadcrumbItems = { Apps: null }
-  const tab = TABS.indexOf(router.location.pathname)
-  if (tab < 0)
-    return null
+  const tab = Math.max(TABS.indexOf(router.location.pathname), 0)
 
   return (
     <CentricGrid>
@@ -69,6 +67,6 @@ function LinkTab(props: LinkTabProps) {
   }
 
   return (
-    <Tab component="a" onClick={handleClick} {...props} />
+    <Tab component="a" onClick={handleClick} {...props} value={href} />
   )
 }
