@@ -1,33 +1,24 @@
 import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
-import Tabs from '@material-ui/core/Tabs'
-import TabContext from '@material-ui/lab/TabContext'
 import { BreadcrumbItems, Breadcrumbs } from 'member/components/Breadcrumbs'
-import { LinkTab } from 'member/components/LinkTab'
-import { useInjection } from 'member/config/di'
-import { services } from 'member/config/di/services'
+import { LinkTabs } from 'member/components/LinkTabs'
 import { CentricGrid } from 'member/layouts/CentricGrid'
 import { routes } from 'member/routes'
 import { observer } from 'mobx-react-lite'
 import React from 'react'
-import { Route, Switch } from 'react-router-dom'
+import { Route } from 'react-router-dom'
 import { Link } from 'shared/components/Link'
-import { IRouterStore } from 'shared/stores/RouterStore'
 
 import { Apps } from './components/Apps'
 import { MyApps } from './components/MyApps'
 
 
-const TABS = [
-  routes.apps.list,
-  routes.apps.my,
-]
-
 export const ListAppsPage = observer(() => {
-  const router = useInjection<IRouterStore>(services.RouterStore)
-
   const breadcrumbs: BreadcrumbItems = { Apps: null }
-  const tab = Math.max(TABS.indexOf(router.location.pathname), 0)
+  const tabs = {
+    [routes.apps.list]: 'Apps',
+    [routes.apps.my]: 'My Apps',
+  }
 
   return (
     <CentricGrid>
@@ -37,18 +28,10 @@ export const ListAppsPage = observer(() => {
           <Button color="primary">Create</Button>
         </Link>
       </Grid>
-      <TabContext value={router.location.pathname}>
-        <div>
-          <Tabs value={tab}>
-            <LinkTab router={router} label="Apps" href={routes.apps.list} />
-            <LinkTab router={router} label="My Apps" href={routes.apps.my} />
-          </Tabs>
-        </div>
-        <Switch>
-          <Route path={routes.apps.list} exact={true} component={Apps} />
-          <Route path={routes.apps.my} exact={true} component={MyApps} />
-        </Switch>
-      </TabContext>
+      <LinkTabs tabs={tabs}>
+        <Route path={routes.apps.list} exact={true} component={Apps} />
+        <Route path={routes.apps.my} exact={true} component={MyApps} />
+      </LinkTabs>
     </CentricGrid>
   )
 })
