@@ -3,7 +3,6 @@ import Divider from '@material-ui/core/Divider'
 import Drawer from '@material-ui/core/Drawer'
 import List from '@material-ui/core/List'
 import AppsIcon from '@material-ui/icons/Apps'
-import DashboardIcon from '@material-ui/icons/Dashboard'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 import PersonIcon from '@material-ui/icons/Person'
 import cx from 'classnames'
@@ -45,7 +44,6 @@ export const Page = observer(({ children }: { children?: ReactNode }) => {
         </div>
         <Divider />
         <List>
-          <LinkItem label="Dashboard" icon={<DashboardIcon />} to={routes.dashboard} />
           <LinkItem label="Apps" icon={<AppsIcon />} to={routes.apps.list} />
           <LinkItem label="Profile" icon={<PersonIcon />} to={routes.profile} />
         </List>
