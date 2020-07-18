@@ -24,7 +24,7 @@ export class Store {
   public async load() {
     this.app.start()
 
-    this.app.data.id = this.router.get<{ app: string }>(routes.apps.view).app
+    this.app.data.id = this.router.parse<{ app: string }>(routes.apps.view).app
     const result = await appService.get(this.app.data.id).then(mapResponse(AppResponseSchema))
 
     if (result.isSuccess)

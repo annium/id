@@ -33,7 +33,7 @@ export class Store {
   public async load() {
     this.state.start()
 
-    const id = this.router.get<{ app: string }>(routes.apps.edit).app
+    const id = this.router.parse<{ app: string }>(routes.apps.edit).app
     const result = await appService.get(id).then(mapResponse(AppResponseSchema))
 
     if (result.isSuccess) {

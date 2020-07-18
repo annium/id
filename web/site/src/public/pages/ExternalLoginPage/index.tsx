@@ -15,7 +15,7 @@ export const ExternalLoginPage = observer(() => {
 
   useEffect(() => {
     if (!me.hasAccess)
-      tokenStorage.set(router.get<TokensResponse>(Routes.externalLogin))
+      tokenStorage.set(router.parse<TokensResponse>(Routes.externalLogin))
 
     router.goToHomeOrStartup()
   }, [me, router])

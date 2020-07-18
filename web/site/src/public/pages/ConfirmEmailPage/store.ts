@@ -30,7 +30,7 @@ export class Store {
 
   @action.bound
   public async init(): Promise<void> {
-    const params = this.router.get<{ id: string }>('/confirm-email')
+    const params = this.router.parse<{ id: string }>('/confirm-email')
 
     // immediate failure if no id
     if (!params.id) {
