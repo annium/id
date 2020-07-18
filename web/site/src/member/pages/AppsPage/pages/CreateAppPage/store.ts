@@ -40,7 +40,7 @@ export class Store {
       this.state.success()
       this.form.reset()
 
-      this.router.go(routes.apps.listMy)
+      this.router.go(routes.apps.my)
 
       return
     }

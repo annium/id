@@ -13,9 +13,9 @@ export const AppsPage = observer(() => (
   <Page>
     <Switch>
       <Route path={routes.apps.list} exact={true} component={ListAppsPage} />
-      <Route path={routes.apps.listMy} exact={true} component={ListAppsPage} />
-      <Route path={routes.apps.create} exact={true} component={CreateAppPage} />
-      <Route path={routes.apps.update} component={UpdateAppPage} />
+      <Route path={routes.apps.my} exact={true} component={ListAppsPage} />
+      <Route path={routes.apps.new} exact={true} component={CreateAppPage} />
+      <Route path={routes.apps.edit} component={UpdateAppPage} />
     </Switch>
   </Page>
 ))

@@ -20,7 +20,7 @@ import { MyApps } from './components/MyApps'
 
 const TABS = [
   routes.apps.list,
-  routes.apps.listMy,
+  routes.apps.my,
 ]
 
 export const ListAppsPage = observer(() => {
@@ -33,7 +33,7 @@ export const ListAppsPage = observer(() => {
     <CentricGrid>
       <Grid container={true} alignItems="flex-end" justify="space-between">
         <Breadcrumbs items={breadcrumbs} />
-        <Link to={routes.apps.create} underline="none">
+        <Link to={routes.apps.new} underline="none">
           <Button color="primary">Create</Button>
         </Link>
       </Grid>
@@ -41,12 +41,12 @@ export const ListAppsPage = observer(() => {
         <div>
           <Tabs value={tab}>
             <LinkTab router={router} label="Apps" href={routes.apps.list} />
-            <LinkTab router={router} label="My Apps" href={routes.apps.listMy} />
+            <LinkTab router={router} label="My Apps" href={routes.apps.my} />
           </Tabs>
         </div>
         <Switch>
           <Route path={routes.apps.list} exact={true} component={Apps} />
-          <Route path={routes.apps.listMy} exact={true} component={MyApps} />
+          <Route path={routes.apps.my} exact={true} component={MyApps} />
         </Switch>
       </TabContext>
     </CentricGrid>

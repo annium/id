@@ -37,13 +37,13 @@ export const MyApps = observer(() => {
           <ListItem key={app.id} button={true}>
             <Link
               className={classes.link}
-              to={router.path(routes.apps.view, { id: app.id })}
+              to={router.path(routes.apps.view, { app: app.id })}
               color="inherit"
               underline="none"
             >
               <ListItemText primary={app.name} />
             </Link>
-            <Link to={router.path(routes.apps.update, { id: app.id })}>
+            <Link to={router.path(routes.apps.edit, { app: app.id })}>
               <IconButton component="button" size="small">
                 <EditIcon />
               </IconButton>

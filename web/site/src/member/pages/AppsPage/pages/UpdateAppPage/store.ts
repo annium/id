@@ -33,7 +33,7 @@ export class Store {
   public async load() {
     this.state.start()
 
-    const id = this.router.get<{ id: string }>(routes.apps.update).id
+    const id = this.router.get<{ app: string }>(routes.apps.edit).app
     const result = await appService.get(id).then(mapResponse(AppResponseSchema))
 
     if (result.isSuccess) {
@@ -53,7 +53,7 @@ export class Store {
       this.state.success()
       this.form.reset()
 
-      this.router.go(routes.apps.listMy)
+      this.router.go(routes.apps.my)
 
       return
     }

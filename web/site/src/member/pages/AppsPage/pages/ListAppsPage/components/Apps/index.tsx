@@ -33,7 +33,7 @@ export const Apps = observer(() => {
           <ListItem key={app.id} button={true}>
             <Link
               className={classes.link}
-              to={router.path(routes.apps.view, { id: app.id })}
+              to={router.path(routes.apps.view, { app: app.id })}
               color="inherit"
               underline="none"
             >

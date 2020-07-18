@@ -71,7 +71,7 @@ export const UpdateAppPage = observer(() => {
                 >
                   Update
                 </Button>
-                <Link to={routes.apps.listMy} underline="none">
+                <Link to={routes.apps.my} underline="none">
                   <Button
                     disableElevation={true}
                     variant="contained"

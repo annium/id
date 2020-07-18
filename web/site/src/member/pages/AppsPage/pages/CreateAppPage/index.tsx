@@ -67,7 +67,7 @@ export const CreateAppPage = observer(() => {
                 >
                   Create
                 </Button>
-                <Link to={routes.apps.listMy} underline="none">
+                <Link to={routes.apps.my} underline="none">
                   <Button
                     disableElevation={true}
                     variant="contained"
