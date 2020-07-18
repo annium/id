@@ -10,6 +10,7 @@ export class RouterStore extends RouterStoreBase implements IRouterStore {
   public get isCurrentLocationPublic(): boolean {
     return this.isLocationPublic(this.location.pathname)
   }
+
   public isLocationPublic(path: string): boolean {
     return Object.values(PublicRoutes).map(String).includes(path)
   }
