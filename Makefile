@@ -29,7 +29,7 @@ deconfigure:
 
 
 gen-api-site-client:
-	xrest ts gen -s http://localhost:9501 -a server/src/api/Annium.Id.Api/bin/Debug/netcoreapp3.1/Annium.Id.Api.dll -o web/site/src/shared/api/server/client -trace
+	xrest ts gen -s http://localhost:5000 -a server/src/api/Annium.Id.Api/bin/Debug/netcoreapp3.1/Annium.Id.Api.dll -o web/site/src/shared/api/server/client -trace
 
 gen-api-test-client:
 	xrest dotnet gen -s http://localhost:5000 -a server/src/api/Annium.Id.Api/bin/Debug/netcoreapp3.1/Annium.Id.Api.dll -o server/test/api/Annium.Id.Api.TestClient -t -trace
