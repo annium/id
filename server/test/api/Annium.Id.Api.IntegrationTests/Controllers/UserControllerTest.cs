@@ -33,6 +33,23 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         }
 
         [Fact]
+        public async Task GetUser_Ok()
+        {
+            // arrange
+            var me = await Id().RegisterLogInGetUser();
+
+            // act
+            var response = await Id().User.GetUser(me.Id).GetData();
+
+            // assert
+            response.IsShallowEqual(new UserResponse
+            {
+              Id  = me.Id,
+              Login = me.Login,
+            });
+        }
+
+        [Fact]
         public async Task AddRole_MissingApp_NotFound()
         {
             // arrange

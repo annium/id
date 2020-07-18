@@ -21,9 +21,17 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpGet]
-        public Task<IResult<IEnumerable<UserResponse>>> FindUsers([FromQuery]FindUsersRequest request)
+        public Task<IResult<IEnumerable<UserResponse>>> FindUsers([FromQuery] FindUsersRequest request)
         {
             return HandleAsync<FindUsersRequest, IEnumerable<UserResponse>>(request);
+        }
+
+        [HttpGet("{userId:guid}")]
+        public Task<IResult<UserResponse>> GetUser(Guid userId)
+        {
+            var request = new GetUserRequest { UserId = userId };
+
+            return HandleAsync<GetUserRequest, UserResponse>(request);
         }
 
         [HttpPost("{userId:guid}/roles/{roleId:guid}")]

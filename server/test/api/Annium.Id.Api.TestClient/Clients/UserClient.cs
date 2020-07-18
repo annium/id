@@ -26,6 +26,15 @@ namespace Annium.Id.Api.TestClient.Clients
                 .AsResponseAsync<IResult<IEnumerable<UserResponse>>>();
         }
 
+        public async Task<IHttpResponse<IResult<UserResponse>>> GetUser(
+            Guid userId
+        )
+        {
+            return await Request.Clone()
+                .Get($"users/{userId}")
+                .AsResponseAsync<IResult<UserResponse>>();
+        }
+
         public async Task<IHttpResponse<IResult>> AddRoleToUser(
             Guid roleId,
             Guid userId

@@ -12,7 +12,8 @@ using Annium.Id.Infrastructure.Db.Repositories;
 namespace Annium.Id.Api.Application.QueryHandlers
 {
     internal class UserQueryHandler :
-        IQueryHandler<FindUsersQuery, IEnumerable<User>>
+        IQueryHandler<FindUsersQuery, IEnumerable<User>>,
+        IQueryHandler<GetUserQuery, User>
     {
         private readonly IUserRepository _userRepository;
 
@@ -31,6 +32,14 @@ namespace Annium.Id.Api.Application.QueryHandlers
             var users = await _userRepository.FindAllByQueryAsync(request.Query, request.Limit);
 
             return Result.Status(OperationStatus.OK, users.AsEnumerable());
+        }
+
+        public Task<IStatusResult<OperationStatus, User>> HandleAsync(
+            GetUserQuery request,
+            CancellationToken ct
+        )
+        {
+            return Task.FromResult(Result.Status(OperationStatus.OK, request.User));
         }
     }
 }
