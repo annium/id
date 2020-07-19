@@ -16,8 +16,8 @@ import { MyApps } from './components/MyApps'
 export const ListAppsPage = observer(() => {
   const breadcrumbs: BreadcrumbItems = { Apps: null }
   const tabs = {
-    [routes.apps.list]: 'Apps',
-    [routes.apps.my]: 'My Apps',
+    Apps: routes.apps.list,
+    'My Apps': routes.apps.my,
   }
 
   return (

@@ -23,8 +23,9 @@ export const ViewAppPage = observer(() => {
     Apps: routes.apps.list,
     [app.data.name || 'xxx']: null,
   }
-  const tabs = app.isSuccess ? {
-    [router.path(routes.apps.view, { app: app.data.id })]: 'App',
+  const tabs: Record<string, string> = app.isSuccess ? {
+    App: router.path(routes.apps.view, { app: app.data.id }),
+    Me: router.path(routes.apps.users.user.view, { app: app.data.id, user: store.me.user!.id }),
   } : {}
 
   useEffect(() => {

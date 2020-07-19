@@ -6,6 +6,7 @@ import { App, AppResponseSchema } from 'member/models/App'
 import { routes } from 'member/routes'
 import { action, observable } from 'mobx'
 import { appService } from 'shared/api/server/appService'
+import { IMeStore } from 'shared/stores/MeStore'
 import { IRouterStore } from 'shared/stores/RouterStore'
 
 
@@ -13,10 +14,14 @@ export class Store {
   @observable
   public app: AsyncDataState<App> = new AsyncDataState<App>({ id: '', name: '' })
 
+  @lazyInject(services.MeStore)
+  public me!: IMeStore
+
   @lazyInject(services.RouterStore)
   public router!: IRouterStore
 
   public constructor() {
+    delete this.me
     delete this.router
   }
 

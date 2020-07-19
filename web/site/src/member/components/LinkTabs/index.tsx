@@ -16,14 +16,18 @@ type LinkTabsProps = {
 
 export const LinkTabs = ({ tabs, children }: LinkTabsProps) => {
   const router = useInjection<IRouterStore>(services.RouterStore)
-  const tab = Math.max(Object.keys(tabs).findIndex(path => router.isAt(path)), 0)
+  const options = Object.values(tabs)
+    .map((path, index) => ({ path, index }))
+    .filter(x => router.isAt(x.path))
+    .sort((a, b) => a.path.length > b.path.length ? -1 : 1)
+  const tab = options.length ? options[0].index : 0
 
   return (
     <TabContext value={router.location.pathname}>
       <div>
         <Tabs value={tab}>
-          {Object.keys(tabs).map(path => (
-            <LinkTab key={path} router={router} label={tabs[path]} href={path} />
+          {Object.keys(tabs).map(name => (
+            <LinkTab key={tabs[name]} router={router} label={name} href={tabs[name]} />
           ))}
         </Tabs>
       </div>
