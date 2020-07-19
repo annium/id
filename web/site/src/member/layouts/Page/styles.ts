@@ -10,7 +10,14 @@ export const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.grey.A400,
   },
   logo: {
-    marginLeft: theme.spacing(0.5),
+    marginLeft: theme.spacing(1),
+    cursor: 'pointer',
+  },
+  spaceSeparator: {
+    width: theme.spacing(3),
+  },
+  growSeparator: {
+    flex: 1,
   },
   content: {
     flex: 1,

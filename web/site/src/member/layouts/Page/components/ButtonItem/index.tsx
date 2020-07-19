@@ -1,7 +1,7 @@
-import ListItem from '@material-ui/core/ListItem'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
-import ListItemText from '@material-ui/core/ListItemText'
+import Tooltip from '@material-ui/core/Tooltip'
 import React from 'react'
+
+import { useStyles } from './styles'
 
 type Props = {
   label: string
@@ -9,9 +9,14 @@ type Props = {
   onClick(): void
 }
 
-export const ButtonItem = ({ onClick, icon, label }: Props) => (
-  <ListItem button={true} onClick={onClick} title={label}>
-    <ListItemIcon>{icon}</ListItemIcon>
-    <ListItemText primary={label} />
-  </ListItem>
-)
+export const ButtonItem = ({ label, icon, onClick }: Props) => {
+  const classes = useStyles()
+
+  return (
+    <Tooltip title={label} aria-label={label}>
+      <div className={classes.button} onClick={onClick}>
+        {icon}
+      </div>
+    </Tooltip>
+  )
+}

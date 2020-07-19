@@ -1,6 +1,6 @@
 import { lazyInject } from 'member/config/di/container'
 import { services } from 'member/config/di/services'
-import { action, computed, observable } from 'mobx'
+import { action, observable } from 'mobx'
 import { IMeStore } from 'shared/stores/MeStore'
 import { IRouterStore } from 'shared/stores/RouterStore'
 
@@ -11,13 +11,9 @@ export class Store {
   @lazyInject(services.RouterStore)
   public router!: IRouterStore
 
-  @computed
-  public get isSidebarOpen(): boolean {
-    return this._isSidebarOpen
-  }
-
   @observable
-  private _isSidebarOpen: boolean = false
+  // @ts-ignore
+  private readonly _fake: boolean = false
 
   public constructor() {
     delete this.me
@@ -25,8 +21,8 @@ export class Store {
   }
 
   @action.bound
-  public toggleSidebar() {
-    this._isSidebarOpen = !this._isSidebarOpen
+  public async goHome() {
+    this.router.go('/member')
   }
 
   @action.bound
