@@ -6,12 +6,16 @@ import { useStyles } from './styles'
 type Props = {
   className?: string
   size: 'small' | 'medium' | 'large'
+  onClick?(): void;
 }
 
-export const Logo = ({ className, size }: Props) => {
+export const Logo = ({ className, size, onClick }: Props) => {
   const classes = useStyles()
 
   return (
-    <div className={cx(classes.logo, className, classes[size])} />
+    <div
+      className={cx(classes.logo, className, classes[size])}
+      onClick={onClick}
+    />
   )
 }
