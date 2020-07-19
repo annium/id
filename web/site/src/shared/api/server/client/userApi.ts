@@ -19,6 +19,10 @@ export const userApi = (client: HttpClient) => ({
     query: string,
   ): Promise<HttpResponse<UserResponse[]>> => client
     .get(`users`, { limit,  query }),
+  getUser: (
+    userId: string,
+  ): Promise<HttpResponse<UserResponse>> => client
+    .get(`users/${userId}`, {}),
   addRoleToUser: (
     roleId: string,
     userId: string,

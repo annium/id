@@ -6,12 +6,6 @@ export const routes = {
     new: '/member/apps/new',
     edit: '/member/apps/:app/edit',
     users: {
-      me: {
-        view: '/member/apps/:app/me',
-        roles: '/member/apps/:app/me/roles',
-        claims: '/member/apps/:app/me/claims',
-        companies: '/member/apps/:app/me/companies',
-      },
       list: '/member/apps/:app/users',
       user: {
         view: '/member/apps/:app/users/:user',
