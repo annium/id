@@ -29,7 +29,7 @@ export class Store {
   public async register() {
     this.state.start()
 
-    const result = await meService.register(
+    const result = await meService.registerMe(
       this.form.email.value,
       this.form.login.value,
       this.form.referralId.value || null,

@@ -60,7 +60,7 @@ export class Store {
     if (confirmationResult.isFailure)
       return confirmationResult
 
-    const userResult = await meService.load()
+    const userResult = await meService.getMe()
     if (userResult.isFailure)
       return userResult
 

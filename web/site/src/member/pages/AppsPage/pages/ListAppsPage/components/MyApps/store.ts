@@ -24,7 +24,7 @@ export class Store {
   public async load() {
     this.apps.start()
 
-    const result = await appService.listMy().then(mapResponseArray(AppResponseSchema))
+    const result = await appService.listMyApps().then(mapResponseArray(AppResponseSchema))
 
     if (result.isSuccess)
       this.apps.success(result.data)
@@ -51,7 +51,7 @@ export class Store {
     const id = this.deleteCandidate.get()!
     this.deleteCandidate.set(null)
 
-    const result = await appService.delete(id)
+    const result = await appService.deleteApp(id)
 
     if (result.isFailure) {
       this.apps.success(this.apps.data)

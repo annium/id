@@ -28,7 +28,7 @@ export class Store {
     this.user.start()
 
     this.user.data.id = this.router.parse<{ user: string }>(routes.apps.users.user.view).user
-    const result = await userService.get(this.user.data.id).then(mapResponse(UserResponseSchema))
+    const result = await userService.getUser(this.user.data.id).then(mapResponse(UserResponseSchema))
 
     if (result.isSuccess)
       this.user.success(result.data)

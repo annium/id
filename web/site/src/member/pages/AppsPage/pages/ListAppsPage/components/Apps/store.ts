@@ -22,7 +22,7 @@ export class Store {
   public async load() {
     this.apps.start()
 
-    const result = await appService.list().then(mapResponseArray(AppResponseSchema))
+    const result = await appService.listApps().then(mapResponseArray(AppResponseSchema))
 
     if (result.isSuccess)
       this.apps.success(result.data)

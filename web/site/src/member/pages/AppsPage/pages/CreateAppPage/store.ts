@@ -34,7 +34,7 @@ export class Store {
   public async create() {
     this.state.start()
 
-    const result = await appService.create(toJS(this.form.value))
+    const result = await appService.createApp(toJS(this.form.value))
 
     if (result.isSuccess) {
       this.state.success()

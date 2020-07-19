@@ -34,7 +34,7 @@ export class Store {
     this.state.start()
 
     const id = this.router.parse<{ app: string }>(routes.apps.edit).app
-    const result = await appService.get(id).then(mapResponse(AppResponseSchema))
+    const result = await appService.getApp(id).then(mapResponse(AppResponseSchema))
 
     if (result.isSuccess) {
       this.form.setValue(result.data)
@@ -47,7 +47,7 @@ export class Store {
   public async update() {
     this.state.start()
 
-    const result = await appService.update(this.form.id.value, toJS(this.form.value))
+    const result = await appService.updateApp(this.form.id.value, toJS(this.form.value))
 
     if (result.isSuccess) {
       this.state.success()

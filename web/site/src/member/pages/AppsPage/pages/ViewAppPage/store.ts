@@ -30,7 +30,7 @@ export class Store {
     this.app.start()
 
     this.app.data.id = this.router.parse<{ app: string }>(routes.apps.view).app
-    const result = await appService.get(this.app.data.id).then(mapResponse(AppResponseSchema))
+    const result = await appService.getApp(this.app.data.id).then(mapResponse(AppResponseSchema))
 
     if (result.isSuccess)
       this.app.success(result.data)

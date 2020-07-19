@@ -38,7 +38,7 @@ export class Store {
     this.state.start()
 
     const payload = toJS(this.form.value)
-    const result = await meService.updateProfile(payload)
+    const result = await meService.updateMyProfile(payload)
 
     if (result.isSuccess) {
       this.state.success()

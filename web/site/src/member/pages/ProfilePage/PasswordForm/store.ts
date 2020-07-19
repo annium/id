@@ -31,7 +31,7 @@ export class Store {
   public async save() {
     this.state.start()
 
-    const result = await meService.updatePassword(toJS(this.form.value))
+    const result = await meService.updateMyPassword(toJS(this.form.value))
 
     if (result.isSuccess) {
       this.state.success()
