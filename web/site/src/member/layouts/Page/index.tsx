@@ -1,18 +1,12 @@
 import { useStore } from '@annium/utils/dist/helpers'
-import Divider from '@material-ui/core/Divider'
-import Drawer from '@material-ui/core/Drawer'
-import List from '@material-ui/core/List'
-import AppsIcon from '@material-ui/icons/Apps'
+import { IconButton } from '@material-ui/core'
+import AppBar from '@material-ui/core/AppBar'
+import Toolbar from '@material-ui/core/Toolbar'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
-import PersonIcon from '@material-ui/icons/Person'
-import cx from 'classnames'
-import { routes } from 'member/routes'
 import { observer } from 'mobx-react-lite'
 import React, { ReactNode } from 'react'
 import { Logo } from 'shared/components/Logo'
 
-import { ButtonItem } from './components/ButtonItem'
-import { LinkItem } from './components/LinkItem'
 import { Store } from './store'
 import { useStyles } from './styles'
 
@@ -23,35 +17,20 @@ export const Page = observer(({ children }: { children?: ReactNode }) => {
 
   return (
     <div className={classes.page}>
-      <Drawer
-        variant="permanent"
-        className={cx(classes.sidebar, {
-          [classes.sidebarOpen]: store.isSidebarOpen,
-          [classes.sidebarClose]: !store.isSidebarOpen,
-        })}
-        classes={{
-          paper: cx({
-            [classes.sidebarOpen]: store.isSidebarOpen,
-            [classes.sidebarClose]: !store.isSidebarOpen,
-          }),
-        }}
-      >
-        <div
-          className={classes.toggle}
-          onClick={store.toggleSidebar}
-        >
-          <Logo className={classes.logo} size="medium" />
-        </div>
-        <Divider />
-        <List>
-          <LinkItem label="Apps" icon={<AppsIcon />} to={routes.apps.list} />
-          <LinkItem label="Profile" icon={<PersonIcon />} to={routes.profile} />
-        </List>
-        <Divider />
-        <List>
-          <ButtonItem label="Log out" icon={<ExitToAppIcon />} onClick={store.logout} />
-        </List>
-      </Drawer>
+      <AppBar position="fixed" className={classes.appBar}>
+        <Toolbar>
+          <Logo className={classes.logo} size="small" />
+          <IconButton
+            edge="end"
+            aria-label="Log out"
+            aria-haspopup="true"
+            onClick={store.logout}
+            color="inherit"
+          >
+            <ExitToAppIcon />
+          </IconButton>
+        </Toolbar>
+      </AppBar>
       <main className={classes.content}>
         {children}
       </main>
