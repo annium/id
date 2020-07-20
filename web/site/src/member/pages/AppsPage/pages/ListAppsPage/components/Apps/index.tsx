@@ -23,7 +23,7 @@ export const Apps = observer(() => {
   const classes = useStyles()
 
   useEffect(() => {
-    store.load()
+    store.load('')
   }, [store])
 
   return (

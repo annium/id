@@ -19,10 +19,10 @@ export class Store {
   }
 
   @action.bound
-  public async load() {
+  public async load(query: string) {
     this.apps.start()
 
-    const result = await appService.listApps().then(mapResponseArray(AppResponseSchema))
+    const result = await appService.findApps(query).then(mapResponseArray(AppResponseSchema))
 
     if (result.isSuccess)
       this.apps.success(result.data)
