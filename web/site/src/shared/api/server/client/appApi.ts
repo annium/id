@@ -25,9 +25,10 @@ export const appApi = (client: HttpClient) => ({
     body: CreateAppRequest,
   ): Promise<HttpResponse<string>> => client
     .post(`apps`, {}, body),
-  listApps: (
+  findApps: (
+    query: string,
   ): Promise<HttpResponse<AppResponse[]>> => client
-    .get(`apps`, {}),
+    .get(`apps`, { query }),
   listMyApps: (
   ): Promise<HttpResponse<AppResponse[]>> => client
     .get(`apps/my`, {}),

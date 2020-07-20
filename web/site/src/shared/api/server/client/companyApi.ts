@@ -29,7 +29,14 @@ export const companyApi = (client: HttpClient) => ({
     body: RegisterCompanyRequest,
   ): Promise<HttpResponse<string>> => client
     .post(`companies`, {}, body),
-  getCompanyInfo: (
+  findCompanies: (
+    query: string,
+  ): Promise<HttpResponse<CompanyResponse[]>> => client
+    .get(`companies`, { query }),
+  listMyCompanies: (
+  ): Promise<HttpResponse<CompanyResponse[]>> => client
+    .get(`companies/my`, {}),
+  getCompany: (
     companyId: string,
   ): Promise<HttpResponse<CompanyResponse>> => client
     .get(`companies/${companyId}`, {}),
