@@ -3,9 +3,9 @@ using Annium.Id.Api.Application.Queries.Apps;
 
 namespace Annium.Id.Api.ViewModels.Requests.Apps.Profiles
 {
-    internal class SetAppOwnerRequestProfile : Profile
+    internal class ListMyAppsRequestProfile : Profile
     {
-        public SetAppOwnerRequestProfile()
+        public ListMyAppsRequestProfile()
         {
             Map<ListMyAppsRequest, ListMyAppsQuery>(r => new ListMyAppsQuery());
         }

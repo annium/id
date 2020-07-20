@@ -31,6 +31,27 @@ namespace Annium.Id.Infrastructure.Db.Repositories.Implementations
             return _mapper.Map<Company>(entity);
         }
 
+        public async Task<Company[]> FindAllAsync(string name)
+        {
+            var query = _context.Companies.AsNoTracking();
+
+            if (!string.IsNullOrWhiteSpace(name))
+                query = query.Where(x => x.Name.StartsWith(name));
+
+            var companies = await query.ToListAsync();
+
+            return companies.Select(_mapper.Map<Company>).ToArray();
+        }
+
+        public async Task<Company[]> FindMyAsync(Guid ownerId)
+        {
+            var companies = await _context.Companies.AsNoTracking()
+                .Where(x => x.OwnerId == ownerId)
+                .ToListAsync();
+
+            return companies.Select(_mapper.Map<Company>).ToArray();
+        }
+
         public async Task<Company[]> GetAllByIdsAsync(Guid[] ids)
         {
             var companies = await _context.Companies.AsNoTracking()

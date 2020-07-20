@@ -31,10 +31,14 @@ namespace Annium.Id.Infrastructure.Db.Repositories.Implementations
             return _mapper.Map<App>(entity);
         }
 
-        public async Task<App[]> FindAllAsync()
+        public async Task<App[]> FindAllAsync(string name)
         {
-            var apps = await _context.Apps.AsNoTracking()
-                .ToListAsync();
+            var query = _context.Apps.AsNoTracking();
+
+            if (!string.IsNullOrWhiteSpace(name))
+                query = query.Where(x => x.Name.StartsWith(name));
+
+            var apps = await query.ToListAsync();
 
             return apps.Select(_mapper.Map<App>).ToArray();
         }

@@ -12,16 +12,41 @@ using Annium.Id.Infrastructure.Db.Repositories;
 namespace Annium.Id.Api.Application.QueryHandlers
 {
     internal class CompanyQueryHandler :
+        IQueryHandler<FindCompaniesQuery, IEnumerable<Company>>,
+        IQueryHandler<ListMyCompaniesQuery, IEnumerable<Company>>,
         IQueryHandler<GetCompanyQuery, Company>,
         IQueryHandler<GetCompanyUsersQuery, IEnumerable<User>>
     {
-        private readonly ICompanyUserRepository companyUserRepository;
+        private readonly ICompanyRepository _companyRepository;
+        private readonly ICompanyUserRepository _companyUserRepository;
 
         public CompanyQueryHandler(
+            ICompanyRepository companyRepository,
             ICompanyUserRepository companyUserRepository
         )
         {
-            this.companyUserRepository = companyUserRepository;
+            _companyRepository = companyRepository;
+            _companyUserRepository = companyUserRepository;
+        }
+
+        public async Task<IStatusResult<OperationStatus, IEnumerable<Company>>> HandleAsync(
+            FindCompaniesQuery request,
+            CancellationToken cancellationToken
+        )
+        {
+            var companies = await _companyRepository.FindAllAsync(request.Query);
+
+            return Result.Status(OperationStatus.OK, companies.AsEnumerable());
+        }
+
+        public async Task<IStatusResult<OperationStatus, IEnumerable<Company>>> HandleAsync(
+            ListMyCompaniesQuery request,
+            CancellationToken cancellationToken
+        )
+        {
+            var companies = await _companyRepository.FindMyAsync(request.User.Id);
+
+            return Result.Status(OperationStatus.OK, companies.AsEnumerable());
         }
 
         public Task<IStatusResult<OperationStatus, Company>> HandleAsync(
@@ -39,7 +64,7 @@ namespace Annium.Id.Api.Application.QueryHandlers
         {
             var company = request.Company;
 
-            var users = await companyUserRepository.GetAllAsync(company.Id);
+            var users = await _companyUserRepository.GetAllAsync(company.Id);
 
             return Result.Status(OperationStatus.OK, users.AsEnumerable());
         }

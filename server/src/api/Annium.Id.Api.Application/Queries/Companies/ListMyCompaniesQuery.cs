@@ -4,16 +4,17 @@ using Annium.Id.Core;
 using Annium.Id.Domain.Entities;
 using Annium.Id.Infrastructure.Db.Repositories;
 
-namespace Annium.Id.Api.Application.Queries.Apps
+namespace Annium.Id.Api.Application.Queries.Companies
 {
-    public class ListMyAppsQuery : IQuery
+    public class ListMyCompaniesQuery : IQuery
     {
         public User User { get; private set; } = default!;
     }
 
-    internal class ListMyAppsQueryComposer : Composer<ListMyAppsQuery>
+
+    internal class ListMyCompaniesQueryComposer : Composer<ListMyCompaniesQuery>
     {
-        public ListMyAppsQueryComposer(
+        public ListMyCompaniesQueryComposer(
             ITokenAccessor tokenAccessor,
             IUserRepository userRepository
         )

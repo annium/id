@@ -25,7 +25,25 @@ namespace Annium.Id.Api.TestClient.Clients
                 .AsResponseAsync<IResult<Guid>>();
         }
 
-        public async Task<IHttpResponse<IResult<CompanyResponse>>> GetCompanyInfo(
+        public async Task<IHttpResponse<IResult<IEnumerable<CompanyResponse>>>> FindCompanies(
+            string query
+        )
+        {
+            return await Request.Clone()
+                .Get("companies")
+                .Param("query", query)
+                .AsResponseAsync<IResult<IEnumerable<CompanyResponse>>>();
+        }
+
+        public async Task<IHttpResponse<IResult<IEnumerable<CompanyResponse>>>> ListMyCompanies(
+        )
+        {
+            return await Request.Clone()
+                .Get("companies/my")
+                .AsResponseAsync<IResult<IEnumerable<CompanyResponse>>>();
+        }
+
+        public async Task<IHttpResponse<IResult<CompanyResponse>>> GetCompany(
             Guid companyId
         )
         {

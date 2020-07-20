@@ -7,7 +7,7 @@ namespace Annium.Id.Infrastructure.Db.Repositories
     public interface IAppRepository
     {
         Task<App> CreateAsync(App app);
-        Task<App[]> FindAllAsync();
+        Task<App[]> FindAllAsync(string name);
         Task<App[]> FindMyAsync(Guid ownerId);
         Task<App> GetByIdAsync(Guid id);
         Task<App> FindByApiTokenAsync(Guid token);

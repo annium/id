@@ -15,7 +15,7 @@ namespace Annium.Id.Api.TestClient.Clients
         {
             var request = new RegisterCompanyRequest { ParentId = parentId, Name = name };
             var companyId = await client.RegisterCompany(request).GetData();
-            var company = await client.GetCompanyInfo(companyId).GetData();
+            var company = await client.GetCompany(companyId).GetData();
 
             return company;
         }

@@ -1,6 +1,8 @@
 using System;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Annium.Data.Models.Extensions;
 using Annium.Id.Api.TestClient;
 using Annium.Id.Api.TestClient.Clients;
 using Annium.Id.Api.ViewModels.Requests.Companies;
@@ -71,27 +73,84 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         }
 
         [Fact]
-        public async Task GetInfo_MissingCompany_NotFound()
-        {
-            // arrange
-            var token = await Id().RegisterLogUserIn();
-
-            // act
-            var response = await Id(token).Company.GetCompanyInfo(Guid.NewGuid());
-
-            // assert
-            response.StatusCode.IsEqual(HttpStatusCode.NotFound);
-        }
-
-        [Fact]
-        public async Task GetInfo_Valid_Ok()
+        public async Task Find_All_Ok()
         {
             // arrange
             var token = await Id().RegisterLogUserIn();
             var company = await Id(token).Company.Register();
 
             // act
-            var response = await Id(token).Company.GetCompanyInfo(company.Id).GetData();
+            var res = await Id(token).Company.FindCompanies(string.Empty);
+            var response = res.Data.Data.ToArray();
+
+            // assert
+            response.IsShallowEqual(new[] { company });
+        }
+
+        [Fact]
+        public async Task Find_Query_Ok()
+        {
+            // arrange
+            var token = await Id().RegisterLogUserIn();
+            var company = await Id(token).Company.Register();
+
+            // act
+            var response = await Id(token).Company.FindCompanies(company.Name).GetData();
+
+            // assert
+            response.IsShallowEqual(new[] { company });
+        }
+
+        [Fact]
+        public async Task ListMy_Ok()
+        {
+            // arrange
+            var token = await Id().RegisterLogUserIn();
+            var company = await Id(token).Company.Register();
+
+            // act
+            var response = await Id(token).Company.ListMyCompanies().GetData();
+
+            // assert
+            response.IsShallowEqual(new[] { company });
+        }
+
+        [Fact]
+        public async Task Get_Ok()
+        {
+            // arrange
+            var token = await Id().RegisterLogUserIn();
+            var company = await Id(token).Company.Register();
+
+            // act
+            var response = await Id(token).Company.GetCompany(company.Id).GetData();
+
+            // assert
+            response.IsShallowEqual(company);
+        }
+
+        [Fact]
+        public async Task Get_MissingCompany_NotFound()
+        {
+            // arrange
+            var token = await Id().RegisterLogUserIn();
+
+            // act
+            var response = await Id(token).Company.GetCompany(Guid.NewGuid());
+
+            // assert
+            response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        }
+
+        [Fact]
+        public async Task Get_Valid_Ok()
+        {
+            // arrange
+            var token = await Id().RegisterLogUserIn();
+            var company = await Id(token).Company.Register();
+
+            // act
+            var response = await Id(token).Company.GetCompany(company.Id).GetData();
 
             // assert
             response.IsEqual(company);

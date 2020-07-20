@@ -24,11 +24,13 @@ namespace Annium.Id.Api.TestClient.Clients
                 .AsResponseAsync<IResult<Guid>>();
         }
 
-        public async Task<IHttpResponse<IResult<IEnumerable<AppResponse>>>> ListApps(
+        public async Task<IHttpResponse<IResult<IEnumerable<AppResponse>>>> FindApps(
+            string query
         )
         {
             return await Request.Clone()
                 .Get("apps")
+                .Param("query", query)
                 .AsResponseAsync<IResult<IEnumerable<AppResponse>>>();
         }
 

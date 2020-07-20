@@ -28,9 +28,25 @@ namespace Annium.Id.Api.Controllers
             return HandleAsync<RegisterCompanyRequest, Guid>(request);
         }
 
+        [HttpGet]
+        [Authorize]
+        public Task<IResult<IEnumerable<CompanyResponse>>> FindCompanies(string query)
+        {
+            var request = new FindCompaniesRequest { Query = query };
+
+            return HandleAsync<FindCompaniesRequest, IEnumerable<CompanyResponse>>(request);
+        }
+
+        [HttpGet("my")]
+        [Authorize]
+        public Task<IResult<IEnumerable<CompanyResponse>>> ListMyCompanies()
+        {
+            return HandleAsync<ListMyCompaniesRequest, IEnumerable<CompanyResponse>>(new ListMyCompaniesRequest());
+        }
+
         [HttpGet("{companyId:guid}")]
         [Authorize]
-        public Task<IResult<CompanyResponse>> GetCompanyInfo(Guid companyId)
+        public Task<IResult<CompanyResponse>> GetCompany(Guid companyId)
         {
             var request = new GetCompanyRequest { CompanyId = companyId };
 

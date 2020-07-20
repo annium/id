@@ -28,9 +28,12 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpGet]
-        public Task<IResult<IEnumerable<AppResponse>>> ListApps()
+        [Authorize]
+        public Task<IResult<IEnumerable<AppResponse>>> FindApps(string query = "")
         {
-            return HandleAsync<ListAppsRequest, IEnumerable<AppResponse>>(new ListAppsRequest());
+            var request = new FindAppsRequest { Query = query };
+
+            return HandleAsync<FindAppsRequest, IEnumerable<AppResponse>>(request);
         }
 
         [HttpGet("my")]
@@ -41,6 +44,7 @@ namespace Annium.Id.Api.Controllers
         }
 
         [HttpGet("{appId:guid}")]
+        [Authorize]
         public Task<IResult<AppResponse>> GetApp(Guid appId)
         {
             var request = new GetAppRequest { AppId = appId };

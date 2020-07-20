@@ -44,7 +44,6 @@ namespace Annium.Id.Api
         {
             cfg.AddLoggingHandler();
             cfg.AddHttpStatusPipeHandler();
-            cfg.AddModelStatePipeHandler();
             cfg.AddExceptionHandler();
             cfg.AddViewMappingHandlers();
             cfg.AddValidationHandler();

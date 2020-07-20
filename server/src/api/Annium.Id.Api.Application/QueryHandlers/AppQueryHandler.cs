@@ -13,7 +13,7 @@ using Annium.Id.Infrastructure.Db.Repositories;
 namespace Annium.Id.Api.Application.QueryHandlers
 {
     internal class AppQueryHandler :
-        IQueryHandler<ListAppsQuery, IEnumerable<App>>,
+        IQueryHandler<FindAppsQuery, IEnumerable<App>>,
         IQueryHandler<ListMyAppsQuery, IEnumerable<App>>,
         IQueryHandler<GetAppQuery, App>,
         IQueryHandler<GetAppApiTokenQuery, Guid>
@@ -28,11 +28,11 @@ namespace Annium.Id.Api.Application.QueryHandlers
         }
 
         public async Task<IStatusResult<OperationStatus, IEnumerable<App>>> HandleAsync(
-            ListAppsQuery request,
+            FindAppsQuery request,
             CancellationToken cancellationToken
         )
         {
-            var apps = await _appRepository.FindAllAsync();
+            var apps = await _appRepository.FindAllAsync(request.Query);
 
             return Result.Status(OperationStatus.OK, apps.AsEnumerable());
         }
@@ -64,7 +64,8 @@ namespace Annium.Id.Api.Application.QueryHandlers
             var app = request.App;
 
             if (myId != app.OwnerId)
-                return Task.FromResult(Result.Status(OperationStatus.Forbidden, Guid.Empty).Error($"Need to be application owner to get app api token"));
+                return Task.FromResult(Result.Status(OperationStatus.Forbidden, Guid.Empty)
+                    .Error($"Need to be application owner to get app api token"));
 
             return Task.FromResult(Result.Status(OperationStatus.OK, app.ApiToken));
         }

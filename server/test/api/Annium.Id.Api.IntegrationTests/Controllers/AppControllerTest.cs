@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Annium.Data.Models.Extensions;
@@ -37,7 +38,7 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
 
             // act
             var app = await Id(token).App.Register(appName);
-            var apps = await Id(token).App.ListApps();
+            var apps = await Id(token).App.FindApps(string.Empty);
 
             // assert
             apps.Data.Data.Has(2);
@@ -129,14 +130,31 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
         }
 
         [Fact]
-        public async Task List_Ok()
+        public async Task Find_All_Ok()
         {
+            // arrange
+            var token = await Id().RegisterLogUserIn();
+
             // act
-            var response = await Id().App.ListApps().GetData();
+            var response = await Id(token).App.FindApps(string.Empty).GetData();
 
             // assert
             response.Has(1);
             response.At(0).Id.IsEqual(Constants.IdAppId);
+        }
+
+        [Fact]
+        public async Task Find_Query_Ok()
+        {
+            // arrange
+            var token = await Id().RegisterLogUserIn();
+            var app = await Id(token).App.Register();
+
+            // act
+            var response = await Id(token).App.FindApps(app.Name).GetData();
+
+            // assert
+            response.IsShallowEqual(new[] { app });
         }
 
         [Fact]
@@ -151,6 +169,20 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
 
             // assert
             response.IsShallowEqual(new[] { app });
+        }
+
+        [Fact]
+        public async Task Get_Ok()
+        {
+            // arrange
+            var token = await Id().RegisterLogUserIn();
+            var app = await Id(token).App.Register();
+
+            // act
+            var response = await Id(token).App.GetApp(app.Id).GetData();
+
+            // assert
+            response.IsShallowEqual(app);
         }
 
         [Fact]
