@@ -13,16 +13,16 @@
 
 "@annium/client-http@0.1.0":
   version "0.1.0"
-  resolved "https://node.pkg.annium.com/%40annium%2fclient-http/0.1.0.tgz#3558fc57e7889c4a20cf4ce86226c5ac7ebb763a"
-  integrity sha512-oVdHXULhLNdw3yzaHzHYYXtFdBAGwRwMSW70SulRgtCg/7x+AbwsiCrHKKL/sOYv3Da21YYUIzDCpIp2XIGpBg==
+  resolved "https://node.pkg.annium.com/%40annium%2fclient-http/0.1.0.tgz#75adc3ab897d6e6323217587465d109ab7040e6a"
+  integrity sha512-fZq9Me24szzlDDeuUwxZyVDSYrbOEYoDPADxuk+uPGmsqOs365ITgWHnpc6yYuq5TuFUuYzkrkzSsRWHeSTFUA==
   dependencies:
     "@annium/data" "0.1.0"
     lodash "4.17.15"
 
 "@annium/data@0.1.0":
   version "0.1.0"
-  resolved "https://node.pkg.annium.com/%40annium%2fdata/0.1.0.tgz#6e91ae9db9804d6d71aa4d27b5248239179ce415"
-  integrity sha512-zFZwKbkZZFpKb1l04HV3kyH1za0QY1EUavt6wyqmu7VxoOiSCDcUaaKk4rt1lCGUKKjior3YrrVDEEGn4znZgQ==
+  resolved "https://node.pkg.annium.com/%40annium%2fdata/0.1.0.tgz#7685a84a0ef7f4e0dbc3fdd4e0aeefc6cf044aaf"
+  integrity sha512-nh7vsrhh/mBGcFJAkCR+DKBm1DocDovUz8sNQWr7k6XnH26Jx4JW9BEEHQ6k/xwDpAP7o5pxi9fUDSxJ71J5eA==
   dependencies:
     "@annium/env-tsconfig" "0.1.0"
     "@annium/env-tslint" "0.1.0"
@@ -79,8 +79,8 @@
 
 "@annium/utils@0.1.0":
   version "0.1.0"
-  resolved "https://node.pkg.annium.com/%40annium%2futils/0.1.0.tgz#b64ba309924c2414bcbf246533cf66a66295efd7"
-  integrity sha512-V0u5iXSsEJGmw/zgzVFBHHP+HUUMd3oFVS5YlvIY9pUi6XTkRov0oFSMx6XEFsyjd6tqu1Jb62a1e/wzYXgFvg==
+  resolved "https://node.pkg.annium.com/%40annium%2futils/0.1.0.tgz#31ca5619278aaf283d5f40a99cad357b5db006f6"
+  integrity sha512-SlDGNyJx1Ct73MaaLyFhqYKkcr3HdZcnvDE0mJUiXJJT7ypDANtjRzPJ0BekKWntav0Wn3CbKheVxv1vNLEdtA==
   dependencies:
     "@annium/client-http" "0.1.0"
     "@annium/data" "0.1.0"
@@ -1896,9 +1896,9 @@
   integrity sha512-tHq6qdbT9U1IRSGf14CL0pUlULksvY9OZ+5eEgl1N7t+OA3tGvNpxJCzuKQlsNgCVwbAs670L1vcVQi8j9HjnA==
 
 "@types/node@*":
-  version "14.0.23"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.0.23.tgz#676fa0883450ed9da0bb24156213636290892806"
-  integrity sha512-Z4U8yDAl5TFkmYsZdFPdjeMa57NOvnaf1tljHzhouaPEp7LCj2JKkejpI1ODviIAQuW4CcQmxkQ77rnLsOOoKw==
+  version "14.0.24"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.0.24.tgz#b0f86f58564fa02a28b68f8b55d4cdec42e3b9d6"
+  integrity sha512-btt/oNOiDWcSuI721MdL8VQGnjsKjlTMdrKyTcLCKeQp/n4AAMFJ961wMbp+09y8WuGPClDEv07RIItdXKIXAA==
 
 "@types/node@14.0.22":
   version "14.0.22"
@@ -3178,9 +3178,9 @@ caniuse-api@^3.0.0:
     lodash.uniq "^4.5.0"
 
 caniuse-lite@^1.0.0, caniuse-lite@^1.0.30000981, caniuse-lite@^1.0.30001035, caniuse-lite@^1.0.30001093, caniuse-lite@^1.0.30001097:
-  version "1.0.30001102"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001102.tgz#3275e7a8d09548f955f665e532df88de0b63741a"
-  integrity sha512-fOjqRmHjRXv1H1YD6QVLb96iKqnu17TjcLSaX64TwhGYed0P1E1CCWZ9OujbbK4Z/7zax7zAzvQidzdtjx8RcA==
+  version "1.0.30001104"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001104.tgz#4e3d5b3b1dd3c3529f10cb7f519c62ba3e579f5d"
+  integrity sha512-pkpCg7dmI/a7WcqM2yfdOiT4Xx5tzyoHAXWsX5/HxZ3TemwDZs0QXdqbE0UPLPVy/7BeK7693YfzfRYfu1YVpg==
 
 capture-exit@^2.0.0:
   version "2.0.0"
@@ -3492,9 +3492,9 @@ combined-stream@^1.0.6, combined-stream@~1.0.6:
     delayed-stream "~1.0.0"
 
 commander@*:
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/commander/-/commander-5.1.0.tgz#46abbd1652f8e059bddaef99bbdcb2ad9cf179ae"
-  integrity sha512-P0CysNDQ7rtVw4QIQtm+MRxV66vKFSvlsQvGYXZWR3qFU0jlMKHZZZgw8e+8DSah4UDKMqnknRDQz+xuQXQ/Zg==
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-6.0.0.tgz#2b270da94f8fb9014455312f829a1129dbf8887e"
+  integrity sha512-s7EA+hDtTYNhuXkTlhqew4txMZVdszBmKWSPEMxGr8ru8JXR7bLUFIAtPhcSuFdJQ0ILMxnJi8GkQL0yvDy/YA==
 
 commander@^2.11.0, commander@^2.12.1, commander@^2.20.0:
   version "2.20.3"
@@ -4368,9 +4368,9 @@ ee-first@1.1.1:
   integrity sha1-WQxhFWsK4vTwJVcyoViyZrxWsh0=
 
 electron-to-chromium@^1.3.378, electron-to-chromium@^1.3.488:
-  version "1.3.500"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.500.tgz#ac082dd2279251b14f1a7f6af6fd16655cf3eb7b"
-  integrity sha512-Zz8BZh4Ssb/rZBaicqpi+GOQ0uu3y+24+MxBLCk0UYt8EGoZRP4cYzYHHwXGZfrSbCU4VDjbWN+Tg+TPgOUX6Q==
+  version "1.3.502"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.502.tgz#6a55e993ef60a01fbdc2152ef5e47ee00c885c98"
+  integrity sha512-TIeXOaHAvfP7FemGUtAJxStmOc1YFGWFNqdey/4Nk41L9b1nMmDVDGNMIWhZJvOfJxix6Cv5FGEnBK+yvw3UTg==
 
 elliptic@^6.0.0, elliptic@^6.5.2:
   version "6.5.3"
@@ -8113,9 +8113,9 @@ onetime@^5.1.0:
     mimic-fn "^2.1.0"
 
 open@^7.0.2:
-  version "7.0.4"
-  resolved "https://registry.yarnpkg.com/open/-/open-7.0.4.tgz#c28a9d315e5c98340bf979fdcb2e58664aa10d83"
-  integrity sha512-brSA+/yq+b08Hsr4c8fsEW2CRzk1BmfN3SAK/5VCHQ9bdoZJ4qa/+AfR0xHjlbbZUyPkUHs1b8x1RqdyZdkVqQ==
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/open/-/open-7.1.0.tgz#68865f7d3cb238520fa1225a63cf28bcf8368a1c"
+  integrity sha512-lLPI5KgOwEYCDKXf4np7y1PBEkj7HYIyP2DY8mVDRnx0VIIu6bNrRB0R66TuO7Mack6EnTNLm4uvcl1UoklTpA==
   dependencies:
     is-docker "^2.0.0"
     is-wsl "^2.1.1"
@@ -8599,9 +8599,9 @@ popper.js@^1.16.1-lts:
   integrity sha512-Wb4p1J4zyFTbM+u6WuO4XstYx4Ky9Cewe4DWrel7B0w6VVICvPwdOpotjzcf6eD8TsckVnIMNONQyPIUFOUbCQ==
 
 portfinder@^1.0.25:
-  version "1.0.26"
-  resolved "https://registry.yarnpkg.com/portfinder/-/portfinder-1.0.26.tgz#475658d56ca30bed72ac7f1378ed350bd1b64e70"
-  integrity sha512-Xi7mKxJHHMI3rIUrnm/jjUgwhbYMkp/XKEcZX3aG4BrumLpq3nmoQMX+ClYnDZnZ/New7IatC1no5RX0zo1vXQ==
+  version "1.0.27"
+  resolved "https://registry.yarnpkg.com/portfinder/-/portfinder-1.0.27.tgz#a41333c116b5e5f3d380f9745ac2f35084c4c758"
+  integrity sha512-bJ3U3MThKnyJ9Dx1Idtm5pQmxXqw08+XOHhi/Lie8OF1OlhVaBFhsntAIhkZYjfDcCzszSr0w1yCbccThhzgxQ==
   dependencies:
     async "^2.6.2"
     debug "^3.1.1"

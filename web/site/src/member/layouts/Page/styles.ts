@@ -13,6 +13,10 @@ export const useStyles = makeStyles(theme => ({
     marginLeft: theme.spacing(1),
     cursor: 'pointer',
   },
+  autoComplete: {
+    width: theme.spacing(20),
+    backgroundColor: theme.palette.common.white,
+  },
   spaceSeparator: {
     width: theme.spacing(3),
   },

@@ -3,6 +3,9 @@ import AppBar from '@material-ui/core/AppBar'
 import Container from '@material-ui/core/Container'
 import Toolbar from '@material-ui/core/Toolbar'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
+import { HeaderAutocomplete } from 'member/layouts/Page/components/HeaderAutocomplete'
+import { App } from 'member/models/App'
+import { Company } from 'member/models/Company'
 import { observer } from 'mobx-react-lite'
 import React, { ReactNode } from 'react'
 import { Logo } from 'shared/components/Logo'
@@ -16,6 +19,8 @@ type PageProps = { children: NonNullable<ReactNode> }
 
 export const Page = observer(({ children }: PageProps) => {
   const store = useStore(new Store())
+  const appStore = store.app
+  const companyStore = store.company
   const classes = useStyles()
 
   return (
@@ -27,6 +32,24 @@ export const Page = observer(({ children }: PageProps) => {
             <div className={classes.spaceSeparator} />
             <ButtonItem label="Log out" icon={<ExitToAppIcon />} onClick={store.logout} />
             <div className={classes.growSeparator} />
+            <HeaderAutocomplete<App>
+              className={classes.autoComplete}
+              label="App"
+              data={appStore.items.data}
+              value={appStore.current}
+              set={appStore.set}
+              search={appStore.load}
+            />
+            <div className={classes.spaceSeparator} />
+            <HeaderAutocomplete<Company>
+              className={classes.autoComplete}
+              label="Company"
+              data={companyStore.items.data}
+              value={companyStore.current}
+              set={companyStore.set}
+              search={companyStore.load}
+            />
+            <div className={classes.spaceSeparator} />
             <ButtonItem label="Log out" icon={<ExitToAppIcon />} onClick={store.logout} />
           </Toolbar>
         </Container>
@@ -37,3 +60,4 @@ export const Page = observer(({ children }: PageProps) => {
     </>
   )
 })
+
