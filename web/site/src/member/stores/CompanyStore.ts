@@ -1,9 +1,7 @@
+import { IResultBase } from '@annium/data'
 import { AsyncDataState } from '@annium/utils/dist/async'
 import { mapResponseArray } from '@annium/utils/dist/helpers'
-import { INotificationStore } from '@annium/utils/dist/stores'
 import { injectable } from 'inversify'
-import { lazyInject } from 'member/config/di/container'
-import { services } from 'member/config/di/services'
 import { Company, CompanyResponseSchema } from 'member/models/Company'
 import { action, computed, observable } from 'mobx'
 import { companyService } from 'shared/api/server/companyService'
@@ -15,43 +13,41 @@ const log = getLog('CompanyStore')
 @injectable()
 export class CompanyStore implements ICompanyStore {
   @observable
-  public companies: AsyncDataState<Company[]> = new AsyncDataState<Company[]>([])
-
-  @lazyInject(services.NotificationStore)
-  public notifications!: INotificationStore
+  public items: AsyncDataState<Company[]> = new AsyncDataState<Company[]>([])
 
   @computed
-  public get company(): Company | null {
-    return this._company
+  public get current(): Company | null {
+    return this._current
   }
 
   @observable
-  private _company: Company | null = null
+  private _current: Company | null = null
 
   @action.bound
-  public set(company: Company): void {
+  public set(company: Company | null): void {
     log('set company to', company)
 
-    this._company = company
+    this._current = company
   }
 
   @action.bound
-  public async load(query: string): Promise<void> {
-    this.companies.start()
+  public async load(query: string): Promise<IResultBase> {
+    this.items.start()
 
     const result = await companyService.findCompanies(query).then(mapResponseArray(CompanyResponseSchema))
 
     if (result.isSuccess)
-      this.companies.success(result.data)
-    else {
-      this.companies.failure(result)
-      this.notifications.error(result.plainErrors.join(', '))
-    }
+      this.items.success(result.data)
+    else
+      this.items.failure(result)
+
+    return result
   }
 }
 
 export interface ICompanyStore {
-  company: Company | null
-  set(company: Company): void
-  load(query: string): Promise<void>
+  items: AsyncDataState<Company[]>
+  current: Company | null
+  set(company: Company | null): void
+  load(query: string): Promise<IResultBase>
 }

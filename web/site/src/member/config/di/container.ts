@@ -1,6 +1,8 @@
 import { INotificationStore } from '@annium/utils/dist/stores'
 import { Container } from 'inversify'
 import getDecorators from 'inversify-inject-decorators'
+import { AppStore, IAppStore } from 'member/stores/AppStore'
+import { CompanyStore, ICompanyStore } from 'member/stores/CompanyStore'
 import { container as sharedContainer } from 'shared/config/di/container'
 import { IMeStore } from 'shared/stores/MeStore'
 import { IRouterStore } from 'shared/stores/RouterStore'
@@ -17,3 +19,7 @@ container.bind<INotificationStore>(services.NotificationStore)
   .toDynamicValue(() => sharedContainer.get<INotificationStore>(services.NotificationStore))
 container.bind<IRouterStore>(services.RouterStore)
   .toDynamicValue(() => sharedContainer.get<IRouterStore>(services.RouterStore))
+container.bind<IAppStore>(services.AppStore)
+  .to(AppStore).inSingletonScope()
+container.bind<ICompanyStore>(services.CompanyStore)
+  .to(CompanyStore).inSingletonScope()
