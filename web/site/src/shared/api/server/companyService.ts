@@ -1,5 +1,5 @@
+import { privateClient } from './base'
 import { companyApi } from './client/companyApi'
-import { privateClient } from './clients'
 
 const privateApi = companyApi(privateClient)
 
