@@ -2,8 +2,11 @@ import { useStore } from '@annium/utils/dist/helpers'
 import AppBar from '@material-ui/core/AppBar'
 import Container from '@material-ui/core/Container'
 import Toolbar from '@material-ui/core/Toolbar'
+import AppsIcon from '@material-ui/icons/Apps'
+import BusinessCenterIcon from '@material-ui/icons/BusinessCenter'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 import { HeaderAutocomplete } from 'member/layouts/Page/components/HeaderAutocomplete'
+import { LinkItem } from 'member/layouts/Page/components/LinkItem'
 import { App } from 'member/models/App'
 import { Company } from 'member/models/Company'
 import { observer } from 'mobx-react-lite'
@@ -28,9 +31,11 @@ export const Page = observer(({ children }: PageProps) => {
       <AppBar position="fixed" className={classes.appBar}>
         <Container>
           <Toolbar>
-            <Logo className={classes.logo} size="small" onClick={store.goHome} />
+            <Logo className={classes.logo} size="small" />
             <div className={classes.spaceSeparator} />
-            <ButtonItem label="Log out" icon={<ExitToAppIcon />} onClick={store.logout} />
+            <LinkItem label="Apps" icon={<AppsIcon />} to="/member" />
+            <div className={classes.spaceSeparator} />
+            <LinkItem label="Companies" icon={<BusinessCenterIcon />} to="/member/companies" />
             <div className={classes.growSeparator} />
             <HeaderAutocomplete<App>
               className={classes.autoComplete}
@@ -50,7 +55,7 @@ export const Page = observer(({ children }: PageProps) => {
               search={companyStore.load}
             />
             <div className={classes.spaceSeparator} />
-            <ButtonItem label="Log out" icon={<ExitToAppIcon />} onClick={store.logout} />
+            <ButtonItem icon={<ExitToAppIcon />} onClick={store.logout} />
           </Toolbar>
         </Container>
       </AppBar>

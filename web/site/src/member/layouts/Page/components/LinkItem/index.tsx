@@ -1,20 +1,20 @@
-import ListItem from '@material-ui/core/ListItem'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
-import ListItemText from '@material-ui/core/ListItemText'
 import React from 'react'
 import { Link } from 'shared/components/Link'
 
+import { useStyles } from './styles'
+
 type Props = {
-  to: string
   icon: JSX.Element
   label: string
+  to: string
 }
 
-export const LinkItem = ({ to, icon, label }: Props) => (
-  <Link to={to} underline="none" color="inherit" title={label}>
-    <ListItem button={true}>
-      <ListItemIcon>{icon}</ListItemIcon>
-      <ListItemText primary={label} />
-    </ListItem>
-  </Link>
-)
+export const LinkItem = ({ icon, label, to }: Props) => {
+  const classes = useStyles()
+
+  return (
+      <Link to={to} underline="none" color="inherit" title={label} className={classes.link}>
+        {icon}
+      </Link>
+  )
+}
