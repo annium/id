@@ -1,32 +1,34 @@
 Apps
-- my apps
-- list apps
-- app page
-App page
-- user (me)
--- roles
--- claims
--- companies
-- users
--- users search
-- roles
+- list apps /member/apps +
+- my apps /member/apps/my +
+- app page /member/apps/:app +
+App page /member/apps/:app +
+- user (me) /member/apps/:app/users/me
+-- roles /member/apps/:app/users/me/roles
+-- claims /member/apps/:app/users/me/roles
+-- companies /member/apps/:app/users/me/companies
+- users /member/apps/:app/users
+-- users search /member/apps/:app/users
+-- user page /member/apps/:app/users/:user
+- roles /member/apps/:app/roles
 -- roles crud
 -- role page
-- claims
+- claims /member/apps/:app/claims
 -- claims crud
 -- claim page
-- companies
+- companies /member/apps/:app/companies
 -- list companies
 -- company page
-Company page
-- user (me)
--- roles
--- claims
-- users
--- users search
-- roles
+Company page /member/apps/:app/companies/:company
+- user (me) /member/apps/:app/companies/:company/users/me
+-- roles /member/apps/:app/companies/:company/users/me/roles
+-- claims /member/apps/:app/companies/:company/users/me/claims
+- users /member/apps/:app/companies/:company/users/
+-- users search /member/apps/:app/companies/:company/users/
+-- user page /member/apps/:app/companies/:company/users/:user
+- roles /member/apps/:app/companies/:company/roles
 -- roles crud
--- role page
-- claims
--- claims crud
--- claim page
+-- role page /member/apps/:app/companies/:company/roles/:role
+- claims /member/apps/:app/companies/:company/claims
+-- claims crud /member/apps/:app/companies/:company/claims
+-- claim page /member/apps/:app/companies/:company/claims/:claim
