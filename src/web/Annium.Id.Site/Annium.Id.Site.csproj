@@ -13,7 +13,7 @@
         <RazorLangVersion>3.0</RazorLangVersion>
     </PropertyGroup>
     <ItemGroup>
-        <ProjectReference Include="../Annium.Components.Forms/Annium.Components.Forms.csproj" />
+        <ProjectReference Include="../../components/Annium.Components.Forms/Annium.Components.Forms.csproj" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Annium.Core.DependencyInjection" Version="0.1.0" />
