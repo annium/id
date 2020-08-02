@@ -16,10 +16,9 @@ namespace Annium.Id.Infrastructure.Db
 
         public override void Configure(IServiceCollection services)
         {
-            var cfg = new ConfigurationBuilder()
-                .AddYamlFile(Path.Combine("configuration", "db.yml"))
-                .Build<Configuration>();
-            services.AddSingleton(cfg);
+            services.AddConfiguration<Configuration>(
+                builder => builder.AddYamlFile(Path.Combine("configuration", "db.yml"))
+            );
         }
 
         public override void Register(IServiceCollection services, IServiceProvider provider)

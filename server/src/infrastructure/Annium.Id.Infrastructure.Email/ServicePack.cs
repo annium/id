@@ -14,15 +14,15 @@ namespace Annium.Id.Infrastructure.Email
 
         public override void Configure(IServiceCollection services)
         {
-            var cfg = new ConfigurationBuilder()
-                .AddYamlFile(Path.Combine("configuration", "email.yml"))
-                .Build<Configuration>();
-            services.AddSingleton(cfg);
-            services.AddSingleton<Net.Mail.Configuration>(cfg);
+            services.AddConfiguration<Configuration>(
+                builder => builder.AddYamlFile(Path.Combine("configuration", "email.yml"))
+            );
         }
 
         public override void Register(IServiceCollection services, System.IServiceProvider provider)
         {
+            var config = provider.GetRequiredService<Configuration>();
+            services.AddSingleton<Net.Mail.Configuration>(config);
             services.AddEmailService();
         }
     }

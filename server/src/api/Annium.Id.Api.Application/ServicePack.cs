@@ -14,10 +14,9 @@ namespace Annium.Id.Api.Application
 
         public override void Configure(IServiceCollection services)
         {
-            var cfg = new ConfigurationBuilder()
-                .AddYamlFile(Path.Combine("configuration", "application.yml"))
-                .Build<Configuration>();
-            services.AddSingleton(cfg);
+            services.AddConfiguration<Configuration>(
+                builder => builder.AddYamlFile(Path.Combine("configuration", "application.yml"))
+            );
         }
     }
 }

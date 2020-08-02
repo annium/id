@@ -1,6 +1,7 @@
 using System;
 using Annium.Core.DependencyInjection;
 using Annium.Core.Mediator;
+using Annium.Core.Runtime.Types;
 using Annium.Id.Api.Tools;
 using Annium.Id.Api.Application.Tools;
 using Annium.Id.AspNetCore;
@@ -12,6 +13,11 @@ namespace Annium.Id.Api
 {
     internal class BaseServicePack : ServicePackBase
     {
+        public override void Configure(IServiceCollection services)
+        {
+            services.AddRuntimeTools(GetType().Assembly);
+        }
+
         public override void Register(IServiceCollection services, IServiceProvider provider)
         {
             services.AddSingleton<Func<Instant>>(() => SystemClock.Instance.GetCurrentInstant());
@@ -40,7 +46,7 @@ namespace Annium.Id.Api
             services.AddMediator();
         }
 
-        private void ConfigureMediator(MediatorConfiguration cfg)
+        private void ConfigureMediator(MediatorConfiguration cfg, ITypeManager typeManager)
         {
             cfg.AddLoggingHandler();
             cfg.AddHttpStatusPipeHandler();
@@ -49,7 +55,7 @@ namespace Annium.Id.Api
             cfg.AddValidationHandler();
             cfg.AddCompositionHandler();
 
-            cfg.AddCommandQueryHandlers();
+            cfg.AddCommandQueryHandlers(typeManager);
         }
     }
 }

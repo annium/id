@@ -14,7 +14,7 @@ namespace Annium.Id.Infrastructure.Db
             services.AddScoped<IContext>(p => p.GetRequiredService<Context>());
 
             // repositories
-            services.AddAssemblyTypes()
+            services.AddAssemblyTypes(GetType().Assembly)
                 .Where(x => x.IsClass && x.Name.EndsWith("Repository"))
                 .AsImplementedInterfaces()
                 .InstancePerScope();

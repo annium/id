@@ -103,7 +103,7 @@ namespace Annium.Id.Api.IntegrationTests.Controllers
 
             // act
             await Id(token).Me.RestoreMyAccess(Constants.IdAppId, request);
-            token = emailService.Emails.Last().Data.As<RestoreAccessData>().Tokens.AccessToken;
+            token = EmailService.Emails.Last().Data.As<RestoreAccessData>().Tokens.AccessToken;
             var response = await Id(token).Me.GetMe().GetData();
 
             // assert

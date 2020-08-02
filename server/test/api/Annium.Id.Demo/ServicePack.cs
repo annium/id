@@ -16,6 +16,8 @@ namespace Annium.Id.Demo
 
         public override void Register(IServiceCollection services, IServiceProvider provider)
         {
+            services.AddRuntimeTools(GetType().Assembly);
+
             services.AddSingleton<Func<Instant>>(SystemClock.Instance.GetCurrentInstant);
 
             // FIXME: removed, cause id is set dynamically from tests

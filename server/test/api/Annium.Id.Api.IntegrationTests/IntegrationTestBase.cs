@@ -18,20 +18,22 @@ namespace Annium.Id.Api.IntegrationTests
 
         public IHttpRequest IdApi => GetRequest<Startup>(
             builder => builder.UseServicePack<TestServicePack>(),
-            services => services.AddSingleton<IEmailService>(emailService)
+            services => services
+                .AddHttpRequestFactory()
+                .AddSingleton<IEmailService>(EmailService)
         );
 
         public ExtendedClient Id()
         {
-            return IdApi.ApiClient(emailService);
+            return IdApi.ApiClient(EmailService);
         }
 
         public ExtendedClient Id(string token)
         {
-            return IdApi.BearerAuthorization(token).ApiClient(emailService);
+            return IdApi.BearerAuthorization(token).ApiClient(EmailService);
         }
 
-        protected readonly TestEmailService emailService = new TestEmailService();
+        protected readonly TestEmailService EmailService = new TestEmailService();
 
         #endregion
 
@@ -42,6 +44,7 @@ namespace Annium.Id.Api.IntegrationTests
             return GetRequest<Demo.Startup>(
                 builder => builder.UseServicePack<Demo.ServicePack>(),
                 services => services
+                    .AddHttpRequestFactory()
                     .AddIdAuthorization(options =>
                     {
                         options.Audience = appId;

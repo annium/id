@@ -14,7 +14,7 @@ namespace Annium.Id.Api.Application
             services.AddScoped<ITokenGenerator, TokenGenerator>();
 
             // services
-            services.AddAssemblyTypes()
+            services.AddAssemblyTypes(GetType().Assembly)
                 .Where(x => x.IsClass && x.Name.EndsWith("Service"))
                 .AsImplementedInterfaces()
                 .InstancePerScope();
