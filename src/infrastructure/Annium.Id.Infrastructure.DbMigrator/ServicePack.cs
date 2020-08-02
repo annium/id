@@ -6,6 +6,7 @@ namespace Annium.Id.Infrastructure.DbMigrator
     {
         public ServicePack()
         {
+            Add<BaseServicePack>();
             Add<Db.ServicePack>();
         }
     }
