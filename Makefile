@@ -28,6 +28,13 @@ deconfigure:
 	$(call clean,/configuration/ /keys/)
 
 
+db-drop db-update migrations-add migrations-list migrations-remove:
+	@pwsh tools/ef/$@.ps1 \
+		-startup src/infrastructure/Annium.Id.Infrastructure.DbMigrator \
+ 		-project src/infrastructure/Annium.Id.Infrastructure.DbMigrator \
+		-context Context
+
+
 gen-api-site-client:
 	xrest ts gen -s http://localhost:5000 -a server/src/api/Annium.Id.Api/bin/Debug/netcoreapp3.1/Annium.Id.Api.dll -o web/site/src/shared/api/server/client -trace
 
@@ -39,8 +46,8 @@ gen-demo-test-client:
 
 
 publish-api:
-	$(call publish,api,server,src/Api/Annium.Id.Api/Dockerfile)
-	$(call publish,migrations,server,src/Api/Annium.Id.Api/migrations.Dockerfile)
+	$(call publish,api,.,src/Api/Annium.Id.Api/Dockerfile)
+	$(call publish,migrations,.,src/Api/Annium.Id.Api/migrations.Dockerfile)
 
 publish-site:
 	$(call publish,site,web/site,Dockerfile)

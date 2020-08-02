@@ -5,6 +5,9 @@
 
 # artifacts
 /run/
+*.blob
+configuration/
+keys/
 
 # xs ignore patterns
 .xs.ignore
