@@ -11,10 +11,4 @@
         <IsPackable>false</IsPackable>
         <Nullable>enable</Nullable>
     </PropertyGroup>
-    <ItemGroup>
-        <PackageReference Include="BlazorStyled" Version="3.0.0" />
-        <PackageReference Include="MatBlazor" Version="2.6.2" />
-        <PackageReference Include="Microsoft.AspNetCore.Components" Version="3.1.6" />
-        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="3.1.6" />
-    </ItemGroup>
 </Project>
