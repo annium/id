@@ -20,7 +20,6 @@
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Annium.AspNetCore.IntegrationTesting" Version="0.1.0" />
-        <PackageReference Include="Annium.Logging.Console" Version="0.1.0" />
         <PackageReference Include="Annium.Testing.Assertions" Version="0.1.0" />
         <PackageReference Include="coverlet.collector" Version="1.3.0" />
         <PackageReference Include="coverlet.msbuild" Version="2.9.0" />
