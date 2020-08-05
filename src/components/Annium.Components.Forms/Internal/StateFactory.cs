@@ -6,11 +6,8 @@ namespace Annium.Components.Forms.Internal
 {
     internal class StateFactory : IStateFactory
     {
-        public IArrayContainer<T> Create<T>(T[] initialValue) => CreateArray(initialValue);
-
-        public IArrayContainer<T> Create<T>(IEnumerable<T> initialValue) => CreateArray(initialValue);
-
         public IAtomicContainer<sbyte> Create(sbyte initialValue) => CreateAtomic(initialValue);
+
         public IAtomicContainer<short> Create(short initialValue) => CreateAtomic(initialValue);
 
         public IAtomicContainer<int> Create(int initialValue) => CreateAtomic(initialValue);
@@ -33,18 +30,32 @@ namespace Annium.Components.Forms.Internal
 
         public IAtomicContainer<string> Create(string initialValue) => CreateAtomic(initialValue);
 
+        public IAtomicContainer<bool> Create(bool initialValue) => CreateAtomic(initialValue);
+
         public IAtomicContainer<DateTime> Create(DateTime initialValue) => CreateAtomic(initialValue);
 
         public IAtomicContainer<DateTimeOffset> Create(DateTimeOffset initialValue) => CreateAtomic(initialValue);
 
         public IAtomicContainer<Instant> Create(Instant initialValue) => CreateAtomic(initialValue);
 
-        public IMapContainer<T> Create<T>(T initialValue)
+        public IMapContainer<TKey, TValue> Create<TKey, TValue>(IReadOnlyDictionary<TKey, TValue> initialValue) where TKey : notnull => CreateMap(initialValue);
+
+        public IMapContainer<TKey, TValue> Create<TKey, TValue>(IDictionary<TKey, TValue> initialValue) where TKey : notnull => CreateMap(initialValue);
+
+        public IMapContainer<TKey, TValue> Create<TKey, TValue>(IEnumerable<KeyValuePair<TKey, TValue>> initialValue) where TKey : notnull => CreateMap(initialValue);
+
+        public IArrayContainer<T> Create<T>(IEnumerable<T> initialValue)
         {
             throw new NotImplementedException();
         }
 
-        private IArrayContainer<T> CreateArray<T>(IEnumerable<T> defaultValue)
+        public IObjectContainer<T> Create<T>(T initialValue)
+        {
+            throw new NotImplementedException();
+        }
+
+        private IMapContainer<TKey, TValue> CreateMap<TKey, TValue>(IEnumerable<KeyValuePair<TKey, TValue>> initialValue)
+            where TKey : notnull
         {
             throw new NotImplementedException();
         }

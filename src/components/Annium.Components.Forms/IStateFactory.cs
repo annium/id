@@ -6,8 +6,6 @@ namespace Annium.Components.Forms
 {
     public interface IStateFactory
     {
-        IArrayContainer<T> Create<T>(T[] initialValue);
-        IArrayContainer<T> Create<T>(IEnumerable<T> initialValue);
         IAtomicContainer<sbyte> Create(sbyte initialValue);
         IAtomicContainer<short> Create(short initialValue);
         IAtomicContainer<int> Create(int initialValue);
@@ -20,9 +18,14 @@ namespace Annium.Components.Forms
         IAtomicContainer<float> Create(float initialValue);
         IAtomicContainer<double> Create(double initialValue);
         IAtomicContainer<string> Create(string initialValue);
+        IAtomicContainer<bool> Create(bool initialValue);
         IAtomicContainer<DateTime> Create(DateTime initialValue);
         IAtomicContainer<DateTimeOffset> Create(DateTimeOffset initialValue);
         IAtomicContainer<Instant> Create(Instant initialValue);
-        IMapContainer<TKey, TValue> Create<TKey, TValue>(IReadOnlyDictionary<TKey, TValue> initialValue);
+        IMapContainer<TKey, TValue> Create<TKey, TValue>(IReadOnlyDictionary<TKey, TValue> initialValue) where TKey : notnull;
+        IMapContainer<TKey, TValue> Create<TKey, TValue>(IDictionary<TKey, TValue> initialValue) where TKey : notnull;
+        IMapContainer<TKey, TValue> Create<TKey, TValue>(IEnumerable<KeyValuePair<TKey, TValue>> initialValue) where TKey : notnull;
+        IArrayContainer<T> Create<T>(IEnumerable<T> initialValue);
+        IObjectContainer<T> Create<T>(T initialValue);
     }
 }
