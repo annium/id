@@ -1,7 +1,8 @@
+using Annium.Components.Forms;
 using Annium.Components.Forms.Internal;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Annium.Components.Forms
+namespace Annium.Core.DependencyInjection
 {
     public static class ServiceCollectionExtensions
     {
