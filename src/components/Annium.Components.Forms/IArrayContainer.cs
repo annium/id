@@ -7,7 +7,7 @@ namespace Annium.Components.Forms
 {
     public interface IArrayContainer<T> : IState<T[]>
     {
-        IArrayContainer<TI> At<TI>(Expression<Func<T[], IEnumerable<TI>>> ex);
+        IArrayContainer<TI> At<TI>(Expression<Func<T[], IEnumerable<TI>>> ex) where TI : notnull, new();
         IMapContainer<TK, TV> At<TK, TV>(Expression<Func<T[], IEnumerable<KeyValuePair<TK, TV>>>> ex) where TK : notnull;
         IAtomicContainer<sbyte> At(Expression<Func<T[], sbyte>> ex);
         IAtomicContainer<short> At(Expression<Func<T[], short>> ex);
@@ -25,7 +25,7 @@ namespace Annium.Components.Forms
         IAtomicContainer<DateTime> At(Expression<Func<T[], DateTime>> ex);
         IAtomicContainer<DateTimeOffset> At(Expression<Func<T[], DateTimeOffset>> ex);
         IAtomicContainer<Instant> At(Expression<Func<T[], Instant>> ex);
-        IObjectContainer<TI> At<TI>(Expression<Func<T[], TI>> ex);
+        IObjectContainer<TI> At<TI>(Expression<Func<T[], TI>> ex) where TI : notnull, new();
         IArrayContainer<T> Add(T item);
         IArrayContainer<T> Insert(int index, T item);
         IArrayContainer<T> Delete(int index);

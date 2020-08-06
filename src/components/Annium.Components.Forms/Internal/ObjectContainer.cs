@@ -1,118 +1,108 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using NodaTime;
 
 namespace Annium.Components.Forms.Internal
 {
     public class ObjectContainer<T> : IObjectContainer<T>
+        where T : notnull, new()
     {
-        public T Value { get; }
-        public bool HasChanged { get; }
-        public bool HasBeenTouched { get; }
+        // ReSharper disable once StaticMemberInGenericType
+        private static PropertyInfo[] Properties { get; }
+
+        // ReSharper disable once StaticMemberInGenericType
+        private static IReadOnlyDictionary<PropertyInfo, MethodInfo> Factories { get; }
+
+        static ObjectContainer()
+        {
+            Properties = typeof(T).GetProperties().Where(x => x.CanRead && x.CanWrite).ToArray();
+            Factories = Properties.ToDictionary(
+                x => x,
+                x => typeof(IStateFactory).GetMethod(nameof(IStateFactory.Create), new[] { x.PropertyType })
+            );
+        }
+
+        public T Value => CreateValue();
+        public bool HasChanged => _states.Values.Any(x => x.HasChanged);
+        public bool HasBeenTouched => _states.Values.Any(x => x.HasBeenTouched);
+        private readonly IReadOnlyDictionary<PropertyInfo, IState> _states;
+        private readonly T _initialValue;
+
+        public ObjectContainer(
+            IStateFactory stateFactory,
+            T initialValue
+        )
+        {
+            _initialValue = initialValue;
+
+            var states = new Dictionary<PropertyInfo, IState>();
+            foreach (var property in Properties)
+            {
+                var create = Factories[property];
+                states[property] = (IState) create.Invoke(
+                    stateFactory, new[]
+                    {
+                        property.GetMethod.Invoke(
+                            initialValue,
+                            Array.Empty<object>()
+                        )
+                    }
+                );
+            }
+
+            _states = states;
+        }
+
         public void Set(T value)
         {
             throw new NotImplementedException();
         }
 
-        public void Reset()
+        public void Reset() => Set(_initialValue);
+
+        public IArrayContainer<TI> At<TI>(Expression<Func<T, IEnumerable<TI>>> ex) where TI : new() => At<IArrayContainer<TI>>(ex);
+        public IMapContainer<TK, TV> At<TK, TV>(Expression<Func<T, IEnumerable<KeyValuePair<TK, TV>>>> ex) where TK : notnull where TV : new() => At<IMapContainer<TK, TV>>(ex);
+        public IAtomicContainer<sbyte> At(Expression<Func<T, sbyte>> ex) => At<IAtomicContainer<sbyte>>(ex);
+        public IAtomicContainer<short> At(Expression<Func<T, short>> ex) => At<IAtomicContainer<short>>(ex);
+        public IAtomicContainer<int> At(Expression<Func<T, int>> ex) => At<IAtomicContainer<int>>(ex);
+        public IAtomicContainer<long> At(Expression<Func<T, long>> ex) => At<IAtomicContainer<long>>(ex);
+        public IAtomicContainer<byte> At(Expression<Func<T, byte>> ex) => At<IAtomicContainer<byte>>(ex);
+        public IAtomicContainer<ushort> At(Expression<Func<T, ushort>> ex) => At<IAtomicContainer<ushort>>(ex);
+        public IAtomicContainer<uint> At(Expression<Func<T, uint>> ex) => At<IAtomicContainer<uint>>(ex);
+        public IAtomicContainer<ulong> At(Expression<Func<T, ulong>> ex) => At<IAtomicContainer<ulong>>(ex);
+        public IAtomicContainer<decimal> At(Expression<Func<T, decimal>> ex) => At<IAtomicContainer<decimal>>(ex);
+        public IAtomicContainer<float> At(Expression<Func<T, float>> ex) => At<IAtomicContainer<float>>(ex);
+        public IAtomicContainer<double> At(Expression<Func<T, double>> ex) => At<IAtomicContainer<double>>(ex);
+        public IAtomicContainer<string> At(Expression<Func<T, string>> ex) => At<IAtomicContainer<string>>(ex);
+        public IAtomicContainer<bool> At(Expression<Func<T, bool>> ex) => At<IAtomicContainer<bool>>(ex);
+        public IAtomicContainer<DateTime> At(Expression<Func<T, DateTime>> ex) => At<IAtomicContainer<DateTime>>(ex);
+        public IAtomicContainer<DateTimeOffset> At(Expression<Func<T, DateTimeOffset>> ex) => At<IAtomicContainer<DateTimeOffset>>(ex);
+        public IAtomicContainer<Instant> At(Expression<Func<T, Instant>> ex) => At<IAtomicContainer<Instant>>(ex);
+        public IObjectContainer<TI> At<TI>(Expression<Func<T, TI>> ex) where TI : new() => At<IObjectContainer<TI>>(ex);
+
+        private T CreateValue()
         {
-            throw new NotImplementedException();
+            var value = new T();
+            foreach (var property in Properties)
+            {
+                var state = _states[property];
+                var valueProperty = state.GetType().GetProperty(nameof(IState<object>.Value));
+                property.SetMethod.Invoke(value, new[] { valueProperty.GetMethod.Invoke(state, Array.Empty<object>()) });
+            }
+
+            return value;
         }
 
-        public IArrayContainer<TI> At<TI>(Expression<Func<T, IEnumerable<TI>>> ex)
-        {
-            throw new NotImplementedException();
-        }
+        private TX At<TX>(LambdaExpression ex) => (TX) _states[ResolveProperty(ex)];
 
-        public IMapContainer<TK, TV> At<TK, TV>(Expression<Func<T, IEnumerable<KeyValuePair<TK, TV>>>> ex) where TK : notnull
+        private PropertyInfo ResolveProperty(LambdaExpression ex)
         {
-            throw new NotImplementedException();
-        }
-
-        public IAtomicContainer<sbyte> At(Expression<Func<T, sbyte>> ex)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IAtomicContainer<short> At(Expression<Func<T, short>> ex)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IAtomicContainer<int> At(Expression<Func<T, int>> ex)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IAtomicContainer<long> At(Expression<Func<T, long>> ex)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IAtomicContainer<byte> At(Expression<Func<T, byte>> ex)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IAtomicContainer<ushort> At(Expression<Func<T, ushort>> ex)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IAtomicContainer<uint> At(Expression<Func<T, uint>> ex)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IAtomicContainer<ulong> At(Expression<Func<T, ulong>> ex)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IAtomicContainer<decimal> At(Expression<Func<T, decimal>> ex)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IAtomicContainer<float> At(Expression<Func<T, float>> ex)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IAtomicContainer<double> At(Expression<Func<T, double>> ex)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IAtomicContainer<string> At(Expression<Func<T, string>> ex)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IAtomicContainer<bool> At(Expression<Func<T, bool>> ex)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IAtomicContainer<DateTime> At(Expression<Func<T, DateTime>> ex)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IAtomicContainer<DateTimeOffset> At(Expression<Func<T, DateTimeOffset>> ex)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IAtomicContainer<Instant> At(Expression<Func<T, Instant>> ex)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IObjectContainer<TI> At<TI>(Expression<Func<T, TI>> ex)
-        {
-            throw new NotImplementedException();
+            if (ex.Body is MemberExpression body && body.Member is PropertyInfo property)
+                return property;
+            throw new ArgumentException($"{ex} is not a direct property access expression");
         }
     }
 }

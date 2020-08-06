@@ -26,7 +26,7 @@ namespace Annium.Components.Forms
         IAtomicContainer<DateTime> At(Expression<Func<IReadOnlyDictionary<TKey, TValue>, DateTime>> ex);
         IAtomicContainer<DateTimeOffset> At(Expression<Func<IReadOnlyDictionary<TKey, TValue>, DateTimeOffset>> ex);
         IAtomicContainer<Instant> At(Expression<Func<IReadOnlyDictionary<TKey, TValue>, Instant>> ex);
-        IObjectContainer<TI> At<TI>(Expression<Func<IReadOnlyDictionary<TKey, TValue>, TI>> ex);
+        IObjectContainer<TI> At<TI>(Expression<Func<IReadOnlyDictionary<TKey, TValue>, TI>> ex) where TI : notnull, new();
         IMapContainer<TKey, TValue> Add(TKey key, TValue item);
         IMapContainer<TKey, TValue> Delete(TKey key);
     }

@@ -10,6 +10,7 @@ namespace Annium.Components.Forms.Internal
         public T[] Value { get; }
         public bool HasChanged { get; }
         public bool HasBeenTouched { get; }
+
         public void Set(T[] value)
         {
             throw new NotImplementedException();
@@ -21,6 +22,7 @@ namespace Annium.Components.Forms.Internal
         }
 
         public IArrayContainer<TI> At<TI>(Expression<Func<T[], IEnumerable<TI>>> ex)
+            where TI : notnull, new()
         {
             throw new NotImplementedException();
         }
@@ -111,6 +113,7 @@ namespace Annium.Components.Forms.Internal
         }
 
         public IObjectContainer<TI> At<TI>(Expression<Func<T[], TI>> ex)
+            where TI : notnull, new()
         {
             throw new NotImplementedException();
         }

@@ -127,6 +127,7 @@ namespace Annium.Components.Forms.Internal
         }
 
         public IObjectContainer<TI> At<TI>(Expression<Func<IReadOnlyDictionary<TKey, TValue>, TI>> ex)
+            where TI : notnull, new()
         {
             throw new NotImplementedException();
         }
