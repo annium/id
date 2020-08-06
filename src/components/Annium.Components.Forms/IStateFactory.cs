@@ -22,8 +22,8 @@ namespace Annium.Components.Forms
         IAtomicContainer<DateTime> Create(DateTime initialValue);
         IAtomicContainer<DateTimeOffset> Create(DateTimeOffset initialValue);
         IAtomicContainer<Instant> Create(Instant initialValue);
-        IMapContainer<TKey, TValue> Create<TKey, TValue>(IReadOnlyDictionary<TKey, TValue> initialValue) where TKey : notnull;
         IMapContainer<TKey, TValue> Create<TKey, TValue>(IDictionary<TKey, TValue> initialValue) where TKey : notnull;
+        IMapContainer<TKey, TValue> Create<TKey, TValue>(IReadOnlyDictionary<TKey, TValue> initialValue) where TKey : notnull;
         IMapContainer<TKey, TValue> Create<TKey, TValue>(IEnumerable<KeyValuePair<TKey, TValue>> initialValue) where TKey : notnull;
         IArrayContainer<T> Create<T>(IEnumerable<T> initialValue);
         IObjectContainer<T> Create<T>(T initialValue);

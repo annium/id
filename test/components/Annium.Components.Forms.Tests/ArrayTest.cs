@@ -18,14 +18,12 @@ namespace Annium.Components.Forms.Tests
             // act
             var state = factory.Create(value);
             state.At(x => x.Author).At(x => x.Name).Set("yyy");
-            state.Messages[1].Text.Set("xxx");
-            state.At(x => x.Messages[1].Text).Set("xxx");
-            state.At(x => x.Messages).At(1).At(x => x.Text).Set("yyy");
+            state.At(x => x.Messages).At(x => x[1]).At(x => x.Text).Set("yyy");
 
             // assert
             // access value by path
-            state.At(x => x.Messages).At(0).Value.Text.IsEqual("one");
-            state.At(x => x.Messages).At(0).At(x => x.Text).Value.IsEqual("one");
+            state.At(x => x.Messages).At(x => x[0]).Value.Text.IsEqual("one");
+            state.At(x => x.Messages).At(x => x[0]).At(x => x.Text).Value.IsEqual("one");
             state.At(x => x.Messages.ElementAt(0).Text).Value.IsEqual("one");
             // modify state
             state.At(x => x.Messages).Add(new Message { Text = "three" });

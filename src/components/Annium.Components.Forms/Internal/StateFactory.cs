@@ -38,9 +38,9 @@ namespace Annium.Components.Forms.Internal
 
         public IAtomicContainer<Instant> Create(Instant initialValue) => CreateAtomic(initialValue);
 
-        public IMapContainer<TKey, TValue> Create<TKey, TValue>(IReadOnlyDictionary<TKey, TValue> initialValue) where TKey : notnull => CreateMap(initialValue);
-
         public IMapContainer<TKey, TValue> Create<TKey, TValue>(IDictionary<TKey, TValue> initialValue) where TKey : notnull => CreateMap(initialValue);
+
+        public IMapContainer<TKey, TValue> Create<TKey, TValue>(IReadOnlyDictionary<TKey, TValue> initialValue) where TKey : notnull => CreateMap(initialValue);
 
         public IMapContainer<TKey, TValue> Create<TKey, TValue>(IEnumerable<KeyValuePair<TKey, TValue>> initialValue) where TKey : notnull => CreateMap(initialValue);
 
