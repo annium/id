@@ -26,6 +26,6 @@ namespace Annium.Components.Forms
         IAtomicContainer<DateTime> At(Expression<Func<T, DateTime>> ex);
         IAtomicContainer<DateTimeOffset> At(Expression<Func<T, DateTimeOffset>> ex);
         IAtomicContainer<Instant> At(Expression<Func<T, Instant>> ex);
-        IObjectContainer<TI> At<TI>(Expression<Func<T, TI>> ex) where TI : new();
+        IObjectContainer<TI> At<TI>(Expression<Func<T, TI>> ex) where TI : notnull, new();
     }
 }

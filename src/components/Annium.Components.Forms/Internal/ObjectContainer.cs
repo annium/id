@@ -26,31 +26,23 @@ namespace Annium.Components.Forms.Internal
         }
 
         public T Value => CreateValue();
-        public bool HasChanged => _states.Values.Any(x => x.HasChanged);
-        public bool HasBeenTouched => _states.Values.Any(x => x.HasBeenTouched);
-        private readonly IReadOnlyDictionary<PropertyInfo, IState> _states;
-        private readonly T _initialValue;
+        public bool HasChanged => _states.Values.Any(x => x.Ref.HasChanged);
+        public bool HasBeenTouched => _states.Values.Any(x => x.Ref.HasBeenTouched);
+        private readonly IReadOnlyDictionary<PropertyInfo, StateReference> _states;
 
         public ObjectContainer(
             IStateFactory stateFactory,
             T initialValue
         )
         {
-            _initialValue = initialValue;
-
-            var states = new Dictionary<PropertyInfo, IState>();
+            var states = new Dictionary<PropertyInfo, StateReference>();
             foreach (var property in Properties)
             {
                 var create = Factories[property];
-                states[property] = (IState) create.Invoke(
-                    stateFactory, new[]
-                    {
-                        property.GetMethod.Invoke(
-                            initialValue,
-                            Array.Empty<object>()
-                        )
-                    }
-                );
+                var @ref = (IState) create.Invoke(stateFactory, new[] { property.GetMethod.Invoke(initialValue, Array.Empty<object>()) });
+                var get = @ref.GetType().GetProperty(nameof(IState<object>.Value)).GetMethod;
+                var set = @ref.GetType().GetMethod(nameof(IState<object>.Set));
+                states[property] = new StateReference(@ref, get, set);
             }
 
             _states = states;
@@ -58,10 +50,19 @@ namespace Annium.Components.Forms.Internal
 
         public void Set(T value)
         {
-            throw new NotImplementedException();
+            foreach (var property in Properties)
+            {
+                var state = _states[property];
+                var propertyValue = property.GetMethod.Invoke(value, Array.Empty<object>());
+                state.Set.Invoke(state.Ref, new[] { propertyValue });
+            }
         }
 
-        public void Reset() => Set(_initialValue);
+        public void Reset()
+        {
+            foreach (var property in Properties)
+                _states[property].Ref.Reset();
+        }
 
         public IArrayContainer<TI> At<TI>(Expression<Func<T, IEnumerable<TI>>> ex) where TI : new() => At<IArrayContainer<TI>>(ex);
         public IMapContainer<TK, TV> At<TK, TV>(Expression<Func<T, IEnumerable<KeyValuePair<TK, TV>>>> ex) where TK : notnull where TV : new() => At<IMapContainer<TK, TV>>(ex);
@@ -81,7 +82,7 @@ namespace Annium.Components.Forms.Internal
         public IAtomicContainer<DateTime> At(Expression<Func<T, DateTime>> ex) => At<IAtomicContainer<DateTime>>(ex);
         public IAtomicContainer<DateTimeOffset> At(Expression<Func<T, DateTimeOffset>> ex) => At<IAtomicContainer<DateTimeOffset>>(ex);
         public IAtomicContainer<Instant> At(Expression<Func<T, Instant>> ex) => At<IAtomicContainer<Instant>>(ex);
-        public IObjectContainer<TI> At<TI>(Expression<Func<T, TI>> ex) where TI : new() => At<IObjectContainer<TI>>(ex);
+        public IObjectContainer<TI> At<TI>(Expression<Func<T, TI>> ex) where TI : notnull, new() => At<IObjectContainer<TI>>(ex);
 
         private T CreateValue()
         {
@@ -89,14 +90,13 @@ namespace Annium.Components.Forms.Internal
             foreach (var property in Properties)
             {
                 var state = _states[property];
-                var valueProperty = state.GetType().GetProperty(nameof(IState<object>.Value));
-                property.SetMethod.Invoke(value, new[] { valueProperty.GetMethod.Invoke(state, Array.Empty<object>()) });
+                property.SetMethod.Invoke(value, new[] { state.Get.Invoke(state.Ref, Array.Empty<object>()) });
             }
 
             return value;
         }
 
-        private TX At<TX>(LambdaExpression ex) => (TX) _states[ResolveProperty(ex)];
+        private TX At<TX>(LambdaExpression ex) where TX : IState => (TX) _states[ResolveProperty(ex)].Ref;
 
         private PropertyInfo ResolveProperty(LambdaExpression ex)
         {
