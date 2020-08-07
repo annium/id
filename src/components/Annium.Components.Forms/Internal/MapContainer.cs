@@ -36,6 +36,21 @@ namespace Annium.Components.Forms.Internal
             HasBeenTouched = false;
         }
 
+        public bool HasOnlyStatuses(params Status[] statuses)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool HasAllStatuses(params Status[] statuses)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool HasAnyStatus(params Status[] statuses)
+        {
+            throw new NotImplementedException();
+        }
+
         public IArrayContainer<TI> At<TI>(Expression<Func<IReadOnlyDictionary<TKey, TValue>, IEnumerable<TI>>> ex)
         {
             throw new NotImplementedException();

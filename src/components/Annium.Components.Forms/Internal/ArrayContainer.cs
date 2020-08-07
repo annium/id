@@ -21,6 +21,21 @@ namespace Annium.Components.Forms.Internal
             throw new NotImplementedException();
         }
 
+        public bool HasOnlyStatuses(params Status[] statuses)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool HasAllStatuses(params Status[] statuses)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool HasAnyStatus(params Status[] statuses)
+        {
+            throw new NotImplementedException();
+        }
+
         public IArrayContainer<TI> At<TI>(Expression<Func<T[], IEnumerable<TI>>> ex)
             where TI : notnull, new()
         {
