@@ -115,6 +115,75 @@ namespace Annium.Components.Forms.Tests
             state.HasStatus(Status.Error).IsFalse();
         }
 
+        [Fact]
+        public void Add_Ok()
+        {
+            // arrange
+            var factory = GetFactory();
+            var initialValue = Arrange();
+            var state = factory.Create(initialValue);
+
+            // act
+            state.Add(10);
+
+            // assert
+            state.Value.IsEqual(new[] { 2, 8, 10 });
+            state.HasChanged.IsTrue();
+            state.HasBeenTouched.IsTrue();
+        }
+
+        [Fact]
+        public void Insert_Ok()
+        {
+            // arrange
+            var factory = GetFactory();
+            var initialValue = Arrange();
+            var state = factory.Create(initialValue);
+
+            // act
+            state.Insert(0, 10);
+
+            // assert
+            state.Value.IsEqual(new[] { 10, 2, 8 });
+            state.HasChanged.IsTrue();
+            state.HasBeenTouched.IsTrue();
+        }
+
+        [Fact]
+        public void RemoveAt_Ok()
+        {
+            // arrange
+            var factory = GetFactory();
+            var initialValue = Arrange();
+            var state = factory.Create(initialValue);
+
+            // act
+            state.RemoveAt(1);
+
+            // assert
+            state.Value.IsEqual(new[] { 2 });
+            state.HasChanged.IsTrue();
+            state.HasBeenTouched.IsTrue();
+        }
+
+        [Fact]
+        public void HasChanged_Ok()
+        {
+            // arrange
+            var factory = GetFactory();
+            var initialValue = Arrange();
+            var state = factory.Create(initialValue);
+
+            // act
+            state.RemoveAt(0);
+            state.Add(1);
+            state.Set(initialValue.ToArray());
+
+            // assert
+            state.HasChanged.IsFalse();
+            state.HasBeenTouched.IsTrue();
+        }
+
         private IReadOnlyCollection<int> Arrange() => new[] { 2, 8 };
     }
 }

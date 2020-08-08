@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using Annium.Core.Mapper;
+using Annium.Data.Models.Extensions;
 using NodaTime;
 
 namespace Annium.Components.Forms.Internal
@@ -12,19 +14,23 @@ namespace Annium.Components.Forms.Internal
     {
         private static MethodInfo Factory { get; } = typeof(IStateFactory).GetMethod(nameof(IStateFactory.Create), new[] { typeof(T) });
         public T[] Value => CreateValue();
-        public bool HasChanged => _states.Any(x => x.HasChanged);
-        public bool HasBeenTouched => _states.Any(x => x.HasBeenTouched);
+        public bool HasChanged => !Value.IsShallowEqual(_initialValue, _mapper);
+        public bool HasBeenTouched => _hasBeenTouched || _states.Any(x => x.HasBeenTouched);
         private readonly IStateFactory _stateFactory;
         private readonly IEnumerable<T> _initialValue;
+        private readonly IMapper _mapper;
         private readonly IList<IState<T>> _states;
+        private bool _hasBeenTouched;
 
         public ArrayContainer(
             IStateFactory stateFactory,
-            IEnumerable<T> initialValue
+            IEnumerable<T> initialValue,
+            IMapper mapper
         )
         {
             _stateFactory = stateFactory;
             _initialValue = initialValue;
+            _mapper = mapper;
             _states = new List<IState<T>>();
             Reset();
         }
@@ -42,6 +48,8 @@ namespace Annium.Components.Forms.Internal
             var removed = Math.Max(_states.Count - value.Length, 0) + updated;
             for (int i = updated; i < removed; i++)
                 _states.RemoveAt(i);
+
+            _hasBeenTouched = true;
         }
 
         public void Reset()
@@ -49,6 +57,8 @@ namespace Annium.Components.Forms.Internal
             _states.Clear();
             foreach (var item in _initialValue)
                 _states.Add((IState<T>) Factory.Invoke(_stateFactory, new[] { (object) item }));
+
+            _hasBeenTouched = false;
         }
 
         public bool IsStatus(params Status[] statuses)
@@ -89,19 +99,22 @@ namespace Annium.Components.Forms.Internal
         public IAtomicContainer<Instant> At(Expression<Func<T[], Instant>> ex) => At<IAtomicContainer<Instant>>(ex);
         public IObjectContainer<TI> At<TI>(Expression<Func<T[], TI>> ex) where TI : notnull, new() => At<IObjectContainer<TI>>(ex);
 
-        public IArrayContainer<T> Add(T item)
+        public void Add(T item)
         {
-            throw new NotImplementedException();
+            _states.Add((IState<T>) Factory.Invoke(_stateFactory, new[] { (object) item }));
+            _hasBeenTouched = true;
         }
 
-        public IArrayContainer<T> Insert(int index, T item)
+        public void Insert(int index, T item)
         {
-            throw new NotImplementedException();
+            _states.Insert(index, (IState<T>) Factory.Invoke(_stateFactory, new[] { (object) item }));
+            _hasBeenTouched = true;
         }
 
-        public IArrayContainer<T> Delete(int index)
+        public void RemoveAt(int index)
         {
-            throw new NotImplementedException();
+            _states.RemoveAt(index);
+            _hasBeenTouched = true;
         }
 
         private TX At<TX>(LambdaExpression ex) where TX : IState

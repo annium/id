@@ -1,11 +1,19 @@
 using System;
 using System.Collections.Generic;
+using Annium.Core.Mapper;
 using NodaTime;
 
 namespace Annium.Components.Forms.Internal
 {
     internal class StateFactory : IStateFactory
     {
+        private readonly IMapper _mapper;
+
+        public StateFactory(IMapper mapper)
+        {
+            _mapper = mapper;
+        }
+
         public IAtomicContainer<sbyte> Create(sbyte initialValue) => CreateAtomic(initialValue);
 
         public IAtomicContainer<short> Create(short initialValue) => CreateAtomic(initialValue);
@@ -44,7 +52,7 @@ namespace Annium.Components.Forms.Internal
 
         public IMapContainer<TKey, TValue> Create<TKey, TValue>(IEnumerable<KeyValuePair<TKey, TValue>> initialValue) where TKey : notnull where TValue : notnull, new() => CreateMap(initialValue);
 
-        public IArrayContainer<T> Create<T>(IEnumerable<T> initialValue) where T : notnull, new() => new ArrayContainer<T>(this, initialValue);
+        public IArrayContainer<T> Create<T>(IEnumerable<T> initialValue) where T : notnull, new() => new ArrayContainer<T>(this, initialValue, _mapper);
 
         public IObjectContainer<T> Create<T>(T initialValue) where T : notnull, new() => new ObjectContainer<T>(this, initialValue);
 

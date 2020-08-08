@@ -7,6 +7,7 @@ namespace Annium.Components.Forms.Tests
     {
         protected IStateFactory GetFactory() => new ServiceCollection()
             .AddRuntimeTools(GetType().Assembly)
+            .AddMapper()
             .AddFormsState()
             .BuildServiceProvider()
             .GetRequiredService<IStateFactory>();
