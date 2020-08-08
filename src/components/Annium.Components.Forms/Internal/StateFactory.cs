@@ -38,22 +38,19 @@ namespace Annium.Components.Forms.Internal
 
         public IAtomicContainer<Instant> Create(Instant initialValue) => CreateAtomic(initialValue);
 
-        public IMapContainer<TKey, TValue> Create<TKey, TValue>(IDictionary<TKey, TValue> initialValue) where TKey : notnull where TValue : new() => CreateMap(initialValue);
+        public IMapContainer<TKey, TValue> Create<TKey, TValue>(IDictionary<TKey, TValue> initialValue) where TKey : notnull where TValue : notnull, new() => CreateMap(initialValue);
 
-        public IMapContainer<TKey, TValue> Create<TKey, TValue>(IReadOnlyDictionary<TKey, TValue> initialValue) where TKey : notnull where TValue : new() => CreateMap(initialValue);
+        public IMapContainer<TKey, TValue> Create<TKey, TValue>(IReadOnlyDictionary<TKey, TValue> initialValue) where TKey : notnull where TValue : notnull, new() => CreateMap(initialValue);
 
-        public IMapContainer<TKey, TValue> Create<TKey, TValue>(IEnumerable<KeyValuePair<TKey, TValue>> initialValue) where TKey : notnull where TValue : new() => CreateMap(initialValue);
+        public IMapContainer<TKey, TValue> Create<TKey, TValue>(IEnumerable<KeyValuePair<TKey, TValue>> initialValue) where TKey : notnull where TValue : notnull, new() => CreateMap(initialValue);
 
-        public IArrayContainer<T> Create<T>(IEnumerable<T> initialValue)
-            where T : new()
-        {
-            throw new NotImplementedException();
-        }
+        public IArrayContainer<T> Create<T>(IEnumerable<T> initialValue) where T : notnull, new() => new ArrayContainer<T>(this, initialValue);
 
-        public IObjectContainer<T> Create<T>(T initialValue) where T : new() => new ObjectContainer<T>(this, initialValue);
+        public IObjectContainer<T> Create<T>(T initialValue) where T : notnull, new() => new ObjectContainer<T>(this, initialValue);
 
         private IMapContainer<TKey, TValue> CreateMap<TKey, TValue>(IEnumerable<KeyValuePair<TKey, TValue>> initialValue)
             where TKey : notnull
+            where TValue : notnull, new()
         {
             throw new NotImplementedException();
         }

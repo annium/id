@@ -22,10 +22,10 @@ namespace Annium.Components.Forms
         IAtomicContainer<DateTime> Create(DateTime initialValue);
         IAtomicContainer<DateTimeOffset> Create(DateTimeOffset initialValue);
         IAtomicContainer<Instant> Create(Instant initialValue);
-        IMapContainer<TKey, TValue> Create<TKey, TValue>(IDictionary<TKey, TValue> initialValue) where TKey : notnull where TValue : new();
-        IMapContainer<TKey, TValue> Create<TKey, TValue>(IReadOnlyDictionary<TKey, TValue> initialValue) where TKey : notnull where TValue : new();
-        IMapContainer<TKey, TValue> Create<TKey, TValue>(IEnumerable<KeyValuePair<TKey, TValue>> initialValue) where TKey : notnull where TValue : new();
-        IArrayContainer<T> Create<T>(IEnumerable<T> initialValue) where T : new();
-        IObjectContainer<T> Create<T>(T initialValue) where T : new();
+        IMapContainer<TKey, TValue> Create<TKey, TValue>(IDictionary<TKey, TValue> initialValue) where TKey : notnull where TValue : notnull, new();
+        IMapContainer<TKey, TValue> Create<TKey, TValue>(IReadOnlyDictionary<TKey, TValue> initialValue) where TKey : notnull where TValue : notnull, new();
+        IMapContainer<TKey, TValue> Create<TKey, TValue>(IEnumerable<KeyValuePair<TKey, TValue>> initialValue) where TKey : notnull where TValue : notnull, new();
+        IArrayContainer<T> Create<T>(IEnumerable<T> initialValue) where T : notnull, new();
+        IObjectContainer<T> Create<T>(T initialValue) where T : notnull, new();
     }
 }

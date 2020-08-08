@@ -7,9 +7,10 @@ namespace Annium.Components.Forms
 {
     public interface IMapContainer<TKey, TValue> : IState<IReadOnlyDictionary<TKey, TValue>>
         where TKey : notnull
+        where TValue : notnull, new()
     {
-        IArrayContainer<TI> At<TI>(Expression<Func<IReadOnlyDictionary<TKey, TValue>, IEnumerable<TI>>> ex);
-        IMapContainer<TK, TV> At<TK, TV>(Expression<Func<IReadOnlyDictionary<TKey, TValue>, IEnumerable<KeyValuePair<TK, TV>>>> ex) where TK : notnull;
+        IArrayContainer<TI> At<TI>(Expression<Func<IReadOnlyDictionary<TKey, TValue>, IEnumerable<TI>>> ex) where TI : notnull, new();
+        IMapContainer<TK, TV> At<TK, TV>(Expression<Func<IReadOnlyDictionary<TKey, TValue>, IEnumerable<KeyValuePair<TK, TV>>>> ex) where TK : notnull where TV : notnull, new();
         IAtomicContainer<sbyte> At(Expression<Func<IReadOnlyDictionary<TKey, TValue>, sbyte>> ex);
         IAtomicContainer<short> At(Expression<Func<IReadOnlyDictionary<TKey, TValue>, short>> ex);
         IAtomicContainer<int> At(Expression<Func<IReadOnlyDictionary<TKey, TValue>, int>> ex);

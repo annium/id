@@ -11,8 +11,7 @@ namespace Annium.Components.Forms
         bool HasChanged { get; }
         bool HasBeenTouched { get; }
         void Reset();
-        bool HasOnlyStatuses(params Status[] statuses);
-        bool HasAllStatuses(params Status[] statuses);
-        bool HasAnyStatus(params Status[] statuses);
+        bool IsStatus(params Status[] statuses);
+        bool HasStatus(params Status[] statuses);
     }
 }

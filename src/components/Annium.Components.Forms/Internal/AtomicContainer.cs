@@ -34,7 +34,7 @@ namespace Annium.Components.Forms.Internal
             _status = status;
         }
 
-        public bool HasOnlyStatuses(params Status[] statuses)
+        public bool IsStatus(params Status[] statuses)
         {
             foreach (var status in statuses)
                 if (_status == status)
@@ -43,16 +43,7 @@ namespace Annium.Components.Forms.Internal
             return false;
         }
 
-        public bool HasAllStatuses(params Status[] statuses)
-        {
-            foreach (var status in statuses)
-                if (_status != status)
-                    return false;
-
-            return true;
-        }
-
-        public bool HasAnyStatus(params Status[] statuses)
+        public bool HasStatus(params Status[] statuses)
         {
             foreach (var status in statuses)
                 if (_status == status)

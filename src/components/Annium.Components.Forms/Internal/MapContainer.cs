@@ -7,6 +7,7 @@ namespace Annium.Components.Forms.Internal
 {
     internal class MapContainer<TKey, TValue> : IMapContainer<TKey, TValue>
         where TKey : notnull
+        where TValue : notnull, new()
     {
         public IReadOnlyDictionary<TKey, TValue> Value { get; private set; }
         public bool HasChanged => !Value.Equals(_initialValue);
@@ -36,27 +37,23 @@ namespace Annium.Components.Forms.Internal
             HasBeenTouched = false;
         }
 
-        public bool HasOnlyStatuses(params Status[] statuses)
+        public bool IsStatus(params Status[] statuses)
         {
             throw new NotImplementedException();
         }
 
-        public bool HasAllStatuses(params Status[] statuses)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool HasAnyStatus(params Status[] statuses)
+        public bool HasStatus(params Status[] statuses)
         {
             throw new NotImplementedException();
         }
 
         public IArrayContainer<TI> At<TI>(Expression<Func<IReadOnlyDictionary<TKey, TValue>, IEnumerable<TI>>> ex)
+            where TI : notnull, new()
         {
             throw new NotImplementedException();
         }
 
-        public IMapContainer<TK, TV> At<TK, TV>(Expression<Func<IReadOnlyDictionary<TKey, TValue>, IEnumerable<KeyValuePair<TK, TV>>>> ex) where TK : notnull
+        public IMapContainer<TK, TV> At<TK, TV>(Expression<Func<IReadOnlyDictionary<TKey, TValue>, IEnumerable<KeyValuePair<TK, TV>>>> ex) where TK : notnull where TV : notnull, new()
         {
             throw new NotImplementedException();
         }

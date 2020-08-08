@@ -3,7 +3,7 @@ using Xunit;
 
 namespace Annium.Components.Forms.Tests
 {
-    public class ObjectTest : TestBase
+    public class ObjectContainerTest : TestBase
     {
         [Fact]
         public void Init_Ok()
@@ -20,9 +20,8 @@ namespace Annium.Components.Forms.Tests
             state.At(x => x.Name).Value.IsEqual(initialValue.Name);
             state.HasChanged.IsFalse();
             state.HasBeenTouched.IsFalse();
-            state.HasOnlyStatuses(Status.None).IsTrue();
-            state.HasAllStatuses(Status.None).IsTrue();
-            state.HasAnyStatus(Status.None).IsTrue();
+            state.IsStatus(Status.None).IsTrue();
+            state.HasStatus(Status.None).IsTrue();
         }
 
         [Fact]
@@ -36,6 +35,15 @@ namespace Annium.Components.Forms.Tests
                 Name = "Lex",
             };
             var state = factory.Create(initialValue);
+
+            // act
+            state.Set(initialValue);
+
+            // assert
+            state.Value.IsEqual(initialValue);
+            state.At(x => x.Name).Value.IsEqual(initialValue.Name);
+            state.HasChanged.IsFalse();
+            state.HasBeenTouched.IsTrue();
 
             // act
             state.Set(otherValue);
@@ -76,9 +84,8 @@ namespace Annium.Components.Forms.Tests
             state.Value.IsEqual(otherValue);
             state.HasChanged.IsTrue();
             state.HasBeenTouched.IsTrue();
-            state.HasOnlyStatuses(Status.None, Status.Validating).IsTrue();
-            state.HasAllStatuses(Status.Validating).IsTrue();
-            state.HasAnyStatus(Status.Validating).IsTrue();
+            state.IsStatus(Status.None, Status.Validating).IsTrue();
+            state.HasStatus(Status.Validating).IsTrue();
 
             // act
             state.Reset();
@@ -88,9 +95,8 @@ namespace Annium.Components.Forms.Tests
             state.At(x => x.Name).Value.IsEqual(initialValue.Name);
             state.HasChanged.IsFalse();
             state.HasBeenTouched.IsFalse();
-            state.HasOnlyStatuses(Status.None).IsTrue();
-            state.HasAllStatuses(Status.None).IsTrue();
-            state.HasAnyStatus(Status.None).IsTrue();
+            state.IsStatus(Status.None).IsTrue();
+            state.HasStatus(Status.None).IsTrue();
         }
 
         [Fact]
@@ -99,23 +105,17 @@ namespace Annium.Components.Forms.Tests
             // arrange
             var factory = GetFactory();
             var initialValue = Arrange();
-            var otherValue = new User
-            {
-                Name = "Lex",
-            };
             var state = factory.Create(initialValue);
 
             // act
             state.At(x => x.Name).SetStatus(Status.Validating);
 
             // assert
-            state.HasOnlyStatuses(Status.None, Status.Validating).IsTrue();
-            state.HasOnlyStatuses(Status.Validating).IsFalse();
-            state.HasAllStatuses(Status.None, Status.Validating).IsTrue();
-            state.HasAllStatuses(Status.None, Status.Error).IsFalse();
-            state.HasAnyStatus(Status.None, Status.Validating).IsTrue();
-            state.HasAnyStatus(Status.None, Status.Error).IsTrue();
-            state.HasAnyStatus(Status.Error).IsFalse();
+            state.IsStatus(Status.None, Status.Validating).IsTrue();
+            state.IsStatus(Status.Validating).IsFalse();
+            state.HasStatus(Status.None, Status.Validating).IsTrue();
+            state.HasStatus(Status.None, Status.Error).IsTrue();
+            state.HasStatus(Status.Error).IsFalse();
         }
 
         private User Arrange() => new User

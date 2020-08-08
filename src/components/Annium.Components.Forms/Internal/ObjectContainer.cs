@@ -64,39 +64,26 @@ namespace Annium.Components.Forms.Internal
                 _states[property].Ref.Reset();
         }
 
-        public bool HasOnlyStatuses(params Status[] statuses)
+        public bool IsStatus(params Status[] statuses)
         {
             foreach (var state in _states.Values)
-                if (!state.Ref.HasOnlyStatuses(statuses))
+                if (!state.Ref.IsStatus(statuses))
                     return false;
 
             return true;
         }
 
-        public bool HasAllStatuses(params Status[] statuses)
-        {
-            foreach (var status in statuses)
-            {
-                if (_states.Values.Any(x => x.Ref.HasAllStatuses(status)))
-                    continue;
-
-                return false;
-            }
-
-            return true;
-        }
-
-        public bool HasAnyStatus(params Status[] statuses)
+        public bool HasStatus(params Status[] statuses)
         {
             foreach (var state in _states.Values)
-                if (state.Ref.HasAnyStatus(statuses))
+                if (state.Ref.HasStatus(statuses))
                     return true;
 
             return false;
         }
 
-        public IArrayContainer<TI> At<TI>(Expression<Func<T, IEnumerable<TI>>> ex) where TI : new() => At<IArrayContainer<TI>>(ex);
-        public IMapContainer<TK, TV> At<TK, TV>(Expression<Func<T, IEnumerable<KeyValuePair<TK, TV>>>> ex) where TK : notnull where TV : new() => At<IMapContainer<TK, TV>>(ex);
+        public IArrayContainer<TI> At<TI>(Expression<Func<T, IEnumerable<TI>>> ex) where TI : notnull, new() => At<IArrayContainer<TI>>(ex);
+        public IMapContainer<TK, TV> At<TK, TV>(Expression<Func<T, IEnumerable<KeyValuePair<TK, TV>>>> ex) where TK : notnull where TV : notnull, new() => At<IMapContainer<TK, TV>>(ex);
         public IAtomicContainer<sbyte> At(Expression<Func<T, sbyte>> ex) => At<IAtomicContainer<sbyte>>(ex);
         public IAtomicContainer<short> At(Expression<Func<T, short>> ex) => At<IAtomicContainer<short>>(ex);
         public IAtomicContainer<int> At(Expression<Func<T, int>> ex) => At<IAtomicContainer<int>>(ex);

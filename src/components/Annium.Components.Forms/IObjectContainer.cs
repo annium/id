@@ -8,8 +8,8 @@ namespace Annium.Components.Forms
     public interface IObjectContainer<T> : IState<T>
         where T : notnull, new()
     {
-        IArrayContainer<TI> At<TI>(Expression<Func<T, IEnumerable<TI>>> ex) where TI : new();
-        IMapContainer<TK, TV> At<TK, TV>(Expression<Func<T, IEnumerable<KeyValuePair<TK, TV>>>> ex) where TK : notnull where TV : new();
+        IArrayContainer<TI> At<TI>(Expression<Func<T, IEnumerable<TI>>> ex) where TI : notnull, new();
+        IMapContainer<TK, TV> At<TK, TV>(Expression<Func<T, IEnumerable<KeyValuePair<TK, TV>>>> ex) where TK : notnull where TV : notnull, new();
         IAtomicContainer<sbyte> At(Expression<Func<T, sbyte>> ex);
         IAtomicContainer<short> At(Expression<Func<T, short>> ex);
         IAtomicContainer<int> At(Expression<Func<T, int>> ex);
