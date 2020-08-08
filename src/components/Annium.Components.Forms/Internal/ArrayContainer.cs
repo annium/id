@@ -146,8 +146,8 @@ namespace Annium.Components.Forms.Internal
                 if (body.Right is MemberExpression member && member.Expression is ConstantExpression)
                 {
                     var value = Expression.Lambda(body.Right).Compile().DynamicInvoke();
-                    if (value is int intValue)
-                        return intValue;
+                    if (value is int index)
+                        return index;
                 }
             }
 

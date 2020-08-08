@@ -3,7 +3,7 @@ using Xunit;
 
 namespace Annium.Components.Forms.Tests
 {
-    public class AtomicTest : TestBase
+    public class AtomicContainerTest : TestBase
     {
         [Fact]
         public void Init_Ok()

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Annium.Core.Mapper;
 using NodaTime;
 
@@ -46,22 +47,18 @@ namespace Annium.Components.Forms.Internal
 
         public IAtomicContainer<Instant> Create(Instant initialValue) => CreateAtomic(initialValue);
 
-        public IMapContainer<TKey, TValue> Create<TKey, TValue>(IDictionary<TKey, TValue> initialValue) where TKey : notnull where TValue : notnull, new() => CreateMap(initialValue);
+        public IMapContainer<TKey, TValue> Create<TKey, TValue>(IDictionary<TKey, TValue> initialValue) where TKey : notnull where TValue : notnull, new() =>
+            new MapContainer<TKey, TValue>(this, initialValue.ToDictionary(x => x.Key, x => x.Value), _mapper);
 
-        public IMapContainer<TKey, TValue> Create<TKey, TValue>(IReadOnlyDictionary<TKey, TValue> initialValue) where TKey : notnull where TValue : notnull, new() => CreateMap(initialValue);
+        public IMapContainer<TKey, TValue> Create<TKey, TValue>(IReadOnlyDictionary<TKey, TValue> initialValue) where TKey : notnull where TValue : notnull, new() =>
+            new MapContainer<TKey, TValue>(this, initialValue, _mapper);
 
-        public IMapContainer<TKey, TValue> Create<TKey, TValue>(IEnumerable<KeyValuePair<TKey, TValue>> initialValue) where TKey : notnull where TValue : notnull, new() => CreateMap(initialValue);
+        public IMapContainer<TKey, TValue> Create<TKey, TValue>(IEnumerable<KeyValuePair<TKey, TValue>> initialValue) where TKey : notnull where TValue : notnull, new() =>
+            new MapContainer<TKey, TValue>(this, initialValue.ToDictionary(x => x.Key, x => x.Value), _mapper);
 
         public IArrayContainer<T> Create<T>(IEnumerable<T> initialValue) where T : notnull, new() => new ArrayContainer<T>(this, initialValue, _mapper);
 
         public IObjectContainer<T> Create<T>(T initialValue) where T : notnull, new() => new ObjectContainer<T>(this, initialValue);
-
-        private IMapContainer<TKey, TValue> CreateMap<TKey, TValue>(IEnumerable<KeyValuePair<TKey, TValue>> initialValue)
-            where TKey : notnull
-            where TValue : notnull, new()
-        {
-            throw new NotImplementedException();
-        }
 
         private IAtomicContainer<T> CreateAtomic<T>(T defaultValue)
             where T : IEquatable<T>
