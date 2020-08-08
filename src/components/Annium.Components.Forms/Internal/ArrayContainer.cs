@@ -12,7 +12,7 @@ namespace Annium.Components.Forms.Internal
     internal class ArrayContainer<T> : IArrayContainer<T>
         where T : notnull, new()
     {
-        private static MethodInfo Factory { get; } = typeof(IStateFactory).GetMethod(nameof(IStateFactory.Create), new[] { typeof(T) });
+        private static MethodInfo Factory { get; } = StateFactory.ResolveFactory(typeof(T));
         public T[] Value => CreateValue();
         public bool HasChanged => !Value.IsShallowEqual(_initialValue, _mapper);
         public bool HasBeenTouched => _hasBeenTouched || _states.Any(x => x.HasBeenTouched);

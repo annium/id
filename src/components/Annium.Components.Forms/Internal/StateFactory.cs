@@ -1,13 +1,37 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Annium.Core.Mapper;
+using Annium.Core.Reflection;
 using NodaTime;
 
 namespace Annium.Components.Forms.Internal
 {
     internal class StateFactory : IStateFactory
     {
+        private static readonly MethodInfo[] Factories = typeof(IStateFactory)
+            .GetMethods()
+            .Where(xx => xx.Name == nameof(IStateFactory.Create))
+            .ToArray();
+
+        internal static MethodInfo ResolveFactory(Type type)
+        {
+            var exactCandidate = Factories.SingleOrDefault(x => x.GetParameters().Single().ParameterType == type);
+            if (exactCandidate != null)
+                return exactCandidate;
+
+            var inferCandidate = Factories.First(xx => type.GetTargetImplementation(xx.GetParameters().Single().ParameterType) != null);
+            var parameterType = inferCandidate.GetParameters().Single().ParameterType;
+
+            if (parameterType.IsGenericParameter)
+                return inferCandidate.MakeGenericMethod(type);
+
+            var args = parameterType.ResolveGenericArgumentsByImplementation(type);
+
+            return inferCandidate.MakeGenericMethod(args);
+        }
+
         private readonly IMapper _mapper;
 
         public StateFactory(IMapper mapper)

@@ -13,7 +13,7 @@ namespace Annium.Components.Forms.Internal
         where TKey : notnull
         where TValue : notnull, new()
     {
-        private static MethodInfo Factory { get; } = typeof(IStateFactory).GetMethod(nameof(IStateFactory.Create), new[] { typeof(TValue) });
+        private static MethodInfo Factory { get; } = StateFactory.ResolveFactory(typeof(TValue));
         public IReadOnlyDictionary<TKey, TValue> Value => CreateValue();
         public bool HasChanged => !Value.IsShallowEqual(_initialValue, _mapper);
         public bool HasBeenTouched => _hasBeenTouched || _states.Values.Any(x => x.HasBeenTouched);

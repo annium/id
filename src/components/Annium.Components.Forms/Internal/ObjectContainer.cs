@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using Annium.Extensions.Primitives;
 using NodaTime;
 
 namespace Annium.Components.Forms.Internal
@@ -19,10 +20,7 @@ namespace Annium.Components.Forms.Internal
         static ObjectContainer()
         {
             Properties = typeof(T).GetProperties().Where(x => x.CanRead && x.CanWrite).ToArray();
-            Factories = Properties.ToDictionary(
-                x => x,
-                x => typeof(IStateFactory).GetMethod(nameof(IStateFactory.Create), new[] { x.PropertyType })
-            );
+            Factories = Properties.ToDictionary(x => x, x => StateFactory.ResolveFactory(x.PropertyType));
         }
 
         public T Value => CreateValue();
@@ -121,6 +119,26 @@ namespace Annium.Components.Forms.Internal
             if (ex.Body is MemberExpression body && body.Member is PropertyInfo property)
                 return property;
             throw new ArgumentException($"{ex} is not a direct property access expression");
+        }
+
+        private class StateReference
+        {
+            public IState Ref { get; }
+            public MethodInfo Get { get; }
+            public MethodInfo Set { get; }
+
+            public StateReference(
+                IState @ref,
+                MethodInfo get,
+                MethodInfo set
+            )
+            {
+                Ref = @ref;
+                Get = get;
+                Set = set;
+            }
+
+            public override string ToString() => Ref.GetType().FriendlyName();
         }
     }
 }
