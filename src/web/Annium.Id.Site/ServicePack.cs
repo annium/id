@@ -1,9 +1,12 @@
 using System;
 using Annium.Core.DependencyInjection;
+using Annium.Core.Runtime.Types;
 using Annium.Net.Http;
+using Annium.Serialization.Json;
 using BlazorStyled;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using NodaTime.Xml;
 
 namespace Annium.Id.Site
 {
@@ -24,6 +27,12 @@ namespace Annium.Id.Site
                 return () => request.Clone();
             });
             services.AddBlazorStyled();
+            services.AddSingleton(sp => StringSerializer.Configure(
+                options => options
+                    .ConfigureDefault(sp.GetRequiredService<ITypeManager>())
+                    .ConfigureForOperations()
+                    .ConfigureForNodaTime(XmlSerializationSettings.DateTimeZoneProvider)
+            ));
         }
     }
 }

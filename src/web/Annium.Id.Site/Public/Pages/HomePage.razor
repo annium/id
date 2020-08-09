@@ -1,17 +1,20 @@
-﻿@page "/{Path}"
-@inject NavigationManager Navigation
+﻿@page "/home"
+@using Annium.Id.Site.Public.Components
+@using Annium.Serialization.Abstractions
+@inject IStateFactory StateFactory
+@inject ISerializer<string> Serializer
 
-@Path
+<TextInput state="@AuthorName" />
+
+@(Serializer.Serialize(State.Value))
 
 @code
 {
-    [Parameter]
-    public string? Path { get; set; }
+    private IAtomicContainer<string> AuthorName => State.At(x => x.Author).At(x => x.Name);
+    private IObjectContainer<Blog> State { get; set; } = default!;
 
     protected override void OnInitialized()
     {
-        Console.WriteLine($"init at {Path}");
-        Console.WriteLine(Navigation.Uri);
-        Console.WriteLine(Navigation.BaseUri);
+        State = StateFactory.Create(new Blog());
     }
 }

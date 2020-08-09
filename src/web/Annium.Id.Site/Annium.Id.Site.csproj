@@ -12,9 +12,9 @@
         <Nullable>enable</Nullable>
         <RazorLangVersion>3.0</RazorLangVersion>
     </PropertyGroup>
-<!--    <ItemGroup>-->
-<!--        <ProjectReference Include="../../components/Annium.Components.Forms/Annium.Components.Forms.csproj" />-->
-<!--    </ItemGroup>-->
+    <ItemGroup>
+        <ProjectReference Include="../../components/Annium.Components.Forms/Annium.Components.Forms.csproj" />
+    </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Annium.Core.DependencyInjection" Version="0.1.0" />
         <PackageReference Include="Annium.Core.Mapper" Version="0.1.0" />
@@ -27,5 +27,16 @@
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Build" Version="3.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="3.2.0" />
         <PackageReference Include="System.Net.Http.Json" Version="3.2.0" />
+    </ItemGroup>
+    <ItemGroup>
+      <Content Update="Public\_Imports.razor">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </Content>
+      <Content Update="Public\Pages\NotFound\NotFoundPage.razor">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </Content>
+      <Content Update="Public\Components\TextInput.razor">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </Content>
     </ItemGroup>
 </Project>
