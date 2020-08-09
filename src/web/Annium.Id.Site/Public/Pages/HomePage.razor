@@ -1,20 +1,21 @@
 ﻿@page "/home"
 @using Annium.Id.Site.Public.Components
 @using Annium.Serialization.Abstractions
+@using Annium.Blazor.Core.Extensions
 @inject IStateFactory StateFactory
 @inject ISerializer<string> Serializer
 
-<TextInput state="@AuthorName" />
+<TextInput state="@_state.At(x => x.Author).At(x => x.Name)" />
 
-@(Serializer.Serialize(State.Value))
+@(Serializer.Serialize(_state.Value))
 
 @code
 {
-    private IAtomicContainer<string> AuthorName => State.At(x => x.Author).At(x => x.Name);
-    private IObjectContainer<Blog> State { get; set; } = default!;
+    private IObjectContainer<Blog> _state = default!;
 
     protected override void OnInitialized()
     {
-        State = StateFactory.Create(new Blog());
+        _state = StateFactory.Create(new Blog());
+        this.ObserveState();
     }
-}
+}¡

@@ -13,6 +13,7 @@
         <RazorLangVersion>3.0</RazorLangVersion>
     </PropertyGroup>
     <ItemGroup>
+        <ProjectReference Include="../../components/Annium.Blazor.Core/Annium.Blazor.Core.csproj" />
         <ProjectReference Include="../../components/Annium.Components.Forms/Annium.Components.Forms.csproj" />
     </ItemGroup>
     <ItemGroup>
