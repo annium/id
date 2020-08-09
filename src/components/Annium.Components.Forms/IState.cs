@@ -1,3 +1,6 @@
+using System;
+using System.Reactive;
+
 namespace Annium.Components.Forms
 {
     public interface IState<T> : IState
@@ -8,6 +11,7 @@ namespace Annium.Components.Forms
 
     public interface IState
     {
+        IObservable<Unit> Changed { get; }
         bool HasChanged { get; }
         bool HasBeenTouched { get; }
         void Reset();

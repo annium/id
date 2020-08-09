@@ -5,21 +5,22 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Annium.Core.Mapper;
 using Annium.Data.Models.Extensions;
+using Annium.Extensions.Primitives;
 using NodaTime;
 
 namespace Annium.Components.Forms.Internal
 {
-    internal class ArrayContainer<T> : IArrayContainer<T>
+    internal class ArrayContainer<T> : ObservableContainer, IArrayContainer<T>
         where T : notnull, new()
     {
         private static MethodInfo Factory { get; } = StateFactory.ResolveFactory(typeof(T));
         public T[] Value => CreateValue();
         public bool HasChanged => !Value.IsShallowEqual(_initialValue, _mapper);
-        public bool HasBeenTouched => _hasBeenTouched || _states.Any(x => x.HasBeenTouched);
+        public bool HasBeenTouched => _hasBeenTouched || _states.Any(x => x.Ref.HasBeenTouched);
         private readonly IStateFactory _stateFactory;
         private readonly IEnumerable<T> _initialValue;
         private readonly IMapper _mapper;
-        private readonly IList<IState<T>> _states;
+        private readonly IList<StateReference> _states = new List<StateReference>();
         private bool _hasBeenTouched;
 
         public ArrayContainer(
@@ -31,7 +32,6 @@ namespace Annium.Components.Forms.Internal
             _stateFactory = stateFactory;
             _initialValue = initialValue;
             _mapper = mapper;
-            _states = new List<IState<T>>();
             Reset();
         }
 
@@ -39,32 +39,37 @@ namespace Annium.Components.Forms.Internal
         {
             var updated = Math.Min(_states.Count, value.Length);
             for (int i = 0; i < updated; i++)
-                _states[i].Set(value[i]);
+                _states[i].Ref.Set(value[i]);
 
             var added = Math.Max(value.Length - _states.Count, 0) + updated;
             for (int i = updated; i < added; i++)
-                _states.Add((IState<T>) Factory.Invoke(_stateFactory, new[] { (object) value[i] }));
+                AddInternal(_states.Count, value[i]);
 
             var removed = Math.Max(_states.Count - value.Length, 0) + updated;
             for (int i = updated; i < removed; i++)
-                _states.RemoveAt(i);
+                RemoveInternal(i);
 
             _hasBeenTouched = true;
+            OnChanged();
         }
 
         public void Reset()
         {
             _states.Clear();
             foreach (var item in _initialValue)
-                _states.Add((IState<T>) Factory.Invoke(_stateFactory, new[] { (object) item }));
+            {
+                var state = (IState<T>) Factory.Invoke(_stateFactory, new[] { (object) item });
+                _states.Add(new StateReference(state, state.Changed.Subscribe(_ => OnChanged())));
+            }
 
             _hasBeenTouched = false;
+            OnChanged();
         }
 
         public bool IsStatus(params Status[] statuses)
         {
             foreach (var state in _states)
-                if (!state.IsStatus(statuses))
+                if (!state.Ref.IsStatus(statuses))
                     return false;
 
             return true;
@@ -73,7 +78,7 @@ namespace Annium.Components.Forms.Internal
         public bool HasStatus(params Status[] statuses)
         {
             foreach (var state in _states)
-                if (state.HasStatus(statuses))
+                if (state.Ref.HasStatus(statuses))
                     return true;
 
             return false;
@@ -101,20 +106,23 @@ namespace Annium.Components.Forms.Internal
 
         public void Add(T item)
         {
-            _states.Add((IState<T>) Factory.Invoke(_stateFactory, new[] { (object) item }));
+            AddInternal(_states.Count, item);
             _hasBeenTouched = true;
+            OnChanged();
         }
 
         public void Insert(int index, T item)
         {
-            _states.Insert(index, (IState<T>) Factory.Invoke(_stateFactory, new[] { (object) item }));
+            AddInternal(index, item);
             _hasBeenTouched = true;
+            OnChanged();
         }
 
         public void RemoveAt(int index)
         {
             _states.RemoveAt(index);
             _hasBeenTouched = true;
+            OnChanged();
         }
 
         private TX At<TX>(LambdaExpression ex) where TX : IState
@@ -123,7 +131,7 @@ namespace Annium.Components.Forms.Internal
             if (index < 0 || index >= _states.Count)
                 throw new IndexOutOfRangeException($"There's no item in container with index {index}");
 
-            return (TX) _states[index];
+            return (TX) _states[index].Ref;
         }
 
         private T[] CreateValue()
@@ -131,7 +139,7 @@ namespace Annium.Components.Forms.Internal
             var value = new List<T>();
 
             foreach (var state in _states)
-                value.Add(state.Value);
+                value.Add(state.Ref.Value);
 
             return value.ToArray();
         }
@@ -152,6 +160,35 @@ namespace Annium.Components.Forms.Internal
             }
 
             throw new ArgumentException($"{ex} is not a valid array index expression");
+        }
+
+        private void AddInternal(int index, T item)
+        {
+            var state = (IState<T>) Factory.Invoke(_stateFactory, new[] { (object) item });
+            _states.Insert(index, new StateReference(state, state.Changed.Subscribe(_ => OnChanged())));
+        }
+
+        private void RemoveInternal(int index)
+        {
+            _states[index].Subscription.Dispose();
+            _states.RemoveAt(index);
+        }
+
+        private class StateReference
+        {
+            public IState<T> Ref { get; }
+            public IDisposable Subscription { get; }
+
+            public StateReference(
+                IState<T> @ref,
+                IDisposable subscription
+            )
+            {
+                Ref = @ref;
+                Subscription = subscription;
+            }
+
+            public override string ToString() => Ref.GetType().FriendlyName();
         }
     }
 }

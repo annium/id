@@ -8,7 +8,7 @@ using NodaTime;
 
 namespace Annium.Components.Forms.Internal
 {
-    public class ObjectContainer<T> : IObjectContainer<T>
+    internal class ObjectContainer<T> : ObservableContainer, IObjectContainer<T>
         where T : notnull, new()
     {
         // ReSharper disable once StaticMemberInGenericType
@@ -38,6 +38,7 @@ namespace Annium.Components.Forms.Internal
             {
                 var create = Factories[property];
                 var @ref = (IState) create.Invoke(stateFactory, new[] { property.GetMethod.Invoke(initialValue, Array.Empty<object>()) });
+                @ref.Changed.Subscribe(_ => OnChanged());
                 var get = @ref.GetType().GetProperty(nameof(IState<object>.Value)).GetMethod;
                 var set = @ref.GetType().GetMethod(nameof(IState<object>.Set));
                 states[property] = new StateReference(@ref, get, set);
@@ -54,12 +55,15 @@ namespace Annium.Components.Forms.Internal
                 var propertyValue = property.GetMethod.Invoke(value, Array.Empty<object>());
                 state.Set.Invoke(state.Ref, new[] { propertyValue });
             }
+
+            OnChanged();
         }
 
         public void Reset()
         {
             foreach (var property in Properties)
                 _states[property].Ref.Reset();
+            OnChanged();
         }
 
         public bool IsStatus(params Status[] statuses)

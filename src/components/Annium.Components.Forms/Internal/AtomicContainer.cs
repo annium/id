@@ -2,7 +2,7 @@ using System;
 
 namespace Annium.Components.Forms.Internal
 {
-    internal class AtomicContainer<T> : IAtomicContainer<T>
+    internal class AtomicContainer<T> : ObservableContainer, IAtomicContainer<T>
         where T : IEquatable<T>
     {
         public T Value { get; private set; }
@@ -20,6 +20,7 @@ namespace Annium.Components.Forms.Internal
         {
             Value = value;
             HasBeenTouched = true;
+            OnChanged();
         }
 
         public void Reset()
@@ -27,11 +28,13 @@ namespace Annium.Components.Forms.Internal
             Value = _initialValue;
             HasBeenTouched = false;
             _status = Status.None;
+            OnChanged();
         }
 
         public void SetStatus(Status status)
         {
             _status = status;
+            OnChanged();
         }
 
         public bool IsStatus(params Status[] statuses)

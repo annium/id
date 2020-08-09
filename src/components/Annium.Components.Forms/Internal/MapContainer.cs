@@ -5,22 +5,23 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Annium.Core.Mapper;
 using Annium.Data.Models.Extensions;
+using Annium.Extensions.Primitives;
 using NodaTime;
 
 namespace Annium.Components.Forms.Internal
 {
-    internal class MapContainer<TKey, TValue> : IMapContainer<TKey, TValue>
+    internal class MapContainer<TKey, TValue> : ObservableContainer, IMapContainer<TKey, TValue>
         where TKey : notnull
         where TValue : notnull, new()
     {
         private static MethodInfo Factory { get; } = StateFactory.ResolveFactory(typeof(TValue));
         public IReadOnlyDictionary<TKey, TValue> Value => CreateValue();
         public bool HasChanged => !Value.IsShallowEqual(_initialValue, _mapper);
-        public bool HasBeenTouched => _hasBeenTouched || _states.Values.Any(x => x.HasBeenTouched);
+        public bool HasBeenTouched => _hasBeenTouched || _states.Values.Any(x => x.Ref.HasBeenTouched);
         private readonly IStateFactory _stateFactory;
         private readonly IReadOnlyDictionary<TKey, TValue> _initialValue;
         private readonly IMapper _mapper;
-        private readonly IDictionary<TKey, IState<TValue>> _states;
+        private readonly IDictionary<TKey, StateReference> _states;
         private bool _hasBeenTouched;
 
         public MapContainer(
@@ -32,7 +33,7 @@ namespace Annium.Components.Forms.Internal
             _stateFactory = stateFactory;
             _initialValue = initialValue;
             _mapper = mapper;
-            _states = new Dictionary<TKey, IState<TValue>>();
+            _states = new Dictionary<TKey, StateReference>();
             Reset();
         }
 
@@ -44,27 +45,29 @@ namespace Annium.Components.Forms.Internal
             foreach (var (key, item) in value)
             {
                 if (_states.TryGetValue(key, out var state))
-                    state.Set(item);
+                    state.Ref.Set(item);
                 else
-                    _states[key] = (IState<TValue>) Factory.Invoke(_stateFactory, new[] { (object) item });
+                    AddInternal(key, item);
             }
 
             _hasBeenTouched = true;
+            OnChanged();
         }
 
         public void Reset()
         {
             _states.Clear();
             foreach (var (key, item) in _initialValue)
-                _states[key] = (IState<TValue>) Factory.Invoke(_stateFactory, new[] { (object) item });
+                AddInternal(key, item);
 
             _hasBeenTouched = false;
+            OnChanged();
         }
 
         public bool IsStatus(params Status[] statuses)
         {
             foreach (var state in _states.Values)
-                if (!state.IsStatus(statuses))
+                if (!state.Ref.IsStatus(statuses))
                     return false;
 
             return true;
@@ -73,7 +76,7 @@ namespace Annium.Components.Forms.Internal
         public bool HasStatus(params Status[] statuses)
         {
             foreach (var state in _states.Values)
-                if (state.HasStatus(statuses))
+                if (state.Ref.HasStatus(statuses))
                     return true;
 
             return false;
@@ -101,14 +104,16 @@ namespace Annium.Components.Forms.Internal
 
         public void Add(TKey key, TValue item)
         {
-            _states[key] = (IState<TValue>) Factory.Invoke(_stateFactory, new[] { (object) item });
+            AddInternal(key, item);
             _hasBeenTouched = true;
+            OnChanged();
         }
 
         public void Remove(TKey key)
         {
-            _states.Remove(key);
+            RemoveInternal(key);
             _hasBeenTouched = true;
+            OnChanged();
         }
 
         private TX At<TX>(LambdaExpression ex) where TX : IState
@@ -117,7 +122,7 @@ namespace Annium.Components.Forms.Internal
             if (!_states.ContainsKey(key))
                 throw new IndexOutOfRangeException($"There's no item in container with key {key}");
 
-            return (TX) _states[key];
+            return (TX) _states[key].Ref;
         }
 
         private IReadOnlyDictionary<TKey, TValue> CreateValue()
@@ -125,7 +130,7 @@ namespace Annium.Components.Forms.Internal
             var value = new Dictionary<TKey, TValue>();
 
             foreach (var (key, state) in _states)
-                value[key] = state.Value;
+                value[key] = state.Ref.Value;
 
             return value;
         }
@@ -144,6 +149,35 @@ namespace Annium.Components.Forms.Internal
             }
 
             throw new ArgumentException($"{ex} is not a valid dictionary index expression");
+        }
+
+        private void AddInternal(TKey key, TValue item)
+        {
+            var state = (IState<TValue>) Factory.Invoke(_stateFactory, new[] { (object) item });
+            _states[key] = new StateReference(state, state.Changed.Subscribe(_ => OnChanged()));
+        }
+
+        private void RemoveInternal(TKey key)
+        {
+            _states[key].Subscription.Dispose();
+            _states.Remove(key);
+        }
+
+        private class StateReference
+        {
+            public IState<TValue> Ref { get; }
+            public IDisposable Subscription { get; }
+
+            public StateReference(
+                IState<TValue> @ref,
+                IDisposable subscription
+            )
+            {
+                Ref = @ref;
+                Subscription = subscription;
+            }
+
+            public override string ToString() => Ref.GetType().FriendlyName();
         }
     }
 }
