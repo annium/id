@@ -12,17 +12,18 @@ namespace Annium.Id.Site
         public override void Register(IServiceCollection services, IServiceProvider provider)
         {
             services.AddRuntimeTools(GetType().Assembly);
-            services.AddBlazorStyled();
+            services.AddMapper();
+            services.AddHttpRequestFactory();
+            services.AddFormsState();
             services.AddTransient<Func<IHttpRequest>>(sp =>
             {
                 var factory = sp.GetRequiredService<IHttpRequestFactory>();
                 var env = sp.GetRequiredService<IWebAssemblyHostEnvironment>();
-                var request = factory.Get(env.BaseAddress);
+                var request = factory.New(env.BaseAddress);
 
                 return () => request.Clone();
             });
-
-            services.AddMapper();
+            services.AddBlazorStyled();
         }
     }
 }
