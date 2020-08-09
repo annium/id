@@ -11,6 +11,7 @@ namespace Annium.Id.Site
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("app");
             builder.ConfigureContainer(new ServiceProviderFactory(x => x.UseServicePack<ServicePack>()));
+            builder.Logging.ConfigureLoggingBridge();
             await builder.Build().RunAsync();
         }
     }

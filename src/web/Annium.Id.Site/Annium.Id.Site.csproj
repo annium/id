@@ -18,6 +18,8 @@
     <ItemGroup>
         <PackageReference Include="Annium.Core.DependencyInjection" Version="0.1.0" />
         <PackageReference Include="Annium.Core.Mapper" Version="0.1.0" />
+        <PackageReference Include="Annium.Logging.Console" Version="0.1.0" />
+        <PackageReference Include="Annium.Logging.Microsoft" Version="0.1.0" />
         <PackageReference Include="Annium.Net.Http" Version="0.1.0" />
         <PackageReference Include="BlazorStyled" Version="3.0.0" />
         <PackageReference Include="MatBlazor" Version="2.6.2" />
@@ -27,16 +29,5 @@
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Build" Version="3.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="3.2.0" />
         <PackageReference Include="System.Net.Http.Json" Version="3.2.0" />
-    </ItemGroup>
-    <ItemGroup>
-      <Content Update="Public\_Imports.razor">
-        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      </Content>
-      <Content Update="Public\Pages\NotFound\NotFoundPage.razor">
-        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      </Content>
-      <Content Update="Public\Components\TextInput.razor">
-        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      </Content>
     </ItemGroup>
 </Project>

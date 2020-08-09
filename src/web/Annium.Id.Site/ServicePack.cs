@@ -6,6 +6,7 @@ using Annium.Serialization.Json;
 using BlazorStyled;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using NodaTime;
 using NodaTime.Xml;
 
 namespace Annium.Id.Site
@@ -14,6 +15,8 @@ namespace Annium.Id.Site
     {
         public override void Register(IServiceCollection services, IServiceProvider provider)
         {
+            // core
+            services.AddSingleton<Func<Instant>>(SystemClock.Instance.GetCurrentInstant);
             services.AddRuntimeTools(GetType().Assembly);
             services.AddMapper();
             services.AddHttpRequestFactory();
@@ -26,6 +29,9 @@ namespace Annium.Id.Site
 
                 return () => request.Clone();
             });
+            services.AddLogging(route => route.UseConsole());
+
+            // app
             services.AddBlazorStyled();
             services.AddSingleton(sp => StringSerializer.Configure(
                 options => options
