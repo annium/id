@@ -20,7 +20,7 @@ namespace Annium.Id.Site
             services.AddRuntimeTools(GetType().Assembly);
             services.AddMapper();
             services.AddHttpRequestFactory();
-            services.AddFormsState();
+            services.AddComponentStateFactory();
             services.AddTransient<Func<IHttpRequest>>(sp =>
             {
                 var factory = sp.GetRequiredService<IHttpRequestFactory>();
@@ -29,7 +29,7 @@ namespace Annium.Id.Site
 
                 return () => request.Clone();
             });
-            services.AddLogging(route => route.UseConsole());
+            // services.AddLogging(route => route.UseConsole());
 
             // app
             services.AddBlazorStyled();
