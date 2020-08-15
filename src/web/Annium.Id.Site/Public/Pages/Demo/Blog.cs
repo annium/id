@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Annium.Extensions.Validation;
 
 namespace Annium.Id.Site.Public.Pages
 {
@@ -19,5 +20,13 @@ namespace Annium.Id.Site.Public.Pages
     {
         public string Text { get; set; } = string.Empty;
         public bool IsRead { get; set; }
+    }
+
+    internal class BlogValidator : Validator<Blog>
+    {
+        public BlogValidator()
+        {
+            Field(x => x.Name).Required().Then().Length(3, 20);
+        }
     }
 }
