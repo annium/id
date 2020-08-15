@@ -34,6 +34,7 @@ namespace Annium.Id.Site
             // services.AddLogging(route => route.UseConsole());
 
             // app
+            services.AddAntDesign();
             services.AddBlazorStyled();
             services.AddSingleton(sp => StringSerializer.Configure(
                 options => options
@@ -41,6 +42,7 @@ namespace Annium.Id.Site
                     .ConfigureForOperations()
                     .ConfigureForNodaTime(XmlSerializationSettings.DateTimeZoneProvider)
             ));
+            services.AddSingleton<Theme>();
         }
     }
 }

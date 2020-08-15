@@ -1,0 +1,41 @@
+@namespace Annium.Id.Site.Public.Layouts
+
+@inherits LayoutComponentBase
+
+@inject Theme Theme;
+
+<Layout>
+    <Content>
+        <Row>
+            <Col Xs="@_xs" Sm="@_sm" Md="@_md" Lg="@_lg" Xl="@_xl" Xxl="@_xxl">
+                <div class="@ContainerClass">
+                    <Logo Class="@LogoClass" />
+                    @Body
+                    <div class="@CredentialsClass">
+                        Built with love by the <a className="@LinkClass" href="https://annium.com/"> Annium</a> team.
+                    </div>
+                </div>
+            </Col>
+        </Row>
+    </Content>
+</Layout>
+
+<Styled @bind-Classname="@ContainerClass">
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    margin-top: 6rem;
+    padding: 1.5rem;
+    border-radius: 1.5rem;
+    background-color: @Theme.Palette.Paper;
+    font-size: 1rem;
+</Styled>
+<Styled @bind-Classname="@LogoClass">
+    font-size: 5rem;
+</Styled>
+<Styled @bind-Classname="@CredentialsClass">
+</Styled>
+<Styled @bind-Classname="@LinkClass">
+
+</Styled>

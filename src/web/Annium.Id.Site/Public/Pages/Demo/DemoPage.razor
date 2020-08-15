@@ -6,18 +6,18 @@
 @namespace Annium.Id.Site.Public.Pages.Demo
 
 @page "/demo"
-@layout PublicLayout
+@layout MinimalCentricLayout
 
 @inject IStateFactory StateFactory
 @inject ISerializer<string> Serializer
 @inject IValidator<Blog> Validator
 
 Name:
-<FormItem TValue="string" state="@_state.At(x => x.Name)">
+<FormField TValue="string" state="@_state.At(x => x.Name)">
     <TextField TValue="string" />
-</FormItem>
-<Checkbox state="@_state.At(x => x.Messages).At(x => x[0]).At(x => x.IsRead)">
+</FormField>
+<CheckboxField state="@_state.At(x => x.Messages).At(x => x[0]).At(x => x.IsRead)">
     is message read?
-</Checkbox>
+</CheckboxField>
 
 @(Serializer.Serialize(_state.Value))
