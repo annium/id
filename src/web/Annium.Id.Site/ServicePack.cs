@@ -1,6 +1,7 @@
 using System;
 using Annium.Core.DependencyInjection;
 using Annium.Core.Runtime.Types;
+using Annium.Id.Site.Shared.Stores;
 using Annium.Net.Http;
 using Annium.Serialization.Json;
 using BlazorStyled;
@@ -43,6 +44,10 @@ namespace Annium.Id.Site
                     .ConfigureForNodaTime(XmlSerializationSettings.DateTimeZoneProvider)
             ));
             services.AddSingleton<Theme>();
+            services.AddAssemblyTypes(GetType().Assembly)
+                .AssignableTo<IStore>()
+                .AsSelf()
+                .SingleInstance();
         }
     }
 }

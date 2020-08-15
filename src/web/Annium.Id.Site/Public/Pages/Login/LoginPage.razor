@@ -1,8 +1,20 @@
-﻿@using Annium.Id.Site.Public.Layouts
+﻿@using Annium.Localization.Abstractions
+@using Annium.Id.Site.Public.Layouts
 
 @namespace Annium.Id.Site.Public.Pages.Login
 
 @page "/login"
 @layout MinimalCentricLayout
 
-Login page
+@inject LoginPageStore Store
+@inject ILocalizer<LoginPage> Loc
+
+Annium ID @Loc["Sign in"]
+
+<FormField TValue="string" state="@State.At(x => x.Login)">
+    <TextField TValue="string" Placeholder="@Loc["Login"]" />
+</FormField>
+
+<FormField TValue="string" state="@State.At(x => x.Password)">
+    <TextField TValue="string" Placeholder="@Loc["Password"]" />
+</FormField>
