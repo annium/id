@@ -21,6 +21,8 @@ namespace Annium.Id.Site
             services.AddMapper();
             services.AddHttpRequestFactory();
             services.AddComponentStateFactory();
+            services.AddValidation();
+            services.AddLocalization(opts => opts.UseInMemoryStorage());
             services.AddTransient<Func<IHttpRequest>>(sp =>
             {
                 var factory = sp.GetRequiredService<IHttpRequestFactory>();
