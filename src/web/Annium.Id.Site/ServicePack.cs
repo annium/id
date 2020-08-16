@@ -1,4 +1,5 @@
 using System;
+using Annium.Blazor.Css;
 using Annium.Core.DependencyInjection;
 using Annium.Core.Runtime.Types;
 using Annium.Id.Site.Shared.Stores;
@@ -24,6 +25,7 @@ namespace Annium.Id.Site
             services.AddComponentStateFactory();
             services.AddValidation();
             services.AddLocalization(opts => opts.UseInMemoryStorage());
+            services.AddCssRules();
             services.AddTransient<Func<IHttpRequest>>(sp =>
             {
                 var factory = sp.GetRequiredService<IHttpRequestFactory>();

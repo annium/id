@@ -12,6 +12,9 @@ namespace Annium.Blazor.Css
         public static IRule Class(string name)
             => new RuleInternal($"{string.Empty}{RuleType.Class}{name}");
 
+        public static IRule Tag(string tag)
+            => new RuleInternal(tag);
+
         public static IRule TagClass(string tag, string name)
             => new RuleInternal($"{tag}{RuleType.Class}{name}");
 
