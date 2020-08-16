@@ -9,30 +9,33 @@ namespace Annium.Blazor.Css
 {
     public static class Rule
     {
-#if DEBUG
-        public static IRule Class([CallerLineNumber] int line = 0, [CallerMemberName] string member = "")
-            => new RuleInternal(string.Empty, RuleType.Class, GenerateName(line, member));
-
         public static IRule Class(string name)
             => new RuleInternal(string.Empty, RuleType.Class, name);
-
-        public static IRule TagClass(string tag, [CallerLineNumber] int line = 0, [CallerMemberName] string member = "")
-            => new RuleInternal(tag, RuleType.Class, GenerateName(line, member));
 
         public static IRule TagClass(string tag, string name)
             => new RuleInternal(tag, RuleType.Class, name);
 
-        public static IRule Id([CallerLineNumber] int line = 0, [CallerMemberName] string member = "")
-            => new RuleInternal(string.Empty, RuleType.Id, GenerateName(line, member));
-
         public static IRule Id(string name)
             => new RuleInternal(string.Empty, RuleType.Id, name);
 
-        public static IRule TagId(string tag, [CallerLineNumber] int line = 0, [CallerMemberName] string member = "")
-            => new RuleInternal(tag, RuleType.Id, GenerateName(line, member));
-
         public static IRule TagId(string tag, string name)
             => new RuleInternal(tag, RuleType.Id, name);
+
+        public static IRule Custom(string selector)
+            => new RuleInternal(selector);
+
+#if DEBUG
+        public static IRule Class([CallerLineNumber] int line = 0, [CallerMemberName] string member = "")
+            => new RuleInternal(string.Empty, RuleType.Class, GenerateName(line, member));
+
+        public static IRule TagClass(string tag, [CallerLineNumber] int line = 0, [CallerMemberName] string member = "")
+            => new RuleInternal(tag, RuleType.Class, GenerateName(line, member));
+
+        public static IRule Id([CallerLineNumber] int line = 0, [CallerMemberName] string member = "")
+            => new RuleInternal(string.Empty, RuleType.Id, GenerateName(line, member));
+
+        public static IRule TagId(string tag, [CallerLineNumber] int line = 0, [CallerMemberName] string member = "")
+            => new RuleInternal(tag, RuleType.Id, GenerateName(line, member));
 
         private static readonly IDictionary<Type, int> TypeRules = new Dictionary<Type, int>();
         private static string GenerateName(int line, string member)
@@ -49,26 +52,14 @@ namespace Annium.Blazor.Css
         public static IRule Class()
             => new RuleInternal(string.Empty, RuleType.Class, GenerateName());
 
-        public static IRule Class(string name)
-            => new RuleInternal(string.Empty, RuleType.Class, name);
-
         public static IRule TagClass(string tag)
             => new RuleInternal(tag, RuleType.Class, GenerateName());
-
-        public static IRule TagClass(string tag, string name)
-            => new RuleInternal(tag, RuleType.Class, name);
 
         public static IRule Id()
             => new RuleInternal(string.Empty, RuleType.Id, GenerateName());
 
-        public static IRule Id(string name)
-            => new RuleInternal(string.Empty, RuleType.Id, name);
-
         public static IRule TagId(string tag)
             => new RuleInternal(tag, RuleType.Id, GenerateName());
-
-        public static IRule TagId(string tag, string name)
-            => new RuleInternal(tag, RuleType.Id, name);
 
         private static int _index = 0;
         private static string GenerateName()

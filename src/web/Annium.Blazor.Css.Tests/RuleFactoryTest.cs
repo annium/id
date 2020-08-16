@@ -3,21 +3,19 @@ using Xunit;
 
 namespace Annium.Blazor.Css.Tests
 {
-    public class BasicRuleTest
+    public class RuleFactoryTest
     {
         [Fact]
-        public void RuleWithGeneratedName_Ok()
+        public void Rule_Class_Auto_Ok()
         {
             // arrange
-            var rule = Rule.Class().WidthPx(10);
+            var rule = Rule.Class();
 
             // act
             var name = rule.ToString();
-            var css = rule.ToCss();
 
             // assert
             name.IsNotDefault();
-            css.IsEqual(new[] { "width: 10px" });
         }
     }
 }
