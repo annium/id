@@ -5,7 +5,6 @@ using Annium.Core.Runtime.Types;
 using Annium.Id.Site.Shared.Stores;
 using Annium.Net.Http;
 using Annium.Serialization.Json;
-using BlazorStyled;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
@@ -38,7 +37,6 @@ namespace Annium.Id.Site
 
             // app
             services.AddAntDesign();
-            services.AddBlazorStyled();
             services.AddSingleton(sp => StringSerializer.Configure(
                 options => options
                     .ConfigureDefault(sp.GetRequiredService<ITypeManager>())

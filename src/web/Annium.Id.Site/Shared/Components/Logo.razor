@@ -1,8 +1,5 @@
 @namespace Annium.Id.Site.Shared.Components
 
-<img src="/images/logo/logo_256.png" class="@ClassName" onclick="@OnClick" />
+@inject Styles Styles
 
-<Styled @bind-Classname="@LogoClass">
-    width: 1em;
-    height: 1em;
-</Styled>
+<img src="/images/logo/logo_256.png" class="@ClassName" onclick="@OnClick" />

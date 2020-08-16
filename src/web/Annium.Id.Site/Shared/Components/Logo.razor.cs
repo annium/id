@@ -1,4 +1,5 @@
 using Annium.Blazor.Core.Tools;
+using Annium.Blazor.Css;
 using Microsoft.AspNetCore.Components;
 
 namespace Annium.Id.Site.Shared.Components
@@ -11,8 +12,13 @@ namespace Annium.Id.Site.Shared.Components
         [Parameter]
         public EventCallback OnClick { get; set; }
 
-        public string ClassName => ClassBuilder.With(LogoClass).With(Class).Build();
+        public string ClassName => ClassBuilder.With(Styles.Logo).With(Class).Build();
+    }
 
-        public string? LogoClass { get; set; }
+    public class Styles : IRuleSet
+    {
+        public readonly CssRule Logo = Rule.Class()
+            .WidthEm(1)
+            .HeightEm(1);
     }
 }
