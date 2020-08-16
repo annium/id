@@ -24,6 +24,9 @@ namespace Annium.Blazor.Css
         public static IRule Custom(string selector)
             => new RuleInternal(selector);
 
+        public static IRule Media(string query)
+            => new RuleInternal($"@media {query}");
+
 #if DEBUG
         public static IRule Class([CallerLineNumber] int line = 0, [CallerMemberName] string member = "")
             => new RuleInternal(string.Empty, RuleType.Class, GenerateName(line, member));
