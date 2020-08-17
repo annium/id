@@ -19,7 +19,7 @@ namespace Annium.Id.Site.Public.Layouts
         public readonly CssRule Container;
 
         public readonly CssRule Logo = Rule.Class()
-            .FontSizeRem(5);
+            .FontSizeRem(4);
 
         public readonly CssRule Credentials = Rule.Class();
         public readonly CssRule Link = Rule.Class();

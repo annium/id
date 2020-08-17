@@ -4,7 +4,7 @@ using Annium.Components.State;
 
 namespace Annium.Id.Site.Public.Pages.Login
 {
-    public partial class LoginPage : IDisposable
+    public partial class Page : IDisposable
     {
         private IObjectContainer<LoginData> State => Store.State;
 

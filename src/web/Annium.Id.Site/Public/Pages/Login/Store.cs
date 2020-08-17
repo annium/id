@@ -4,11 +4,11 @@ using Annium.Id.Site.Shared.Stores;
 
 namespace Annium.Id.Site.Public.Pages.Login
 {
-    public class LoginPageStore : IStore
+    public class Store : IStore
     {
         public IObjectContainer<LoginData> State { get; }
 
-        public LoginPageStore(
+        public Store(
             IStateFactory stateFactory,
             IValidator<LoginData> validator
         )

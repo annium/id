@@ -12,13 +12,13 @@ namespace Annium.Id.Site.Shared.Components
         [Parameter]
         public EventCallback OnClick { get; set; }
 
-        public string ClassName => ClassBuilder.With(Styles.Logo).With(Class).Build();
-    }
+        public string ClassName => ClassBuilder.With(Style.Logo).With(Class).Build();
 
-    public class Styles : IRuleSet
-    {
-        public readonly CssRule Logo = Rule.Class()
-            .WidthEm(1)
-            .HeightEm(1);
+        public class Styles : IRuleSet
+        {
+            public readonly CssRule Logo = Rule.Class()
+                .WidthEm(1)
+                .HeightEm(1);
+        }
     }
 }

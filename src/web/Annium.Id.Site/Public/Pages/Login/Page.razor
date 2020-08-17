@@ -6,10 +6,14 @@
 @page "/login"
 @layout MinimalCentricLayout
 
-@inject LoginPageStore Store
-@inject ILocalizer<LoginPage> Loc
+@inject Store Store
+@inject Styles Style
+@inject NavigationManager Router
+@inject ILocalizer<Page> Loc
 
-Annium ID @Loc["Sign in"]
+<PageTitle Class="@Style.Title" Level="2">
+    Annium ID @Loc["Sign in"]
+</PageTitle>
 
 <FormField TValue="string" state="@State.At(x => x.Login)">
     <TextField TValue="string" Placeholder="@Loc["Login"]" />
@@ -18,3 +22,5 @@ Annium ID @Loc["Sign in"]
 <FormField TValue="string" state="@State.At(x => x.Password)">
     <TextField TValue="string" Placeholder="@Loc["Password"]" />
 </FormField>
+
+<NavLink href="@Routes.Register">Register</NavLink>
