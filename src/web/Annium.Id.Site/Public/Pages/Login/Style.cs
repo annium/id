@@ -12,6 +12,8 @@ namespace Annium.Id.Site.Public.Pages.Login
             .MarginTopRem(1);
 
         public CssRule FormItem { get; } = Rule.Class()
-            .MarginBottomRem(0);
+            .FontSizeRem(1)
+            .MarginBottomRem(0)
+            .Inheritor("input", input => input.FontSizeRem(1));
     }
 }

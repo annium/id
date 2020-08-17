@@ -16,13 +16,13 @@ namespace Annium.Id.Site.Public.Layouts.MinimalCentric
         public Style(Theme theme)
         {
             Column = Rule.Class()
-                .Margin("0", "auto")
                 .Media(theme.Media.Xs, rule => rule.WidthRem(26))
                 .Media(theme.Media.Sm, rule => rule.WidthRem(24))
                 .Media(theme.Media.Md, rule => rule.WidthRem(22))
                 .Media(theme.Media.Lg, rule => rule.WidthRem(20))
                 .Media(theme.Media.Xl, rule => rule.WidthRem(18))
-                .Media(theme.Media.Xxl, rule => rule.WidthRem(16));
+                .Media(theme.Media.Xxl, rule => rule.WidthRem(18))
+                .Margin("0", "auto");
             Container = Rule.Class()
                 .FlexColumn(AlignItems.Center, JustifyContent.FlexStart)
                 .MarginTopRem(6)
