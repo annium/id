@@ -2,7 +2,6 @@ using Annium.Id.AspNetCore.Tools;
 using Annium.Id.Core;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using NodaTime;
 
 namespace Annium.Id.AspNetCore.Pipeline
 {
