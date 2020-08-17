@@ -1,8 +1,7 @@
 using Annium.Blazor.Core.Tools;
-using Annium.Blazor.Css;
 using Microsoft.AspNetCore.Components;
 
-namespace Annium.Id.Site.Shared.Components
+namespace Annium.Id.Site.Shared.Components.Logo
 {
     public partial class Logo
     {
@@ -14,11 +13,5 @@ namespace Annium.Id.Site.Shared.Components
 
         public string ClassName => ClassBuilder.With(Style.Logo).With(Class).Build();
 
-        public class Styles : IRuleSet
-        {
-            public readonly CssRule Logo = Rule.Class()
-                .WidthEm(1)
-                .HeightEm(1);
-        }
     }
 }

@@ -3,11 +3,11 @@ using Annium.Blazor.Css.Internal;
 
 namespace Annium.Id.Site.Shared
 {
-    public class Styles : IRuleSet
+    public class Style : IRuleSet
     {
         private readonly CssRule _html;
 
-        public Styles(Theme theme)
+        public Style(Theme theme)
         {
             _html = Rule.Tag("html")
                 .FlexColumn(AlignItems.Stretch, JustifyContent.FlexStart)

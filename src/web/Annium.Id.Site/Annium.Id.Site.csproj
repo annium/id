@@ -31,4 +31,18 @@
     <ItemGroup>
         <Folder Include="Member" />
     </ItemGroup>
+    <ItemGroup>
+      <Content Update="Shared\Components\Logo\Logo.razor">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </Content>
+      <Content Update="Shared\Components\PageTitle\PageTitle.razor">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </Content>
+      <Content Update="Public\Layouts\MinimalCentric\_Imports.razor">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </Content>
+      <Content Update="Public\Layouts\MinimalCentric\MinimalCentricLayout.razor">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </Content>
+    </ItemGroup>
 </Project>

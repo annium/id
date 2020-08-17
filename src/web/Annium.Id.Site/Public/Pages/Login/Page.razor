@@ -1,5 +1,6 @@
 ﻿@using Annium.Localization.Abstractions
 @using Annium.Id.Site.Public.Layouts
+@using Annium.Id.Site.Public.Layouts.MinimalCentric
 
 @namespace Annium.Id.Site.Public.Pages.Login
 
@@ -7,7 +8,7 @@
 @layout MinimalCentricLayout
 
 @inject Store Store
-@inject Styles Style
+@inject Style Style
 @inject NavigationManager Router
 @inject ILocalizer<Page> Loc
 
@@ -15,12 +16,12 @@
     Annium ID @Loc["Sign in"]
 </PageTitle>
 
-<FormField TValue="string" state="@State.At(x => x.Login)">
-    <TextField TValue="string" Placeholder="@Loc["Login"]" />
-</FormField>
+<div class="@Style.Form">
+    <FormField TValue="string" State="@State.At(x => x.Login)" Class="@Style.FormItem">
+        <TextField TValue="string" Size="@InputSize.Large" Placeholder="@Loc["Login"]" />
+    </FormField>
 
-<FormField TValue="string" state="@State.At(x => x.Password)">
-    <TextField TValue="string" Placeholder="@Loc["Password"]" />
-</FormField>
-
-<NavLink href="@Routes.Register">Register</NavLink>
+    <FormField TValue="string" State="@State.At(x => x.Password)" Class="@Style.FormItem">
+        <TextField TValue="string" Size="@InputSize.Large" Placeholder="@Loc["Password"]" />
+    </FormField>
+</div>
