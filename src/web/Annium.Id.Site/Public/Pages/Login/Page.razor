@@ -1,6 +1,5 @@
 ﻿@using Annium.Localization.Abstractions
 @using Annium.Id.Site.Public.Layouts.MinimalCentric
-@using Annium.Components.State
 
 @namespace Annium.Id.Site.Public.Pages.Login
 
@@ -17,19 +16,27 @@
 </PageTitle>
 
 <div class="@Style.Form">
-    <FormField TValue="string" State="@State.At(x => x.Login)" Class="@Style.FormItem">
-        <TextField TValue="string" Size="@InputSize.Large" Placeholder="@T["Login"]" />
+    <FormField TValue="string" State="@Store.State.At(x => x.Login)" Class="@Style.FormItem">
+        <TextField
+            TValue="string"
+            Size="@InputSize.Large"
+            Placeholder="@T["Login"]" />
     </FormField>
 
-    <FormField TValue="string" State="@State.At(x => x.Password)" Class="@Style.FormItem">
-        <TextField TValue="string" Size="@InputSize.Large" Placeholder="@T["Password"]" />
+    <FormField TValue="string" State="@Store.State.At(x => x.Password)" Class="@Style.FormItem">
+        <TextField
+            TValue="string"
+            Size="@InputSize.Large"
+            Placeholder="@T["Password"]" />
     </FormField>
 
     <Button
         type="primary"
         block
-        disabled="@(State.HasStatus(Status.Error, Status.Loading, Status.Validating) && State.HasBeenTouched)"
-        size="large">
+        disabled="@Store.CanLogin"
+        size="large"
+        OnClick="@Store.Login"
+        >
         @T["Sign in"]
     </Button>
 
