@@ -1,5 +1,6 @@
 ﻿@using Annium.Localization.Abstractions
 @using Annium.Id.Site.Public.Layouts.MinimalCentric
+@using Annium.Components.State
 
 @namespace Annium.Id.Site.Public.Pages.Login
 
@@ -9,18 +10,35 @@
 @inject Store Store
 @inject Style Style
 @inject NavigationManager Router
-@inject ILocalizer<Page> Loc
+@inject ILocalizer<Page> T
 
 <PageTitle Class="@Style.Title" Level="2">
-    Annium ID @Loc["Sign in"]
+    Annium ID @T["Sign in"]
 </PageTitle>
 
 <div class="@Style.Form">
     <FormField TValue="string" State="@State.At(x => x.Login)" Class="@Style.FormItem">
-        <TextField TValue="string" Size="@InputSize.Large" Placeholder="@Loc["Login"]" />
+        <TextField TValue="string" Size="@InputSize.Large" Placeholder="@T["Login"]" />
     </FormField>
 
     <FormField TValue="string" State="@State.At(x => x.Password)" Class="@Style.FormItem">
-        <TextField TValue="string" Size="@InputSize.Large" Placeholder="@Loc["Password"]" />
+        <TextField TValue="string" Size="@InputSize.Large" Placeholder="@T["Password"]" />
     </FormField>
+
+    <Button
+        type="primary"
+        block
+        disabled="@(State.HasStatus(Status.Error, Status.Loading, Status.Validating) && State.HasBeenTouched)"
+        size="large">
+        @T["Sign in"]
+    </Button>
+
+    <div class="@Style.Links">
+        <div>
+            <NavLink href="@Routes.RestoreAccess">@T["Forgot password?"]</NavLink>
+        </div>
+        <div>
+            @T["No account?"] <NavLink href="@Routes.Register">@T["Sign Up"]</NavLink>
+        </div>
+    </div>
 </div>

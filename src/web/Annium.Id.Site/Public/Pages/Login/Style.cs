@@ -15,5 +15,10 @@ namespace Annium.Id.Site.Public.Pages.Login
             .FontSizeRem(1)
             .MarginBottomRem(0)
             .Inheritor("input", input => input.FontSizeRem(1));
+
+        public CssRule Links { get; } = Rule.Class()
+            .FlexRow(AlignItems.Center, JustifyContent.SpaceBetween)
+            .FontSizeRem(0.8)
+            .MarginTopRem(1);
     }
 }
