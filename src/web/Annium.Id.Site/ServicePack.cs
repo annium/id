@@ -21,7 +21,7 @@ namespace Annium.Id.Site
             services.AddRuntimeTools(GetType().Assembly);
             services.AddMapper();
             services.AddHttpRequestFactory();
-            services.AddComponentStateFactory();
+            services.AddComponentFormStateFactory();
             services.AddValidation();
             services.AddLocalization(opts => opts.UseInMemoryStorage());
             services.AddCssRules();
