@@ -33,7 +33,7 @@
     <Button
         type="primary"
         block
-        disabled="@Store.CanLogin"
+        disabled="@(!Store.CanLogin)"
         size="large"
         OnClick="@Store.Login"
         >
