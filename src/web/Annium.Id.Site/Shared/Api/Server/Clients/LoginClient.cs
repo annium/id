@@ -1,0 +1,50 @@
+using System;
+using System.Threading.Tasks;
+using Annium.Data.Operations;
+using Annium.Id.Api.ViewModels.Requests.Login;
+using Annium.Id.Api.ViewModels.Responses.Login;
+using Annium.Net.Http;
+
+namespace Annium.Id.Site.Shared.Api.Server.Clients
+{
+    public class LoginClient : ClientBase
+    {
+        public LoginClient(IHttpRequest request) : base(request)
+        {
+        }
+
+        public async Task<IResult<TokensResponse>> LogIn(
+            Guid appId,
+            LogInRequestBody body
+        )
+        {
+            return await Request.Clone()
+                .Post($"me/{appId}/login")
+                .JsonContent(body)
+                .EnsureSuccessStatusCode()
+                .AsAsync<IResult<TokensResponse>>();
+        }
+
+        public async Task<IResult<TokensResponse>> UpdateToken(
+            Guid appId,
+            Guid refreshToken
+        )
+        {
+            return await Request.Clone()
+                .Put($"me/{appId}/token")
+                .Param("refreshToken", refreshToken)
+                .EnsureSuccessStatusCode()
+                .AsAsync<IResult<TokensResponse>>();
+        }
+
+        public async Task<IResult> LogOut(
+            Guid appId
+        )
+        {
+            return await Request.Clone()
+                .Delete($"me/{appId}/logout")
+                .EnsureSuccessStatusCode()
+                .AsAsync<IResult>();
+        }
+    }
+}

@@ -1,0 +1,61 @@
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Annium.Data.Operations;
+using Annium.Id.Api.ViewModels.Requests.Claims;
+using Annium.Id.Api.ViewModels.Responses.Claims;
+using Annium.Net.Http;
+
+namespace Annium.Id.Site.Shared.Api.Server.Clients
+{
+    public class ClaimClient : ClientBase
+    {
+        public ClaimClient(IHttpRequest request) : base(request)
+        {
+        }
+
+        public async Task<IResult<Guid>> CreateClaim(
+            CreateClaimRequest body
+        )
+        {
+            return await Request.Clone()
+                .Post("claims")
+                .JsonContent(body)
+                .EnsureSuccessStatusCode()
+                .AsAsync<IResult<Guid>>();
+        }
+
+        public async Task<IResult<IEnumerable<ClaimResponse>>> ListClaims(
+            Guid appId
+        )
+        {
+            return await Request.Clone()
+                .Get("claims")
+                .Param("appId", appId)
+                .EnsureSuccessStatusCode()
+                .AsAsync<IResult<IEnumerable<ClaimResponse>>>();
+        }
+
+        public async Task<IResult> UpdateClaim(
+            Guid claimId,
+            UpdateClaimRequestBody body
+        )
+        {
+            return await Request.Clone()
+                .Put($"claims/{claimId}")
+                .JsonContent(body)
+                .EnsureSuccessStatusCode()
+                .AsAsync<IResult>();
+        }
+
+        public async Task<IResult> DeleteClaim(
+            Guid claimId
+        )
+        {
+            return await Request.Clone()
+                .Delete($"claims/{claimId}")
+                .EnsureSuccessStatusCode()
+                .AsAsync<IResult>();
+        }
+    }
+}
