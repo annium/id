@@ -36,7 +36,7 @@ db-drop db-update migrations-add migrations-list migrations-remove:
 
 
 gen-api-site-client:
-	xrest dotnet gen -s http://localhost:5000 -a src/api/Annium.Id.Api/bin/Debug/netcoreapp3.1/Annium.Id.Api.dll -o src/web/Annium.Id.Site/Shared/Api/Server/Client -trace
+	xrest dotnet gen -s http://localhost:5000 -a src/api/Annium.Id.Api/bin/Debug/netcoreapp3.1/Annium.Id.Api.dll -o src/web/Annium.Id.Site/Shared/Api/Server -ns Annium.Id.Site.Shared.Api.Server -trace
 
 gen-api-test-client:
 	xrest dotnet gen -s http://localhost:5000 -a src/api/Annium.Id.Api/bin/Debug/netcoreapp3.1/Annium.Id.Api.dll -o test/api/Annium.Id.Api.TestClient -t -trace
