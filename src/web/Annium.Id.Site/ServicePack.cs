@@ -1,11 +1,10 @@
 using System;
 using Annium.Blazor.Css;
+using Annium.Blazor.Net;
 using Annium.Core.DependencyInjection;
 using Annium.Core.Runtime.Types;
 using Annium.Id.Site.Shared.Stores;
-using Annium.Net.Http;
 using Annium.Serialization.Json;
-using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
 using NodaTime.Xml;
@@ -25,14 +24,7 @@ namespace Annium.Id.Site
             services.AddValidation();
             services.AddLocalization(opts => opts.UseInMemoryStorage());
             services.AddCssRules();
-            services.AddTransient<Func<IHttpRequest>>(sp =>
-            {
-                var factory = sp.GetRequiredService<IHttpRequestFactory>();
-                var env = sp.GetRequiredService<IWebAssemblyHostEnvironment>();
-                var request = factory.New(env.BaseAddress);
-
-                return () => request.Clone();
-            });
+            services.AddHostHttpRequestFactory();
             // services.AddLogging(route => route.UseConsole());
 
             // app
@@ -48,6 +40,7 @@ namespace Annium.Id.Site
                 .AssignableTo<IStore>()
                 .AsSelf()
                 .SingleInstance();
+            services.AddApiServices();
         }
     }
 }
