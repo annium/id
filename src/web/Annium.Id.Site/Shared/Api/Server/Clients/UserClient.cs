@@ -14,7 +14,7 @@ namespace Annium.Id.Site.Shared.Api.Server.Clients
         {
         }
 
-        public async Task<IResult<IEnumerable<UserResponse>>> FindUsers(
+        public async Task<IHttpResponse<IResult<IEnumerable<UserResponse>>>> FindUsers(
             int limit,
             string query
         )
@@ -23,43 +23,39 @@ namespace Annium.Id.Site.Shared.Api.Server.Clients
                 .Get("users")
                 .Param("limit", limit)
                 .Param("query", query)
-                .EnsureSuccessStatusCode()
-                .AsAsync<IResult<IEnumerable<UserResponse>>>();
+                .AsResponseAsync<IResult<IEnumerable<UserResponse>>>();
         }
 
-        public async Task<IResult<UserResponse>> GetUser(
+        public async Task<IHttpResponse<IResult<UserResponse>>> GetUser(
             Guid userId
         )
         {
             return await Request.Clone()
                 .Get($"users/{userId}")
-                .EnsureSuccessStatusCode()
-                .AsAsync<IResult<UserResponse>>();
+                .AsResponseAsync<IResult<UserResponse>>();
         }
 
-        public async Task<IResult> AddRoleToUser(
+        public async Task<IHttpResponse<IResult>> AddRoleToUser(
             Guid roleId,
             Guid userId
         )
         {
             return await Request.Clone()
                 .Post($"users/{userId}/roles/{roleId}")
-                .EnsureSuccessStatusCode()
-                .AsAsync<IResult>();
+                .AsResponseAsync<IResult>();
         }
 
-        public async Task<IResult> DeleteRoleFromUser(
+        public async Task<IHttpResponse<IResult>> DeleteRoleFromUser(
             Guid roleId,
             Guid userId
         )
         {
             return await Request.Clone()
                 .Delete($"users/{userId}/roles/{roleId}")
-                .EnsureSuccessStatusCode()
-                .AsAsync<IResult>();
+                .AsResponseAsync<IResult>();
         }
 
-        public async Task<IResult> AddClaimToUser(
+        public async Task<IHttpResponse<IResult>> AddClaimToUser(
             Guid claimId,
             Guid userId,
             AddClaimToUserRequestBody body
@@ -68,19 +64,17 @@ namespace Annium.Id.Site.Shared.Api.Server.Clients
             return await Request.Clone()
                 .Post($"users/{userId}/claims/{claimId}")
                 .JsonContent(body)
-                .EnsureSuccessStatusCode()
-                .AsAsync<IResult>();
+                .AsResponseAsync<IResult>();
         }
 
-        public async Task<IResult> DeleteClaimFromUser(
+        public async Task<IHttpResponse<IResult>> DeleteClaimFromUser(
             Guid claimId,
             Guid userId
         )
         {
             return await Request.Clone()
                 .Delete($"users/{userId}/claims/{claimId}")
-                .EnsureSuccessStatusCode()
-                .AsAsync<IResult>();
+                .AsResponseAsync<IResult>();
         }
     }
 }

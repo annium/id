@@ -8,18 +8,25 @@ namespace Annium.Id.Site.Shared.Api.Server
 {
     public static class HttpResponseExtensions
     {
-        public static async Task<T> GetData<T>(this Task<IResult<T>> task)
+        public static async Task<T> GetData<T>(this Task<IHttpResponse<IResult<T>>> task)
+        {
+            var response = await task;
+
+            return response.Data.Data;
+        }
+
+        public static async Task<IReadOnlyCollection<T>> GetData<T>(this Task<IHttpResponse<IResult<IEnumerable<T>>>> task)
+        {
+            var response = await task;
+
+            return response.Data.Data.ToArray();
+        }
+
+        public static async Task<IResult<T>> GetResult<T>(this Task<IHttpResponse<IResult<T>>> task)
         {
             var response = await task;
 
             return response.Data;
-        }
-
-        public static async Task<IReadOnlyCollection<T>> GetData<T>(this Task<IResult<IEnumerable<T>>> task)
-        {
-            var response = await task;
-
-            return response.Data.ToArray();
         }
     }
 }

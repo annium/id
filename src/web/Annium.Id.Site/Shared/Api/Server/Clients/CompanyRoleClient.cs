@@ -14,29 +14,27 @@ namespace Annium.Id.Site.Shared.Api.Server.Clients
         {
         }
 
-        public async Task<IResult<Guid>> CreateRole(
+        public async Task<IHttpResponse<IResult<Guid>>> CreateRole(
             CreateCompanyRoleRequest body
         )
         {
             return await Request.Clone()
                 .Post("companies/roles")
                 .JsonContent(body)
-                .EnsureSuccessStatusCode()
-                .AsAsync<IResult<Guid>>();
+                .AsResponseAsync<IResult<Guid>>();
         }
 
-        public async Task<IResult<IEnumerable<CompanyRoleResponse>>> ListRoles(
+        public async Task<IHttpResponse<IResult<IEnumerable<CompanyRoleResponse>>>> ListRoles(
             Guid appId
         )
         {
             return await Request.Clone()
                 .Get("companies/roles")
                 .Param("appId", appId)
-                .EnsureSuccessStatusCode()
-                .AsAsync<IResult<IEnumerable<CompanyRoleResponse>>>();
+                .AsResponseAsync<IResult<IEnumerable<CompanyRoleResponse>>>();
         }
 
-        public async Task<IResult> UpdateRole(
+        public async Task<IHttpResponse<IResult>> UpdateRole(
             Guid roleId,
             UpdateCompanyRoleRequestBody body
         )
@@ -44,11 +42,10 @@ namespace Annium.Id.Site.Shared.Api.Server.Clients
             return await Request.Clone()
                 .Put($"companies/roles/{roleId}")
                 .JsonContent(body)
-                .EnsureSuccessStatusCode()
-                .AsAsync<IResult>();
+                .AsResponseAsync<IResult>();
         }
 
-        public async Task<IResult> AddClaimToRole(
+        public async Task<IHttpResponse<IResult>> AddClaimToRole(
             Guid claimId,
             Guid roleId,
             AddCompanyClaimToCompanyRoleRequestBody body
@@ -57,29 +54,26 @@ namespace Annium.Id.Site.Shared.Api.Server.Clients
             return await Request.Clone()
                 .Post($"companies/roles/{roleId}/claims/{claimId}")
                 .JsonContent(body)
-                .EnsureSuccessStatusCode()
-                .AsAsync<IResult>();
+                .AsResponseAsync<IResult>();
         }
 
-        public async Task<IResult> DeleteClaimFromRole(
+        public async Task<IHttpResponse<IResult>> DeleteClaimFromRole(
             Guid claimId,
             Guid roleId
         )
         {
             return await Request.Clone()
                 .Delete($"companies/roles/{roleId}/claims/{claimId}")
-                .EnsureSuccessStatusCode()
-                .AsAsync<IResult>();
+                .AsResponseAsync<IResult>();
         }
 
-        public async Task<IResult> DeleteRole(
+        public async Task<IHttpResponse<IResult>> DeleteRole(
             Guid roleId
         )
         {
             return await Request.Clone()
                 .Delete($"companies/roles/{roleId}")
-                .EnsureSuccessStatusCode()
-                .AsAsync<IResult>();
+                .AsResponseAsync<IResult>();
         }
     }
 }

@@ -14,18 +14,17 @@ namespace Annium.Id.Site.Shared.Api.Server.Clients
         {
         }
 
-        public async Task<IResult> RegisterMe(
+        public async Task<IHttpResponse<IResult>> RegisterMe(
             RegisterMeRequest body
         )
         {
             return await Request.Clone()
                 .Post("me")
                 .JsonContent(body)
-                .EnsureSuccessStatusCode()
-                .AsAsync<IResult>();
+                .AsResponseAsync<IResult>();
         }
 
-        public async Task<IResult<TokensResponse>> ConfirmMyEmail(
+        public async Task<IHttpResponse<IResult<TokensResponse>>> ConfirmMyEmail(
             Guid appId,
             ConfirmMyEmailRequestBody body
         )
@@ -33,11 +32,10 @@ namespace Annium.Id.Site.Shared.Api.Server.Clients
             return await Request.Clone()
                 .Post($"me/{appId}/confirm-email")
                 .JsonContent(body)
-                .EnsureSuccessStatusCode()
-                .AsAsync<IResult<TokensResponse>>();
+                .AsResponseAsync<IResult<TokensResponse>>();
         }
 
-        public async Task<IResult> RestoreMyAccess(
+        public async Task<IHttpResponse<IResult>> RestoreMyAccess(
             Guid appId,
             RestoreMyAccessRequestBody body
         )
@@ -45,57 +43,51 @@ namespace Annium.Id.Site.Shared.Api.Server.Clients
             return await Request.Clone()
                 .Post($"me/{appId}/restore-access")
                 .JsonContent(body)
-                .EnsureSuccessStatusCode()
-                .AsAsync<IResult>();
+                .AsResponseAsync<IResult>();
         }
 
-        public async Task<IResult<MeResponse>> GetMe(
+        public async Task<IHttpResponse<IResult<MeResponse>>> GetMe(
         )
         {
             return await Request.Clone()
                 .Get("me")
-                .EnsureSuccessStatusCode()
-                .AsAsync<IResult<MeResponse>>();
+                .AsResponseAsync<IResult<MeResponse>>();
         }
 
-        public async Task<IResult<IdTokenResponse>> GetMyToken(
+        public async Task<IHttpResponse<IResult<IdTokenResponse>>> GetMyToken(
         )
         {
             return await Request.Clone()
                 .Get("me/token")
-                .EnsureSuccessStatusCode()
-                .AsAsync<IResult<IdTokenResponse>>();
+                .AsResponseAsync<IResult<IdTokenResponse>>();
         }
 
-        public async Task<IResult> UpdateMyProfile(
+        public async Task<IHttpResponse<IResult>> UpdateMyProfile(
             UpdateMyProfileRequest body
         )
         {
             return await Request.Clone()
                 .Put("me/profile")
                 .JsonContent(body)
-                .EnsureSuccessStatusCode()
-                .AsAsync<IResult>();
+                .AsResponseAsync<IResult>();
         }
 
-        public async Task<IResult> UpdateMyPassword(
+        public async Task<IHttpResponse<IResult>> UpdateMyPassword(
             UpdateMyPasswordRequest body
         )
         {
             return await Request.Clone()
                 .Put("me/password")
                 .JsonContent(body)
-                .EnsureSuccessStatusCode()
-                .AsAsync<IResult>();
+                .AsResponseAsync<IResult>();
         }
 
-        public async Task<IResult> UnregisterMe(
+        public async Task<IHttpResponse<IResult>> UnregisterMe(
         )
         {
             return await Request.Clone()
                 .Delete("me")
-                .EnsureSuccessStatusCode()
-                .AsAsync<IResult>();
+                .AsResponseAsync<IResult>();
         }
     }
 }

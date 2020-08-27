@@ -14,58 +14,53 @@ namespace Annium.Id.Site.Shared.Api.Server.Clients
         {
         }
 
-        public async Task<IResult<Guid>> CreateApp(
+        public async Task<IHttpResponse<IResult<Guid>>> CreateApp(
             CreateAppRequest body
         )
         {
             return await Request.Clone()
                 .Post("apps")
                 .JsonContent(body)
-                .EnsureSuccessStatusCode()
-                .AsAsync<IResult<Guid>>();
+                .AsResponseAsync<IResult<Guid>>();
         }
 
-        public async Task<IResult<IEnumerable<AppResponse>>> FindApps(
+        public async Task<IHttpResponse<IResult<IEnumerable<AppResponse>>>> FindApps(
             string query
         )
         {
             return await Request.Clone()
                 .Get("apps")
                 .Param("query", query)
-                .EnsureSuccessStatusCode()
-                .AsAsync<IResult<IEnumerable<AppResponse>>>();
+                .AsResponseAsync<IResult<IEnumerable<AppResponse>>>();
         }
 
-        public async Task<IResult<IEnumerable<AppResponse>>> ListMyApps(
+        public async Task<IHttpResponse<IResult<IEnumerable<AppResponse>>>> ListMyApps(
         )
         {
             return await Request.Clone()
                 .Get("apps/my")
-                .EnsureSuccessStatusCode()
-                .AsAsync<IResult<IEnumerable<AppResponse>>>();
+                .AsResponseAsync<IResult<IEnumerable<AppResponse>>>();
         }
 
-        public async Task<IResult<AppResponse>> GetApp(
+        public async Task<IHttpResponse<IResult<AppResponse>>> GetApp(
             Guid appId
         )
         {
             return await Request.Clone()
                 .Get($"apps/{appId}")
-                .EnsureSuccessStatusCode()
-                .AsAsync<IResult<AppResponse>>();
+                .AsResponseAsync<IResult<AppResponse>>();
         }
 
-        public async Task<IResult<Guid>> GetAppApiToken(
+        public async Task<IHttpResponse<IResult<Guid>>> GetAppApiToken(
             Guid appId
         )
         {
             return await Request.Clone()
                 .Get($"apps/{appId}/token")
-                .EnsureSuccessStatusCode()
-                .AsAsync<IResult<Guid>>();
+                .AsResponseAsync<IResult<Guid>>();
         }
 
-        public async Task<IResult> UpdateApp(
+        public async Task<IHttpResponse<IResult>> UpdateApp(
             Guid appId,
             UpdateAppRequestBody body
         )
@@ -73,39 +68,35 @@ namespace Annium.Id.Site.Shared.Api.Server.Clients
             return await Request.Clone()
                 .Put($"apps/{appId}")
                 .JsonContent(body)
-                .EnsureSuccessStatusCode()
-                .AsAsync<IResult>();
+                .AsResponseAsync<IResult>();
         }
 
-        public async Task<IResult> SetAppOwner(
+        public async Task<IHttpResponse<IResult>> SetAppOwner(
             Guid appId,
             Guid newOwnerId
         )
         {
             return await Request.Clone()
                 .Put($"apps/{appId}/owner/{newOwnerId}")
-                .EnsureSuccessStatusCode()
-                .AsAsync<IResult>();
+                .AsResponseAsync<IResult>();
         }
 
-        public async Task<IResult<Guid>> UpdateAppApiToken(
+        public async Task<IHttpResponse<IResult<Guid>>> UpdateAppApiToken(
             Guid appId
         )
         {
             return await Request.Clone()
                 .Put($"apps/{appId}/token")
-                .EnsureSuccessStatusCode()
-                .AsAsync<IResult<Guid>>();
+                .AsResponseAsync<IResult<Guid>>();
         }
 
-        public async Task<IResult> DeleteApp(
+        public async Task<IHttpResponse<IResult>> DeleteApp(
             Guid appId
         )
         {
             return await Request.Clone()
                 .Delete($"apps/{appId}")
-                .EnsureSuccessStatusCode()
-                .AsAsync<IResult>();
+                .AsResponseAsync<IResult>();
         }
     }
 }

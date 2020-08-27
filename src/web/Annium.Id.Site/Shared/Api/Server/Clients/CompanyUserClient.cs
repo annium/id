@@ -12,18 +12,17 @@ namespace Annium.Id.Site.Shared.Api.Server.Clients
         {
         }
 
-        public async Task<IResult> AddUserToCompany(
+        public async Task<IHttpResponse<IResult>> AddUserToCompany(
             Guid companyId,
             Guid userId
         )
         {
             return await Request.Clone()
                 .Post($"companies/{companyId}/users/{userId}")
-                .EnsureSuccessStatusCode()
-                .AsAsync<IResult>();
+                .AsResponseAsync<IResult>();
         }
 
-        public async Task<IResult> AddCompanyRoleToCompanyUser(
+        public async Task<IHttpResponse<IResult>> AddCompanyRoleToCompanyUser(
             Guid companyId,
             Guid roleId,
             Guid userId
@@ -31,11 +30,10 @@ namespace Annium.Id.Site.Shared.Api.Server.Clients
         {
             return await Request.Clone()
                 .Post($"companies/{companyId}/users/{userId}/roles/{roleId}")
-                .EnsureSuccessStatusCode()
-                .AsAsync<IResult>();
+                .AsResponseAsync<IResult>();
         }
 
-        public async Task<IResult> DeleteCompanyRoleFromCompanyUser(
+        public async Task<IHttpResponse<IResult>> DeleteCompanyRoleFromCompanyUser(
             Guid companyId,
             Guid roleId,
             Guid userId
@@ -43,11 +41,10 @@ namespace Annium.Id.Site.Shared.Api.Server.Clients
         {
             return await Request.Clone()
                 .Delete($"companies/{companyId}/users/{userId}/roles/{roleId}")
-                .EnsureSuccessStatusCode()
-                .AsAsync<IResult>();
+                .AsResponseAsync<IResult>();
         }
 
-        public async Task<IResult> AddCompanyClaimToCompanyUser(
+        public async Task<IHttpResponse<IResult>> AddCompanyClaimToCompanyUser(
             Guid claimId,
             Guid companyId,
             Guid userId,
@@ -57,11 +54,10 @@ namespace Annium.Id.Site.Shared.Api.Server.Clients
             return await Request.Clone()
                 .Post($"companies/{companyId}/users/{userId}/claims/{claimId}")
                 .JsonContent(body)
-                .EnsureSuccessStatusCode()
-                .AsAsync<IResult>();
+                .AsResponseAsync<IResult>();
         }
 
-        public async Task<IResult> DeleteCompanyClaimFromCompanyUser(
+        public async Task<IHttpResponse<IResult>> DeleteCompanyClaimFromCompanyUser(
             Guid claimId,
             Guid companyId,
             Guid userId
@@ -69,19 +65,17 @@ namespace Annium.Id.Site.Shared.Api.Server.Clients
         {
             return await Request.Clone()
                 .Delete($"companies/{companyId}/users/{userId}/claims/{claimId}")
-                .EnsureSuccessStatusCode()
-                .AsAsync<IResult>();
+                .AsResponseAsync<IResult>();
         }
 
-        public async Task<IResult> DeleteUserFromCompany(
+        public async Task<IHttpResponse<IResult>> DeleteUserFromCompany(
             Guid companyId,
             Guid userId
         )
         {
             return await Request.Clone()
                 .Delete($"companies/{companyId}/users/{userId}")
-                .EnsureSuccessStatusCode()
-                .AsAsync<IResult>();
+                .AsResponseAsync<IResult>();
         }
     }
 }
