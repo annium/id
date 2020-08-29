@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Annium.Blazor.Storage;
 using Annium.Id.Api.ViewModels.Responses.Login;
 
@@ -14,29 +13,24 @@ namespace Annium.Id.Site.Shared.Stores
             _storage = storage;
         }
 
-        public async ValueTask<TokensResponse?> GetAsync()
+        public TokensResponse? Get()
         {
-            if (!await _storage.HasKeyAsync(Key))
+            if (!_storage.HasKey(Key))
                 return null;
 
-            return await _storage.GetAsync<TokensResponse>(Key);
+            return _storage.Get<TokensResponse>(Key);
         }
 
-        public async ValueTask SetAsync(TokensResponse tokens)
-        {
-            await _storage.SetAsync(Key, tokens);
-        }
+        public void Set(TokensResponse tokens) => _storage.Set(Key, tokens);
 
-        public async ValueTask ClearAsync()
-        {
-            await _storage.RemoveAsync(Key);
-        }
+
+        public void Clear() => _storage.Remove(Key);
     }
 
     public interface ITokenStore : IStore
     {
-        ValueTask<TokensResponse?> GetAsync();
-        ValueTask SetAsync(TokensResponse tokens);
-        ValueTask ClearAsync();
+        TokensResponse? Get();
+        void Set(TokensResponse tokens);
+        void Clear();
     }
 }
