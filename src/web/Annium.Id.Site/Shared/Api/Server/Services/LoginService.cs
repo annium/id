@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Annium.Blazor.Net;
 using Annium.Data.Operations;
@@ -24,21 +25,37 @@ namespace Annium.Id.Site.Shared.Api.Server.Services
             _tokenStore = tokenStore;
         }
 
-        public async Task<IResult<TokensResponse>> Login(string login, string password)
+        public async Task<IResult<TokensResponse>> LogIn(string login, string password)
         {
             var response = await _serverApi.Public.Client().Login.LogIn(_config.AppId, new LogInRequestBody { Login = login, Password = password });
 
-            if (response.IsSuccess)
-                await _tokenStore.SetAsync(response.Data.Data);
+            if (response.IsOk)
+                await _tokenStore.SetAsync(response.Data);
             else
                 await _tokenStore.ClearAsync();
 
-            return response.Data;
+            return response;
+        }
+
+        public Task<IResult> LogOut() => _serverApi.Private.Client().Login.LogOut(_config.AppId);
+
+        public async Task<IResult<TokensResponse>> LogIn(Guid refreshToken)
+        {
+            var response = await _serverApi.Private.Client().Login.UpdateToken(_config.AppId, refreshToken);
+
+            if (response.IsOk)
+                await _tokenStore.SetAsync(response.Data);
+            else
+                await _tokenStore.ClearAsync();
+
+            return response;
         }
     }
 
     public interface ILoginService : IApiService
     {
-        Task<IResult<TokensResponse>> Login(string login, string password);
+        Task<IResult<TokensResponse>> LogIn(string login, string password);
+        Task<IResult> LogOut();
+        Task<IResult<TokensResponse>> LogIn(Guid refreshToken);
     }
 }
