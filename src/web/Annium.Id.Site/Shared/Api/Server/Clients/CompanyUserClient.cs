@@ -12,17 +12,17 @@ namespace Annium.Id.Site.Shared.Api.Server.Clients
         {
         }
 
-        public async Task<IHttpResponse<IResult>> AddUserToCompany(
+        public async Task<IResult> AddUserToCompany(
             Guid companyId,
             Guid userId
         )
         {
             return await Request.Clone()
                 .Post($"companies/{companyId}/users/{userId}")
-                .AsResponseAsync<IResult>();
+                .AsAsync(Result.New().Error("Request failed"));
         }
 
-        public async Task<IHttpResponse<IResult>> AddCompanyRoleToCompanyUser(
+        public async Task<IResult> AddCompanyRoleToCompanyUser(
             Guid companyId,
             Guid roleId,
             Guid userId
@@ -30,10 +30,10 @@ namespace Annium.Id.Site.Shared.Api.Server.Clients
         {
             return await Request.Clone()
                 .Post($"companies/{companyId}/users/{userId}/roles/{roleId}")
-                .AsResponseAsync<IResult>();
+                .AsAsync(Result.New().Error("Request failed"));
         }
 
-        public async Task<IHttpResponse<IResult>> DeleteCompanyRoleFromCompanyUser(
+        public async Task<IResult> DeleteCompanyRoleFromCompanyUser(
             Guid companyId,
             Guid roleId,
             Guid userId
@@ -41,10 +41,10 @@ namespace Annium.Id.Site.Shared.Api.Server.Clients
         {
             return await Request.Clone()
                 .Delete($"companies/{companyId}/users/{userId}/roles/{roleId}")
-                .AsResponseAsync<IResult>();
+                .AsAsync(Result.New().Error("Request failed"));
         }
 
-        public async Task<IHttpResponse<IResult>> AddCompanyClaimToCompanyUser(
+        public async Task<IResult> AddCompanyClaimToCompanyUser(
             Guid claimId,
             Guid companyId,
             Guid userId,
@@ -54,10 +54,10 @@ namespace Annium.Id.Site.Shared.Api.Server.Clients
             return await Request.Clone()
                 .Post($"companies/{companyId}/users/{userId}/claims/{claimId}")
                 .JsonContent(body)
-                .AsResponseAsync<IResult>();
+                .AsAsync(Result.New().Error("Request failed"));
         }
 
-        public async Task<IHttpResponse<IResult>> DeleteCompanyClaimFromCompanyUser(
+        public async Task<IResult> DeleteCompanyClaimFromCompanyUser(
             Guid claimId,
             Guid companyId,
             Guid userId
@@ -65,17 +65,17 @@ namespace Annium.Id.Site.Shared.Api.Server.Clients
         {
             return await Request.Clone()
                 .Delete($"companies/{companyId}/users/{userId}/claims/{claimId}")
-                .AsResponseAsync<IResult>();
+                .AsAsync(Result.New().Error("Request failed"));
         }
 
-        public async Task<IHttpResponse<IResult>> DeleteUserFromCompany(
+        public async Task<IResult> DeleteUserFromCompany(
             Guid companyId,
             Guid userId
         )
         {
             return await Request.Clone()
                 .Delete($"companies/{companyId}/users/{userId}")
-                .AsResponseAsync<IResult>();
+                .AsAsync(Result.New().Error("Request failed"));
         }
     }
 }

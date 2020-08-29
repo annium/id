@@ -15,53 +15,53 @@ namespace Annium.Id.Site.Shared.Api.Server.Clients
         {
         }
 
-        public async Task<IHttpResponse<IResult<Guid>>> RegisterCompany(
+        public async Task<IResult<Guid>> RegisterCompany(
             RegisterCompanyRequest body
         )
         {
             return await Request.Clone()
                 .Post("companies")
                 .JsonContent(body)
-                .AsResponseAsync<IResult<Guid>>();
+                .AsAsync(Result.New(default(Guid)).Error("Request failed"));
         }
 
-        public async Task<IHttpResponse<IResult<IEnumerable<CompanyResponse>>>> FindCompanies(
+        public async Task<IResult<IEnumerable<CompanyResponse>>> FindCompanies(
             string query
         )
         {
             return await Request.Clone()
                 .Get("companies")
                 .Param("query", query)
-                .AsResponseAsync<IResult<IEnumerable<CompanyResponse>>>();
+                .AsAsync(Result.New<IEnumerable<CompanyResponse>>(Array.Empty<CompanyResponse>()).Error("Request failed"));
         }
 
-        public async Task<IHttpResponse<IResult<IEnumerable<CompanyResponse>>>> ListMyCompanies(
+        public async Task<IResult<IEnumerable<CompanyResponse>>> ListMyCompanies(
         )
         {
             return await Request.Clone()
                 .Get("companies/my")
-                .AsResponseAsync<IResult<IEnumerable<CompanyResponse>>>();
+                .AsAsync(Result.New<IEnumerable<CompanyResponse>>(Array.Empty<CompanyResponse>()).Error("Request failed"));
         }
 
-        public async Task<IHttpResponse<IResult<CompanyResponse>>> GetCompany(
+        public async Task<IResult<CompanyResponse>> GetCompany(
             Guid companyId
         )
         {
             return await Request.Clone()
                 .Get($"companies/{companyId}")
-                .AsResponseAsync<IResult<CompanyResponse>>();
+                .AsAsync(Result.New(new CompanyResponse()).Error("Request failed"));
         }
 
-        public async Task<IHttpResponse<IResult<IEnumerable<UserResponse>>>> GetCompanyUsers(
+        public async Task<IResult<IEnumerable<UserResponse>>> GetCompanyUsers(
             Guid companyId
         )
         {
             return await Request.Clone()
                 .Get($"companies/{companyId}/users")
-                .AsResponseAsync<IResult<IEnumerable<UserResponse>>>();
+                .AsAsync(Result.New<IEnumerable<UserResponse>>(Array.Empty<UserResponse>()).Error("Request failed"));
         }
 
-        public async Task<IHttpResponse<IResult>> UpdateCompany(
+        public async Task<IResult> UpdateCompany(
             Guid companyId,
             UpdateCompanyRequestBody body
         )
@@ -69,26 +69,26 @@ namespace Annium.Id.Site.Shared.Api.Server.Clients
             return await Request.Clone()
                 .Put($"companies/{companyId}")
                 .JsonContent(body)
-                .AsResponseAsync<IResult>();
+                .AsAsync(Result.New().Error("Request failed"));
         }
 
-        public async Task<IHttpResponse<IResult>> SetCompanyOwner(
+        public async Task<IResult> SetCompanyOwner(
             Guid companyId,
             Guid userId
         )
         {
             return await Request.Clone()
                 .Put($"companies/{companyId}/owner/{userId}")
-                .AsResponseAsync<IResult>();
+                .AsAsync(Result.New().Error("Request failed"));
         }
 
-        public async Task<IHttpResponse<IResult>> UnregisterCompany(
+        public async Task<IResult> UnregisterCompany(
             Guid companyId
         )
         {
             return await Request.Clone()
                 .Delete($"companies/{companyId}")
-                .AsResponseAsync<IResult>();
+                .AsAsync(Result.New().Error("Request failed"));
         }
     }
 }

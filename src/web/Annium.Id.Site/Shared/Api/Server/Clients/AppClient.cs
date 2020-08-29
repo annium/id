@@ -14,53 +14,53 @@ namespace Annium.Id.Site.Shared.Api.Server.Clients
         {
         }
 
-        public async Task<IHttpResponse<IResult<Guid>>> CreateApp(
+        public async Task<IResult<Guid>> CreateApp(
             CreateAppRequest body
         )
         {
             return await Request.Clone()
                 .Post("apps")
                 .JsonContent(body)
-                .AsResponseAsync<IResult<Guid>>();
+                .AsAsync(Result.New(default(Guid)).Error("Request failed"));
         }
 
-        public async Task<IHttpResponse<IResult<IEnumerable<AppResponse>>>> FindApps(
+        public async Task<IResult<IEnumerable<AppResponse>>> FindApps(
             string query
         )
         {
             return await Request.Clone()
                 .Get("apps")
                 .Param("query", query)
-                .AsResponseAsync<IResult<IEnumerable<AppResponse>>>();
+                .AsAsync(Result.New<IEnumerable<AppResponse>>(Array.Empty<AppResponse>()).Error("Request failed"));
         }
 
-        public async Task<IHttpResponse<IResult<IEnumerable<AppResponse>>>> ListMyApps(
+        public async Task<IResult<IEnumerable<AppResponse>>> ListMyApps(
         )
         {
             return await Request.Clone()
                 .Get("apps/my")
-                .AsResponseAsync<IResult<IEnumerable<AppResponse>>>();
+                .AsAsync(Result.New<IEnumerable<AppResponse>>(Array.Empty<AppResponse>()).Error("Request failed"));
         }
 
-        public async Task<IHttpResponse<IResult<AppResponse>>> GetApp(
+        public async Task<IResult<AppResponse>> GetApp(
             Guid appId
         )
         {
             return await Request.Clone()
                 .Get($"apps/{appId}")
-                .AsResponseAsync<IResult<AppResponse>>();
+                .AsAsync(Result.New(new AppResponse()).Error("Request failed"));
         }
 
-        public async Task<IHttpResponse<IResult<Guid>>> GetAppApiToken(
+        public async Task<IResult<Guid>> GetAppApiToken(
             Guid appId
         )
         {
             return await Request.Clone()
                 .Get($"apps/{appId}/token")
-                .AsResponseAsync<IResult<Guid>>();
+                .AsAsync(Result.New(default(Guid)).Error("Request failed"));
         }
 
-        public async Task<IHttpResponse<IResult>> UpdateApp(
+        public async Task<IResult> UpdateApp(
             Guid appId,
             UpdateAppRequestBody body
         )
@@ -68,35 +68,35 @@ namespace Annium.Id.Site.Shared.Api.Server.Clients
             return await Request.Clone()
                 .Put($"apps/{appId}")
                 .JsonContent(body)
-                .AsResponseAsync<IResult>();
+                .AsAsync(Result.New().Error("Request failed"));
         }
 
-        public async Task<IHttpResponse<IResult>> SetAppOwner(
+        public async Task<IResult> SetAppOwner(
             Guid appId,
             Guid newOwnerId
         )
         {
             return await Request.Clone()
                 .Put($"apps/{appId}/owner/{newOwnerId}")
-                .AsResponseAsync<IResult>();
+                .AsAsync(Result.New().Error("Request failed"));
         }
 
-        public async Task<IHttpResponse<IResult<Guid>>> UpdateAppApiToken(
+        public async Task<IResult<Guid>> UpdateAppApiToken(
             Guid appId
         )
         {
             return await Request.Clone()
                 .Put($"apps/{appId}/token")
-                .AsResponseAsync<IResult<Guid>>();
+                .AsAsync(Result.New(default(Guid)).Error("Request failed"));
         }
 
-        public async Task<IHttpResponse<IResult>> DeleteApp(
+        public async Task<IResult> DeleteApp(
             Guid appId
         )
         {
             return await Request.Clone()
                 .Delete($"apps/{appId}")
-                .AsResponseAsync<IResult>();
+                .AsAsync(Result.New().Error("Request failed"));
         }
     }
 }

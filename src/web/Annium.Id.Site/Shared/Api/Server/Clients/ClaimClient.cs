@@ -14,27 +14,27 @@ namespace Annium.Id.Site.Shared.Api.Server.Clients
         {
         }
 
-        public async Task<IHttpResponse<IResult<Guid>>> CreateClaim(
+        public async Task<IResult<Guid>> CreateClaim(
             CreateClaimRequest body
         )
         {
             return await Request.Clone()
                 .Post("claims")
                 .JsonContent(body)
-                .AsResponseAsync<IResult<Guid>>();
+                .AsAsync(Result.New(default(Guid)).Error("Request failed"));
         }
 
-        public async Task<IHttpResponse<IResult<IEnumerable<ClaimResponse>>>> ListClaims(
+        public async Task<IResult<IEnumerable<ClaimResponse>>> ListClaims(
             Guid appId
         )
         {
             return await Request.Clone()
                 .Get("claims")
                 .Param("appId", appId)
-                .AsResponseAsync<IResult<IEnumerable<ClaimResponse>>>();
+                .AsAsync(Result.New<IEnumerable<ClaimResponse>>(Array.Empty<ClaimResponse>()).Error("Request failed"));
         }
 
-        public async Task<IHttpResponse<IResult>> UpdateClaim(
+        public async Task<IResult> UpdateClaim(
             Guid claimId,
             UpdateClaimRequestBody body
         )
@@ -42,16 +42,16 @@ namespace Annium.Id.Site.Shared.Api.Server.Clients
             return await Request.Clone()
                 .Put($"claims/{claimId}")
                 .JsonContent(body)
-                .AsResponseAsync<IResult>();
+                .AsAsync(Result.New().Error("Request failed"));
         }
 
-        public async Task<IHttpResponse<IResult>> DeleteClaim(
+        public async Task<IResult> DeleteClaim(
             Guid claimId
         )
         {
             return await Request.Clone()
                 .Delete($"claims/{claimId}")
-                .AsResponseAsync<IResult>();
+                .AsAsync(Result.New().Error("Request failed"));
         }
     }
 }

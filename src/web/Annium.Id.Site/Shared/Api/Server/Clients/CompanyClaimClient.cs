@@ -14,27 +14,27 @@ namespace Annium.Id.Site.Shared.Api.Server.Clients
         {
         }
 
-        public async Task<IHttpResponse<IResult<Guid>>> CreateCompanyClaim(
+        public async Task<IResult<Guid>> CreateCompanyClaim(
             CreateCompanyClaimRequest body
         )
         {
             return await Request.Clone()
                 .Post("companies/claims")
                 .JsonContent(body)
-                .AsResponseAsync<IResult<Guid>>();
+                .AsAsync(Result.New(default(Guid)).Error("Request failed"));
         }
 
-        public async Task<IHttpResponse<IResult<IEnumerable<CompanyClaimResponse>>>> ListCompanyClaims(
+        public async Task<IResult<IEnumerable<CompanyClaimResponse>>> ListCompanyClaims(
             Guid appId
         )
         {
             return await Request.Clone()
                 .Get("companies/claims")
                 .Param("appId", appId)
-                .AsResponseAsync<IResult<IEnumerable<CompanyClaimResponse>>>();
+                .AsAsync(Result.New<IEnumerable<CompanyClaimResponse>>(Array.Empty<CompanyClaimResponse>()).Error("Request failed"));
         }
 
-        public async Task<IHttpResponse<IResult>> UpdateCompanyClaim(
+        public async Task<IResult> UpdateCompanyClaim(
             Guid claimId,
             UpdateCompanyClaimRequestBody body
         )
@@ -42,16 +42,16 @@ namespace Annium.Id.Site.Shared.Api.Server.Clients
             return await Request.Clone()
                 .Put($"companies/claims/{claimId}")
                 .JsonContent(body)
-                .AsResponseAsync<IResult>();
+                .AsAsync(Result.New().Error("Request failed"));
         }
 
-        public async Task<IHttpResponse<IResult>> DeleteCompanyClaim(
+        public async Task<IResult> DeleteCompanyClaim(
             Guid claimId
         )
         {
             return await Request.Clone()
                 .Delete($"companies/claims/{claimId}")
-                .AsResponseAsync<IResult>();
+                .AsAsync(Result.New().Error("Request failed"));
         }
     }
 }

@@ -14,27 +14,27 @@ namespace Annium.Id.Site.Shared.Api.Server.Clients
         {
         }
 
-        public async Task<IHttpResponse<IResult<Guid>>> CreateRole(
+        public async Task<IResult<Guid>> CreateRole(
             CreateCompanyRoleRequest body
         )
         {
             return await Request.Clone()
                 .Post("companies/roles")
                 .JsonContent(body)
-                .AsResponseAsync<IResult<Guid>>();
+                .AsAsync(Result.New(default(Guid)).Error("Request failed"));
         }
 
-        public async Task<IHttpResponse<IResult<IEnumerable<CompanyRoleResponse>>>> ListRoles(
+        public async Task<IResult<IEnumerable<CompanyRoleResponse>>> ListRoles(
             Guid appId
         )
         {
             return await Request.Clone()
                 .Get("companies/roles")
                 .Param("appId", appId)
-                .AsResponseAsync<IResult<IEnumerable<CompanyRoleResponse>>>();
+                .AsAsync(Result.New<IEnumerable<CompanyRoleResponse>>(Array.Empty<CompanyRoleResponse>()).Error("Request failed"));
         }
 
-        public async Task<IHttpResponse<IResult>> UpdateRole(
+        public async Task<IResult> UpdateRole(
             Guid roleId,
             UpdateCompanyRoleRequestBody body
         )
@@ -42,10 +42,10 @@ namespace Annium.Id.Site.Shared.Api.Server.Clients
             return await Request.Clone()
                 .Put($"companies/roles/{roleId}")
                 .JsonContent(body)
-                .AsResponseAsync<IResult>();
+                .AsAsync(Result.New().Error("Request failed"));
         }
 
-        public async Task<IHttpResponse<IResult>> AddClaimToRole(
+        public async Task<IResult> AddClaimToRole(
             Guid claimId,
             Guid roleId,
             AddCompanyClaimToCompanyRoleRequestBody body
@@ -54,26 +54,26 @@ namespace Annium.Id.Site.Shared.Api.Server.Clients
             return await Request.Clone()
                 .Post($"companies/roles/{roleId}/claims/{claimId}")
                 .JsonContent(body)
-                .AsResponseAsync<IResult>();
+                .AsAsync(Result.New().Error("Request failed"));
         }
 
-        public async Task<IHttpResponse<IResult>> DeleteClaimFromRole(
+        public async Task<IResult> DeleteClaimFromRole(
             Guid claimId,
             Guid roleId
         )
         {
             return await Request.Clone()
                 .Delete($"companies/roles/{roleId}/claims/{claimId}")
-                .AsResponseAsync<IResult>();
+                .AsAsync(Result.New().Error("Request failed"));
         }
 
-        public async Task<IHttpResponse<IResult>> DeleteRole(
+        public async Task<IResult> DeleteRole(
             Guid roleId
         )
         {
             return await Request.Clone()
                 .Delete($"companies/roles/{roleId}")
-                .AsResponseAsync<IResult>();
+                .AsAsync(Result.New().Error("Request failed"));
         }
     }
 }

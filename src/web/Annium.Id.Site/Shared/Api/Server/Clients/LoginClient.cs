@@ -13,7 +13,7 @@ namespace Annium.Id.Site.Shared.Api.Server.Clients
         {
         }
 
-        public async Task<IHttpResponse<IResult<TokensResponse>>> LogIn(
+        public async Task<IResult<TokensResponse>> LogIn(
             Guid appId,
             LogInRequestBody body
         )
@@ -21,10 +21,10 @@ namespace Annium.Id.Site.Shared.Api.Server.Clients
             return await Request.Clone()
                 .Post($"me/{appId}/login")
                 .JsonContent(body)
-                .AsResponseAsync<IResult<TokensResponse>>();
+                .AsAsync(Result.New(new TokensResponse()).Error("Request failed"));
         }
 
-        public async Task<IHttpResponse<IResult<TokensResponse>>> UpdateToken(
+        public async Task<IResult<TokensResponse>> UpdateToken(
             Guid appId,
             Guid refreshToken
         )
@@ -32,16 +32,16 @@ namespace Annium.Id.Site.Shared.Api.Server.Clients
             return await Request.Clone()
                 .Put($"me/{appId}/token")
                 .Param("refreshToken", refreshToken)
-                .AsResponseAsync<IResult<TokensResponse>>();
+                .AsAsync(Result.New(new TokensResponse()).Error("Request failed"));
         }
 
-        public async Task<IHttpResponse<IResult>> LogOut(
+        public async Task<IResult> LogOut(
             Guid appId
         )
         {
             return await Request.Clone()
                 .Delete($"me/{appId}/logout")
-                .AsResponseAsync<IResult>();
+                .AsAsync(Result.New().Error("Request failed"));
         }
     }
 }
