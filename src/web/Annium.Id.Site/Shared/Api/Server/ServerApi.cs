@@ -6,6 +6,7 @@ namespace Annium.Id.Site.Shared.Api.Server
     internal class ServerApi : IServerApi
     {
         public IHttpRequest Public => _requestFactory.New(_config.Server);
+        public IHttpRequest Private => _requestFactory.New(_config.Server);
 
         private readonly IHttpRequestFactory _requestFactory;
         private readonly Configuration _config;
@@ -23,5 +24,6 @@ namespace Annium.Id.Site.Shared.Api.Server
     public interface IServerApi : IApi
     {
         IHttpRequest Public { get; }
+        IHttpRequest Private { get; }
     }
 }
