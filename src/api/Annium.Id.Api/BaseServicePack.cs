@@ -15,7 +15,7 @@ namespace Annium.Id.Api
     {
         public override void Configure(IServiceCollection services)
         {
-            services.AddRuntimeTools(GetType().Assembly);
+            services.AddRuntimeTools(GetType().Assembly, true);
         }
 
         public override void Register(IServiceCollection services, IServiceProvider provider)

@@ -16,7 +16,7 @@ namespace Annium.Id.Demo
 
         public override void Register(IServiceCollection services, IServiceProvider provider)
         {
-            services.AddRuntimeTools(GetType().Assembly);
+            services.AddRuntimeTools(GetType().Assembly, true);
 
             services.AddSingleton<Func<Instant>>(SystemClock.Instance.GetCurrentInstant);
 

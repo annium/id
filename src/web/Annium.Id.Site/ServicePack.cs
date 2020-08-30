@@ -16,7 +16,7 @@ namespace Annium.Id.Site
         {
             // core
             services.AddSingleton<Func<Instant>>(SystemClock.Instance.GetCurrentInstant);
-            services.AddRuntimeTools(GetType().Assembly);
+            services.AddRuntimeTools(GetType().Assembly, false);
             services.AddMapper();
             services.AddHttpRequestFactory();
             services.AddComponentFormStateFactory();
