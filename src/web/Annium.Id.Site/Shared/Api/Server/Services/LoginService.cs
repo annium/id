@@ -30,23 +30,23 @@ namespace Annium.Id.Site.Shared.Api.Server.Services
             var response = await _serverApi.Public.Client().Login.LogIn(_config.AppId, new LogInRequestBody { Login = login, Password = password });
 
             if (response.IsOk)
-                await _tokenStore.SetAsync(response.Data);
+                _tokenStore.Set(response.Data);
             else
-                await _tokenStore.ClearAsync();
+                _tokenStore.Clear();
 
             return response;
         }
 
         public Task<IResult> LogOut() => _serverApi.Private.Client().Login.LogOut(_config.AppId);
 
-        public async Task<IResult<TokensResponse>> LogIn(Guid refreshToken)
+        public async Task<IResult<TokensResponse>> UpdateToken(Guid refreshToken)
         {
             var response = await _serverApi.Private.Client().Login.UpdateToken(_config.AppId, refreshToken);
 
             if (response.IsOk)
-                await _tokenStore.SetAsync(response.Data);
+                _tokenStore.Set(response.Data);
             else
-                await _tokenStore.ClearAsync();
+                _tokenStore.Clear();
 
             return response;
         }
@@ -56,6 +56,6 @@ namespace Annium.Id.Site.Shared.Api.Server.Services
     {
         Task<IResult<TokensResponse>> LogIn(string login, string password);
         Task<IResult> LogOut();
-        Task<IResult<TokensResponse>> LogIn(Guid refreshToken);
+        Task<IResult<TokensResponse>> UpdateToken(Guid refreshToken);
     }
 }

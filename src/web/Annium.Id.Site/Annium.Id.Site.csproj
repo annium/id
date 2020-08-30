@@ -15,9 +15,13 @@
     <ItemGroup>
         <ProjectReference Include="../../../../frontend/web/src/Annium.Blazor.Ant/Annium.Blazor.Ant.csproj" />
         <ProjectReference Include="../../../../frontend/web/src/Annium.Blazor.Css/Annium.Blazor.Css.csproj" />
+        <ProjectReference Include="../../../../frontend/web/src/Annium.Blazor.Net/Annium.Blazor.Net.csproj" />
+        <ProjectReference Include="../../../../frontend/web/src/Annium.Blazor.Storage/Annium.Blazor.Storage.csproj" />
+        <ProjectReference Include="../../../../frontend/shared/src/Annium.Components.State/Annium.Components.State.csproj" />
         <ProjectReference Include="../../api/Annium.Id.Api.ViewModels/Annium.Id.Api.ViewModels.csproj" />
     </ItemGroup>
     <ItemGroup>
+        <PackageReference Include="Annium.Configuration.Yaml" Version="0.1.0" />
         <PackageReference Include="Annium.Core.Mapper" Version="0.1.0" />
         <PackageReference Include="Annium.Extensions.Validation" Version="0.1.0" />
         <PackageReference Include="Annium.Localization.InMemory" Version="0.1.0" />

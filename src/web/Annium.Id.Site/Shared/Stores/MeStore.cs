@@ -66,7 +66,7 @@ namespace Annium.Id.Site.Shared.Stores
         private async Task Load(bool force)
         {
             // fail immediately if no tokens
-            if (await _tokenStore.GetAsync() is null)
+            if (_tokenStore.Get() is null)
             {
                 Console.WriteLine("MeStore.Load: no tokens");
                 State.Fail(Result.New().Error("Tokens missing"));

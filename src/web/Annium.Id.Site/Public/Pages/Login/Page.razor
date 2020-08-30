@@ -6,7 +6,7 @@
 @page "/login"
 @layout MinimalCentricLayout
 
-@inject Store Store
+@inject IStore Store
 @inject Style Style
 @inject NavigationManager Router
 @inject ILocalizer<Page> T
@@ -16,14 +16,14 @@
 </PageTitle>
 
 <div class="@Style.Form">
-    <FormField TValue="string" State="@Store.State.At(x => x.Login)" Class="@Style.FormItem">
+    <FormField TValue="string" State="@Store.Form.At(x => x.Login)" Class="@Style.FormItem">
         <TextField
             TValue="string"
             Size="@InputSize.Large"
             Placeholder="@T["Login"]" />
     </FormField>
 
-    <FormField TValue="string" State="@Store.State.At(x => x.Password)" Class="@Style.FormItem">
+    <FormField TValue="string" State="@Store.Form.At(x => x.Password)" Class="@Style.FormItem">
         <TextField
             TValue="string"
             Size="@InputSize.Large"
@@ -35,7 +35,7 @@
         block
         disabled="@(!Store.CanLogin)"
         size="large"
-        OnClick="@Store.Login"
+        OnClick="@Store.LogIn"
         >
         @T["Sign in"]
     </Button>
