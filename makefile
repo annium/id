@@ -50,7 +50,7 @@ publish-api:
 	$(call publish,migrations,.,src/api/Annium.Id.Api/migrations.dockerfile)
 
 publish-site:
-	$(call publish,site,src/web/Annium.Id.Site,site.dockerfile)
+	$(call publish,site,.,src/web/Annium.Id.Site/site.dockerfile)
 
 
 define publish
