@@ -11,7 +11,7 @@ services:
     <<: *base
     build:
       context: .
-      dockerfile: src/api/Annium.Id.Api/Dockerfile
+      dockerfile: src/api/Annium.Id.Api/api.dockerfile
     image: id_api
     container_name: id_api
     ports:
@@ -32,7 +32,7 @@ services:
     <<: *base
     build:
       context: ./src/web/Annium.Id.Site
-      dockerfile: Dockerfile
+      dockerfile: site.dockerfile
     image: id_site
     container_name: id_site
     ports:

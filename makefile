@@ -46,11 +46,11 @@ gen-demo-test-client:
 
 
 publish-api:
-	$(call publish,api,.,src/api/Annium.Id.Api/Dockerfile)
-	$(call publish,migrations,.,src/api/Annium.Id.Api/migrations.Dockerfile)
+	$(call publish,api,.,src/api/Annium.Id.Api/api.dockerfile)
+	$(call publish,migrations,.,src/api/Annium.Id.Api/migrations.dockerfile)
 
 publish-site:
-	$(call publish,site,web/site,Dockerfile)
+	$(call publish,site,src/web/Annium.Id.Site,site.dockerfile)
 
 
 define publish
