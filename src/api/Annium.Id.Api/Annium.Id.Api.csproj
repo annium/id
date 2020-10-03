@@ -17,6 +17,7 @@
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Annium.Architecture.Http" Version="0.1.0" />
+        <PackageReference Include="Annium.Configuration.CommandLine" Version="0.1.0" />
         <PackageReference Include="Annium.Logging.Microsoft" Version="0.1.0" />
         <PackageReference Include="Annium.NodaTime.Serialization.Json" Version="0.1.0" />
         <PackageReference Include="XRest.Plugins.AspNetCore" Version="0.1.0" />

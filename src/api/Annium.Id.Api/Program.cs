@@ -1,4 +1,5 @@
 using System.IO;
+using Annium.Configuration.Abstractions;
 using Annium.Core.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
@@ -14,6 +15,8 @@ namespace Annium.Id.Api
 
         private static IHostBuilder CreateHostBuilder(string[] args)
         {
+            var hostConfiguration = Configurator.Get<HostConfiguration>(x => x.AddCommandLineArgs(), true);
+
             return Host.CreateDefaultBuilder(args)
                 .UseServiceProviderFactory(new ServiceProviderFactory(b => b.UseServicePack<ServicePack>()))
                 .ConfigureLoggingBridge()
@@ -24,7 +27,7 @@ namespace Annium.Id.Api
                         .UseKestrel(server =>
                         {
                             server.AddServerHeader = false;
-                            server.ListenAnyIP(5000, listen =>
+                            server.ListenAnyIP(hostConfiguration.Port, listen =>
                             {
                                 var certFile = Path.GetFullPath(Path.Combine("certs", "cert.pfx"));
                                 if (File.Exists(certFile))
