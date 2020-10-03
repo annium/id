@@ -54,7 +54,7 @@ gtc-api:
 
 gtc-demo:
 	xrest dotnet gen \
-		-s http://localhost:9501 \
+		-s http://localhost:9502 \
 		-a test/api/Annium.Id.Demo/bin/Debug/netcoreapp3.1/Annium.Id.Demo.dll \
 		-o test/api/Annium.Id.Demo.TestClient \
 		-t
