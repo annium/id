@@ -34,15 +34,30 @@ db-drop db-update migrations-add migrations-list migrations-remove:
  		-project src/infrastructure/Annium.Id.Infrastructure.DbMigrator \
 		-context Context
 
+gwc: gwc-api
 
-gen-api-site-client:
-	xrest dotnet gen -s http://localhost:5000 -a src/api/Annium.Id.Api/bin/Debug/netcoreapp3.1/Annium.Id.Api.dll -o src/web/Annium.Id.Site/Shared/Api/Server -ns Annium.Id.Site.Shared.Api.Server -trace
+gwc-api:
+	xrest dotnet gen \
+		-s http://localhost:9501 \
+		-a src/api/Annium.Id.Api/bin/Debug/netcoreapp3.1/Annium.Id.Api.dll \
+		-o src/web/Annium.Id.Site/Shared/Api/Server \
+		-ns Annium.Id.Site.Shared.Api.Server
 
-gen-api-test-client:
-	xrest dotnet gen -s http://localhost:5000 -a src/api/Annium.Id.Api/bin/Debug/netcoreapp3.1/Annium.Id.Api.dll -o test/api/Annium.Id.Api.TestClient -t -trace
+gtc: gtc-api gtc-demo
 
-gen-demo-test-client:
-	xrest dotnet gen -s http://localhost:5000 -a test/api/Annium.Id.Demo/bin/Debug/netcoreapp3.1/Annium.Id.Demo.dll -o test/api/Annium.Id.Demo.TestClient -t -trace
+gtc-api:
+	xrest dotnet gen \
+		-s http://localhost:9501 \
+		-a src/api/Annium.Id.Api/bin/Debug/netcoreapp3.1/Annium.Id.Api.dll \
+		-o test/api/Annium.Id.Api.TestClient \
+		-t
+
+gtc-demo:
+	xrest dotnet gen \
+		-s http://localhost:9501 \
+		-a test/api/Annium.Id.Demo/bin/Debug/netcoreapp3.1/Annium.Id.Demo.dll \
+		-o test/api/Annium.Id.Demo.TestClient \
+		-t
 
 
 publish-api:
