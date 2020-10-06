@@ -1,14 +1,13 @@
-# OS & misc
-/.vscode/
-**/.DS_STORE
-**/*.log
+# ignore all by default
+**
 
-# .NET
+# all sources & tests
+!/.config/
+!/src/
+!/test/
+
+# ignore artifacts
 **/bin/
 **/obj/
-**/coverage.json
-
-# local artifacts
 **/configuration/
-**/run/
-/tools/
+**/keys/
