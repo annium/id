@@ -19,6 +19,6 @@
         <PackageReference Include="Annium.Net.Mail" Version="0.1.0" />
     </ItemGroup>
     <ItemGroup>
-        <None Update="Email/Templates/*.html" CopyToOutputDirectory="PreserveNewest" />
+        <None Update="Templates/*.html" CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
 </Project>
