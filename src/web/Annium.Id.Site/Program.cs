@@ -13,7 +13,7 @@ namespace Annium.Id.Site
             builder.RootComponents.Add<App>("app");
             builder.ConfigureContainer(new ServiceProviderFactory(x => x.UseServicePack<ServicePack>()));
             builder.Services.AddRuntimeTools(typeof(Program).Assembly, false);
-            await builder.Services.AddConfigurationAsync<Shared.Configuration>(cfg => cfg.AddRemoteYaml($"{builder.HostEnvironment.BaseAddress}site.yml"));
+            builder.Services.AddConfiguration<Shared.Configuration>(cfg => cfg.AddRemoteYaml($"{builder.HostEnvironment.BaseAddress}site.yml"));
             // builder.Logging.ConfigureLoggingBridge();
             await builder.Build().RunAsync();
         }
