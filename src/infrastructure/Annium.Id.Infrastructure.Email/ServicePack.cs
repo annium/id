@@ -21,8 +21,7 @@ namespace Annium.Id.Infrastructure.Email
 
         public override void Register(IServiceCollection services, System.IServiceProvider provider)
         {
-            var config = provider.GetRequiredService<Configuration>();
-            services.AddSingleton<Net.Mail.Configuration>(config);
+            services.AddSingleton<Net.Mail.Configuration>(sp => sp.GetRequiredService<Configuration>());
             services.AddEmailService();
         }
     }

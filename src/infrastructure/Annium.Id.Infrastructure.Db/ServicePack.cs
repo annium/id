@@ -23,12 +23,11 @@ namespace Annium.Id.Infrastructure.Db
 
         public override void Register(IServiceCollection services, IServiceProvider provider)
         {
-            var cfg = provider.GetRequiredService<Configuration>();
-
             // register context
             services
-                .AddDbContext<Context>(builder =>
+                .AddDbContext<Context>((sp, builder) =>
                 {
+                    var cfg = sp.GetRequiredService<Configuration>();
                     builder.UseNpgsql(
                         string.Join(';', new string[]
                         {
@@ -47,12 +46,6 @@ namespace Annium.Id.Infrastructure.Db
                         }
                     );
                 });
-
-            // log queries if needed
-            if (cfg.LogQueries)
-            {
-                // TODO:
-            }
         }
     }
 }

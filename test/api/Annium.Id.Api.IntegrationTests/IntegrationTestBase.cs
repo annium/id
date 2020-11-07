@@ -3,7 +3,6 @@ using System.IO;
 using Annium.AspNetCore.IntegrationTesting;
 using Annium.Core.DependencyInjection;
 using Annium.Id.Api.TestClient;
-using Annium.Id.AspNetCore;
 using Annium.Id.Demo.TestClient;
 using Annium.Net.Http;
 using Annium.Net.Mail;
@@ -45,7 +44,7 @@ namespace Annium.Id.Api.IntegrationTests
                 builder => builder.UseServicePack<Demo.ServicePack>(),
                 services => services
                     .AddHttpRequestFactory()
-                    .AddIdAuthorization(options =>
+                    .AddIdAuthorization((sp, options) =>
                     {
                         options.Audience = appId;
                         options.PublicKeyFile = Path.Combine("keys", "public.key");

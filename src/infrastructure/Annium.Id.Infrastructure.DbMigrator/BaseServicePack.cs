@@ -8,6 +8,7 @@ namespace Annium.Id.Infrastructure.DbMigrator
         public override void Configure(IServiceCollection services)
         {
             services.AddRuntimeTools(GetType().Assembly, false);
+            services.AddMapper();
         }
     }
 }

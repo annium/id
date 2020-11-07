@@ -106,9 +106,9 @@ namespace Annium.Id.Core.Tests
             return reader.ReadToken(token, new TokenReadOptions());
         }
 
-        private Action<AuthOptions> Configure(Guid appId)
+        private Action<IServiceProvider, AuthOptions> Configure(Guid appId)
         {
-            return options =>
+            return (sp, options) =>
             {
                 options.Audience = appId;
                 options.PrivateKeyFile = Path.Combine("keys", "private.key");

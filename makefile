@@ -28,11 +28,12 @@ deconfigure:
 	$(call clean,/configuration/ /keys/)
 
 
-db-drop db-update migrations-add migrations-list migrations-remove:
+db-drop db-migrate-up db-migrate-down migrations-add migrations-list migrations-remove:
 	@pwsh tools/ef/$@.ps1 \
 		-startup src/infrastructure/Annium.Id.Infrastructure.DbMigrator \
  		-project src/infrastructure/Annium.Id.Infrastructure.DbMigrator \
 		-context Context
+
 
 gwc: gwc-api
 
@@ -60,6 +61,8 @@ gtc-demo:
 		-t
 
 
+publish: publish-api publish-migrations publish-site
+
 publish-api:
 	$(call publish,api,.,src/api/Annium.Id.Api/app.dockerfile)
 
@@ -67,7 +70,7 @@ publish-migrations:
 	$(call publish,migrations,.,src/infrastructure/Annium.Id.Infrastructure.DbMigrator/migrations.dockerfile)
 
 publish-site:
-	$(call publish,site,.,src/web/Annium.Id.Site/site.dockerfile)
+	$(call publish,site,.,src/web/Annium.Id.Site/app.dockerfile)
 
 
 define publish

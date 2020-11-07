@@ -18,7 +18,7 @@ namespace Annium.Core.DependencyInjection
 
         public static IServiceCollection AddIdAuthorization(
             this IServiceCollection services,
-            Action<AuthOptions> configure
+            Action<IServiceProvider, AuthOptions> configure
         )
         {
             // configure authorization options

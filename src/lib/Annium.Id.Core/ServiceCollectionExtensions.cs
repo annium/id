@@ -9,14 +9,26 @@ namespace Annium.Id.Core
     {
         public static IServiceCollection AddIdAuthorizationCoreServices(
             this IServiceCollection services,
-            Action<AuthOptions> configure
+            Action<IServiceProvider, AuthOptions> configure
         )
         {
-            var options = new AuthOptions();
-            configure(options);
-            Validate(options);
-            services.AddSingleton(options);
+            services.AddSingleton(sp =>
+            {
+                var options = new AuthOptions();
 
+                configure(sp, options);
+                Validate(options);
+
+                return options;
+            });
+
+            return services.AddIdAuthorizationCoreServicesBase();
+        }
+
+        private static IServiceCollection AddIdAuthorizationCoreServicesBase(
+            this IServiceCollection services
+        )
+        {
             services.AddSingleton<IPolicyMapper, PolicyMapper>();
             services.AddSingleton<ITokenReader, TokenReader>();
             services.AddSingleton<ITokenWriter, TokenWriter>();

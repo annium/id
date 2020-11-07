@@ -31,8 +31,8 @@ services:
   site:
     <<: *base
     build:
-      context: ./src/web/Annium.Id.Site
-      dockerfile: site.dockerfile
+      context: .
+      dockerfile: src/web/Annium.Id.Site/app.dockerfile
     image: id_site
     container_name: id_site
     ports:

@@ -2,9 +2,8 @@ using System;
 using Annium.Core.DependencyInjection;
 using Annium.Core.Mediator;
 using Annium.Core.Runtime.Types;
-using Annium.Id.Api.Tools;
 using Annium.Id.Api.Application.Tools;
-using Annium.Id.AspNetCore;
+using Annium.Id.Api.Tools;
 using Annium.Id.Core;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
@@ -23,9 +22,9 @@ namespace Annium.Id.Api
             services.AddSingleton<Func<Instant>>(() => SystemClock.Instance.GetCurrentInstant());
 
             // auth
-            services.AddIdAuthorization(opts =>
+            services.AddIdAuthorization((sp, opts) =>
             {
-                var cfg = provider.GetRequiredService<Application.Configuration>();
+                var cfg = sp.GetRequiredService<Application.Configuration>();
                 opts.Audience = Constants.IdAppId;
                 opts.PublicKeyFile = cfg.PublicKeyFile;
                 opts.PrivateKeyFile = cfg.PrivateKeyFile;
