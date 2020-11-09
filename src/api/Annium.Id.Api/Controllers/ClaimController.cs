@@ -15,8 +15,9 @@ namespace Annium.Id.Api.Controllers
     public class ClaimController : ServerController
     {
         public ClaimController(
-            IMediator mediator
-        ) : base(mediator)
+            IMediator mediator,
+            IServiceProvider sp
+        ) : base(mediator, sp)
         {
         }
 

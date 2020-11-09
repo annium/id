@@ -15,8 +15,9 @@ namespace Annium.Id.Api.Controllers
     public class AppController : ServerController
     {
         public AppController(
-            IMediator mediator
-        ) : base(mediator)
+            IMediator mediator,
+            IServiceProvider sp
+        ) : base(mediator, sp)
         {
         }
 
