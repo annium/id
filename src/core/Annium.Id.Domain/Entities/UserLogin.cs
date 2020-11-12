@@ -9,7 +9,7 @@ namespace Annium.Id.Domain.Entities
         public Guid AppId { get; }
         public Guid UserId { get; }
         public Instant LoggedAt { get; }
-        public string IPAddress { get; }
+        public string IpAddress { get; }
         public string Client { get; }
         public Guid RefreshToken { get; set; }
         public Instant RefreshTokenExpires { get; set; }
@@ -27,7 +27,7 @@ namespace Annium.Id.Domain.Entities
             AppId = appId;
             UserId = userId;
             LoggedAt = loggedAt;
-            IPAddress = ipAddress;
+            IpAddress = ipAddress;
             Client = client;
             RefreshToken = refreshToken;
             RefreshTokenExpires = refreshTokenExpires;

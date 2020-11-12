@@ -17,9 +17,9 @@ namespace Annium.Id.Api.Application.CommandHandlers
         ICommandHandler<DeleteCompanyClaimFromCompanyUserCommand>,
         ICommandHandler<DeleteUserFromCompanyCommand>
     {
-        private readonly ICompanyUserRepository companyUserRepository;
-        private readonly ICompanyUserRoleRepository companyUserRoleRepository;
-        private readonly ICompanyUserClaimRepository companyUserClaimRepository;
+        private readonly ICompanyUserRepository _companyUserRepository;
+        private readonly ICompanyUserRoleRepository _companyUserRoleRepository;
+        private readonly ICompanyUserClaimRepository _companyUserClaimRepository;
 
         public CompanyUserCommandHandler(
             ICompanyUserRepository companyUserRepository,
@@ -27,9 +27,9 @@ namespace Annium.Id.Api.Application.CommandHandlers
             ICompanyUserClaimRepository companyUserClaimRepository
         )
         {
-            this.companyUserRepository = companyUserRepository;
-            this.companyUserRoleRepository = companyUserRoleRepository;
-            this.companyUserClaimRepository = companyUserClaimRepository;
+            _companyUserRepository = companyUserRepository;
+            _companyUserRoleRepository = companyUserRoleRepository;
+            _companyUserClaimRepository = companyUserClaimRepository;
         }
 
         public async Task<IStatusResult<OperationStatus>> HandleAsync(
@@ -45,9 +45,9 @@ namespace Annium.Id.Api.Application.CommandHandlers
                 return Result.Status(OperationStatus.Forbidden).Error("Need to be company owner to add user to company");
 
             var companyUser = new CompanyUser(company.Id, user.Id);
-            await companyUserRepository.SaveAsync(companyUser);
+            await _companyUserRepository.SaveAsync(companyUser);
 
-            return Result.Status(OperationStatus.OK);
+            return Result.Status(OperationStatus.Ok);
         }
 
         public async Task<IStatusResult<OperationStatus>> HandleAsync(
@@ -63,13 +63,13 @@ namespace Annium.Id.Api.Application.CommandHandlers
             if (myId != company.OwnerId)
                 return Result.Status(OperationStatus.Forbidden).Error("Need to be company owner to add company role to company user");
 
-            if (await companyUserRepository.GetByIdAsync(company.Id, user.Id) is null)
+            if (await _companyUserRepository.GetByIdAsync(company.Id, user.Id) is null)
                 return Result.Status(OperationStatus.Forbidden).Error("User is not company member");
 
             var companyUserRole = new CompanyUserRole(company.Id, user.Id, role.Id);
-            await companyUserRoleRepository.SaveAsync(companyUserRole);
+            await _companyUserRoleRepository.SaveAsync(companyUserRole);
 
-            return Result.Status(OperationStatus.OK);
+            return Result.Status(OperationStatus.Ok);
         }
 
         public async Task<IStatusResult<OperationStatus>> HandleAsync(
@@ -85,12 +85,12 @@ namespace Annium.Id.Api.Application.CommandHandlers
             if (myId != company.OwnerId)
                 return Result.Status(OperationStatus.Forbidden).Error("Need to be company owner to delete company role from company user");
 
-            if (await companyUserRepository.GetByIdAsync(company.Id, user.Id) is null)
+            if (await _companyUserRepository.GetByIdAsync(company.Id, user.Id) is null)
                 return Result.Status(OperationStatus.Forbidden).Error("User is not company member");
 
-            await companyUserRoleRepository.DeleteByIdAsync(company.Id, user.Id, role.Id);
+            await _companyUserRoleRepository.DeleteByIdAsync(company.Id, user.Id, role.Id);
 
-            return Result.Status(OperationStatus.OK);
+            return Result.Status(OperationStatus.Ok);
         }
 
         public async Task<IStatusResult<OperationStatus>> HandleAsync(
@@ -106,13 +106,13 @@ namespace Annium.Id.Api.Application.CommandHandlers
             if (myId != company.OwnerId)
                 return Result.Status(OperationStatus.Forbidden).Error("Need to be company owner to add company claim to company user");
 
-            if (await companyUserRepository.GetByIdAsync(company.Id, user.Id) is null)
+            if (await _companyUserRepository.GetByIdAsync(company.Id, user.Id) is null)
                 return Result.Status(OperationStatus.Forbidden).Error("User is not company member");
 
             var companyUserClaim = new CompanyUserClaim(company.Id, user.Id, claim.Id, request.Value);
-            await companyUserClaimRepository.SaveAsync(companyUserClaim);
+            await _companyUserClaimRepository.SaveAsync(companyUserClaim);
 
-            return Result.Status(OperationStatus.OK);
+            return Result.Status(OperationStatus.Ok);
         }
 
         public async Task<IStatusResult<OperationStatus>> HandleAsync(
@@ -128,12 +128,12 @@ namespace Annium.Id.Api.Application.CommandHandlers
             if (myId != company.OwnerId)
                 return Result.Status(OperationStatus.Forbidden).Error("Need to be company owner to delete company claim from company user");
 
-            if (await companyUserRepository.GetByIdAsync(company.Id, user.Id) is null)
+            if (await _companyUserRepository.GetByIdAsync(company.Id, user.Id) is null)
                 return Result.Status(OperationStatus.Forbidden).Error("User is not company member");
 
-            await companyUserClaimRepository.DeleteByIdAsync(company.Id, user.Id, claim.Id);
+            await _companyUserClaimRepository.DeleteByIdAsync(company.Id, user.Id, claim.Id);
 
-            return Result.Status(OperationStatus.OK);
+            return Result.Status(OperationStatus.Ok);
         }
 
         public async Task<IStatusResult<OperationStatus>> HandleAsync(
@@ -148,12 +148,12 @@ namespace Annium.Id.Api.Application.CommandHandlers
             if (myId != company.OwnerId)
                 return Result.Status(OperationStatus.Forbidden).Error("Need to be company owner to delete user from company");
 
-            if (await companyUserRepository.GetByIdAsync(company.Id, user.Id) is null)
+            if (await _companyUserRepository.GetByIdAsync(company.Id, user.Id) is null)
                 return Result.Status(OperationStatus.Forbidden).Error("User is not company member");
 
-            await companyUserRepository.DeleteByIdAsync(company.Id, user.Id);
+            await _companyUserRepository.DeleteByIdAsync(company.Id, user.Id);
 
-            return Result.Status(OperationStatus.OK);
+            return Result.Status(OperationStatus.Ok);
         }
     }
 }

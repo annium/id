@@ -14,13 +14,13 @@ namespace Annium.Id.Api.Application.QueryHandlers
     internal class RoleQueryHandler :
         IQueryHandler<ListRolesQuery, IEnumerable<Role>>
     {
-        private readonly IRoleRepository roleRepository;
+        private readonly IRoleRepository _roleRepository;
 
         public RoleQueryHandler(
             IRoleRepository roleRepository
         )
         {
-            this.roleRepository = roleRepository;
+            _roleRepository = roleRepository;
         }
 
         public async Task<IStatusResult<OperationStatus, IEnumerable<Role>>> HandleAsync(
@@ -28,9 +28,9 @@ namespace Annium.Id.Api.Application.QueryHandlers
             CancellationToken cancellationToken
         )
         {
-            var roles = await roleRepository.GetAllAsync(request.AppId);
+            var roles = await _roleRepository.GetAllAsync(request.AppId);
 
-            return Result.Status(OperationStatus.OK, roles.AsEnumerable());
+            return Result.Status(OperationStatus.Ok, roles.AsEnumerable());
         }
     }
 }

@@ -28,7 +28,7 @@ namespace Annium.Id.Api.Application.QueryHandlers
             CancellationToken cancellationToken
         )
         {
-            return Task.FromResult(Result.Status(OperationStatus.OK, request.User));
+            return Task.FromResult(Result.Status(OperationStatus.Ok, request.User));
         }
 
         public async Task<IStatusResult<OperationStatus, IdToken>> HandleAsync(
@@ -38,7 +38,7 @@ namespace Annium.Id.Api.Application.QueryHandlers
         {
             var token = await _tokenGenerator.GenerateToken(request.Login);
 
-            return Result.Status(OperationStatus.OK, token);
+            return Result.Status(OperationStatus.Ok, token);
         }
     }
 }

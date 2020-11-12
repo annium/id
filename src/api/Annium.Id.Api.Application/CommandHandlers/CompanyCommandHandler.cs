@@ -16,13 +16,13 @@ namespace Annium.Id.Api.Application.CommandHandlers
         ICommandHandler<SetCompanyOwnerCommand>,
         ICommandHandler<UnregisterCompanyCommand>
     {
-        private readonly ICompanyRepository companyRepository;
+        private readonly ICompanyRepository _companyRepository;
 
         public CompanyCommandHandler(
             ICompanyRepository companyRepository
         )
         {
-            this.companyRepository = companyRepository;
+            _companyRepository = companyRepository;
         }
 
         public async Task<IStatusResult<OperationStatus, Guid>> HandleAsync(
@@ -35,7 +35,7 @@ namespace Annium.Id.Api.Application.CommandHandlers
 
             if (parentId.HasValue)
             {
-                var parent = await companyRepository.GetByIdAsync(parentId.Value);
+                var parent = await _companyRepository.GetByIdAsync(parentId.Value);
                 if (parent is null)
                     return Result.Status(OperationStatus.NotFound, Guid.Empty).Error("Parent company not found");
 
@@ -49,9 +49,9 @@ namespace Annium.Id.Api.Application.CommandHandlers
                 request.Name
             );
 
-            company = await companyRepository.CreateAsync(company);
+            company = await _companyRepository.CreateAsync(company);
 
-            return Result.Status(OperationStatus.OK, company.Id);
+            return Result.Status(OperationStatus.Ok, company.Id);
         }
 
         public async Task<IStatusResult<OperationStatus>> HandleAsync(
@@ -68,7 +68,7 @@ namespace Annium.Id.Api.Application.CommandHandlers
 
             if (parentId.HasValue)
             {
-                var parent = await companyRepository.GetByIdAsync(parentId.Value);
+                var parent = await _companyRepository.GetByIdAsync(parentId.Value);
                 if (parent is null)
                     return Result.Status(OperationStatus.NotFound).Error("Parent company not found");
 
@@ -79,9 +79,9 @@ namespace Annium.Id.Api.Application.CommandHandlers
             company.ParentId = request.ParentId;
             company.Name = request.Name;
 
-            await companyRepository.UpdateAsync(company);
+            await _companyRepository.UpdateAsync(company);
 
-            return Result.Status(OperationStatus.OK);
+            return Result.Status(OperationStatus.Ok);
         }
 
         public async Task<IStatusResult<OperationStatus>> HandleAsync(
@@ -98,9 +98,9 @@ namespace Annium.Id.Api.Application.CommandHandlers
 
             company.OwnerId = user.Id;
 
-            await companyRepository.UpdateAsync(company);
+            await _companyRepository.UpdateAsync(company);
 
-            return Result.Status(OperationStatus.OK);
+            return Result.Status(OperationStatus.Ok);
         }
 
         public async Task<IStatusResult<OperationStatus>> HandleAsync(
@@ -114,9 +114,9 @@ namespace Annium.Id.Api.Application.CommandHandlers
             if (myId != company.OwnerId)
                 return Result.Status(OperationStatus.Forbidden).Error("Need to be company owner to unregister company");
 
-            await companyRepository.DeleteByIdAsync(company.Id);
+            await _companyRepository.DeleteByIdAsync(company.Id);
 
-            return Result.Status(OperationStatus.OK);
+            return Result.Status(OperationStatus.Ok);
         }
     }
 }

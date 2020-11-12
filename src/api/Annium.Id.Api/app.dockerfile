@@ -1,8 +1,8 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1-alpine as builder
+FROM mcr.microsoft.com/dotnet/sdk:5.0-alpine as builder
 COPY . /code
 RUN dotnet publish -c release -o /app /code/src/api/Annium.Id.Api
 
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-alpine
+FROM mcr.microsoft.com/dotnet/aspnet:5.0-alpine
 WORKDIR /app
 COPY --from=builder /app /app
 VOLUME [ "/app/certs", "/app/configuration", "/app/keys" ]

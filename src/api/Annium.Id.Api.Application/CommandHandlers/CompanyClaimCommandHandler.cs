@@ -15,16 +15,16 @@ namespace Annium.Id.Api.Application.CommandHandlers
         ICommandHandler<UpdateCompanyClaimCommand>,
         ICommandHandler<DeleteCompanyClaimCommand>
     {
-        private readonly IAppRepository appRepository;
-        private readonly ICompanyClaimRepository companyClaimRepository;
+        private readonly IAppRepository _appRepository;
+        private readonly ICompanyClaimRepository _companyClaimRepository;
 
         public CompanyClaimCommandHandler(
             IAppRepository appRepository,
             ICompanyClaimRepository companyClaimRepository
         )
         {
-            this.appRepository = appRepository;
-            this.companyClaimRepository = companyClaimRepository;
+            _appRepository = appRepository;
+            _companyClaimRepository = companyClaimRepository;
         }
 
         public async Task<IStatusResult<OperationStatus, Guid>> HandleAsync(
@@ -44,9 +44,9 @@ namespace Annium.Id.Api.Application.CommandHandlers
                 request.Name
             );
 
-            claim = await companyClaimRepository.CreateAsync(claim);
+            claim = await _companyClaimRepository.CreateAsync(claim);
 
-            return Result.Status(OperationStatus.OK, claim.Id);
+            return Result.Status(OperationStatus.Ok, claim.Id);
         }
 
         public async Task<IStatusResult<OperationStatus>> HandleAsync(
@@ -55,21 +55,21 @@ namespace Annium.Id.Api.Application.CommandHandlers
         )
         {
             var myId = request.MyId;
-            var app = await appRepository.GetByIdAsync(request.Claim.AppId);
+            var app = await _appRepository.GetByIdAsync(request.Claim.AppId);
             var claim = request.Claim;
 
             if (myId != app.OwnerId)
                 return Result.Status(OperationStatus.Forbidden).Error($"Need to be application owner to update company claim");
 
-            if (request.Key != claim.Key && await companyClaimRepository.FindByKeyAsync(app.Id, request.Key) != null)
+            if (request.Key != claim.Key && await _companyClaimRepository.FindByKeyAsync(app.Id, request.Key) != null)
                 return Result.Status(OperationStatus.Conflict).Error($"Company claim key {request.Key} is already used");
 
             claim.Key = request.Key;
             claim.Name = request.Name;
 
-            await companyClaimRepository.UpdateAsync(claim);
+            await _companyClaimRepository.UpdateAsync(claim);
 
-            return Result.Status(OperationStatus.OK);
+            return Result.Status(OperationStatus.Ok);
         }
 
         public async Task<IStatusResult<OperationStatus>> HandleAsync(
@@ -78,15 +78,15 @@ namespace Annium.Id.Api.Application.CommandHandlers
         )
         {
             var myId = request.MyId;
-            var app = await appRepository.GetByIdAsync(request.Claim.AppId);
+            var app = await _appRepository.GetByIdAsync(request.Claim.AppId);
             var claim = request.Claim;
 
             if (myId != app.OwnerId)
                 return Result.Status(OperationStatus.Forbidden).Error($"Need to be application owner to delete company claim");
 
-            await companyClaimRepository.DeleteByIdAsync(claim.Id);
+            await _companyClaimRepository.DeleteByIdAsync(claim.Id);
 
-            return Result.Status(OperationStatus.OK);
+            return Result.Status(OperationStatus.Ok);
         }
     }
 }

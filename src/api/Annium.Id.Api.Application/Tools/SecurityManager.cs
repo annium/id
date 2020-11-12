@@ -6,16 +6,16 @@ namespace Annium.Id.Api.Application.Tools
 {
     internal class SecurityManager : ISecurityManager, IDisposable
     {
-        private readonly HashAlgorithm hashAlgorithm = new SHA512CryptoServiceProvider();
+        private readonly HashAlgorithm _hashAlgorithm = new SHA512CryptoServiceProvider();
 
         public string Hash(string data)
         {
-            return Convert.ToBase64String(hashAlgorithm.ComputeHash(Encoding.UTF8.GetBytes(data)));
+            return Convert.ToBase64String(_hashAlgorithm.ComputeHash(Encoding.UTF8.GetBytes(data)));
         }
 
         public void Dispose()
         {
-            hashAlgorithm.Dispose();
+            _hashAlgorithm.Dispose();
         }
     }
 }

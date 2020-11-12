@@ -8,16 +8,16 @@ namespace Annium.Id.Infrastructure.Email
 {
     public class EmailService : IEmailService
     {
-        private readonly Configuration cfg;
-        private readonly Net.Mail.IEmailService emailService;
+        private readonly Configuration _cfg;
+        private readonly Net.Mail.IEmailService _emailService;
 
         public EmailService(
             Configuration cfg,
             Net.Mail.IEmailService emailService
         )
         {
-            this.cfg = cfg;
-            this.emailService = emailService;
+            _cfg = cfg;
+            _emailService = emailService;
         }
 
         public async Task<IBooleanResult> SendEmailConfirmationAsync(User user, Uri server)
@@ -31,7 +31,7 @@ namespace Annium.Id.Infrastructure.Email
                 Id = user.Id
             };
 
-            return await emailService.SendAsync(message, "confirm-email", data);
+            return await _emailService.SendAsync(message, "confirm-email", data);
         }
 
         public async Task<IBooleanResult> SendRestoreAccessAsync(User user, Uri server, Tokens tokens)
@@ -45,14 +45,14 @@ namespace Annium.Id.Infrastructure.Email
                 Tokens = tokens
             };
 
-            return await emailService.SendAsync(message, "restore-access", data);
+            return await _emailService.SendAsync(message, "restore-access", data);
         }
 
         private MailMessage GetMessage(string subject)
         {
             return new MailMessage
             {
-                From = new MailAddress(cfg.FromAddress, cfg.FromDisplay),
+                From = new MailAddress(_cfg.FromAddress, _cfg.FromDisplay),
                 Subject = subject
             };
         }

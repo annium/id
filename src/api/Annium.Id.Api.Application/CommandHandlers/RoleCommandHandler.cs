@@ -17,9 +17,9 @@ namespace Annium.Id.Api.Application.CommandHandlers
         ICommandHandler<DeleteClaimFromRoleCommand>,
         ICommandHandler<DeleteRoleCommand>
     {
-        private readonly IAppRepository appRepository;
-        private readonly IRoleRepository roleRepository;
-        private readonly IRoleClaimRepository roleClaimRepository;
+        private readonly IAppRepository _appRepository;
+        private readonly IRoleRepository _roleRepository;
+        private readonly IRoleClaimRepository _roleClaimRepository;
 
         public RoleCommandHandler(
             IAppRepository appRepository,
@@ -27,9 +27,9 @@ namespace Annium.Id.Api.Application.CommandHandlers
             IRoleClaimRepository roleClaimRepository
         )
         {
-            this.appRepository = appRepository;
-            this.roleRepository = roleRepository;
-            this.roleClaimRepository = roleClaimRepository;
+            _appRepository = appRepository;
+            _roleRepository = roleRepository;
+            _roleClaimRepository = roleClaimRepository;
         }
 
         public async Task<IStatusResult<OperationStatus, Guid>> HandleAsync(
@@ -50,9 +50,9 @@ namespace Annium.Id.Api.Application.CommandHandlers
                 Array.Empty<ClaimValue>()
             );
 
-            role = await roleRepository.CreateAsync(role);
+            role = await _roleRepository.CreateAsync(role);
 
-            return Result.Status(OperationStatus.OK, role.Id);
+            return Result.Status(OperationStatus.Ok, role.Id);
         }
 
         public async Task<IStatusResult<OperationStatus>> HandleAsync(
@@ -61,21 +61,21 @@ namespace Annium.Id.Api.Application.CommandHandlers
         )
         {
             var myId = request.MyId;
-            var app = await appRepository.GetByIdAsync(request.Role.AppId);
+            var app = await _appRepository.GetByIdAsync(request.Role.AppId);
             var role = request.Role;
 
             if (myId != app.OwnerId)
                 return Result.Status(OperationStatus.Forbidden).Error($"Need to be application owner to update role");
 
-            if (request.Key != role.Key && await roleRepository.FindByKeyAsync(app.Id, request.Key) != null)
+            if (request.Key != role.Key && await _roleRepository.FindByKeyAsync(app.Id, request.Key) != null)
                 return Result.Status(OperationStatus.Conflict).Error($"Role key {request.Key} is already used");
 
             role.Key = request.Key;
             role.Name = request.Name;
 
-            await roleRepository.UpdateAsync(role);
+            await _roleRepository.UpdateAsync(role);
 
-            return Result.Status(OperationStatus.OK);
+            return Result.Status(OperationStatus.Ok);
         }
 
         public async Task<IStatusResult<OperationStatus>> HandleAsync(
@@ -84,7 +84,7 @@ namespace Annium.Id.Api.Application.CommandHandlers
         )
         {
             var myId = request.MyId;
-            var app = await appRepository.GetByIdAsync(request.Role.AppId);
+            var app = await _appRepository.GetByIdAsync(request.Role.AppId);
             var role = request.Role;
             var claim = request.Claim;
 
@@ -96,9 +96,9 @@ namespace Annium.Id.Api.Application.CommandHandlers
 
             var roleClaim = new RoleClaim(role.Id, claim.Id, request.Value);
 
-            await roleClaimRepository.SaveAsync(roleClaim);
+            await _roleClaimRepository.SaveAsync(roleClaim);
 
-            return Result.Status(OperationStatus.OK);
+            return Result.Status(OperationStatus.Ok);
         }
 
         public async Task<IStatusResult<OperationStatus>> HandleAsync(
@@ -107,7 +107,7 @@ namespace Annium.Id.Api.Application.CommandHandlers
         )
         {
             var myId = request.MyId;
-            var app = await appRepository.GetByIdAsync(request.Role.AppId);
+            var app = await _appRepository.GetByIdAsync(request.Role.AppId);
             var role = request.Role;
             var claim = request.Claim;
 
@@ -117,9 +117,9 @@ namespace Annium.Id.Api.Application.CommandHandlers
             if (claim.AppId != app.Id)
                 return Result.Status(OperationStatus.Forbidden).Error("Claim belongs to another application");
 
-            await roleClaimRepository.DeleteByIdAsync(role.Id, claim.Id);
+            await _roleClaimRepository.DeleteByIdAsync(role.Id, claim.Id);
 
-            return Result.Status(OperationStatus.OK);
+            return Result.Status(OperationStatus.Ok);
         }
 
         public async Task<IStatusResult<OperationStatus>> HandleAsync(
@@ -128,15 +128,15 @@ namespace Annium.Id.Api.Application.CommandHandlers
         )
         {
             var myId = request.MyId;
-            var app = await appRepository.GetByIdAsync(request.Role.AppId);
+            var app = await _appRepository.GetByIdAsync(request.Role.AppId);
             var role = request.Role;
 
             if (myId != app.OwnerId)
                 return Result.Status(OperationStatus.Forbidden).Error($"Need to be application owner to delete role");
 
-            await roleRepository.DeleteByIdAsync(role.Id);
+            await _roleRepository.DeleteByIdAsync(role.Id);
 
-            return Result.Status(OperationStatus.OK);
+            return Result.Status(OperationStatus.Ok);
         }
     }
 }

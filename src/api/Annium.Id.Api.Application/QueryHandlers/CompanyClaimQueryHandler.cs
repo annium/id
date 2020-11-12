@@ -14,13 +14,13 @@ namespace Annium.Id.Api.Application.QueryHandlers
     public class CompanyClaimQueryHandler :
         IQueryHandler<ListCompanyClaimsQuery, IEnumerable<CompanyClaim>>
     {
-        private readonly ICompanyClaimRepository companyClaimRepository;
+        private readonly ICompanyClaimRepository _companyClaimRepository;
 
         public CompanyClaimQueryHandler(
             ICompanyClaimRepository companyClaimRepository
         )
         {
-            this.companyClaimRepository = companyClaimRepository;
+            _companyClaimRepository = companyClaimRepository;
         }
 
         public async Task<IStatusResult<OperationStatus, IEnumerable<CompanyClaim>>> HandleAsync(
@@ -28,9 +28,9 @@ namespace Annium.Id.Api.Application.QueryHandlers
             CancellationToken cancellationToken
         )
         {
-            var claims = await companyClaimRepository.GetAllAsync(request.App.Id);
+            var claims = await _companyClaimRepository.GetAllAsync(request.App.Id);
 
-            return Result.Status(OperationStatus.OK, claims.AsEnumerable());
+            return Result.Status(OperationStatus.Ok, claims.AsEnumerable());
         }
     }
 }

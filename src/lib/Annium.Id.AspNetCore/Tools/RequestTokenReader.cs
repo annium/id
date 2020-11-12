@@ -13,19 +13,19 @@ namespace Annium.Id.AspNetCore.Tools
         public ValueTuple<string, IActionResult?> ReadToken(HttpRequest request)
         {
             if (!request.Headers.ContainsKey(HeaderNames.Authorization))
-                return fail(HttpStatusCode.Unauthorized, "Bearer authorization required.");
+                return Fail(HttpStatusCode.Unauthorized, "Bearer authorization required.");
             var authorization = request.Headers[HeaderNames.Authorization]
                 .ToString().Split(' ').Select(e => e.Trim()).ToArray();
             if (authorization.Length != 2)
-                return fail(HttpStatusCode.Unauthorized, "Authorization format is invalid.");
+                return Fail(HttpStatusCode.Unauthorized, "Authorization format is invalid.");
 
             var (type, token) = (authorization[0], authorization[1]);
             if (type != "Bearer")
-                return fail(HttpStatusCode.Unauthorized, "Bearer authorization required.");
+                return Fail(HttpStatusCode.Unauthorized, "Bearer authorization required.");
 
             return (token, null);
 
-            static (string, IActionResult) fail(HttpStatusCode statusCode, string message)
+            static (string, IActionResult) Fail(HttpStatusCode statusCode, string message)
             {
                 return (string.Empty, new ObjectResult(Result.Failure().Error(message)) { StatusCode = (int) statusCode });
             }

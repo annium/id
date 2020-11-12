@@ -17,13 +17,13 @@ namespace Annium.Id.Api.Application.CommandHandlers
         ICommandHandler<UpdateAppApiTokenCommand, Guid>,
         ICommandHandler<DeleteAppCommand>
     {
-        private readonly IAppRepository appRepository;
+        private readonly IAppRepository _appRepository;
 
         public AppCommandHandler(
             IAppRepository appRepository
         )
         {
-            this.appRepository = appRepository;
+            _appRepository = appRepository;
         }
 
         public async Task<IStatusResult<OperationStatus, Guid>> HandleAsync(
@@ -33,9 +33,9 @@ namespace Annium.Id.Api.Application.CommandHandlers
         {
             var app = new App(request.MyId, request.Name, Guid.NewGuid());
 
-            app = await appRepository.CreateAsync(app);
+            app = await _appRepository.CreateAsync(app);
 
-            return Result.Status(OperationStatus.OK, app.Id);
+            return Result.Status(OperationStatus.Ok, app.Id);
         }
 
         public async Task<IStatusResult<OperationStatus>> HandleAsync(
@@ -51,9 +51,9 @@ namespace Annium.Id.Api.Application.CommandHandlers
 
             app.Name = request.Name;
 
-            await appRepository.UpdateAsync(app);
+            await _appRepository.UpdateAsync(app);
 
-            return Result.Status(OperationStatus.OK);
+            return Result.Status(OperationStatus.Ok);
         }
 
         public async Task<IStatusResult<OperationStatus>> HandleAsync(
@@ -70,9 +70,9 @@ namespace Annium.Id.Api.Application.CommandHandlers
 
             app.OwnerId = newOwner.Id;
 
-            await appRepository.UpdateAsync(app);
+            await _appRepository.UpdateAsync(app);
 
-            return Result.Status(OperationStatus.OK);
+            return Result.Status(OperationStatus.Ok);
         }
 
         public async Task<IStatusResult<OperationStatus, Guid>> HandleAsync(
@@ -87,9 +87,9 @@ namespace Annium.Id.Api.Application.CommandHandlers
                 return Result.Status(OperationStatus.Forbidden, Guid.Empty).Error($"Need to be application owner to update app api token");
 
             var apiToken = Guid.NewGuid();
-            await appRepository.UpdateApiTokenAsync(app.Id, Guid.NewGuid());
+            await _appRepository.UpdateApiTokenAsync(app.Id, Guid.NewGuid());
 
-            return Result.Status(OperationStatus.OK, apiToken);
+            return Result.Status(OperationStatus.Ok, apiToken);
         }
 
         public async Task<IStatusResult<OperationStatus>> HandleAsync(
@@ -103,9 +103,9 @@ namespace Annium.Id.Api.Application.CommandHandlers
             if (myId != app.OwnerId)
                 return Result.Status(OperationStatus.Forbidden).Error($"Need to be application owner to update app api token");
 
-            await appRepository.DeleteByIdAsync(app.Id);
+            await _appRepository.DeleteByIdAsync(app.Id);
 
-            return Result.Status(OperationStatus.OK);
+            return Result.Status(OperationStatus.Ok);
         }
     }
 }

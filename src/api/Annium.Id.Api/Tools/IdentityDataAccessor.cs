@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Net;
 using Annium.Id.Api.Application.Tools;
@@ -8,18 +9,18 @@ namespace Annium.Id.Api.Tools
 {
     internal class IdentityDataAccessor : IIdentityDataAccessor
     {
-        private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public IdentityDataAccessor(
             IHttpContextAccessor httpContextAccessor
         )
         {
-            this.httpContextAccessor = httpContextAccessor;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public IdentityData GetIdentityData()
         {
-            var context = httpContextAccessor.HttpContext;
+            var context = _httpContextAccessor.HttpContext ?? throw new InvalidOperationException("HttpContext is null");
 
             var ipAddress = context.Connection.RemoteIpAddress ?? IPAddress.Loopback;
             var client = context.Request.Headers.ContainsKey("User-Agent") ? context.Request.Headers["User-Agent"].First() : string.Empty;

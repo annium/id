@@ -13,9 +13,9 @@ namespace Annium.Id.AspNetCore.Pipeline
 {
     internal class PolicyFilter : IActionFilter
     {
-        private readonly ITokenAccessor tokenAccessor;
-        private readonly Policy policy;
-        private readonly Func<IdToken, IReadOnlyDictionary<string, object>, object[]> mapArguments;
+        private readonly ITokenAccessor _tokenAccessor;
+        private readonly Policy _policy;
+        private readonly Func<IdToken, IReadOnlyDictionary<string, object>, object[]> _mapArguments;
 
         public PolicyFilter(
             ITokenAccessor tokenAccessor,
@@ -23,9 +23,9 @@ namespace Annium.Id.AspNetCore.Pipeline
             Func<IdToken, IReadOnlyDictionary<string, object>, object[]> mapArguments
         )
         {
-            this.tokenAccessor = tokenAccessor;
-            this.policy = policy;
-            this.mapArguments = mapArguments;
+            _tokenAccessor = tokenAccessor;
+            _policy = policy;
+            _mapArguments = mapArguments;
         }
 
         public void OnActionExecuting(ActionExecutingContext context)
@@ -38,11 +38,11 @@ namespace Annium.Id.AspNetCore.Pipeline
             }
 
             var args = context.ActionArguments.ToDictionary(p => p.Key, p => p.Value);
-            var arguments = mapArguments(token, args);
+            var arguments = _mapArguments(token, args);
 
             try
             {
-                var result = (bool) policy.Handle.DynamicInvoke(arguments) !;
+                var result = (bool) _policy.Handle.DynamicInvoke(arguments) !;
                 if (!result)
                     context.Result = GetFailure("Access policy violation");
             }
@@ -60,7 +60,7 @@ namespace Annium.Id.AspNetCore.Pipeline
         {
             try
             {
-                return tokenAccessor.GetToken();
+                return _tokenAccessor.GetToken();
             }
             catch
             {

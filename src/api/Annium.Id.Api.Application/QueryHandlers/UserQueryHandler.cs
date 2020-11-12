@@ -31,7 +31,7 @@ namespace Annium.Id.Api.Application.QueryHandlers
         {
             var users = await _userRepository.FindAllByQueryAsync(request.Query, request.Limit);
 
-            return Result.Status(OperationStatus.OK, users.AsEnumerable());
+            return Result.Status(OperationStatus.Ok, users.AsEnumerable());
         }
 
         public Task<IStatusResult<OperationStatus, User>> HandleAsync(
@@ -39,7 +39,7 @@ namespace Annium.Id.Api.Application.QueryHandlers
             CancellationToken ct
         )
         {
-            return Task.FromResult(Result.Status(OperationStatus.OK, request.User));
+            return Task.FromResult(Result.Status(OperationStatus.Ok, request.User));
         }
     }
 }

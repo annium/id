@@ -6,19 +6,20 @@ namespace Annium.Id.AspNetCore.Tools
 {
     internal class HttpContextTokenAccessor : ITokenAccessor
     {
-        private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public HttpContextTokenAccessor(IHttpContextAccessor httpContextAccessor)
         {
-            this.httpContextAccessor = httpContextAccessor;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public IdToken GetToken()
         {
-            if (!httpContextAccessor.HttpContext.Items.TryGetValue(Constants.IdTokenProperty, out var raw))
-                throw new InvalidOperationException($"User is not authenticated.");
+            var context = _httpContextAccessor.HttpContext ?? throw new InvalidOperationException("HttpContext is null");
+            if (!context.Items.TryGetValue(Constants.IdTokenProperty, out var raw))
+                throw new InvalidOperationException("User is not authenticated.");
 
-            return (IdToken) raw;
+            return (IdToken) raw!;
         }
     }
 }

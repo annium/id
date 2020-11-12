@@ -13,7 +13,7 @@ namespace Annium.Core.DependencyInjection
 {
     public static class AuthorizationExtensions
     {
-        private static readonly ConditionalWeakTable<IServiceCollection, List<string>> policiesContainer =
+        private static readonly ConditionalWeakTable<IServiceCollection, List<string>> PoliciesContainer =
             new ConditionalWeakTable<IServiceCollection, List<string>>();
 
         public static IServiceCollection AddIdAuthorization(
@@ -87,14 +87,14 @@ namespace Annium.Core.DependencyInjection
             LambdaExpression expression
         )
         {
-            var policies = policiesContainer.GetOrCreateValue(services);
+            var policies = PoliciesContainer.GetOrCreateValue(services);
 
             if (policies.Contains(name))
                 throw new ArgumentException($"Policy {name} is already registered");
 
             var parameters = expression.Parameters
                 .Where(p => !typeof(IdToken).IsAssignableFrom(p.Type))
-                .ToDictionary(p => p.Name, p => p.Type);
+                .ToDictionary(p => p.Name!, p => p.Type);
             var handle = expression.Compile();
 
             var policy = new Policy(name, parameters, handle);

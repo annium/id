@@ -22,11 +22,11 @@ namespace Annium.Id.Api.Application.CommandHandlers
         ICommandHandler<UpdateMyProfileCommand>,
         ICommandHandler<UnregisterMeCommand>
     {
-        private readonly IUserRepository userRepository;
-        private readonly IUserLoginRepository userLoginRepository;
-        private readonly ISecurityManager securityManager;
-        private readonly ILoginService loginService;
-        private readonly IEmailService emailService;
+        private readonly IUserRepository _userRepository;
+        private readonly IUserLoginRepository _userLoginRepository;
+        private readonly ISecurityManager _securityManager;
+        private readonly ILoginService _loginService;
+        private readonly IEmailService _emailService;
 
         public MeCommandHandler(
             IUserRepository userRepository,
@@ -36,11 +36,11 @@ namespace Annium.Id.Api.Application.CommandHandlers
             IEmailService emailService
         )
         {
-            this.userRepository = userRepository;
-            this.userLoginRepository = userLoginRepository;
-            this.securityManager = securityManager;
-            this.loginService = loginService;
-            this.emailService = emailService;
+            _userRepository = userRepository;
+            _userLoginRepository = userLoginRepository;
+            _securityManager = securityManager;
+            _loginService = loginService;
+            _emailService = emailService;
         }
 
         public async Task<IStatusResult<OperationStatus>> HandleAsync(
@@ -55,13 +55,13 @@ namespace Annium.Id.Api.Application.CommandHandlers
                 request.ReferralId
             );
 
-            user = await userRepository.CreateAsync(user);
+            user = await _userRepository.CreateAsync(user);
 
-            var result = await emailService.SendEmailConfirmationAsync(user, request.ServerUri);
+            var result = await _emailService.SendEmailConfirmationAsync(user, request.ServerUri);
             if (result.IsFailure)
                 return Result.Status(OperationStatus.UncaughtException).Join(result);
 
-            return Result.Status(OperationStatus.OK);
+            return Result.Status(OperationStatus.Ok);
         }
 
         public async Task<IStatusResult<OperationStatus, Tokens>> HandleAsync(
@@ -77,12 +77,12 @@ namespace Annium.Id.Api.Application.CommandHandlers
                 return Result.Status<OperationStatus, Tokens>(OperationStatus.Forbidden, default!).Error("Email already confirmed");
 
             // set random password to allow check above be bypassed only once
-            user.PasswordHash = securityManager.Hash(Guid.NewGuid().ToString());
-            await userRepository.UpdateAsync(user);
+            user.PasswordHash = _securityManager.Hash(Guid.NewGuid().ToString());
+            await _userRepository.UpdateAsync(user);
 
-            var tokens = await loginService.LogUserInAsync(app, user);
+            var tokens = await _loginService.LogUserInAsync(app, user);
 
-            return Result.Status(OperationStatus.OK, tokens);
+            return Result.Status(OperationStatus.Ok, tokens);
         }
 
         public async Task<IStatusResult<OperationStatus>> HandleAsync(
@@ -93,13 +93,13 @@ namespace Annium.Id.Api.Application.CommandHandlers
             var app = request.App;
             var user = request.User;
 
-            var tokens = await loginService.LogUserInAsync(app, user);
+            var tokens = await _loginService.LogUserInAsync(app, user);
 
-            var result = await emailService.SendRestoreAccessAsync(user, request.ServerUri, tokens);
+            var result = await _emailService.SendRestoreAccessAsync(user, request.ServerUri, tokens);
             if (result.IsFailure)
                 return Result.Status(OperationStatus.UncaughtException).Join(result);
 
-            return Result.Status(OperationStatus.OK);
+            return Result.Status(OperationStatus.Ok);
         }
 
         public async Task<IStatusResult<OperationStatus>> HandleAsync(
@@ -109,11 +109,11 @@ namespace Annium.Id.Api.Application.CommandHandlers
         {
             var user = request.User;
 
-            user.PasswordHash = securityManager.Hash(request.Password);
+            user.PasswordHash = _securityManager.Hash(request.Password);
 
-            await userRepository.UpdateAsync(user);
+            await _userRepository.UpdateAsync(user);
 
-            return Result.Status(OperationStatus.OK);
+            return Result.Status(OperationStatus.Ok);
         }
 
         public async Task<IStatusResult<OperationStatus>> HandleAsync(
@@ -123,18 +123,18 @@ namespace Annium.Id.Api.Application.CommandHandlers
         {
             var user = request.User;
 
-            if (request.Login != user.Login && await userRepository.FindByLoginAsync(request.Login) != null)
+            if (request.Login != user.Login && await _userRepository.FindByLoginAsync(request.Login) != null)
                 return Result.Status(OperationStatus.Conflict).Error($"Login {request.Login} is already used");
 
-            if (request.Email != user.Email && await userRepository.FindByEmailAsync(request.Email) != null)
+            if (request.Email != user.Email && await _userRepository.FindByEmailAsync(request.Email) != null)
                 return Result.Status(OperationStatus.Conflict).Error($"Email {request.Email} is already used");
 
             user.Login = request.Login;
             user.Email = request.Email;
 
-            await userRepository.UpdateAsync(user);
+            await _userRepository.UpdateAsync(user);
 
-            return Result.Status(OperationStatus.OK);
+            return Result.Status(OperationStatus.Ok);
         }
 
         public async Task<IStatusResult<OperationStatus>> HandleAsync(
@@ -142,10 +142,10 @@ namespace Annium.Id.Api.Application.CommandHandlers
             CancellationToken cancellationToken
         )
         {
-            await userLoginRepository.DeleteAllByUserIdAsync(request.MyId);
-            await userRepository.DeleteByIdAsync(request.MyId);
+            await _userLoginRepository.DeleteAllByUserIdAsync(request.MyId);
+            await _userRepository.DeleteByIdAsync(request.MyId);
 
-            return Result.Status(OperationStatus.OK);
+            return Result.Status(OperationStatus.Ok);
         }
     }
 }

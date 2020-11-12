@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1-alpine AS build
+FROM mcr.microsoft.com/dotnet/sdk:5.0-alpine AS build
 COPY . /code
 RUN dotnet publish -c Release -o /dist /code/src/web/Annium.Id.Site
 

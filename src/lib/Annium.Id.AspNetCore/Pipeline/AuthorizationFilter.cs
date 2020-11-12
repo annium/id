@@ -7,9 +7,9 @@ namespace Annium.Id.AspNetCore.Pipeline
 {
     internal class AuthorizationFilter : IAuthorizationFilter
     {
-        private readonly AuthorizationFilterOptions options;
-        private readonly RequestTokenReader requestTokenReader;
-        private readonly ITokenReader tokenReader;
+        private readonly AuthorizationFilterOptions _options;
+        private readonly RequestTokenReader _requestTokenReader;
+        private readonly ITokenReader _tokenReader;
 
         public AuthorizationFilter(
             AuthorizationFilterOptions options,
@@ -17,9 +17,9 @@ namespace Annium.Id.AspNetCore.Pipeline
             ITokenReader tokenReader
         )
         {
-            this.options = options;
-            this.requestTokenReader = requestTokenReader;
-            this.tokenReader = tokenReader;
+            _options = options;
+            _requestTokenReader = requestTokenReader;
+            _tokenReader = tokenReader;
         }
 
         public void OnAuthorization(AuthorizationFilterContext context)
@@ -31,16 +31,16 @@ namespace Annium.Id.AspNetCore.Pipeline
 
         private IActionResult? HandleAuthorization(AuthorizationFilterContext context)
         {
-            var (tokenString, requestReadResult) = requestTokenReader.ReadToken(context.HttpContext.Request);
+            var (tokenString, requestReadResult) = _requestTokenReader.ReadToken(context.HttpContext.Request);
             if (requestReadResult != null)
                 return requestReadResult;
 
             var tokenReadOptions = new TokenReadOptions
             {
-                ValidateAudience = options.ValidateAudience,
-                ValidateExpiration = options.ValidateExpiration
+                ValidateAudience = _options.ValidateAudience,
+                ValidateExpiration = _options.ValidateExpiration
             };
-            var readResult = tokenReader.ReadToken(tokenString, tokenReadOptions);
+            var readResult = _tokenReader.ReadToken(tokenString, tokenReadOptions);
             if (readResult.Status == TokenReadStatus.BadSource)
                 return new BadRequestObjectResult(readResult);
             if (readResult.Status == TokenReadStatus.Failed)

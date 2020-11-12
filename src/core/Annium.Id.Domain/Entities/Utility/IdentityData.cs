@@ -4,7 +4,7 @@ namespace Annium.Id.Domain.Entities.Utility
 {
     public class IdentityData
     {
-        public IPAddress IPAddress { get; }
+        public IPAddress IpAddress { get; }
         public string Client { get; }
 
         public IdentityData(
@@ -12,7 +12,7 @@ namespace Annium.Id.Domain.Entities.Utility
             string client
         )
         {
-            IPAddress = ipAddress;
+            IpAddress = ipAddress;
             Client = client;
         }
     }

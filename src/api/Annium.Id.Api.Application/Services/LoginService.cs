@@ -10,11 +10,11 @@ namespace Annium.Id.Api.Application.Services
 {
     internal class LoginService : ILoginService
     {
-        private readonly Func<Instant> getInstant;
-        private readonly AuthOptions options;
-        private readonly IUserLoginRepository userLoginRepository;
-        private readonly IIdentityDataAccessor identityDataAccessor;
-        private readonly ITokenGenerator tokenGenerator;
+        private readonly Func<Instant> _getInstant;
+        private readonly AuthOptions _options;
+        private readonly IUserLoginRepository _userLoginRepository;
+        private readonly IIdentityDataAccessor _identityDataAccessor;
+        private readonly ITokenGenerator _tokenGenerator;
 
         public LoginService(
             Func<Instant> getInstant,
@@ -24,31 +24,31 @@ namespace Annium.Id.Api.Application.Services
             ITokenGenerator tokenGenerator
         )
         {
-            this.getInstant = getInstant;
-            this.options = options;
-            this.userLoginRepository = userLoginRepository;
-            this.identityDataAccessor = identityDataAccessor;
-            this.tokenGenerator = tokenGenerator;
+            _getInstant = getInstant;
+            _options = options;
+            _userLoginRepository = userLoginRepository;
+            _identityDataAccessor = identityDataAccessor;
+            _tokenGenerator = tokenGenerator;
         }
 
         public async Task<Tokens> LogUserInAsync(App app, User user)
         {
-            var instant = getInstant();
-            var identity = identityDataAccessor.GetIdentityData();
+            var instant = _getInstant();
+            var identity = _identityDataAccessor.GetIdentityData();
             var login = new UserLogin(
                 app.Id,
                 user.Id,
                 instant,
-                identity.IPAddress.ToString(),
+                identity.IpAddress.ToString(),
                 identity.Client,
                 Guid.NewGuid(),
-                instant + options.RefreshTokenLifeTime
+                instant + _options.RefreshTokenLifeTime
             );
 
-            await userLoginRepository.DeleteExpiredByUserIdAsync(user.Id, instant);
-            login = await userLoginRepository.CreateAsync(login);
+            await _userLoginRepository.DeleteExpiredByUserIdAsync(user.Id, instant);
+            login = await _userLoginRepository.CreateAsync(login);
 
-            var token = await tokenGenerator.GenerateTokenString(login);
+            var token = await _tokenGenerator.GenerateTokenString(login);
 
             return new Tokens(token, login.RefreshToken, login.RefreshTokenExpires);
         }

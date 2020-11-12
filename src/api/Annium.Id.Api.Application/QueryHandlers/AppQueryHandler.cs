@@ -34,7 +34,7 @@ namespace Annium.Id.Api.Application.QueryHandlers
         {
             var apps = await _appRepository.FindAllAsync(request.Query);
 
-            return Result.Status(OperationStatus.OK, apps.AsEnumerable());
+            return Result.Status(OperationStatus.Ok, apps.AsEnumerable());
         }
 
         public async Task<IStatusResult<OperationStatus, IEnumerable<App>>> HandleAsync(
@@ -44,7 +44,7 @@ namespace Annium.Id.Api.Application.QueryHandlers
         {
             var apps = await _appRepository.FindMyAsync(request.User.Id);
 
-            return Result.Status(OperationStatus.OK, apps.AsEnumerable());
+            return Result.Status(OperationStatus.Ok, apps.AsEnumerable());
         }
 
         public Task<IStatusResult<OperationStatus, App>> HandleAsync(
@@ -52,7 +52,7 @@ namespace Annium.Id.Api.Application.QueryHandlers
             CancellationToken cancellationToken
         )
         {
-            return Task.FromResult(Result.Status(OperationStatus.OK, request.App));
+            return Task.FromResult(Result.Status(OperationStatus.Ok, request.App));
         }
 
         public Task<IStatusResult<OperationStatus, Guid>> HandleAsync(
@@ -67,7 +67,7 @@ namespace Annium.Id.Api.Application.QueryHandlers
                 return Task.FromResult(Result.Status(OperationStatus.Forbidden, Guid.Empty)
                     .Error($"Need to be application owner to get app api token"));
 
-            return Task.FromResult(Result.Status(OperationStatus.OK, app.ApiToken));
+            return Task.FromResult(Result.Status(OperationStatus.Ok, app.ApiToken));
         }
     }
 }

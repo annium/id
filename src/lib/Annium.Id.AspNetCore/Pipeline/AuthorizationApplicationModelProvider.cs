@@ -9,10 +9,10 @@ namespace Annium.Id.AspNetCore.Pipeline
     internal class AuthorizationApplicationModelProvider : IApplicationModelProvider
     {
         public int Order { get; } = -990;
-        private readonly Func<AuthorizationFilterOptions, AuthorizationFilter> createAuthorizationFilter;
-        private readonly Func<Policy, PolicyFilter> createPolicyFilter;
-        private readonly IEnumerable<Policy> policies;
-        private readonly IPolicyMapper mapper;
+        private readonly Func<AuthorizationFilterOptions, AuthorizationFilter> _createAuthorizationFilter;
+        private readonly Func<Policy, PolicyFilter> _createPolicyFilter;
+        private readonly IEnumerable<Policy> _policies;
+        private readonly IPolicyMapper _mapper;
 
         public AuthorizationApplicationModelProvider(
             Func<AuthorizationFilterOptions, AuthorizationFilter> createAuthorizationFilter,
@@ -21,10 +21,10 @@ namespace Annium.Id.AspNetCore.Pipeline
             IPolicyMapper mapper
         )
         {
-            this.createAuthorizationFilter = createAuthorizationFilter;
-            this.createPolicyFilter = createPolicyFilter;
-            this.policies = policies;
-            this.mapper = mapper;
+            _createAuthorizationFilter = createAuthorizationFilter;
+            _createPolicyFilter = createPolicyFilter;
+            _policies = policies;
+            _mapper = mapper;
         }
 
         public void OnProvidersExecuted(ApplicationModelProviderContext context)
@@ -52,21 +52,21 @@ namespace Annium.Id.AspNetCore.Pipeline
                 return;
 
             var options = new AuthorizationFilterOptions(attribute.ValidateAudience, attribute.ValidateExpiration);
-            actionModel.Filters.Add(createAuthorizationFilter(options));
+            actionModel.Filters.Add(_createAuthorizationFilter(options));
             if (attribute.PolicyName is null)
                 return;
 
-            var policy = policies.FirstOrDefault(p => p.Name == attribute.PolicyName);
+            var policy = _policies.FirstOrDefault(p => p.Name == attribute.PolicyName);
             if (policy is null)
                 throw new ArgumentException($"Policy {attribute.PolicyName}, requested by {actionModel.DisplayName} is not registered");
 
-            mapper.EnsureMappable(
+            _mapper.EnsureMappable(
                 policy,
                 actionModel.DisplayName,
                 actionModel.Parameters.ToDictionary(p => p.ParameterName, p => p.ParameterType)
             );
 
-            actionModel.Filters.Add(createPolicyFilter(policy));
+            actionModel.Filters.Add(_createPolicyFilter(policy));
         }
     }
 }

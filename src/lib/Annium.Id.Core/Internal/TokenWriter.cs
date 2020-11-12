@@ -13,9 +13,9 @@ namespace Annium.Id.Core.Internal
 {
     internal class TokenWriter : ITokenWriter
     {
-        private readonly RsaSecurityKey signingKey;
-        private readonly AuthOptions options;
-        private readonly Func<Instant> getInstant;
+        private readonly RsaSecurityKey _signingKey;
+        private readonly AuthOptions _options;
+        private readonly Func<Instant> _getInstant;
 
         public TokenWriter(
             AuthOptions options,
@@ -26,11 +26,11 @@ namespace Annium.Id.Core.Internal
             {
                 var provider = new RSACryptoServiceProvider();
                 provider.ImportParameters(new KeyReader().ReadRsaKey(s));
-                signingKey = new RsaSecurityKey(provider);
+                _signingKey = new RsaSecurityKey(provider);
             }
 
-            this.options = options;
-            this.getInstant = getInstant;
+            _options = options;
+            _getInstant = getInstant;
         }
 
         public string WriteToken(IdToken token)
@@ -40,9 +40,9 @@ namespace Annium.Id.Core.Internal
                 MessagePackSerializerOptions.Standard.WithCompression(MessagePackCompression.Lz4BlockArray)
             ));
 
-            var instant = getInstant();
+            var instant = _getInstant();
             var now = instant.ToDateTimeUtc();
-            var expires = (instant + options.AccessTokenLifeTime).ToDateTimeUtc();
+            var expires = (instant + _options.AccessTokenLifeTime).ToDateTimeUtc();
 
             var claims = new List<SystemClaim>
             {
@@ -57,7 +57,7 @@ namespace Annium.Id.Core.Internal
                 claims,
                 expires: expires,
                 notBefore: now,
-                signingCredentials: new SigningCredentials(signingKey, SecurityAlgorithms.RsaSha256)
+                signingCredentials: new SigningCredentials(_signingKey, SecurityAlgorithms.RsaSha256)
             );
 
             return new JwtSecurityTokenHandler().WriteToken(jwt);

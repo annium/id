@@ -36,7 +36,7 @@ namespace Annium.Id.Api.Application.QueryHandlers
         {
             var companies = await _companyRepository.FindAllAsync(request.Query);
 
-            return Result.Status(OperationStatus.OK, companies.AsEnumerable());
+            return Result.Status(OperationStatus.Ok, companies.AsEnumerable());
         }
 
         public async Task<IStatusResult<OperationStatus, IEnumerable<Company>>> HandleAsync(
@@ -46,7 +46,7 @@ namespace Annium.Id.Api.Application.QueryHandlers
         {
             var companies = await _companyRepository.FindMyAsync(request.User.Id);
 
-            return Result.Status(OperationStatus.OK, companies.AsEnumerable());
+            return Result.Status(OperationStatus.Ok, companies.AsEnumerable());
         }
 
         public Task<IStatusResult<OperationStatus, Company>> HandleAsync(
@@ -54,7 +54,7 @@ namespace Annium.Id.Api.Application.QueryHandlers
             CancellationToken cancellationToken
         )
         {
-            return Task.FromResult(Result.Status(OperationStatus.OK, request.Company));
+            return Task.FromResult(Result.Status(OperationStatus.Ok, request.Company));
         }
 
         public async Task<IStatusResult<OperationStatus, IEnumerable<User>>> HandleAsync(
@@ -66,7 +66,7 @@ namespace Annium.Id.Api.Application.QueryHandlers
 
             var users = await _companyUserRepository.GetAllAsync(company.Id);
 
-            return Result.Status(OperationStatus.OK, users.AsEnumerable());
+            return Result.Status(OperationStatus.Ok, users.AsEnumerable());
         }
     }
 }

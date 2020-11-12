@@ -14,10 +14,10 @@ namespace Annium.Id.Core.Internal
 {
     internal class TokenReader : ITokenReader
     {
-        private readonly RsaSecurityKey signingKey;
-        private readonly AuthOptions authOptions;
-        private readonly Func<Instant> getInstant;
-        private readonly ILogger logger;
+        private readonly RsaSecurityKey _signingKey;
+        private readonly AuthOptions _authOptions;
+        private readonly Func<Instant> _getInstant;
+        private readonly ILogger _logger;
 
         public TokenReader(
             AuthOptions authOptions,
@@ -29,12 +29,12 @@ namespace Annium.Id.Core.Internal
             {
                 var provider = new RSACryptoServiceProvider();
                 provider.ImportParameters(new KeyReader().ReadRsaKey(s));
-                signingKey = new RsaSecurityKey(provider);
+                _signingKey = new RsaSecurityKey(provider);
             }
 
-            this.authOptions = authOptions;
-            this.getInstant = getInstant;
-            this.logger = logger;
+            _authOptions = authOptions;
+            _getInstant = getInstant;
+            _logger = logger;
         }
 
         public IStatusResult<TokenReadStatus, IdToken> ReadToken(string tokenString, TokenReadOptions options)
@@ -51,7 +51,7 @@ namespace Annium.Id.Core.Internal
                 var jwt = (JwtSecurityToken) securityToken;
                 if (!options.ValidateExpiration)
                 {
-                    var now = getInstant().ToDateTimeUtc();
+                    var now = _getInstant().ToDateTimeUtc();
                     if (jwt.ValidFrom > now)
                         return Fail(TokenReadStatus.Failed, "Token is not yet valid");
                 }
@@ -80,7 +80,7 @@ namespace Annium.Id.Core.Internal
         {
             var tvp = new TokenValidationParameters
             {
-                IssuerSigningKey = signingKey,
+                IssuerSigningKey = _signingKey,
                 RequireSignedTokens = true,
                 ValidateIssuer = true,
                 ValidIssuer = Constants.Issuer,
@@ -90,7 +90,7 @@ namespace Annium.Id.Core.Internal
             if (options.ValidateAudience)
             {
                 tvp.ValidateAudience = true;
-                tvp.ValidAudience = authOptions.Audience.ToString();
+                tvp.ValidAudience = _authOptions.Audience.ToString();
             }
             else
             {
@@ -134,7 +134,7 @@ namespace Annium.Id.Core.Internal
 
         private ValueTuple<TokenReadStatus, string> Log(TokenReadStatus status, string error, string message)
         {
-            logger.Error(message);
+            _logger.Error(message);
 
             return (status, error);
         }

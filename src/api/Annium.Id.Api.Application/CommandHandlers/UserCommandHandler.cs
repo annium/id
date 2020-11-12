@@ -15,9 +15,9 @@ namespace Annium.Id.Api.Application.CommandHandlers
         ICommandHandler<AddClaimToUserCommand>,
         ICommandHandler<DeleteClaimFromUserCommand>
     {
-        private readonly IAppRepository appRepository;
-        private readonly IUserRoleRepository userRoleRepository;
-        private readonly IUserClaimRepository userClaimRepository;
+        private readonly IAppRepository _appRepository;
+        private readonly IUserRoleRepository _userRoleRepository;
+        private readonly IUserClaimRepository _userClaimRepository;
 
         public UserCommandHandler(
             IAppRepository appRepository,
@@ -25,9 +25,9 @@ namespace Annium.Id.Api.Application.CommandHandlers
             IUserClaimRepository userClaimRepository
         )
         {
-            this.appRepository = appRepository;
-            this.userRoleRepository = userRoleRepository;
-            this.userClaimRepository = userClaimRepository;
+            _appRepository = appRepository;
+            _userRoleRepository = userRoleRepository;
+            _userClaimRepository = userClaimRepository;
         }
 
         public async Task<IStatusResult<OperationStatus>> HandleAsync(
@@ -36,7 +36,7 @@ namespace Annium.Id.Api.Application.CommandHandlers
         )
         {
             var myId = request.MyId;
-            var app = await appRepository.GetByIdAsync(request.Role.AppId);
+            var app = await _appRepository.GetByIdAsync(request.Role.AppId);
             var user = request.User;
             var role = request.Role;
 
@@ -44,9 +44,9 @@ namespace Annium.Id.Api.Application.CommandHandlers
                 return Result.Status(OperationStatus.Forbidden).Error("Need to be application owner to add role to user");
 
             var userRole = new UserRole(user.Id, role.Id);
-            await userRoleRepository.SaveAsync(userRole);
+            await _userRoleRepository.SaveAsync(userRole);
 
-            return Result.Status(OperationStatus.OK);
+            return Result.Status(OperationStatus.Ok);
         }
 
         public async Task<IStatusResult<OperationStatus>> HandleAsync(
@@ -55,16 +55,16 @@ namespace Annium.Id.Api.Application.CommandHandlers
         )
         {
             var myId = request.MyId;
-            var app = await appRepository.GetByIdAsync(request.Role.AppId);
+            var app = await _appRepository.GetByIdAsync(request.Role.AppId);
             var user = request.User;
             var role = request.Role;
 
             if (myId != app.OwnerId)
                 return Result.Status(OperationStatus.Forbidden).Error("Need to be application owner to delete role from user");
 
-            await userRoleRepository.DeleteByIdAsync(user.Id, role.Id);
+            await _userRoleRepository.DeleteByIdAsync(user.Id, role.Id);
 
-            return Result.Status(OperationStatus.OK);
+            return Result.Status(OperationStatus.Ok);
         }
 
         public async Task<IStatusResult<OperationStatus>> HandleAsync(
@@ -73,7 +73,7 @@ namespace Annium.Id.Api.Application.CommandHandlers
         )
         {
             var myId = request.MyId;
-            var app = await appRepository.GetByIdAsync(request.Claim.AppId);
+            var app = await _appRepository.GetByIdAsync(request.Claim.AppId);
             var user = request.User;
             var claim = request.Claim;
 
@@ -81,9 +81,9 @@ namespace Annium.Id.Api.Application.CommandHandlers
                 return Result.Status(OperationStatus.Forbidden).Error("Need to be application owner to add claim to user");
 
             var userClaim = new UserClaim(user.Id, claim.Id, request.Value);
-            await userClaimRepository.SaveAsync(userClaim);
+            await _userClaimRepository.SaveAsync(userClaim);
 
-            return Result.Status(OperationStatus.OK);
+            return Result.Status(OperationStatus.Ok);
         }
 
         public async Task<IStatusResult<OperationStatus>> HandleAsync(
@@ -92,16 +92,16 @@ namespace Annium.Id.Api.Application.CommandHandlers
         )
         {
             var myId = request.MyId;
-            var app = await appRepository.GetByIdAsync(request.Claim.AppId);
+            var app = await _appRepository.GetByIdAsync(request.Claim.AppId);
             var user = request.User;
             var claim = request.Claim;
 
             if (myId != app.OwnerId)
                 return Result.Status(OperationStatus.Forbidden).Error("Need to be application owner to delete claim from user");
 
-            await userClaimRepository.DeleteByIdAsync(user.Id, claim.Id);
+            await _userClaimRepository.DeleteByIdAsync(user.Id, claim.Id);
 
-            return Result.Status(OperationStatus.OK);
+            return Result.Status(OperationStatus.Ok);
         }
     }
 }
