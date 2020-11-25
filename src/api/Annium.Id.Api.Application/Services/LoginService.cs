@@ -1,30 +1,30 @@
 using System;
 using System.Threading.Tasks;
+using Annium.Core.Runtime.Time;
 using Annium.Id.Api.Application.Tools;
 using Annium.Id.Core;
 using Annium.Id.Domain.Entities;
 using Annium.Id.Infrastructure.Db.Repositories;
-using NodaTime;
 
 namespace Annium.Id.Api.Application.Services
 {
     internal class LoginService : ILoginService
     {
-        private readonly Func<Instant> _getInstant;
+        private readonly ITimeProvider _timeProvider;
         private readonly AuthOptions _options;
         private readonly IUserLoginRepository _userLoginRepository;
         private readonly IIdentityDataAccessor _identityDataAccessor;
         private readonly ITokenGenerator _tokenGenerator;
 
         public LoginService(
-            Func<Instant> getInstant,
+            ITimeProvider timeProvider,
             AuthOptions options,
             IUserLoginRepository userLoginRepository,
             IIdentityDataAccessor identityDataAccessor,
             ITokenGenerator tokenGenerator
         )
         {
-            _getInstant = getInstant;
+            _timeProvider = timeProvider;
             _options = options;
             _userLoginRepository = userLoginRepository;
             _identityDataAccessor = identityDataAccessor;
@@ -33,7 +33,7 @@ namespace Annium.Id.Api.Application.Services
 
         public async Task<Tokens> LogUserInAsync(App app, User user)
         {
-            var instant = _getInstant();
+            var instant = _timeProvider.Now;
             var identity = _identityDataAccessor.GetIdentityData();
             var login = new UserLogin(
                 app.Id,

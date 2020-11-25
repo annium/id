@@ -3,6 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using Annium.Core.Runtime.Time;
 using Annium.Data.Operations;
 using Annium.Logging.Abstractions;
 using Annium.Security.Cryptography;
@@ -16,12 +17,12 @@ namespace Annium.Id.Core.Internal
     {
         private readonly RsaSecurityKey _signingKey;
         private readonly AuthOptions _authOptions;
-        private readonly Func<Instant> _getInstant;
+        private readonly ITimeProvider _timeProvider;
         private readonly ILogger _logger;
 
         public TokenReader(
             AuthOptions authOptions,
-            Func<Instant> getInstant,
+            ITimeProvider timeProvider,
             ILogger<TokenReader> logger
         )
         {
@@ -33,7 +34,7 @@ namespace Annium.Id.Core.Internal
             }
 
             _authOptions = authOptions;
-            _getInstant = getInstant;
+            _timeProvider = timeProvider;
             _logger = logger;
         }
 
@@ -51,7 +52,7 @@ namespace Annium.Id.Core.Internal
                 var jwt = (JwtSecurityToken) securityToken;
                 if (!options.ValidateExpiration)
                 {
-                    var now = _getInstant().ToDateTimeUtc();
+                    var now = _timeProvider.Now.ToDateTimeUtc();
                     if (jwt.ValidFrom > now)
                         return Fail(TokenReadStatus.Failed, "Token is not yet valid");
                 }

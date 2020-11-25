@@ -6,7 +6,6 @@ using Annium.Id.Api.TestClient;
 using Annium.Id.Demo.TestClient;
 using Annium.Net.Http;
 using Annium.Net.Mail;
-using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
 
 namespace Annium.Id.Api.IntegrationTests
@@ -17,10 +16,11 @@ namespace Annium.Id.Api.IntegrationTests
 
         public IHttpRequest IdApi => GetRequest<Startup>(
             builder => builder.UseServicePack<TestServicePack>(),
-            services => services
-                .AddHttpRequestFactory()
-                .AddSingleton<IEmailService>(EmailService)
-        );
+            container =>
+            {
+                container.AddHttpRequestFactory();
+                container.Add(EmailService).AsSelf().AsInterfaces().Singleton();
+            });
 
         public ExtendedClient Id()
         {
@@ -44,7 +44,7 @@ namespace Annium.Id.Api.IntegrationTests
                 builder => builder.UseServicePack<Demo.ServicePack>(),
                 services => services
                     .AddHttpRequestFactory()
-                    .AddIdAuthorization((sp, options) =>
+                    .AddIdAuthorization((_, options) =>
                     {
                         options.Audience = appId;
                         options.PublicKeyFile = Path.Combine("keys", "public.key");

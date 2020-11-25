@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using Annium.Core.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Annium.Id.Api
 {
@@ -15,10 +14,10 @@ namespace Annium.Id.Api
             Add<Infrastructure.Email.ServicePack>();
         }
 
-        public override void Register(IServiceCollection services, IServiceProvider provider)
+        public override void Register(IServiceContainer container, IServiceProvider provider)
         {
             var ignored = new[] { "ChainBuilder", "PipeHandler" };
-            services.AddLogging(route => route
+            container.AddLogging(route => route
                 // .UseConsole());
                 .For(m => !ignored.Any(m.Source.Name.Contains)).UseConsole());
         }

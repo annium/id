@@ -1,18 +1,18 @@
 using System;
 using System.IO;
+using Annium.Id.Core;
 using Annium.Id.Core.Internal;
-using Microsoft.Extensions.DependencyInjection;
 
-namespace Annium.Id.Core
+namespace Annium.Core.DependencyInjection
 {
-    public static class ServiceCollectionExtensions
+    public static class ServiceContainerExtensions
     {
-        public static IServiceCollection AddIdAuthorizationCoreServices(
-            this IServiceCollection services,
+        public static IServiceContainer AddIdAuthorizationCoreServices(
+            this IServiceContainer container,
             Action<IServiceProvider, AuthOptions> configure
         )
         {
-            services.AddSingleton(sp =>
+            container.Add(sp =>
             {
                 var options = new AuthOptions();
 
@@ -20,20 +20,20 @@ namespace Annium.Id.Core
                 Validate(options);
 
                 return options;
-            });
+            }).AsSelf().Singleton();
 
-            return services.AddIdAuthorizationCoreServicesBase();
+            return container.AddIdAuthorizationCoreServicesBase();
         }
 
-        private static IServiceCollection AddIdAuthorizationCoreServicesBase(
-            this IServiceCollection services
+        private static IServiceContainer AddIdAuthorizationCoreServicesBase(
+            this IServiceContainer container
         )
         {
-            services.AddSingleton<IPolicyMapper, PolicyMapper>();
-            services.AddSingleton<ITokenReader, TokenReader>();
-            services.AddSingleton<ITokenWriter, TokenWriter>();
+            container.Add<IPolicyMapper, PolicyMapper>().Singleton();
+            container.Add<ITokenReader, TokenReader>().Singleton();
+            container.Add<ITokenWriter, TokenWriter>().Singleton();
 
-            return services;
+            return container;
         }
 
         private static void Validate(AuthOptions options)

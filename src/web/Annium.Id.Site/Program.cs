@@ -12,7 +12,8 @@ namespace Annium.Id.Site
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("app");
             builder.ConfigureContainer(new ServiceProviderFactory(x => x.UseServicePack<ServicePack>()));
-            await builder.Services.AddConfiguration<Shared.Configuration>(cfg => cfg.AddRemoteYaml($"{builder.HostEnvironment.BaseAddress}site.yml"));
+            var container = new ServiceContainer(builder.Services);
+            await container.AddConfiguration<Shared.Configuration>(async cfg => await cfg.AddRemoteYaml($"{builder.HostEnvironment.BaseAddress}site.yml"));
             // builder.Logging.ConfigureLoggingBridge();
             await builder.Build().RunAsync();
         }

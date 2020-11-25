@@ -1,42 +1,36 @@
 using System;
 using Annium.Blazor.Css;
-using Annium.Blazor.Net;
 using Annium.Core.DependencyInjection;
 using Annium.Core.Runtime.Types;
-using Annium.Serialization.Json;
 using Microsoft.Extensions.DependencyInjection;
-using NodaTime;
-using NodaTime.Xml;
 
 namespace Annium.Id.Site
 {
     public class ServicePack : ServicePackBase
     {
-        public override void Register(IServiceCollection services, IServiceProvider provider)
+        public override void Register(IServiceContainer container, IServiceProvider provider)
         {
             // core
-            services.AddSingleton<Func<Instant>>(SystemClock.Instance.GetCurrentInstant);
-            services.AddRuntimeTools(GetType().Assembly, false);
-            services.AddMapper();
-            services.AddHttpRequestFactory();
-            services.AddComponentFormStateFactory();
-            services.AddValidation();
-            services.AddLocalization(opts => opts.UseInMemoryStorage());
-            services.AddCssRules();
-            services.AddHostHttpRequestFactory();
-            // services.AddLogging(route => route.UseConsole());
+            container.AddTimeProvider();
+            container.AddRuntimeTools(GetType().Assembly, false);
+            container.AddMapper();
+            container.AddHttpRequestFactory();
+            container.AddComponentFormStateFactory();
+            container.AddValidation();
+            container.AddLocalization(opts => opts.UseInMemoryStorage());
+            container.AddCssRules();
+            container.AddHostHttpRequestFactory();
+            // container.AddLogging(route => route.UseConsole());
 
             // app
-            services.AddAntDesign();
-            services.AddSingleton(sp => StringSerializer.Configure(
-                options => options
-                    .ConfigureDefault(sp.GetRequiredService<ITypeManager>())
-                    .ConfigureForOperations()
-                    .ConfigureForNodaTime(XmlSerializationSettings.DateTimeZoneProvider)
-            ));
-            services.AddSingleton<Theme>();
-            services.AddStorages();
-            services.AddApiServices();
+            container.Collection.AddAntDesign();
+            container.AddJsonSerializers((sp, opts) => opts
+                .ConfigureDefault(sp.Resolve<ITypeManager>())
+                .ConfigureForOperations()
+                .ConfigureForNodaTime());
+            container.Add<Theme>().AsSelf().Singleton();
+            container.AddStorages();
+            container.AddApiServices();
         }
     }
 }

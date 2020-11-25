@@ -5,10 +5,10 @@ namespace Annium.Id.Infrastructure.DbMigrator
 {
     internal class BaseServicePack : ServicePackBase
     {
-        public override void Configure(IServiceCollection services)
+        public override void Configure(IServiceContainer container)
         {
-            services.AddRuntimeTools(GetType().Assembly, false);
-            services.AddMapper();
+            container.AddRuntimeTools(GetType().Assembly, false);
+            container.AddMapper();
         }
     }
 }

@@ -12,9 +12,9 @@ namespace Annium.Id.Api.Application
             Add<BaseServicePack>();
         }
 
-        public override void Configure(IServiceCollection services)
+        public override void Configure(IServiceContainer container)
         {
-            services.AddConfiguration<Configuration>(
+            container.AddConfiguration<Configuration>(
                 builder => builder.AddYamlFile(Path.Combine("configuration", "application.yml"))
             );
         }

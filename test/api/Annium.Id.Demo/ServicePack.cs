@@ -1,48 +1,51 @@
 using System;
 using System.Linq;
 using Annium.Core.DependencyInjection;
-using Annium.Id.AspNetCore;
-using Microsoft.Extensions.DependencyInjection;
-using NodaTime;
+using Annium.Core.Runtime.Types;
 
 namespace Annium.Id.Demo
 {
     public class ServicePack : ServicePackBase
     {
-        public override void Configure(IServiceCollection services)
+        public override void Configure(IServiceContainer container)
         {
             // register configurations
         }
 
-        public override void Register(IServiceCollection services, IServiceProvider provider)
+        public override void Register(IServiceContainer container, IServiceProvider provider)
         {
-            services.AddRuntimeTools(GetType().Assembly, true);
+            container.AddRuntimeTools(GetType().Assembly, true);
 
-            services.AddSingleton<Func<Instant>>(SystemClock.Instance.GetCurrentInstant);
+            container.AddTimeProvider();
+            container.AddJsonSerializers((sp, opts) => opts
+                .ConfigureDefault(sp.Resolve<ITypeManager>())
+                .ConfigureForOperations()
+                .ConfigureForNodaTime());
+            container.AddXRest();
 
             // FIXME: removed, cause id is set dynamically from tests
-            // services.AddIdAuthorization(options =>
+            // container.AddIdAuthorization(options =>
             // {
             //     options.Audience = Constants.AppId;
             //     options.PublicKeyFile = Path.Combine("keys", "public.key");
             // });
-            services.AddLogging(route => route.UseConsole());
-            services.AddIdPolicy(
+            container.AddLogging(route => route.UseConsole());
+            container.AddIdPolicy(
                 "isAdmin",
                 token => token.App.Roles.Contains("admin")
             );
-            services.AddIdPolicy(
+            container.AddIdPolicy(
                 "hasPaymentsAccess",
                 token => token.App.Claims.ContainsKey("paymentsAccess") &&
                     token.App.Claims["paymentsAccess"] == "full"
             );
-            services.AddIdPolicy<Guid>(
+            container.AddIdPolicy<Guid>(
                 "hasCompanyPaymentsAccess",
                 (token, companyId) => token.Companies.Any(
                     c => c.Id == companyId && c.Claims.ContainsKey("paymentsAccess") && c.Claims["paymentsAccess"] == "full"
                 )
             );
-            services.AddMapper();
+            container.AddMapper();
         }
 
         public override void Setup(IServiceProvider provider)

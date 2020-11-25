@@ -10,7 +10,6 @@ namespace Annium.Id.Api
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddXRest();
             services.AddCors();
             services.AddControllers()
                 .AddDefaultJsonOptions();
@@ -22,7 +21,7 @@ namespace Annium.Id.Api
             app.UseXRest();
             app.UseRouting();
             app.UseCors(builder => builder
-                .SetIsOriginAllowed(o => true)
+                .SetIsOriginAllowed(_ => true)
                 .AllowAnyMethod()
                 .AllowAnyHeader()
                 .AllowCredentials()

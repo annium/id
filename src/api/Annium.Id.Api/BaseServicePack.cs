@@ -5,44 +5,48 @@ using Annium.Core.Runtime.Types;
 using Annium.Id.Api.Application.Tools;
 using Annium.Id.Api.Tools;
 using Annium.Id.Core;
-using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
 
 namespace Annium.Id.Api
 {
     internal class BaseServicePack : ServicePackBase
     {
-        public override void Configure(IServiceCollection services)
+        public override void Configure(IServiceContainer container)
         {
-            services.AddRuntimeTools(GetType().Assembly, true);
+            container.AddRuntimeTools(GetType().Assembly, true);
         }
 
-        public override void Register(IServiceCollection services, IServiceProvider provider)
+        public override void Register(IServiceContainer container, IServiceProvider provider)
         {
-            services.AddSingleton<Func<Instant>>(() => SystemClock.Instance.GetCurrentInstant());
+            container.AddTimeProvider();
 
             // auth
-            services.AddIdAuthorization((sp, opts) =>
+            container.AddIdAuthorization((sp, opts) =>
             {
-                var cfg = sp.GetRequiredService<Application.Configuration>();
+                var cfg = sp.Resolve<Application.Configuration>();
                 opts.Audience = Constants.IdAppId;
                 opts.PublicKeyFile = cfg.PublicKeyFile;
                 opts.PrivateKeyFile = cfg.PrivateKeyFile;
                 opts.AccessTokenLifeTime = Duration.FromMinutes(30);
                 opts.RefreshTokenLifeTime = Duration.FromDays(1);
             });
-            services.AddIdPolicy<Guid>(AuthPolicy.CanRefreshToken, (token, appId) => token.App.Id == appId);
-            services.AddIdPolicy<Guid>(AuthPolicy.CanLogOut, (token, appId) => token.App.Id == appId);
+            container.AddIdPolicy<Guid>(AuthPolicy.CanRefreshToken, (token, appId) => token.App.Id == appId);
+            container.AddIdPolicy<Guid>(AuthPolicy.CanLogOut, (token, appId) => token.App.Id == appId);
 
             // tools
-            services.AddSingleton<IIdentityDataAccessor, IdentityDataAccessor>();
+            container.Add<IIdentityDataAccessor, IdentityDataAccessor>().Singleton();
 
-            services.AddLocalization(opts => opts.UseYamlStorage());
-            services.AddComposition();
-            services.AddValidation();
-            services.AddMapper();
-            services.AddMediatorConfiguration(ConfigureMediator);
-            services.AddMediator();
+            container.AddJsonSerializers((sp, opts) => opts
+                .ConfigureDefault(sp.Resolve<ITypeManager>())
+                .ConfigureForOperations()
+                .ConfigureForNodaTime());
+            container.AddXRest();
+            container.AddLocalization(opts => opts.UseYamlStorage());
+            container.AddComposition();
+            container.AddValidation();
+            container.AddMapper();
+            container.AddMediatorConfiguration(ConfigureMediator);
+            container.AddMediator();
         }
 
         private void ConfigureMediator(MediatorConfiguration cfg, ITypeManager typeManager)

@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Annium.Architecture.Base;
 using Annium.Architecture.CQRS.Commands;
+using Annium.Core.Runtime.Time;
 using Annium.Data.Operations;
 using Annium.Id.Api.Application.Commands.Login;
 using Annium.Id.Api.Application.Services;
@@ -10,7 +11,6 @@ using Annium.Id.Api.Application.Tools;
 using Annium.Id.Core;
 using Annium.Id.Domain.Entities;
 using Annium.Id.Infrastructure.Db.Repositories;
-using NodaTime;
 
 namespace Annium.Id.Api.Application.CommandHandlers
 {
@@ -19,7 +19,7 @@ namespace Annium.Id.Api.Application.CommandHandlers
         ICommandHandler<LogOutCommand>,
         ICommandHandler<UpdateTokensCommand, Tokens>
     {
-        private readonly Func<Instant> _getInstant;
+        private readonly ITimeProvider _timeProvider;
         private readonly AuthOptions _options;
         private readonly IUserLoginRepository _userLoginRepository;
         private readonly ISecurityManager _securityManager;
@@ -27,7 +27,7 @@ namespace Annium.Id.Api.Application.CommandHandlers
         private readonly ITokenGenerator _tokenGenerator;
 
         public LoginCommandHandler(
-            Func<Instant> getInstant,
+            ITimeProvider timeProvider,
             AuthOptions options,
             IUserLoginRepository userLoginRepository,
             ISecurityManager securityManager,
@@ -35,7 +35,7 @@ namespace Annium.Id.Api.Application.CommandHandlers
             ITokenGenerator tokenGenerator
         )
         {
-            _getInstant = getInstant;
+            _timeProvider = timeProvider;
             _options = options;
             _userLoginRepository = userLoginRepository;
             _securityManager = securityManager;
@@ -66,11 +66,11 @@ namespace Annium.Id.Api.Application.CommandHandlers
         {
             var login = request.Login;
 
-            if (login.RefreshTokenExpires < _getInstant())
+            if (login.RefreshTokenExpires < _timeProvider.Now)
                 return Result.Status(OperationStatus.Forbidden, default(Tokens)!).Error("Refresh token expired");
 
             login.RefreshToken = Guid.NewGuid();
-            login.RefreshTokenExpires = _getInstant() + _options.RefreshTokenLifeTime;
+            login.RefreshTokenExpires = _timeProvider.Now + _options.RefreshTokenLifeTime;
             await _userLoginRepository.UpdateRefreshTokenAsync(login);
             var token = await _tokenGenerator.GenerateTokenString(login);
 

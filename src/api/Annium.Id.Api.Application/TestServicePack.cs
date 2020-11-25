@@ -1,6 +1,5 @@
 using System.IO;
 using Annium.Core.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Annium.Id.Api.Application
 {
@@ -11,13 +10,13 @@ namespace Annium.Id.Api.Application
             Add<BaseServicePack>();
         }
 
-        public override void Configure(IServiceCollection services)
+        public override void Configure(IServiceContainer container)
         {
-            services.AddSingleton(new Configuration
+            container.Add(new Configuration
             {
                 PrivateKeyFile = Path.Combine("keys", "private.key"),
                 PublicKeyFile = Path.Combine("keys", "public.key")
-            });
+            }).AsSelf().Singleton();
         }
     }
 }

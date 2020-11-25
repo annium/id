@@ -4,9 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using Annium.Core.DependencyInjection;
+using Annium.Core.Runtime.Time;
 using Annium.Data.Operations;
 using Annium.Testing;
-using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
 using Xunit;
 
@@ -80,35 +80,39 @@ namespace Annium.Id.Core.Tests
             bool expired = false
         )
         {
-            var services = new ServiceCollection();
-            services.AddIdAuthorizationCoreServices(Configure(token.App.Id));
-            if (expired)
-                services.AddSingleton<Func<Instant>>(() => SystemClock.Instance.GetCurrentInstant() - Duration.FromDays(1));
-            else
-                services.AddSingleton<Func<Instant>>(SystemClock.Instance.GetCurrentInstant);
-            var provider = services.BuildServiceProvider();
+            var container = new ServiceContainer();
+            container.AddIdAuthorizationCoreServices(Configure(token.App.Id));
+            container.AddTestTimeProvider();
 
-            var writer = provider.GetRequiredService<ITokenWriter>();
+            var provider = container.BuildServiceProvider();
+
+            var timeProvider = provider.Resolve<IManagedTimeProvider>();
+            if (expired)
+                timeProvider.SetNow(SystemClock.Instance.GetCurrentInstant() - Duration.FromDays(1));
+            else
+                timeProvider.SetNow(SystemClock.Instance.GetCurrentInstant());
+
+            var writer = provider.Resolve<ITokenWriter>();
 
             return writer.WriteToken(token);
         }
 
         private IStatusResult<TokenReadStatus, IdToken> ReadToken(string token, Guid appId)
         {
-            var services = new ServiceCollection();
-            services.AddIdAuthorizationCoreServices(Configure(appId));
-            services.AddSingleton<Func<Instant>>(SystemClock.Instance.GetCurrentInstant);
-            services.AddLogging(route => route.UseConsole());
-            var provider = services.BuildServiceProvider();
+            var container = new ServiceContainer();
+            container.AddIdAuthorizationCoreServices(Configure(appId));
+            container.AddTimeProvider();
+            container.AddLogging(route => route.UseConsole());
+            var provider = container.BuildServiceProvider();
 
-            var reader = provider.GetRequiredService<ITokenReader>();
+            var reader = provider.Resolve<ITokenReader>();
 
             return reader.ReadToken(token, new TokenReadOptions());
         }
 
         private Action<IServiceProvider, AuthOptions> Configure(Guid appId)
         {
-            return (sp, options) =>
+            return (_, options) =>
             {
                 options.Audience = appId;
                 options.PrivateKeyFile = Path.Combine("keys", "private.key");

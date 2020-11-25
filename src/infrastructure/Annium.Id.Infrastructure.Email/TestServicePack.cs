@@ -1,5 +1,4 @@
 using Annium.Core.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Annium.Id.Infrastructure.Email
 {
@@ -10,14 +9,14 @@ namespace Annium.Id.Infrastructure.Email
             Add<BaseServicePack>();
         }
 
-        public override void Configure(IServiceCollection services)
+        public override void Configure(IServiceContainer container)
         {
             var cfg = new Configuration
             {
                 FromAddress = "support@annium.com",
                 FromDisplay = "Annium"
             };
-            services.AddSingleton(cfg);
+            container.Add(cfg).AsSelf().Singleton();
         }
     }
 }

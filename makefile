@@ -1,5 +1,7 @@
 PROJECT_NAME := id
 TAG_PREFIX := registry.annium.com/$(PROJECT_NAME)
+TFM := net5.0
+BIN_DEBUG := bin/Debug/$(TFM)
 
 configure:
 	@# api
@@ -40,7 +42,7 @@ gwc: gwc-api
 gwc-api:
 	xrest dotnet gen \
 		-s http://localhost:9501 \
-		-a src/api/Annium.Id.Api/bin/Debug/netcoreapp3.1/Annium.Id.Api.dll \
+		-a src/api/Annium.Id.Api/$(BIN_DEBUG)/Annium.Id.Api.dll \
 		-o src/web/Annium.Id.Site/Shared/Api/Server \
 		-ns Annium.Id.Site.Shared.Api.Server
 
@@ -49,14 +51,14 @@ gtc: gtc-api gtc-demo
 gtc-api:
 	xrest dotnet gen \
 		-s http://localhost:9501 \
-		-a src/api/Annium.Id.Api/bin/Debug/netcoreapp3.1/Annium.Id.Api.dll \
+		-a src/api/Annium.Id.Api/$(BIN_DEBUG)/Annium.Id.Api.dll \
 		-o test/api/Annium.Id.Api.TestClient \
 		-t
 
 gtc-demo:
 	xrest dotnet gen \
 		-s http://localhost:9502 \
-		-a test/api/Annium.Id.Demo/bin/Debug/netcoreapp3.1/Annium.Id.Demo.dll \
+		-a test/api/Annium.Id.Demo/$(BIN_DEBUG)/Annium.Id.Demo.dll \
 		-o test/api/Annium.Id.Demo.TestClient \
 		-t
 

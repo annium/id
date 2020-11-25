@@ -4,11 +4,11 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Annium.Blazor.Net;
+using Annium.Core.Runtime.Time;
 using Annium.Data.Operations;
 using Annium.Id.Site.Shared.Stores;
 using Annium.Net.Http;
 using Annium.Serialization.Abstractions;
-using NodaTime;
 
 namespace Annium.Id.Site.Shared.Api.Server
 {
@@ -23,21 +23,21 @@ namespace Annium.Id.Site.Shared.Api.Server
         public IHttpRequest PrivateBase => _requestFactory.New(_config.Server)
             .BearerAuthorization(_tokenStore.Get()?.AccessToken ?? string.Empty);
 
-        private readonly Func<Instant> _getInstant;
+        private readonly ITimeProvider _timeProvider;
         private readonly IHttpRequestFactory _requestFactory;
         private readonly ITokenStore _tokenStore;
         private readonly Configuration _config;
         private readonly ISerializer<string> _serializer;
 
         public ServerApi(
-            Func<Instant> getInstant,
+            ITimeProvider timeProvider,
             IHttpRequestFactory requestFactory,
             ITokenStore tokenStore,
             Configuration config,
             ISerializer<string> serializer
         )
         {
-            _getInstant = getInstant;
+            _timeProvider = timeProvider;
             _requestFactory = requestFactory;
             _tokenStore = tokenStore;
             _config = config;
@@ -57,7 +57,7 @@ namespace Annium.Id.Site.Shared.Api.Server
                 return GetAuthFailureResponse("No user token available to perform token update");
 
             // if unauthorized - try refresh token and retry
-            if (tokens.RefreshTokenExpires < _getInstant())
+            if (tokens.RefreshTokenExpires < _timeProvider.Now)
                 return GetAuthFailureResponse("Refresh token is expired. Need to login");
 
             var updateTokenResult = await Private.Client().Login.UpdateToken(_config.AppId, tokens.RefreshToken);

@@ -1,7 +1,7 @@
+using System;
 using System.IO;
 using Annium.Configuration.Abstractions;
 using Annium.Core.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Annium.Id.Infrastructure.Email
 {
@@ -12,17 +12,17 @@ namespace Annium.Id.Infrastructure.Email
             Add<BaseServicePack>();
         }
 
-        public override void Configure(IServiceCollection services)
+        public override void Configure(IServiceContainer container)
         {
-            services.AddConfiguration<Configuration>(
+            container.AddConfiguration<Configuration>(
                 builder => builder.AddYamlFile(Path.Combine("configuration", "email.yml"))
             );
         }
 
-        public override void Register(IServiceCollection services, System.IServiceProvider provider)
+        public override void Register(IServiceContainer container, IServiceProvider provider)
         {
-            services.AddSingleton<Net.Mail.Configuration>(sp => sp.GetRequiredService<Configuration>());
-            services.AddEmailService();
+            container.Add<Net.Mail.Configuration, Configuration>().Singleton();
+            container.AddEmailService();
         }
     }
 }

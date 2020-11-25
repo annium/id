@@ -14,20 +14,20 @@ namespace Annium.Id.Infrastructure.Db
             Add<BaseServicePack>();
         }
 
-        public override void Configure(IServiceCollection services)
+        public override void Configure(IServiceContainer container)
         {
-            services.AddConfiguration<Configuration>(
+            container.AddConfiguration<Configuration>(
                 builder => builder.AddYamlFile(Path.Combine("configuration", "db.yml"))
             );
         }
 
-        public override void Register(IServiceCollection services, IServiceProvider provider)
+        public override void Register(IServiceContainer container, IServiceProvider provider)
         {
             // register context
-            services
+            container.Collection
                 .AddDbContext<Context>((sp, builder) =>
                 {
-                    var cfg = sp.GetRequiredService<Configuration>();
+                    var cfg = sp.Resolve<Configuration>();
                     builder.UseNpgsql(
                         string.Join(';', new string[]
                         {

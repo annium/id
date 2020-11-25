@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Security.Cryptography;
+using Annium.Core.Runtime.Time;
 using Annium.Security.Cryptography;
 using MessagePack;
 using Microsoft.IdentityModel.Tokens;
-using NodaTime;
 using SystemClaim = System.Security.Claims.Claim;
 
 namespace Annium.Id.Core.Internal
@@ -15,11 +16,11 @@ namespace Annium.Id.Core.Internal
     {
         private readonly RsaSecurityKey _signingKey;
         private readonly AuthOptions _options;
-        private readonly Func<Instant> _getInstant;
+        private readonly ITimeProvider _timeProvider;
 
         public TokenWriter(
             AuthOptions options,
-            Func<Instant> getInstant
+            ITimeProvider timeProvider
         )
         {
             using (var s = File.OpenRead(options.PrivateKeyFile))
@@ -30,7 +31,7 @@ namespace Annium.Id.Core.Internal
             }
 
             _options = options;
-            _getInstant = getInstant;
+            _timeProvider = timeProvider;
         }
 
         public string WriteToken(IdToken token)
@@ -40,14 +41,14 @@ namespace Annium.Id.Core.Internal
                 MessagePackSerializerOptions.Standard.WithCompression(MessagePackCompression.Lz4BlockArray)
             ));
 
-            var instant = _getInstant();
+            var instant = _timeProvider.Now;
             var now = instant.ToDateTimeUtc();
             var expires = (instant + _options.AccessTokenLifeTime).ToDateTimeUtc();
 
             var claims = new List<SystemClaim>
             {
                 new SystemClaim(Claims.Id, packedToken),
-                new SystemClaim(Claims.IssuedAt, now.ToString()),
+                new SystemClaim(Claims.IssuedAt, now.ToString(CultureInfo.InvariantCulture)),
                 new SystemClaim(Claims.TokenId, Guid.NewGuid().ToString())
             };
 
