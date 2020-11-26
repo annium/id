@@ -1,9 +1,11 @@
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
 using Annium.Blazor.Net;
+using Annium.Core.DependencyInjection;
 using Annium.Core.Runtime.Time;
 using Annium.Data.Operations;
 using Annium.Id.Site.Shared.Stores;
@@ -34,14 +36,14 @@ namespace Annium.Id.Site.Shared.Api.Server
             IHttpRequestFactory requestFactory,
             ITokenStore tokenStore,
             Configuration config,
-            ISerializer<string> serializer
+            IIndex<string, ISerializer<string>> serializers
         )
         {
             _timeProvider = timeProvider;
             _requestFactory = requestFactory;
             _tokenStore = tokenStore;
             _config = config;
-            _serializer = serializer;
+            _serializer = serializers[MediaTypeNames.Application.Json];
         }
 
         private async Task<IHttpResponse> AuthMiddleware(Func<Task<IHttpResponse>> next)
