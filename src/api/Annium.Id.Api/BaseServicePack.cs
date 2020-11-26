@@ -36,10 +36,7 @@ namespace Annium.Id.Api
             // tools
             container.Add<IIdentityDataAccessor, IdentityDataAccessor>().Singleton();
 
-            container.AddJsonSerializers((sp, opts) => opts
-                .ConfigureDefault(sp.Resolve<ITypeManager>())
-                .ConfigureForOperations()
-                .ConfigureForNodaTime());
+            container.AddJsonSerializers(opts => opts.ConfigureForOperations().ConfigureForNodaTime());
             container.AddXRest();
             container.AddLocalization(opts => opts.UseYamlStorage());
             container.AddComposition();

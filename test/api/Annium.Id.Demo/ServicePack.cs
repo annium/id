@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using Annium.Core.DependencyInjection;
-using Annium.Core.Runtime.Types;
 
 namespace Annium.Id.Demo
 {
@@ -17,10 +16,7 @@ namespace Annium.Id.Demo
             container.AddRuntimeTools(GetType().Assembly, true);
 
             container.AddTimeProvider();
-            container.AddJsonSerializers((sp, opts) => opts
-                .ConfigureDefault(sp.Resolve<ITypeManager>())
-                .ConfigureForOperations()
-                .ConfigureForNodaTime());
+            container.AddJsonSerializers(opts => opts.ConfigureForOperations().ConfigureForNodaTime());
             container.AddXRest();
 
             // FIXME: removed, cause id is set dynamically from tests

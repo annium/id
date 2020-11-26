@@ -1,7 +1,6 @@
 using System;
 using Annium.Blazor.Css;
 using Annium.Core.DependencyInjection;
-using Annium.Core.Runtime.Types;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Annium.Id.Site
@@ -24,10 +23,7 @@ namespace Annium.Id.Site
 
             // app
             container.Collection.AddAntDesign();
-            container.AddJsonSerializers((sp, opts) => opts
-                .ConfigureDefault(sp.Resolve<ITypeManager>())
-                .ConfigureForOperations()
-                .ConfigureForNodaTime());
+            container.AddJsonSerializers(opts => opts.ConfigureForOperations().ConfigureForNodaTime());
             container.Add<Theme>().AsSelf().Singleton();
             container.AddStorages();
             container.AddApiServices();
