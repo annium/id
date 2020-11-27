@@ -42,7 +42,7 @@ namespace Annium.Core.DependencyInjection
             // tools
             container.Collection.AddHttpContextAccessor();
             container.Add<ITokenAccessor, HttpContextTokenAccessor>().Singleton();
-            container.Add<RequestTokenReader>().Singleton();
+            container.Add<RequestTokenReader>().AsSelf().Singleton();
 
 
             return container;
