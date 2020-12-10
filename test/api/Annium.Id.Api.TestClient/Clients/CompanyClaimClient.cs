@@ -6,7 +6,7 @@ using Annium.Id.Api.ViewModels.Requests.CompanyClaims;
 using Annium.Id.Api.ViewModels.Responses.CompanyClaims;
 using Annium.Net.Http;
 
-namespace Annium.Id.Api.TestClient.Clients
+namespace Annium.Id.Api.TestClient
 {
     public class CompanyClaimClient : ClientBase
     {

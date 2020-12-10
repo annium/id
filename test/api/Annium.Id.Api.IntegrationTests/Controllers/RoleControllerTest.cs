@@ -2,7 +2,6 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 using Annium.Id.Api.TestClient;
-using Annium.Id.Api.TestClient.Clients;
 using Annium.Id.Api.ViewModels.Requests.Roles;
 using Annium.Id.Api.ViewModels.Responses.Claims;
 using Annium.Id.Api.ViewModels.Responses.Roles;

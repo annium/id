@@ -4,7 +4,6 @@ using System.Net;
 using System.Threading.Tasks;
 using Annium.Data.Models.Extensions;
 using Annium.Id.Api.TestClient;
-using Annium.Id.Api.TestClient.Clients;
 using Annium.Id.Api.ViewModels.Requests.Companies;
 using Annium.Testing;
 using Xunit;

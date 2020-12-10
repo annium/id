@@ -3,7 +3,6 @@ using System.Net;
 using System.Threading.Tasks;
 using Annium.Data.Models.Extensions;
 using Annium.Id.Api.TestClient;
-using Annium.Id.Api.TestClient.Clients;
 using Annium.Id.Api.ViewModels.Requests.Apps;
 using Annium.Id.Api.ViewModels.Responses.Apps;
 using Annium.Id.Core;

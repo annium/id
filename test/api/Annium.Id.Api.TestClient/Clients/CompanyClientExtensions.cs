@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Annium.Id.Api.ViewModels.Requests.Companies;
 using Annium.Id.Api.ViewModels.Responses.Companies;
 
-namespace Annium.Id.Api.TestClient.Clients
+namespace Annium.Id.Api.TestClient
 {
     public static class CompanyClientExtensions
     {

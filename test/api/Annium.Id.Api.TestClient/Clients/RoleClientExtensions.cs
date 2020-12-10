@@ -6,7 +6,7 @@ using Annium.Id.Api.ViewModels.Requests.Roles;
 using Annium.Id.Api.ViewModels.Responses.Roles;
 using Annium.Net.Http;
 
-namespace Annium.Id.Api.TestClient.Clients
+namespace Annium.Id.Api.TestClient
 {
     public static class RoleClientExtensions
     {

@@ -4,7 +4,7 @@ using Annium.Data.Operations;
 using Annium.Id.Api.ViewModels.Requests.Users;
 using Annium.Net.Http;
 
-namespace Annium.Id.Api.TestClient.Clients
+namespace Annium.Id.Api.TestClient
 {
     public static class UserClientExtensions
     {
