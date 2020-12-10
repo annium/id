@@ -3,7 +3,7 @@ using Annium.Net.Mail;
 
 namespace Annium.Id.Api.TestClient
 {
-    public class ExtendedClient : Client
+    public class ExtendedClient : Root
     {
         public TestEmailService EmailService { get; }
         internal IHttpRequest Request { get; }

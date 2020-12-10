@@ -1,9 +1,8 @@
-using Annium.Id.Api.TestClient;
 using Annium.Net.Http;
 
 namespace Annium.Id.Api.TestClient
 {
-    public class Client
+    public class Root
     {
         public AppClient App { get; }
         public ClaimClient Claim { get; }
@@ -16,7 +15,7 @@ namespace Annium.Id.Api.TestClient
         public RoleClient Role { get; }
         public UserClient User { get; }
 
-        public Client(IHttpRequest request)
+        public Root(IHttpRequest request)
         {
             App = new AppClient(request);
             Claim = new ClaimClient(request);
