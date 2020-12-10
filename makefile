@@ -37,6 +37,23 @@ db-drop db-migrate-up db-migrate-down migrations-add migrations-list migrations-
 		-context Context
 
 
+start: start-api start-demo
+
+start-api:
+	$(call start-dotnet,src,api,Annium.Id.Api,9501)
+
+start-demo:
+	$(call start-dotnet,test,api,Annium.Id.Demo,9502)
+
+stop: stop-api stop-demo
+
+stop-api:
+	$(call stop-dotnet,Annium.Id.Api)
+
+stop-demo:
+	$(call stop-dotnet,Annium.Id.Demo)
+
+
 gwc: gwc-api
 
 gwc-api:
@@ -73,6 +90,21 @@ publish-migrations:
 
 publish-site:
 	$(call publish,site,.,src/web/Annium.Id.Site/app.dockerfile)
+
+
+# control
+define start-dotnet
+	@$(eval section := $(1))
+	@$(eval component := $(2))
+	@$(eval project := $(3))
+	@$(eval port := $(4))
+	cd $(section)/$(component)/$(project) && dotnet $(BIN_DEBUG)/$(project).dll -port $(port) &
+endef
+
+define stop-dotnet
+	@$(eval project := $(1))
+	ps -ax | grep $(project).dll | grep -v src | grep -v grep | sed -e 's#^ *##' | cut -d ' ' -f 1 | xargs -I% kill %
+endef
 
 
 define publish
