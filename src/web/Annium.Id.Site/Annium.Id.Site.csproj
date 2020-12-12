@@ -31,7 +31,4 @@
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="5.0.0" />
         <PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
     </ItemGroup>
-    <ItemGroup>
-        <Folder Include="Member" />
-    </ItemGroup>
 </Project>
