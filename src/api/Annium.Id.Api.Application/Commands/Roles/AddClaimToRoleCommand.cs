@@ -1,34 +1,11 @@
-using System;
-using Annium.Architecture.CQRS.Commands;
 using Annium.Extensions.Composition;
 using Annium.Extensions.Validation;
+using Annium.Id.Api.Domain.Commands.Roles;
 using Annium.Id.Core;
-using Annium.Id.Domain.Entities;
 using Annium.Id.Infrastructure.Db.Repositories;
 
 namespace Annium.Id.Api.Application.Commands.Roles
 {
-    public class AddClaimToRoleCommand : ICommand
-    {
-        public Guid RoleId { get; }
-        public Guid ClaimId { get; }
-        public string Value { get; }
-        public Guid MyId { get; private set; }
-        public Role Role { get; private set; } = null!;
-        public Claim Claim { get; private set; } = null!;
-
-        public AddClaimToRoleCommand(
-            Guid roleId,
-            Guid claimId,
-            string value
-        )
-        {
-            RoleId = roleId;
-            ClaimId = claimId;
-            Value = value;
-        }
-    }
-
     internal class AddClaimToRoleCommandValidator : Validator<AddClaimToRoleCommand>
     {
         public AddClaimToRoleCommandValidator()
@@ -47,7 +24,7 @@ namespace Annium.Id.Api.Application.Commands.Roles
             IClaimRepository claimRepository
         )
         {
-            Field(c => c.MyId).LoadWith(ctx => tokenAccessor.GetToken().UserId);
+            Field(c => c.MyId).LoadWith(_ => tokenAccessor.GetToken().UserId);
             Field(c => c.Role).LoadWith(ctx => roleRepository.GetByIdAsync(ctx.Root.RoleId));
             Field(c => c.Claim).LoadWith(ctx => claimRepository.GetByIdAsync(ctx.Root.ClaimId));
         }

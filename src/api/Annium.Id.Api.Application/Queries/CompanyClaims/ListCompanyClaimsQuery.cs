@@ -1,23 +1,10 @@
-using System;
-using Annium.Architecture.CQRS.Queries;
 using Annium.Extensions.Composition;
 using Annium.Extensions.Validation;
-using Annium.Id.Domain.Entities;
+using Annium.Id.Api.Domain.Queries.CompanyClaims;
 using Annium.Id.Infrastructure.Db.Repositories;
 
 namespace Annium.Id.Api.Application.Queries.CompanyClaims
 {
-    public class ListCompanyClaimsQuery : IQuery
-    {
-        public Guid AppId { get; }
-        public App App { get; private set; } = null!;
-
-        public ListCompanyClaimsQuery(Guid appId)
-        {
-            AppId = appId;
-        }
-    }
-
     internal class ListCompanyClaimsQueryValidator : Validator<ListCompanyClaimsQuery>
     {
         public ListCompanyClaimsQueryValidator()

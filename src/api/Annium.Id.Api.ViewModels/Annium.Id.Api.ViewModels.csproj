@@ -8,11 +8,12 @@
         <DebugType>portable</DebugType>
         <LangVersion>preview</LangVersion>
         <WarningsAsErrors>true</WarningsAsErrors>
-        <IsPackable>false</IsPackable>
+        <IsPackable>true</IsPackable>
         <Nullable>enable</Nullable>
     </PropertyGroup>
     <ItemGroup>
-        <ProjectReference Include="../Annium.Id.Api.Application/Annium.Id.Api.Application.csproj" />
+        <ProjectReference Include="../Annium.Id.Api.Domain/Annium.Id.Api.Domain.csproj" />
+        <ProjectReference Include="../../lib/Annium.Id.Core/Annium.Id.Core.csproj" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Annium.Architecture.ViewModel" Version="0.1.0" />

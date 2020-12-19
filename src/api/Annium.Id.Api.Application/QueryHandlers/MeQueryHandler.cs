@@ -5,6 +5,7 @@ using Annium.Architecture.CQRS.Queries;
 using Annium.Data.Operations;
 using Annium.Id.Api.Application.Queries.Me;
 using Annium.Id.Api.Application.Tools;
+using Annium.Id.Api.Domain.Queries.Me;
 using Annium.Id.Core;
 using Annium.Id.Domain.Entities;
 

@@ -1,23 +1,8 @@
-using Annium.Architecture.CQRS.Queries;
 using Annium.Extensions.Validation;
+using Annium.Id.Api.Domain.Queries.Users;
 
 namespace Annium.Id.Api.Application.Queries.Users
 {
-    public class FindUsersQuery : IQuery
-    {
-        public string Query { get; }
-        public int Limit { get; }
-
-        public FindUsersQuery(
-            string query,
-            int limit
-        )
-        {
-            Query = query;
-            Limit = limit;
-        }
-    }
-
     internal class FindUsersQueryValidator : Validator<FindUsersQuery>
     {
         public FindUsersQueryValidator(

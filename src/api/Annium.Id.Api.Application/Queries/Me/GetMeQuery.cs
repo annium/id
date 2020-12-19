@@ -1,20 +1,10 @@
-using Annium.Architecture.CQRS.Queries;
 using Annium.Extensions.Composition;
+using Annium.Id.Api.Domain.Queries.Me;
 using Annium.Id.Core;
-using Annium.Id.Domain.Entities;
 using Annium.Id.Infrastructure.Db.Repositories;
 
 namespace Annium.Id.Api.Application.Queries.Me
 {
-    public class GetMeQuery : IQuery
-    {
-        public User User { get; private set; } = null!;
-
-        public GetMeQuery()
-        {
-        }
-    }
-
     internal class GetMeQueryComposer : Composer<GetMeQuery>
     {
         public GetMeQueryComposer(

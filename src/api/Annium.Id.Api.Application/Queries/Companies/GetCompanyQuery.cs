@@ -1,25 +1,10 @@
-using System;
-using Annium.Architecture.CQRS.Queries;
 using Annium.Extensions.Composition;
 using Annium.Extensions.Validation;
-using Annium.Id.Domain.Entities;
+using Annium.Id.Api.Domain.Queries.Companies;
 using Annium.Id.Infrastructure.Db.Repositories;
 
 namespace Annium.Id.Api.Application.Queries.Companies
 {
-    public class GetCompanyQuery : IQuery
-    {
-        public Guid CompanyId { get; }
-        public Company Company { get; private set; } = null!;
-
-        public GetCompanyQuery(
-            Guid companyId
-        )
-        {
-            CompanyId = companyId;
-        }
-    }
-
     internal class GetCompanyQueryValidator : Validator<GetCompanyQuery>
     {
         public GetCompanyQueryValidator()

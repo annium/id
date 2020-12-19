@@ -1,6 +1,6 @@
 using System;
 using Annium.Architecture.ViewModel;
-using Annium.Id.Api.Application.Queries.Claims;
+using Annium.Id.Api.Domain.Queries.Claims;
 
 namespace Annium.Id.Api.ViewModels.Requests.Claims
 {

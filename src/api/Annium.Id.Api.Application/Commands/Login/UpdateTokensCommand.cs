@@ -1,29 +1,10 @@
-using System;
-using Annium.Architecture.CQRS.Commands;
 using Annium.Extensions.Composition;
 using Annium.Extensions.Validation;
-using Annium.Id.Domain.Entities;
+using Annium.Id.Api.Domain.Commands.Login;
 using Annium.Id.Infrastructure.Db.Repositories;
 
 namespace Annium.Id.Api.Application.Commands.Login
 {
-    public class UpdateTokensCommand : ICommand
-    {
-        public Guid AppId { get; }
-        public Guid RefreshToken { get; }
-        public App App { get; private set; } = null!;
-        public UserLogin Login { get; private set; } = null!;
-
-        public UpdateTokensCommand(
-            Guid appId,
-            Guid refreshToken
-        )
-        {
-            AppId = appId;
-            RefreshToken = refreshToken;
-        }
-    }
-
     internal class UpdateTokensCommandValidator : Validator<UpdateTokensCommand>
     {
         public UpdateTokensCommandValidator()

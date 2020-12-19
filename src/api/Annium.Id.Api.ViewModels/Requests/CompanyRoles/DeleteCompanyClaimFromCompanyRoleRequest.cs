@@ -1,6 +1,6 @@
 using System;
 using Annium.Architecture.ViewModel;
-using Annium.Id.Api.Application.Commands.CompanyRoles;
+using Annium.Id.Api.Domain.Commands.CompanyRoles;
 
 namespace Annium.Id.Api.ViewModels.Requests.CompanyRoles
 {

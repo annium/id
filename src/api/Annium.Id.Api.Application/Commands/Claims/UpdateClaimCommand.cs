@@ -1,33 +1,11 @@
-using System;
-using Annium.Architecture.CQRS.Commands;
 using Annium.Extensions.Composition;
 using Annium.Extensions.Validation;
+using Annium.Id.Api.Domain.Commands.Claims;
 using Annium.Id.Core;
-using Annium.Id.Domain.Entities;
 using Annium.Id.Infrastructure.Db.Repositories;
 
 namespace Annium.Id.Api.Application.Commands.Claims
 {
-    public class UpdateClaimCommand : ICommand
-    {
-        public Guid ClaimId { get; }
-        public string Key { get; }
-        public string Name { get; }
-        public Guid MyId { get; private set; }
-        public Claim Claim { get; private set; } = null!;
-
-        public UpdateClaimCommand(
-            Guid claimId,
-            string key,
-            string name
-        )
-        {
-            ClaimId = claimId;
-            Key = key;
-            Name = name;
-        }
-    }
-
     internal class UpdateClaimCommandValidator : Validator<UpdateClaimCommand>
     {
         public UpdateClaimCommandValidator()
@@ -45,7 +23,7 @@ namespace Annium.Id.Api.Application.Commands.Claims
             IClaimRepository claimRepository
         )
         {
-            Field(c => c.MyId).LoadWith(ctx => tokenAccessor.GetToken().UserId);
+            Field(c => c.MyId).LoadWith(_ => tokenAccessor.GetToken().UserId);
             Field(c => c.Claim).LoadWith(ctx => claimRepository.GetByIdAsync(ctx.Root.ClaimId));
         }
     }

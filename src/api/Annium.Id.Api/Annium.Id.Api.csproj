@@ -12,6 +12,7 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
     <ItemGroup>
+        <ProjectReference Include="../Annium.Id.Api.Application/Annium.Id.Api.Application.csproj" />
         <ProjectReference Include="../Annium.Id.Api.ViewModels/Annium.Id.Api.ViewModels.csproj" />
         <ProjectReference Include="../../lib/Annium.Id.AspNetCore/Annium.Id.AspNetCore.csproj" />
     </ItemGroup>

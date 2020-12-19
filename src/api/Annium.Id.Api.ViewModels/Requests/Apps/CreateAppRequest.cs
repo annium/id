@@ -1,5 +1,5 @@
 using Annium.Architecture.ViewModel;
-using Annium.Id.Api.Application.Commands.Apps;
+using Annium.Id.Api.Domain.Commands.Apps;
 
 namespace Annium.Id.Api.ViewModels.Requests.Apps
 {

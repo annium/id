@@ -1,16 +1,10 @@
-using Annium.Architecture.CQRS.Queries;
 using Annium.Extensions.Composition;
+using Annium.Id.Api.Domain.Queries.Apps;
 using Annium.Id.Core;
-using Annium.Id.Domain.Entities;
 using Annium.Id.Infrastructure.Db.Repositories;
 
 namespace Annium.Id.Api.Application.Queries.Apps
 {
-    public class ListMyAppsQuery : IQuery
-    {
-        public User User { get; private set; } = default!;
-    }
-
     internal class ListMyAppsQueryComposer : Composer<ListMyAppsQuery>
     {
         public ListMyAppsQueryComposer(

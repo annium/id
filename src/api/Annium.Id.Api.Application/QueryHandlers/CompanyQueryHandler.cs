@@ -6,6 +6,7 @@ using Annium.Architecture.Base;
 using Annium.Architecture.CQRS.Queries;
 using Annium.Data.Operations;
 using Annium.Id.Api.Application.Queries.Companies;
+using Annium.Id.Api.Domain.Queries.Companies;
 using Annium.Id.Domain.Entities;
 using Annium.Id.Infrastructure.Db.Repositories;
 

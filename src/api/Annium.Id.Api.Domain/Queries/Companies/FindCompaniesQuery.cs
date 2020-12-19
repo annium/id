@@ -1,12 +1,12 @@
 using Annium.Architecture.CQRS.Queries;
 
-namespace Annium.Id.Api.Application.Queries.Apps
+namespace Annium.Id.Api.Domain.Queries.Companies
 {
-    public class FindAppsQuery : IQuery
+    public class FindCompaniesQuery : IQuery
     {
         public string Query { get; }
 
-        public FindAppsQuery(
+        public FindCompaniesQuery(
             string query
         )
         {

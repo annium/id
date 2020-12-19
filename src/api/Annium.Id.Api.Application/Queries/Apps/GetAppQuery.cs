@@ -1,25 +1,10 @@
-using System;
-using Annium.Architecture.CQRS.Queries;
 using Annium.Extensions.Composition;
 using Annium.Extensions.Validation;
-using Annium.Id.Domain.Entities;
+using Annium.Id.Api.Domain.Queries.Apps;
 using Annium.Id.Infrastructure.Db.Repositories;
 
 namespace Annium.Id.Api.Application.Queries.Apps
 {
-    public class GetAppQuery : IQuery
-    {
-        public Guid AppId { get; }
-        public App App { get; private set; } = null!;
-
-        public GetAppQuery(
-            Guid appId
-        )
-        {
-            AppId = appId;
-        }
-    }
-
     internal class GetAppQueryValidator : Validator<GetAppQuery>
     {
         public GetAppQueryValidator()

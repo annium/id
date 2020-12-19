@@ -1,27 +1,11 @@
-using System;
-using Annium.Architecture.CQRS.Commands;
 using Annium.Extensions.Composition;
 using Annium.Extensions.Validation;
+using Annium.Id.Api.Domain.Commands.CompanyClaims;
 using Annium.Id.Core;
-using Annium.Id.Domain.Entities;
 using Annium.Id.Infrastructure.Db.Repositories;
 
 namespace Annium.Id.Api.Application.Commands.CompanyClaims
 {
-    public class DeleteCompanyClaimCommand : ICommand
-    {
-        public Guid ClaimId { get; }
-        public Guid MyId { get; private set; }
-        public CompanyClaim Claim { get; private set; } = null!;
-
-        public DeleteCompanyClaimCommand(
-            Guid claimId
-        )
-        {
-            ClaimId = claimId;
-        }
-    }
-
     internal class DeleteCompanyClaimCommandValidator : Validator<DeleteCompanyClaimCommand>
     {
         public DeleteCompanyClaimCommandValidator()
@@ -37,7 +21,7 @@ namespace Annium.Id.Api.Application.Commands.CompanyClaims
             ICompanyClaimRepository companyClaimRepository
         )
         {
-            Field(c => c.MyId).LoadWith(ctx => tokenAccessor.GetToken().UserId);
+            Field(c => c.MyId).LoadWith(_ => tokenAccessor.GetToken().UserId);
             Field(c => c.Claim).LoadWith(ctx => companyClaimRepository.GetByIdAsync(ctx.Root.ClaimId));
         }
     }

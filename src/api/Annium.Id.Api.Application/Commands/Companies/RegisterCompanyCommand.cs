@@ -1,27 +1,10 @@
-using System;
-using Annium.Architecture.CQRS.Commands;
 using Annium.Extensions.Composition;
 using Annium.Extensions.Validation;
+using Annium.Id.Api.Domain.Commands.Companies;
 using Annium.Id.Core;
 
 namespace Annium.Id.Api.Application.Commands.Companies
 {
-    public class RegisterCompanyCommand : ICommand
-    {
-        public Guid? ParentId { get; }
-        public string Name { get; }
-        public Guid MyId { get; private set; }
-
-        public RegisterCompanyCommand(
-            Guid? parentId,
-            string name
-        )
-        {
-            ParentId = parentId;
-            Name = name;
-        }
-    }
-
     internal class RegisterCompanyCommandValidator : Validator<RegisterCompanyCommand>
     {
         public RegisterCompanyCommandValidator(
@@ -38,7 +21,7 @@ namespace Annium.Id.Api.Application.Commands.Companies
             ITokenAccessor tokenAccessor
         )
         {
-            Field(c => c.MyId).LoadWith(ctx => tokenAccessor.GetToken().UserId);
+            Field(c => c.MyId).LoadWith(_ => tokenAccessor.GetToken().UserId);
         }
     }
 }

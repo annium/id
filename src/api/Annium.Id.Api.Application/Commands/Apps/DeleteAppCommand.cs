@@ -1,27 +1,11 @@
-using System;
-using Annium.Architecture.CQRS.Commands;
 using Annium.Extensions.Composition;
 using Annium.Extensions.Validation;
+using Annium.Id.Api.Domain.Commands.Apps;
 using Annium.Id.Core;
-using Annium.Id.Domain.Entities;
 using Annium.Id.Infrastructure.Db.Repositories;
 
 namespace Annium.Id.Api.Application.Commands.Apps
 {
-    public class DeleteAppCommand : ICommand
-    {
-        public Guid AppId { get; set; }
-        public Guid MyId { get; private set; }
-        public App App { get; private set; } = null!;
-
-        public DeleteAppCommand(
-            Guid appId
-        )
-        {
-            AppId = appId;
-        }
-    }
-
     internal class DeleteAppCommandValidator : Validator<DeleteAppCommand>
     {
         public DeleteAppCommandValidator()
@@ -37,7 +21,7 @@ namespace Annium.Id.Api.Application.Commands.Apps
             IAppRepository appRepository
         )
         {
-            Field(c => c.MyId).LoadWith(ctx => tokenAccessor.GetToken().UserId);
+            Field(c => c.MyId).LoadWith(_ => tokenAccessor.GetToken().UserId);
             Field(c => c.App).LoadWith(ctx => appRepository.GetByIdAsync(ctx.Root.AppId));
         }
     }

@@ -5,6 +5,7 @@ using Annium.Architecture.Base;
 using Annium.Architecture.CQRS.Commands;
 using Annium.Data.Operations;
 using Annium.Id.Api.Application.Commands.Roles;
+using Annium.Id.Api.Domain.Commands.Roles;
 using Annium.Id.Domain.Entities;
 using Annium.Id.Infrastructure.Db.Repositories;
 

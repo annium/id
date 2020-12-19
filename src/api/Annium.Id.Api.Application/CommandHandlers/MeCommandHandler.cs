@@ -8,6 +8,7 @@ using Annium.Data.Operations;
 using Annium.Id.Api.Application.Commands.Me;
 using Annium.Id.Api.Application.Services;
 using Annium.Id.Api.Application.Tools;
+using Annium.Id.Api.Domain.Commands.Me;
 using Annium.Id.Domain.Entities;
 using Annium.Id.Infrastructure.Db.Repositories;
 using Annium.Id.Infrastructure.Email;

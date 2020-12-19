@@ -1,25 +1,10 @@
-using System;
-using Annium.Architecture.CQRS.Queries;
-using Annium.Extensions.Validation;
 using Annium.Extensions.Composition;
-using Annium.Id.Domain.Entities;
+using Annium.Extensions.Validation;
+using Annium.Id.Api.Domain.Queries.Users;
 using Annium.Id.Infrastructure.Db.Repositories;
 
 namespace Annium.Id.Api.Application.Queries.Users
 {
-    public class GetUserQuery : IQuery
-    {
-        public Guid UserId { get; }
-        public User User { get; private set; } = default!;
-
-        public GetUserQuery(
-            Guid userId
-        )
-        {
-            UserId = userId;
-        }
-    }
-
     internal class GetUserQueryValidator : Validator<GetUserQuery>
     {
         public GetUserQueryValidator(

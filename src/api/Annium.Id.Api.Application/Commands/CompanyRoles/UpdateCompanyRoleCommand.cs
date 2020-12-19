@@ -1,33 +1,11 @@
-using System;
-using Annium.Architecture.CQRS.Commands;
 using Annium.Extensions.Composition;
 using Annium.Extensions.Validation;
+using Annium.Id.Api.Domain.Commands.CompanyRoles;
 using Annium.Id.Core;
-using Annium.Id.Domain.Entities;
 using Annium.Id.Infrastructure.Db.Repositories;
 
 namespace Annium.Id.Api.Application.Commands.CompanyRoles
 {
-    public class UpdateCompanyRoleCommand : ICommand
-    {
-        public Guid RoleId { get; }
-        public string Key { get; }
-        public string Name { get; }
-        public Guid MyId { get; private set; }
-        public CompanyRole Role { get; private set; } = null!;
-
-        public UpdateCompanyRoleCommand(
-            Guid roleId,
-            string key,
-            string name
-        )
-        {
-            RoleId = roleId;
-            Key = key;
-            Name = name;
-        }
-    }
-
     internal class UpdateCompanyRoleCommandValidator : Validator<UpdateCompanyRoleCommand>
     {
         public UpdateCompanyRoleCommandValidator()
@@ -45,7 +23,7 @@ namespace Annium.Id.Api.Application.Commands.CompanyRoles
             ICompanyRoleRepository companyRoleRepository
         )
         {
-            Field(c => c.MyId).LoadWith(ctx => tokenAccessor.GetToken().UserId);
+            Field(c => c.MyId).LoadWith(_ => tokenAccessor.GetToken().UserId);
             Field(c => c.Role).LoadWith(ctx => companyRoleRepository.GetByIdAsync(ctx.Root.RoleId));
         }
     }

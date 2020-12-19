@@ -1,22 +1,11 @@
-using Annium.Architecture.CQRS.Queries;
 using Annium.Extensions.Composition;
 using Annium.Extensions.Validation;
+using Annium.Id.Api.Domain.Queries.Me;
 using Annium.Id.Core;
-using Annium.Id.Domain.Entities;
 using Annium.Id.Infrastructure.Db.Repositories;
 
 namespace Annium.Id.Api.Application.Queries.Me
 {
-    public class GetMyTokenQuery : IQuery
-    {
-        public UserLogin Login { get; private set; } = default!;
-
-        public GetMyTokenQuery(
-        )
-        {
-        }
-    }
-
     internal class GetTokenQueryValidator : Validator<GetMyTokenQuery>
     {
         public GetTokenQueryValidator(

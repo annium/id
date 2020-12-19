@@ -1,5 +1,5 @@
 using Annium.Core.Mapper;
-using Annium.Id.Api.Application.Queries.Me;
+using Annium.Id.Api.Domain.Queries.Me;
 
 namespace Annium.Id.Api.ViewModels.Requests.Me.Profiles
 {
