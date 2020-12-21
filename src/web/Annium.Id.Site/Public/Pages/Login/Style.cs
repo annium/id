@@ -2,7 +2,7 @@ using Annium.Blazor.Css;
 
 namespace Annium.Id.Site.Public.Pages.Login
 {
-    public class Style : IRuleSet
+    public class Style : RuleSet
     {
         public CssRule Title { get; } = Rule.Class()
             .MarginTopRem(1);

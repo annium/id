@@ -17,7 +17,7 @@ namespace Annium.Id.Site
             container.AddComponentFormStateFactory();
             container.AddValidation();
             container.AddLocalization(opts => opts.UseInMemoryStorage());
-            container.AddCssRules();
+            container.AddCss();
             container.AddHostHttpRequestFactory();
             // container.AddLogging(route => route.UseConsole());
 
