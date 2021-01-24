@@ -15,7 +15,7 @@
         <PackageReference Include="Annium.Data.Operations" Version="0.1.0" />
         <PackageReference Include="Annium.Logging.Abstractions" Version="0.1.0" />
         <PackageReference Include="Annium.Security.Cryptography" Version="0.1.0" />
-        <PackageReference Include="MessagePack" Version="2.2.60" />
+        <PackageReference Include="MessagePack" Version="2.2.85" />
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.8.0" />
     </ItemGroup>
 </Project>
