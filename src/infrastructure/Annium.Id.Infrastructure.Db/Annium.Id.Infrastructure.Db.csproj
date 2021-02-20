@@ -21,8 +21,8 @@
         <PackageReference Include="Annium.Core.Mapper" Version="0.1.0" />
         <PackageReference Include="Annium.EntityFrameworkCore.Extensions" Version="0.1.0" />
         <PackageReference Include="Annium.Logging.Console" Version="0.1.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.2" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.2" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.3" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.3" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.2" />
     </ItemGroup>
 </Project>
