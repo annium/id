@@ -14,13 +14,14 @@ namespace Annium.Id.Api.IntegrationTests
     {
         #region id
 
-        public IHttpRequest IdApi => GetRequest<Startup>(
+        public IHttpRequest IdApi => GetAppFactory<Startup>(
             builder => builder.UseServicePack<TestServicePack>(),
             container =>
             {
                 container.AddHttpRequestFactory();
                 container.Add(EmailService).AsSelf().AsInterfaces().Singleton();
-            });
+            }
+        ).GetHttpRequest();
 
         public ExtendedClient Id()
         {
@@ -40,26 +41,27 @@ namespace Annium.Id.Api.IntegrationTests
 
         public IHttpRequest DemoApi(Guid appId)
         {
-            return GetRequest<Demo.Startup>(
+            return GetAppFactory<Demo.Startup>(
                 builder => builder.UseServicePack<Demo.ServicePack>(),
-                services => services
-                    .AddHttpRequestFactory()
-                    .AddIdAuthorization((_, options) =>
+                services =>
+                {
+                    services.AddHttpRequestFactory().SetDefault();
+                    services.AddIdAuthorization((_, options) =>
                     {
                         options.Audience = appId;
                         options.PublicKeyFile = Path.Combine("keys", "public.key");
                         options.AccessTokenLifeTime = Duration.FromMinutes(5);
                         options.RefreshTokenLifeTime = Duration.FromMinutes(5);
-                    })
-            );
+                    });
+                }).GetHttpRequest();
         }
 
-        public Demo.TestClient.Client Demo(Guid appId)
+        public Client Demo(Guid appId)
         {
             return DemoApi(appId).DemoClient();
         }
 
-        public Demo.TestClient.Client Demo(Guid appId, string token)
+        public Client Demo(Guid appId, string token)
         {
             return DemoApi(appId).BearerAuthorization(token).DemoClient();
         }

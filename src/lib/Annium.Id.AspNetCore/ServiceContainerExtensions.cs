@@ -13,8 +13,7 @@ namespace Annium.Core.DependencyInjection
 {
     public static class ServiceContainerExtensions
     {
-        private static readonly ConditionalWeakTable<IServiceContainer, List<string>> PoliciesContainer =
-            new ConditionalWeakTable<IServiceContainer, List<string>>();
+        private static readonly ConditionalWeakTable<IServiceContainer, List<string>> PoliciesContainer = new();
 
         public static IServiceContainer AddIdAuthorization(
             this IServiceContainer container,

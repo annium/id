@@ -16,7 +16,9 @@ namespace Annium.Id.Demo
             container.AddRuntimeTools(GetType().Assembly, true);
 
             container.AddTimeProvider();
-            container.AddJsonSerializers(opts => opts.ConfigureForOperations().ConfigureForNodaTime());
+            container.AddJsonSerializers()
+                .Configure(opts => opts.ConfigureForOperations().ConfigureForNodaTime())
+                .SetDefault();
             container.AddXRest();
 
             // FIXME: removed, cause id is set dynamically from tests
@@ -33,7 +35,7 @@ namespace Annium.Id.Demo
             container.AddIdPolicy(
                 "hasPaymentsAccess",
                 token => token.App.Claims.ContainsKey("paymentsAccess") &&
-                    token.App.Claims["paymentsAccess"] == "full"
+                         token.App.Claims["paymentsAccess"] == "full"
             );
             container.AddIdPolicy<Guid>(
                 "hasCompanyPaymentsAccess",
