@@ -17,7 +17,6 @@
         <ProjectReference Include="../../infrastructure/Annium.Id.Infrastructure.Email/Annium.Id.Infrastructure.Email.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Annium.Architecture.CQRS" Version="0.1.0" />
         <PackageReference Include="Annium.Architecture.Mediator" Version="0.1.0" />
         <PackageReference Include="Annium.Core.Runtime" Version="0.1.0" />
         <PackageReference Include="Annium.Diagnostics.Debug" Version="0.1.0" />

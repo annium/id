@@ -13,12 +13,13 @@ namespace Annium.Id.Demo
 
         public override void Register(IServiceContainer container, IServiceProvider provider)
         {
-            container.AddRuntimeTools(GetType().Assembly, true);
+            container.AddRuntimeTools(GetType().Assembly, false);
 
             container.AddTimeProvider();
             container.AddJsonSerializers()
                 .Configure(opts => opts.ConfigureForOperations().ConfigureForNodaTime())
                 .SetDefault();
+            container.AddHttpRequestFactory().SetDefault();
             container.AddXRest();
 
             // FIXME: removed, cause id is set dynamically from tests

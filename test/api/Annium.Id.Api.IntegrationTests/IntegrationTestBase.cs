@@ -18,7 +18,6 @@ namespace Annium.Id.Api.IntegrationTests
             builder => builder.UseServicePack<TestServicePack>(),
             container =>
             {
-                container.AddHttpRequestFactory();
                 container.Add(EmailService).AsSelf().AsInterfaces().Singleton();
             }
         ).GetHttpRequest();
@@ -45,7 +44,6 @@ namespace Annium.Id.Api.IntegrationTests
                 builder => builder.UseServicePack<Demo.ServicePack>(),
                 services =>
                 {
-                    services.AddHttpRequestFactory().SetDefault();
                     services.AddIdAuthorization((_, options) =>
                     {
                         options.Audience = appId;
