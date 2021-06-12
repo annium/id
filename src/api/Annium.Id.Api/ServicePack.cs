@@ -19,7 +19,7 @@ namespace Annium.Id.Api
             var ignored = new[] { "ChainBuilder", "PipeHandler" };
             container.AddLogging(route => route
                 // .UseConsole());
-                .For(m => !ignored.Any(m.Source.Name.Contains)).UseConsole());
+                .For(m => !ignored.Any(m.Source.Contains)).UseConsole());
         }
     }
 }
