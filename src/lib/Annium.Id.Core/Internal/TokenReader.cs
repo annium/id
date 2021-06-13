@@ -13,12 +13,12 @@ using NodaTime;
 
 namespace Annium.Id.Core.Internal
 {
-    internal class TokenReader : ITokenReader
+    internal class TokenReader : ITokenReader, ILogSubject
     {
+        public ILogger Logger { get; }
         private readonly RsaSecurityKey _signingKey;
         private readonly AuthOptions _authOptions;
         private readonly ITimeProvider _timeProvider;
-        private readonly ILogger _logger;
 
         public TokenReader(
             AuthOptions authOptions,
@@ -35,7 +35,7 @@ namespace Annium.Id.Core.Internal
 
             _authOptions = authOptions;
             _timeProvider = timeProvider;
-            _logger = logger;
+            Logger = logger;
         }
 
         public IStatusResult<TokenReadStatus, IdToken> ReadToken(string tokenString, TokenReadOptions options)
@@ -135,7 +135,7 @@ namespace Annium.Id.Core.Internal
 
         private ValueTuple<TokenReadStatus, string> Log(TokenReadStatus status, string error, string message)
         {
-            _logger.Error(message);
+            this.Error(message);
 
             return (status, error);
         }
