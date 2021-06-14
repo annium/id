@@ -135,7 +135,7 @@ namespace Annium.Id.Core.Internal
 
         private ValueTuple<TokenReadStatus, string> Log(TokenReadStatus status, string error, string message)
         {
-            this.Error(message);
+            this.Log().Error(message);
 
             return (status, error);
         }
