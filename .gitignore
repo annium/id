@@ -4,6 +4,7 @@
 *DotSettings.user
 
 # artifacts
+.DS_Store
 /run/
 *.blob
 configuration/
