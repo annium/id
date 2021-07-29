@@ -5,7 +5,6 @@ using Annium.Architecture.Base;
 using Annium.Architecture.CQRS.Commands;
 using Annium.Core.Primitives;
 using Annium.Data.Operations;
-using Annium.Id.Api.Application.Commands.Me;
 using Annium.Id.Api.Application.Services;
 using Annium.Id.Api.Application.Tools;
 using Annium.Id.Api.Domain.Commands.Me;
@@ -60,7 +59,7 @@ namespace Annium.Id.Api.Application.CommandHandlers
 
             var result = await _emailService.SendEmailConfirmationAsync(user, request.ServerUri);
             if (result.IsFailure)
-                return Result.Status(OperationStatus.UncaughtException).Join(result);
+                return Result.Status(OperationStatus.UncaughtError).Join(result);
 
             return Result.Status(OperationStatus.Ok);
         }
@@ -98,7 +97,7 @@ namespace Annium.Id.Api.Application.CommandHandlers
 
             var result = await _emailService.SendRestoreAccessAsync(user, request.ServerUri, tokens);
             if (result.IsFailure)
-                return Result.Status(OperationStatus.UncaughtException).Join(result);
+                return Result.Status(OperationStatus.UncaughtError).Join(result);
 
             return Result.Status(OperationStatus.Ok);
         }

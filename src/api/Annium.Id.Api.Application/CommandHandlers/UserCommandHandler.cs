@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Annium.Architecture.Base;
 using Annium.Architecture.CQRS.Commands;
 using Annium.Data.Operations;
-using Annium.Id.Api.Application.Commands.Users;
 using Annium.Id.Api.Domain.Commands.Users;
 using Annium.Id.Domain.Entities;
 using Annium.Id.Infrastructure.Db.Repositories;

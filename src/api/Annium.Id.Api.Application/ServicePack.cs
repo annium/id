@@ -1,7 +1,6 @@
 using System.IO;
 using Annium.Configuration.Abstractions;
 using Annium.Core.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Annium.Id.Api.Application
 {

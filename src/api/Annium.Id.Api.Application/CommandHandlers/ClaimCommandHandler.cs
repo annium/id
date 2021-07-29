@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Annium.Architecture.Base;
 using Annium.Architecture.CQRS.Commands;
 using Annium.Data.Operations;
-using Annium.Id.Api.Application.Commands.Claims;
 using Annium.Id.Api.Domain.Commands.Claims;
 using Annium.Id.Domain.Entities;
 using Annium.Id.Infrastructure.Db.Repositories;

@@ -1,4 +1,3 @@
-using Annium.Id.Demo.TestClient.Clients;
 using Annium.Net.Http;
 
 namespace Annium.Id.Demo.TestClient

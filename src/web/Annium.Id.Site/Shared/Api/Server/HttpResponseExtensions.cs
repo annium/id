@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Annium.Data.Operations;
-using Annium.Net.Http;
 
 namespace Annium.Id.Site.Shared.Api.Server
 {
