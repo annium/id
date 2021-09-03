@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using Annium.Core.Runtime.Time;
+using Annium.Core.Primitives;
 using Annium.Id.Api.Application.Tools;
 using Annium.Id.Core;
 using Annium.Id.Domain.Entities;

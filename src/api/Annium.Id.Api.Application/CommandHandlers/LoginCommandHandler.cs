@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Annium.Architecture.Base;
 using Annium.Architecture.CQRS.Commands;
-using Annium.Core.Runtime.Time;
+using Annium.Core.Primitives;
 using Annium.Data.Operations;
 using Annium.Id.Api.Application.Services;
 using Annium.Id.Api.Application.Tools;

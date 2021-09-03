@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Annium.Blazor.Net;
 using Annium.Core.DependencyInjection;
-using Annium.Core.Runtime.Time;
+using Annium.Core.Primitives;
 using Annium.Data.Operations;
 using Annium.Id.Site.Shared.Stores;
 using Annium.Net.Http;
