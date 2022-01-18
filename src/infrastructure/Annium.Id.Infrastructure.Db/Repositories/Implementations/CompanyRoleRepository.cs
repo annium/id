@@ -40,20 +40,20 @@ namespace Annium.Id.Infrastructure.Db.Repositories.Implementations
             return raw.Select(_mapper.Map<CompanyRole>).ToArray();
         }
 
-        public async Task<CompanyRole> GetByIdAsync(Guid id)
+        public async Task<CompanyRole?> GetByIdAsync(Guid id)
         {
-            var role = await _context.CompanyRoles.AsNoTracking()
+            var entity = await _context.CompanyRoles.AsNoTracking()
                 .FirstOrDefaultAsync(c => c.Id == id);
 
-            return _mapper.Map<CompanyRole>(role);
+            return _mapper.Map<CompanyRole>(entity);
         }
 
-        public async Task<CompanyRole> FindByKeyAsync(Guid appId, string key)
+        public async Task<CompanyRole?> FindByKeyAsync(Guid appId, string key)
         {
-            var role = await _context.CompanyRoles.AsNoTracking()
+            var entity = await _context.CompanyRoles.AsNoTracking()
                 .FirstOrDefaultAsync(c => c.AppId == appId && c.Key == key);
 
-            return _mapper.Map<CompanyRole>(role);
+            return _mapper.Map<CompanyRole>(entity);
         }
 
         public async Task<CompanyRole> UpdateAsync(CompanyRole role)

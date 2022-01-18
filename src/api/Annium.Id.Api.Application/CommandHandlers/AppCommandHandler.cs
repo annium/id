@@ -47,7 +47,7 @@ namespace Annium.Id.Api.Application.CommandHandlers
             var app = request.App;
 
             if (myId != app.OwnerId)
-                return Result.Status(OperationStatus.Forbidden).Error($"Need to be application owner to update app");
+                return Result.Status(OperationStatus.Forbidden).Error("Need to be application owner to update app");
 
             app.Name = request.Name;
 
@@ -66,7 +66,7 @@ namespace Annium.Id.Api.Application.CommandHandlers
             var newOwner = request.NewOwner;
 
             if (myId != app.OwnerId)
-                return Result.Status(OperationStatus.Forbidden).Error($"Need to be application owner to change app owner");
+                return Result.Status(OperationStatus.Forbidden).Error("Need to be application owner to change app owner");
 
             app.OwnerId = newOwner.Id;
 
@@ -84,7 +84,7 @@ namespace Annium.Id.Api.Application.CommandHandlers
             var app = request.App;
 
             if (myId != app.OwnerId)
-                return Result.Status(OperationStatus.Forbidden, Guid.Empty).Error($"Need to be application owner to update app api token");
+                return Result.Status(OperationStatus.Forbidden, Guid.Empty).Error("Need to be application owner to update app api token");
 
             var apiToken = Guid.NewGuid();
             await _appRepository.UpdateApiTokenAsync(app.Id, Guid.NewGuid());
@@ -101,7 +101,7 @@ namespace Annium.Id.Api.Application.CommandHandlers
             var app = request.App;
 
             if (myId != app.OwnerId)
-                return Result.Status(OperationStatus.Forbidden).Error($"Need to be application owner to update app api token");
+                return Result.Status(OperationStatus.Forbidden).Error("Need to be application owner to update app api token");
 
             await _appRepository.DeleteByIdAsync(app.Id);
 

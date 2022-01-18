@@ -1,3 +1,4 @@
+using System;
 using Annium.Core.DependencyInjection;
 
 namespace Annium.Id.Infrastructure.Db
@@ -9,7 +10,7 @@ namespace Annium.Id.Infrastructure.Db
             Add<BaseServicePack>();
         }
 
-        public override void Register(IServiceContainer container, System.IServiceProvider provider)
+        public override void Register(IServiceContainer container, IServiceProvider provider)
         {
             container.AddEntityFrameworkSqliteInMemory<Context>();
         }

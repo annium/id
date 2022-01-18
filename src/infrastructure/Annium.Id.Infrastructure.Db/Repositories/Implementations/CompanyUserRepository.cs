@@ -37,7 +37,7 @@ namespace Annium.Id.Infrastructure.Db.Repositories.Implementations
             return _mapper.Map<CompanyUser>(entity);
         }
 
-        public async Task<CompanyUser> GetByIdAsync(Guid companyId, Guid userId)
+        public async Task<CompanyUser?> GetByIdAsync(Guid companyId, Guid userId)
         {
             var entity = await _context.CompanyUsers.AsNoTracking()
                 .FirstOrDefaultAsync(x => x.CompanyId == companyId && x.UserId == userId);

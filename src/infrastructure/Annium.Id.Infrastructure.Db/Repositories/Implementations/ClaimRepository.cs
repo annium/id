@@ -40,7 +40,7 @@ namespace Annium.Id.Infrastructure.Db.Repositories.Implementations
             return claims.Select(_mapper.Map<Claim>).ToArray();
         }
 
-        public async Task<Claim> GetByIdAsync(Guid id)
+        public async Task<Claim?> GetByIdAsync(Guid id)
         {
             var claim = await _context.Claims.AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id);
@@ -48,7 +48,7 @@ namespace Annium.Id.Infrastructure.Db.Repositories.Implementations
             return _mapper.Map<Claim>(claim);
         }
 
-        public async Task<Claim> FindByKeyAsync(Guid appId, string key)
+        public async Task<Claim?> FindByKeyAsync(Guid appId, string key)
         {
             var claim = await _context.Claims.AsNoTracking()
                 .FirstOrDefaultAsync(x => x.AppId == appId && x.Key == key);

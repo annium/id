@@ -31,7 +31,7 @@ namespace Annium.Id.Infrastructure.Db.Repositories.Implementations
             return _mapper.Map<User>(entity);
         }
 
-        public async Task<User> GetByIdAsync(Guid id)
+        public async Task<User?> GetByIdAsync(Guid id)
         {
             var entity = await _context.Users.AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id);
@@ -49,7 +49,7 @@ namespace Annium.Id.Infrastructure.Db.Repositories.Implementations
             return _mapper.Map<User[]>(entities);
         }
 
-        public async Task<User> FindByLoginAsync(string login)
+        public async Task<User?> FindByLoginAsync(string login)
         {
             var entity = await _context.Users.AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Login == login);
@@ -57,7 +57,7 @@ namespace Annium.Id.Infrastructure.Db.Repositories.Implementations
             return _mapper.Map<User>(entity);
         }
 
-        public async Task<User> FindByEmailAsync(string email)
+        public async Task<User?> FindByEmailAsync(string email)
         {
             var entity = await _context.Users.AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Email == email);
@@ -68,7 +68,7 @@ namespace Annium.Id.Infrastructure.Db.Repositories.Implementations
         public async Task<User> UpdateAsync(User user)
         {
             var entity = await _context.Users
-                .FirstOrDefaultAsync(x => x.Id == user.Id);
+                .FirstAsync(x => x.Id == user.Id);
 
             entity.Login = user.Login;
             entity.PasswordHash = user.PasswordHash;

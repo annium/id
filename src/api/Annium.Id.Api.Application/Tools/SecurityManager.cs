@@ -6,7 +6,7 @@ namespace Annium.Id.Api.Application.Tools
 {
     internal class SecurityManager : ISecurityManager, IDisposable
     {
-        private readonly HashAlgorithm _hashAlgorithm = new SHA512CryptoServiceProvider();
+        private readonly HashAlgorithm _hashAlgorithm = SHA512.Create();
 
         public string Hash(string data)
         {

@@ -36,7 +36,7 @@ namespace Annium.Id.Api.Application.CommandHandlers
             var app = request.App;
 
             if (myId != app.OwnerId)
-                return Result.Status(OperationStatus.Forbidden, Guid.Empty).Error($"Need to be application owner to create claim");
+                return Result.Status(OperationStatus.Forbidden, Guid.Empty).Error("Need to be application owner to create claim");
 
             var claim = new Claim(
                 app.Id,
@@ -59,7 +59,7 @@ namespace Annium.Id.Api.Application.CommandHandlers
             var claim = request.Claim;
 
             if (myId != app.OwnerId)
-                return Result.Status(OperationStatus.Forbidden).Error($"Need to be application owner to update claim");
+                return Result.Status(OperationStatus.Forbidden).Error("Need to be application owner to update claim");
 
             if (request.Key != claim.Key && await _claimRepository.FindByKeyAsync(app.Id, request.Key) != null)
                 return Result.Status(OperationStatus.Conflict).Error($"Claim key {request.Key} is already used");
@@ -82,7 +82,7 @@ namespace Annium.Id.Api.Application.CommandHandlers
             var claim = request.Claim;
 
             if (myId != app.OwnerId)
-                return Result.Status(OperationStatus.Forbidden).Error($"Need to be application owner to delete claim");
+                return Result.Status(OperationStatus.Forbidden).Error("Need to be application owner to delete claim");
 
             await _claimRepository.DeleteByIdAsync(claim.Id);
 

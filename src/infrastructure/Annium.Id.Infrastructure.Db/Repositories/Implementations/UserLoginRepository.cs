@@ -32,7 +32,7 @@ namespace Annium.Id.Infrastructure.Db.Repositories.Implementations
             return _mapper.Map<UserLogin>(entity);
         }
 
-        public async Task<UserLogin> GetByIdAsync(Guid id)
+        public async Task<UserLogin?> GetByIdAsync(Guid id)
         {
             var entity = await _context.UserLogins.AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id);
@@ -40,7 +40,7 @@ namespace Annium.Id.Infrastructure.Db.Repositories.Implementations
             return _mapper.Map<UserLogin>(entity);
         }
 
-        public async Task<UserLogin> FindByRefreshTokenAsync(Guid token)
+        public async Task<UserLogin?> FindByRefreshTokenAsync(Guid token)
         {
             var entity = await _context.UserLogins.AsNoTracking()
                 .FirstOrDefaultAsync(x => x.RefreshToken == token);

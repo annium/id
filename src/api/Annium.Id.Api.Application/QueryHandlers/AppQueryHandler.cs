@@ -65,7 +65,7 @@ namespace Annium.Id.Api.Application.QueryHandlers
 
             if (myId != app.OwnerId)
                 return Task.FromResult(Result.Status(OperationStatus.Forbidden, Guid.Empty)
-                    .Error($"Need to be application owner to get app api token"));
+                    .Error("Need to be application owner to get app api token"));
 
             return Task.FromResult(Result.Status(OperationStatus.Ok, app.ApiToken));
         }

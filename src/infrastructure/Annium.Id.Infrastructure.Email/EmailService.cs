@@ -3,6 +3,7 @@ using System.Net.Mail;
 using System.Threading.Tasks;
 using Annium.Data.Operations;
 using Annium.Id.Domain.Entities;
+using Annium.Id.Infrastructure.Email.Models;
 
 namespace Annium.Id.Infrastructure.Email
 {
@@ -25,7 +26,7 @@ namespace Annium.Id.Infrastructure.Email
             using var message = GetMessage("Annium email confirmation");
             message.To.Add(user.Email);
 
-            var data = new Models.ConfirmEmailData
+            var data = new ConfirmEmailData
             {
                 Server = server.GetLeftPart(UriPartial.Authority),
                 Id = user.Id
@@ -39,7 +40,7 @@ namespace Annium.Id.Infrastructure.Email
             using var message = GetMessage("Annium access restore");
             message.To.Add(user.Email);
 
-            var data = new Models.RestoreAccessData
+            var data = new RestoreAccessData
             {
                 Server = server.GetLeftPart(UriPartial.Authority),
                 Tokens = tokens

@@ -8,10 +8,6 @@ namespace Annium.Id.Api.Application.Queries.Me
 {
     internal class GetTokenQueryValidator : Validator<GetMyTokenQuery>
     {
-        public GetTokenQueryValidator(
-        )
-        {
-        }
     }
 
     internal class GetTokenQueryComposer : Composer<GetMyTokenQuery>

@@ -29,16 +29,7 @@ namespace Annium.Id.Infrastructure.Db
                 {
                     var cfg = sp.Resolve<Configuration>();
                     builder.UseNpgsql(
-                        string.Join(';', new string[]
-                        {
-                            $"Host={cfg.Host}",
-                            $"Port={cfg.Port}",
-                            $"Database={cfg.Database}",
-                            $"Username={cfg.User}",
-                            $"Password={cfg.Password}",
-                            $"SSL Mode=Prefer",
-                            $"Trust Server Certificate=true"
-                        }),
+                        string.Join(';', $"Host={cfg.Host}", $"Port={cfg.Port}", $"Database={cfg.Database}", $"Username={cfg.User}", $"Password={cfg.Password}", "SSL Mode=Prefer", "Trust Server Certificate=true"),
                         options =>
                         {
                             options.EnableRetryOnFailure(10, TimeSpan.FromSeconds(30), Array.Empty<string>());

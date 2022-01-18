@@ -40,7 +40,7 @@ namespace Annium.Id.Infrastructure.Db.Repositories.Implementations
             return raw.Select(_mapper.Map<Role>).ToArray();
         }
 
-        public async Task<Role> GetByIdAsync(Guid id)
+        public async Task<Role?> GetByIdAsync(Guid id)
         {
             var role = await _context.Roles.AsNoTracking()
                 .FirstOrDefaultAsync(c => c.Id == id);
@@ -48,7 +48,7 @@ namespace Annium.Id.Infrastructure.Db.Repositories.Implementations
             return _mapper.Map<Role>(role);
         }
 
-        public async Task<Role> FindByKeyAsync(Guid appId, string key)
+        public async Task<Role?> FindByKeyAsync(Guid appId, string key)
         {
             var role = await _context.Roles.AsNoTracking()
                 .FirstOrDefaultAsync(c => c.AppId == appId && c.Key == key);

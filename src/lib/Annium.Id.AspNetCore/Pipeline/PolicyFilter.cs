@@ -37,7 +37,7 @@ namespace Annium.Id.AspNetCore.Pipeline
                 return;
             }
 
-            var args = context.ActionArguments.ToDictionary(p => p.Key, p => p.Value);
+            var args = context.ActionArguments.ToDictionary(p => p.Key, p => p.Value!);
             var arguments = _mapArguments(token, args);
 
             try

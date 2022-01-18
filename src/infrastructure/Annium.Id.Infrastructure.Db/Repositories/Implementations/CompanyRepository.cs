@@ -54,19 +54,19 @@ namespace Annium.Id.Infrastructure.Db.Repositories.Implementations
 
         public async Task<Company[]> GetAllByIdsAsync(Guid[] ids)
         {
-            var companies = await _context.Companies.AsNoTracking()
+            var entities = await _context.Companies.AsNoTracking()
                 .Where(x => ids.Contains(x.Id))
                 .ToArrayAsync();
 
-            return companies.Select(_mapper.Map<Company>).ToArray();
+            return entities.Select(_mapper.Map<Company>).ToArray();
         }
 
-        public async Task<Company> GetByIdAsync(Guid id)
+        public async Task<Company?> GetByIdAsync(Guid id)
         {
-            var company = await _context.Companies.AsNoTracking()
+            var entity = await _context.Companies.AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id);
 
-            return _mapper.Map<Company>(company);
+            return _mapper.Map<Company?>(entity);
         }
 
         public async Task<Company> UpdateAsync(Company company)

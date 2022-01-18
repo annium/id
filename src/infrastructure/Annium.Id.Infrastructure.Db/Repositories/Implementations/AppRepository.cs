@@ -38,29 +38,29 @@ namespace Annium.Id.Infrastructure.Db.Repositories.Implementations
             if (!string.IsNullOrWhiteSpace(name))
                 query = query.Where(x => x.Name.StartsWith(name));
 
-            var apps = await query.ToListAsync();
+            var entities = await query.ToListAsync();
 
-            return apps.Select(_mapper.Map<App>).ToArray();
+            return entities.Select(_mapper.Map<App>).ToArray();
         }
 
         public async Task<App[]> FindMyAsync(Guid ownerId)
         {
-            var apps = await _context.Apps.AsNoTracking()
+            var entities = await _context.Apps.AsNoTracking()
                 .Where(x => x.OwnerId == ownerId)
                 .ToListAsync();
 
-            return apps.Select(_mapper.Map<App>).ToArray();
+            return entities.Select(_mapper.Map<App>).ToArray();
         }
 
-        public async Task<App> GetByIdAsync(Guid id)
+        public async Task<App?> GetByIdAsync(Guid id)
         {
-            var app = await _context.Apps.AsNoTracking()
+            var entity = await _context.Apps.AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id);
 
-            return _mapper.Map<App>(app);
+            return _mapper.Map<App>(entity);
         }
 
-        public async Task<App> FindByApiTokenAsync(Guid token)
+        public async Task<App?> FindByApiTokenAsync(Guid token)
         {
             var app = await _context.Apps.AsNoTracking()
                 .FirstOrDefaultAsync(x => x.ApiToken == token);

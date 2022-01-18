@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 using Annium.AspNetCore.Extensions;
 using Annium.Core.Mediator;
 using Annium.Data.Operations;
-using Annium.Id.AspNetCore;
 using Annium.Id.Api.ViewModels.Requests.Apps;
 using Annium.Id.Api.ViewModels.Responses.Apps;
+using Annium.Id.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Annium.Id.Api.Controllers

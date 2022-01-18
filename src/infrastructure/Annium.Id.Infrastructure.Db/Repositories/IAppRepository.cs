@@ -9,8 +9,8 @@ namespace Annium.Id.Infrastructure.Db.Repositories
         Task<App> CreateAsync(App app);
         Task<App[]> FindAllAsync(string name);
         Task<App[]> FindMyAsync(Guid ownerId);
-        Task<App> GetByIdAsync(Guid id);
-        Task<App> FindByApiTokenAsync(Guid token);
+        Task<App?> GetByIdAsync(Guid id);
+        Task<App?> FindByApiTokenAsync(Guid token);
         Task<App> UpdateAsync(App app);
         Task UpdateApiTokenAsync(Guid appId, Guid apiToken);
         Task DeleteByIdAsync(Guid id);
