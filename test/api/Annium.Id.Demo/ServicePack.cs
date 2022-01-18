@@ -15,7 +15,7 @@ namespace Annium.Id.Demo
         {
             container.AddRuntimeTools(GetType().Assembly, false);
 
-            container.AddTimeProvider();
+            container.AddTime().WithRealTime().SetDefault();
             container.AddJsonSerializers()
                 .Configure(opts => opts.ConfigureForOperations().ConfigureForNodaTime())
                 .SetDefault();
@@ -28,7 +28,7 @@ namespace Annium.Id.Demo
             //     options.Audience = Constants.AppId;
             //     options.PublicKeyFile = Path.Combine("keys", "public.key");
             // });
-            container.AddLogging(route => route.UseConsole());
+            container.AddLogging();
             container.AddIdPolicy(
                 "isAdmin",
                 token => token.App.Roles.Contains("admin")
@@ -49,7 +49,7 @@ namespace Annium.Id.Demo
 
         public override void Setup(IServiceProvider provider)
         {
-            // setup post-configured services
+            provider.UseLogging(route => route.UseConsole());
         }
     }
 }

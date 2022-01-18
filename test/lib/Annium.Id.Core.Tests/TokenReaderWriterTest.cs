@@ -82,15 +82,15 @@ namespace Annium.Id.Core.Tests
         {
             var container = new ServiceContainer();
             container.AddIdAuthorizationCoreServices(Configure(token.App.Id));
-            container.AddTestTimeProvider();
+            container.AddTime().WithManagedTime().SetDefault();
 
             var provider = container.BuildServiceProvider();
 
-            var timeProvider = provider.Resolve<IManagedTimeProvider>();
+            var timeManager = provider.Resolve<ITimeManager>();
             if (expired)
-                timeProvider.SetNow(SystemClock.Instance.GetCurrentInstant() - Duration.FromDays(1));
+                timeManager.SetNow(SystemClock.Instance.GetCurrentInstant() - Duration.FromDays(1));
             else
-                timeProvider.SetNow(SystemClock.Instance.GetCurrentInstant());
+                timeManager.SetNow(SystemClock.Instance.GetCurrentInstant());
 
             var writer = provider.Resolve<ITokenWriter>();
 
@@ -101,9 +101,11 @@ namespace Annium.Id.Core.Tests
         {
             var container = new ServiceContainer();
             container.AddIdAuthorizationCoreServices(Configure(appId));
-            container.AddTimeProvider();
-            container.AddLogging(route => route.UseConsole());
+            container.AddTime().WithRealTime().SetDefault();
+            container.AddLogging();
+
             var provider = container.BuildServiceProvider();
+            provider.UseLogging(route => route.UseConsole());
 
             var reader = provider.Resolve<ITokenReader>();
 

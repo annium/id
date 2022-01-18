@@ -9,7 +9,7 @@ namespace Annium.Id.Site
         public override void Register(IServiceContainer container, IServiceProvider provider)
         {
             // core
-            container.AddTimeProvider();
+            container.AddTime().WithRealTime().SetDefault();
             container.AddRuntimeTools(GetType().Assembly, false);
             container.AddMapper();
             container.AddHttpRequestFactory();

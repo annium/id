@@ -18,7 +18,7 @@ namespace Annium.Id.Api
 
         public override void Register(IServiceContainer container, IServiceProvider provider)
         {
-            container.AddTimeProvider();
+            container.AddTime().WithRealTime().SetDefault();
 
             // auth
             container.AddIdAuthorization((sp, opts) =>

@@ -16,8 +16,13 @@ namespace Annium.Id.Api
 
         public override void Register(IServiceContainer container, IServiceProvider provider)
         {
+            container.AddLogging();
+        }
+
+        public override void Setup(IServiceProvider provider)
+        {
             var ignored = new[] { "ChainBuilder", "PipeHandler" };
-            container.AddLogging(route => route
+            provider.UseLogging(route => route
                 // .For(m =>
                 //     !ignored.Any(m.Source.Name.Contains)
                 // )
