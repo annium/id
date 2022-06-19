@@ -1,5 +1,5 @@
 using System;
-using Annium.Core.DependencyInjection;
+using Annium.EntityFrameworkCore.Extensions;
 using Annium.Id.Core;
 using Annium.Id.Infrastructure.Db.Entities;
 using Microsoft.EntityFrameworkCore;
