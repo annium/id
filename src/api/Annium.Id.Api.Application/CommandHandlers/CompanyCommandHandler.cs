@@ -8,115 +8,114 @@ using Annium.Id.Api.Domain.Commands.Companies;
 using Annium.Id.Domain.Entities;
 using Annium.Id.Infrastructure.Db.Repositories;
 
-namespace Annium.Id.Api.Application.CommandHandlers
+namespace Annium.Id.Api.Application.CommandHandlers;
+
+internal class CompanyCommandHandler :
+    ICommandHandler<RegisterCompanyCommand, Guid>,
+    ICommandHandler<UpdateCompanyCommand>,
+    ICommandHandler<SetCompanyOwnerCommand>,
+    ICommandHandler<UnregisterCompanyCommand>
 {
-    internal class CompanyCommandHandler :
-        ICommandHandler<RegisterCompanyCommand, Guid>,
-        ICommandHandler<UpdateCompanyCommand>,
-        ICommandHandler<SetCompanyOwnerCommand>,
-        ICommandHandler<UnregisterCompanyCommand>
+    private readonly ICompanyRepository _companyRepository;
+
+    public CompanyCommandHandler(
+        ICompanyRepository companyRepository
+    )
     {
-        private readonly ICompanyRepository _companyRepository;
+        _companyRepository = companyRepository;
+    }
 
-        public CompanyCommandHandler(
-            ICompanyRepository companyRepository
-        )
+    public async Task<IStatusResult<OperationStatus, Guid>> HandleAsync(
+        RegisterCompanyCommand request,
+        CancellationToken cancellationToken
+    )
+    {
+        var myId = request.MyId;
+        var parentId = request.ParentId;
+
+        if (parentId.HasValue)
         {
-            _companyRepository = companyRepository;
+            var parent = await _companyRepository.GetByIdAsync(parentId.Value);
+            if (parent is null)
+                return Result.Status(OperationStatus.NotFound, Guid.Empty).Error("Parent company not found");
+
+            if (myId != parent.OwnerId)
+                return Result.Status(OperationStatus.Forbidden, Guid.Empty).Error("Need to be owner of parent company to create child company");
         }
 
-        public async Task<IStatusResult<OperationStatus, Guid>> HandleAsync(
-            RegisterCompanyCommand request,
-            CancellationToken cancellationToken
-        )
+        var company = new Company(
+            myId,
+            parentId,
+            request.Name
+        );
+
+        company = await _companyRepository.CreateAsync(company);
+
+        return Result.Status(OperationStatus.Ok, company.Id);
+    }
+
+    public async Task<IStatusResult<OperationStatus>> HandleAsync(
+        UpdateCompanyCommand request,
+        CancellationToken cancellationToken
+    )
+    {
+        var myId = request.MyId;
+        var parentId = request.ParentId;
+        var company = request.Company;
+
+        if (myId != company.OwnerId)
+            return Result.Status(OperationStatus.Forbidden).Error("Need to be company owner to update company");
+
+        if (parentId.HasValue)
         {
-            var myId = request.MyId;
-            var parentId = request.ParentId;
+            var parent = await _companyRepository.GetByIdAsync(parentId.Value);
+            if (parent is null)
+                return Result.Status(OperationStatus.NotFound).Error("Parent company not found");
 
-            if (parentId.HasValue)
-            {
-                var parent = await _companyRepository.GetByIdAsync(parentId.Value);
-                if (parent is null)
-                    return Result.Status(OperationStatus.NotFound, Guid.Empty).Error("Parent company not found");
-
-                if (myId != parent.OwnerId)
-                    return Result.Status(OperationStatus.Forbidden, Guid.Empty).Error("Need to be owner of parent company to create child company");
-            }
-
-            var company = new Company(
-                myId,
-                parentId,
-                request.Name
-            );
-
-            company = await _companyRepository.CreateAsync(company);
-
-            return Result.Status(OperationStatus.Ok, company.Id);
+            if (myId != parent.OwnerId)
+                return Result.Status(OperationStatus.Forbidden).Error("Need to be owner of parent company to set child company parent");
         }
 
-        public async Task<IStatusResult<OperationStatus>> HandleAsync(
-            UpdateCompanyCommand request,
-            CancellationToken cancellationToken
-        )
-        {
-            var myId = request.MyId;
-            var parentId = request.ParentId;
-            var company = request.Company;
+        company.ParentId = request.ParentId;
+        company.Name = request.Name;
 
-            if (myId != company.OwnerId)
-                return Result.Status(OperationStatus.Forbidden).Error("Need to be company owner to update company");
+        await _companyRepository.UpdateAsync(company);
 
-            if (parentId.HasValue)
-            {
-                var parent = await _companyRepository.GetByIdAsync(parentId.Value);
-                if (parent is null)
-                    return Result.Status(OperationStatus.NotFound).Error("Parent company not found");
+        return Result.Status(OperationStatus.Ok);
+    }
 
-                if (myId != parent.OwnerId)
-                    return Result.Status(OperationStatus.Forbidden).Error("Need to be owner of parent company to set child company parent");
-            }
+    public async Task<IStatusResult<OperationStatus>> HandleAsync(
+        SetCompanyOwnerCommand request,
+        CancellationToken cancellationToken
+    )
+    {
+        var myId = request.MyId;
+        var user = request.User;
+        var company = request.Company;
 
-            company.ParentId = request.ParentId;
-            company.Name = request.Name;
+        if (myId != company.OwnerId)
+            return Result.Status(OperationStatus.Forbidden).Error("Need to be company owner to change company owner");
 
-            await _companyRepository.UpdateAsync(company);
+        company.OwnerId = user.Id;
 
-            return Result.Status(OperationStatus.Ok);
-        }
+        await _companyRepository.UpdateAsync(company);
 
-        public async Task<IStatusResult<OperationStatus>> HandleAsync(
-            SetCompanyOwnerCommand request,
-            CancellationToken cancellationToken
-        )
-        {
-            var myId = request.MyId;
-            var user = request.User;
-            var company = request.Company;
+        return Result.Status(OperationStatus.Ok);
+    }
 
-            if (myId != company.OwnerId)
-                return Result.Status(OperationStatus.Forbidden).Error("Need to be company owner to change company owner");
+    public async Task<IStatusResult<OperationStatus>> HandleAsync(
+        UnregisterCompanyCommand request,
+        CancellationToken cancellationToken
+    )
+    {
+        var myId = request.MyId;
+        var company = request.Company;
 
-            company.OwnerId = user.Id;
+        if (myId != company.OwnerId)
+            return Result.Status(OperationStatus.Forbidden).Error("Need to be company owner to unregister company");
 
-            await _companyRepository.UpdateAsync(company);
+        await _companyRepository.DeleteByIdAsync(company.Id);
 
-            return Result.Status(OperationStatus.Ok);
-        }
-
-        public async Task<IStatusResult<OperationStatus>> HandleAsync(
-            UnregisterCompanyCommand request,
-            CancellationToken cancellationToken
-        )
-        {
-            var myId = request.MyId;
-            var company = request.Company;
-
-            if (myId != company.OwnerId)
-                return Result.Status(OperationStatus.Forbidden).Error("Need to be company owner to unregister company");
-
-            await _companyRepository.DeleteByIdAsync(company.Id);
-
-            return Result.Status(OperationStatus.Ok);
-        }
+        return Result.Status(OperationStatus.Ok);
     }
 }

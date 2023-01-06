@@ -1,6 +1,5 @@
-namespace Annium.Id.Infrastructure.Db.Entities
+namespace Annium.Id.Infrastructure.Db.Entities;
+
+internal abstract class BaseEntity
 {
-    internal abstract class BaseEntity
-    {
-    }
 }

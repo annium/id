@@ -4,27 +4,26 @@ using Annium.Id.Api.Domain.Commands.Roles;
 using Annium.Id.Core;
 using Annium.Id.Infrastructure.Db.Repositories;
 
-namespace Annium.Id.Api.Application.Commands.Roles
-{
-    internal class UpdateRoleCommandValidator : Validator<UpdateRoleCommand>
-    {
-        public UpdateRoleCommandValidator()
-        {
-            Field(c => c.RoleId).Required();
-            Field(c => c.Key).Required().Length(3, 100);
-            Field(c => c.Name).Required().Length(3, 100);
-        }
-    }
+namespace Annium.Id.Api.Application.Commands.Roles;
 
-    internal class UpdateRoleCommandComposer : Composer<UpdateRoleCommand>
+internal class UpdateRoleCommandValidator : Validator<UpdateRoleCommand>
+{
+    public UpdateRoleCommandValidator()
     {
-        public UpdateRoleCommandComposer(
-            ITokenAccessor tokenAccessor,
-            IRoleRepository roleRepository
-        )
-        {
-            Field(c => c.MyId).LoadWith(_ => tokenAccessor.GetToken().UserId);
-            Field(c => c.Role).LoadWith(ctx => roleRepository.GetByIdAsync(ctx.Root.RoleId));
-        }
+        Field(c => c.RoleId).Required();
+        Field(c => c.Key).Required().Length(3, 100);
+        Field(c => c.Name).Required().Length(3, 100);
+    }
+}
+
+internal class UpdateRoleCommandComposer : Composer<UpdateRoleCommand>
+{
+    public UpdateRoleCommandComposer(
+        ITokenAccessor tokenAccessor,
+        IRoleRepository roleRepository
+    )
+    {
+        Field(c => c.MyId).LoadWith(_ => tokenAccessor.GetToken().UserId);
+        Field(c => c.Role).LoadWith(ctx => roleRepository.GetByIdAsync(ctx.Root.RoleId));
     }
 }

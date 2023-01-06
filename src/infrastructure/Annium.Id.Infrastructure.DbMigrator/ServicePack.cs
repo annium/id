@@ -1,13 +1,12 @@
 using Annium.Core.DependencyInjection;
 
-namespace Annium.Id.Infrastructure.DbMigrator
+namespace Annium.Id.Infrastructure.DbMigrator;
+
+internal class ServicePack : ServicePackBase
 {
-    internal class ServicePack : ServicePackBase
+    public ServicePack()
     {
-        public ServicePack()
-        {
-            Add<BaseServicePack>();
-            Add<Db.ServicePack>();
-        }
+        Add<BaseServicePack>();
+        Add<Db.ServicePack>();
     }
 }

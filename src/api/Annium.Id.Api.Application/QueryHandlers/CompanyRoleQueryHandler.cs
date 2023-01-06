@@ -9,28 +9,27 @@ using Annium.Id.Api.Domain.Queries.CompanyRoles;
 using Annium.Id.Domain.Entities;
 using Annium.Id.Infrastructure.Db.Repositories;
 
-namespace Annium.Id.Api.Application.QueryHandlers
+namespace Annium.Id.Api.Application.QueryHandlers;
+
+internal class CompanyRoleQueryHandler :
+    IQueryHandler<ListCompanyRolesQuery, IEnumerable<CompanyRole>>
 {
-    internal class CompanyRoleQueryHandler :
-        IQueryHandler<ListCompanyRolesQuery, IEnumerable<CompanyRole>>
+    private readonly ICompanyRoleRepository _companyRoleRepository;
+
+    public CompanyRoleQueryHandler(
+        ICompanyRoleRepository companyRoleRepository
+    )
     {
-        private readonly ICompanyRoleRepository _companyRoleRepository;
+        _companyRoleRepository = companyRoleRepository;
+    }
 
-        public CompanyRoleQueryHandler(
-            ICompanyRoleRepository companyRoleRepository
-        )
-        {
-            _companyRoleRepository = companyRoleRepository;
-        }
+    public async Task<IStatusResult<OperationStatus, IEnumerable<CompanyRole>>> HandleAsync(
+        ListCompanyRolesQuery request,
+        CancellationToken cancellationToken
+    )
+    {
+        var companyRoles = await _companyRoleRepository.GetAllAsync(request.AppId);
 
-        public async Task<IStatusResult<OperationStatus, IEnumerable<CompanyRole>>> HandleAsync(
-            ListCompanyRolesQuery request,
-            CancellationToken cancellationToken
-        )
-        {
-            var companyRoles = await _companyRoleRepository.GetAllAsync(request.AppId);
-
-            return Result.Status(OperationStatus.Ok, companyRoles.AsEnumerable());
-        }
+        return Result.Status(OperationStatus.Ok, companyRoles.AsEnumerable());
     }
 }

@@ -5,141 +5,140 @@ using Annium.Id.Api.TestClient;
 using Annium.Testing;
 using Xunit;
 
-namespace Annium.Id.Api.IntegrationTests.DemoClient.Controllers
+namespace Annium.Id.Api.IntegrationTests.DemoClient.Controllers;
+
+public class DemoControllerTest : IntegrationTestBase
 {
-    public class DemoControllerTest : IntegrationTestBase
+    [Fact]
+    public async Task IdAuthorization_Unauthorized_ReturnsUnauthorized()
     {
-        [Fact]
-        public async Task IdAuthorization_Unauthorized_ReturnsUnauthorized()
-        {
-            // act
-            var response = await Demo(Guid.NewGuid()).Index.Base();
+        // act
+        var response = await Demo(Guid.NewGuid()).Index.Base();
 
-            // assert
-            response.StatusCode.IsEqual(HttpStatusCode.Unauthorized);
-        }
+        // assert
+        response.StatusCode.IsEqual(HttpStatusCode.Unauthorized);
+    }
 
-        [Fact]
-        public async Task IdAuthorization_Authorized_Works()
-        {
-            // arrange
-            var token = await Id().RegisterLogUserIn();
-            var app = await Id(token).App.Register();
-            token = await Id().LogUserIn(app.Id);
+    [Fact]
+    public async Task IdAuthorization_Authorized_Works()
+    {
+        // arrange
+        var token = await Id().RegisterLogUserIn();
+        var app = await Id(token).App.Register();
+        token = await Id().LogUserIn(app.Id);
 
-            // act
-            var response = await Demo(app.Id, token).Index.Base();
+        // act
+        var response = await Demo(app.Id, token).Index.Base();
 
-            // assert
-            response.StatusCode.IsEqual(HttpStatusCode.OK);
-            // FIXME: use, when System.Text.Json supports Deserialize with non-default constructor
-            // var token = await Demo(app.Id).Get("/base").BearerAuthorization(appTokens.AccessToken).AsAsync<IdToken>();
+        // assert
+        response.StatusCode.IsEqual(HttpStatusCode.OK);
+        // FIXME: use, when System.Text.Json supports Deserialize with non-default constructor
+        // var token = await Demo(app.Id).Get("/base").BearerAuthorization(appTokens.AccessToken).AsAsync<IdToken>();
 
-            // // assert
-            // token.IsNotDefault();
-            // token.UserId.IsEqual(user.Id);
-            // token.LoginId.IsNotDefault();
-        }
+        // // assert
+        // token.IsNotDefault();
+        // token.UserId.IsEqual(user.Id);
+        // token.LoginId.IsNotDefault();
+    }
 
-        [Fact]
-        public async Task IdAuthorization_CheckRole_Unauthorized_ReturnsUnauthorized()
-        {
-            // act
-            var response = await Demo(Guid.NewGuid()).Index.IsAdmin();
+    [Fact]
+    public async Task IdAuthorization_CheckRole_Unauthorized_ReturnsUnauthorized()
+    {
+        // act
+        var response = await Demo(Guid.NewGuid()).Index.IsAdmin();
 
-            // assert
-            response.StatusCode.IsEqual(HttpStatusCode.Unauthorized);
-        }
+        // assert
+        response.StatusCode.IsEqual(HttpStatusCode.Unauthorized);
+    }
 
-        [Fact]
-        public async Task IdAuthorization_CheckRole_HasNoAccess_ReturnsForbidden()
-        {
-            // arrange
-            var token = await Id().RegisterLogUserIn();
-            var app = await Id(token).App.Register();
-            token = await Id().LogUserIn(app.Id);
+    [Fact]
+    public async Task IdAuthorization_CheckRole_HasNoAccess_ReturnsForbidden()
+    {
+        // arrange
+        var token = await Id().RegisterLogUserIn();
+        var app = await Id(token).App.Register();
+        token = await Id().LogUserIn(app.Id);
 
-            // act
-            var response = await Demo(app.Id, token).Index.IsAdmin();
+        // act
+        var response = await Demo(app.Id, token).Index.IsAdmin();
 
-            // assert
-            response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
-        }
+        // assert
+        response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
+    }
 
-        [Fact]
-        public async Task IdAuthorization_CheckRole_HasAccess_Works()
-        {
-            // arrange
-            var token = await Id().RegisterLogUserIn();
-            var user = await Id(token).Me.GetMe().GetData();
-            var app = await Id(token).App.Register();
-            var role = await Id(token).Role.Register(app.Id, "admin", "Administrator");
-            await Id(token).User.AddRoleToUser(role.Id, user.Id);
-            token = await Id().LogUserIn(app.Id);
+    [Fact]
+    public async Task IdAuthorization_CheckRole_HasAccess_Works()
+    {
+        // arrange
+        var token = await Id().RegisterLogUserIn();
+        var user = await Id(token).Me.GetMe().GetData();
+        var app = await Id(token).App.Register();
+        var role = await Id(token).Role.Register(app.Id, "admin", "Administrator");
+        await Id(token).User.AddRoleToUser(role.Id, user.Id);
+        token = await Id().LogUserIn(app.Id);
 
-            // act
-            var response = await Demo(app.Id, token).Index.IsAdmin();
+        // act
+        var response = await Demo(app.Id, token).Index.IsAdmin();
 
-            // assert
-            response.StatusCode.IsEqual(HttpStatusCode.OK);
-        }
+        // assert
+        response.StatusCode.IsEqual(HttpStatusCode.OK);
+    }
 
-        [Fact]
-        public async Task IdAuthorization_CheckClaim_HasRoleAccess_Works()
-        {
-            // arrange
-            var token = await Id().RegisterLogUserIn();
-            var user = await Id(token).Me.GetMe().GetData();
-            var app = await Id(token).App.Register();
-            var role = await Id(token).Role.Register(app.Id, "coo", "Chief Operations Officer");
-            await Id(token).User.AddRoleToUser(role.Id, user.Id);
-            var claim = await Id(token).Claim.Register(app.Id, "paymentsAccess", "Payments Access");
-            await Id(token).Role.AddClaimToRole(claim.Id, role.Id, "full");
-            token = await Id().LogUserIn(app.Id);
+    [Fact]
+    public async Task IdAuthorization_CheckClaim_HasRoleAccess_Works()
+    {
+        // arrange
+        var token = await Id().RegisterLogUserIn();
+        var user = await Id(token).Me.GetMe().GetData();
+        var app = await Id(token).App.Register();
+        var role = await Id(token).Role.Register(app.Id, "coo", "Chief Operations Officer");
+        await Id(token).User.AddRoleToUser(role.Id, user.Id);
+        var claim = await Id(token).Claim.Register(app.Id, "paymentsAccess", "Payments Access");
+        await Id(token).Role.AddClaimToRole(claim.Id, role.Id, "full");
+        token = await Id().LogUserIn(app.Id);
 
-            // act
-            var response = await Demo(app.Id, token).Index.HasPaymentsAccess();
+        // act
+        var response = await Demo(app.Id, token).Index.HasPaymentsAccess();
 
-            // assert
-            response.StatusCode.IsEqual(HttpStatusCode.OK);
-        }
+        // assert
+        response.StatusCode.IsEqual(HttpStatusCode.OK);
+    }
 
-        [Fact]
-        public async Task IdAuthorization_CheckClaim_HasClaimAccess_Works()
-        {
-            // arrange
-            var token = await Id().RegisterLogUserIn();
-            var user = await Id(token).Me.GetMe().GetData();
-            var app = await Id(token).App.Register();
-            var claim = await Id(token).Claim.Register(app.Id, "paymentsAccess", "Payments Access");
-            await Id(token).User.AddUserClaim(user.Id, claim.Id, "full");
-            token = await Id().LogUserIn(app.Id);
+    [Fact]
+    public async Task IdAuthorization_CheckClaim_HasClaimAccess_Works()
+    {
+        // arrange
+        var token = await Id().RegisterLogUserIn();
+        var user = await Id(token).Me.GetMe().GetData();
+        var app = await Id(token).App.Register();
+        var claim = await Id(token).Claim.Register(app.Id, "paymentsAccess", "Payments Access");
+        await Id(token).User.AddUserClaim(user.Id, claim.Id, "full");
+        token = await Id().LogUserIn(app.Id);
 
-            // act
-            var response = await Demo(app.Id, token).Index.HasPaymentsAccess();
+        // act
+        var response = await Demo(app.Id, token).Index.HasPaymentsAccess();
 
-            // assert
-            response.StatusCode.IsEqual(HttpStatusCode.OK);
-        }
+        // assert
+        response.StatusCode.IsEqual(HttpStatusCode.OK);
+    }
 
-        [Fact]
-        public async Task IdAuthorization_CheckClaim_HasRoleClaimAccess_Works()
-        {
-            // arrange
-            var token = await Id().RegisterLogUserIn();
-            var user = await Id(token).Me.GetMe().GetData();
-            var app = await Id(token).App.Register();
-            var role = await Id(token).Role.Register(app.Id, "coo", "Chief Operations Officer");
-            var claim = await Id(token).Claim.Register(app.Id, "paymentsAccess", "Payments Access");
-            await Id(token).Role.AddClaimToRole(claim.Id, role.Id, "limited");
-            await Id(token).User.AddUserClaim(user.Id, claim.Id, "full");
-            token = await Id().LogUserIn(app.Id);
+    [Fact]
+    public async Task IdAuthorization_CheckClaim_HasRoleClaimAccess_Works()
+    {
+        // arrange
+        var token = await Id().RegisterLogUserIn();
+        var user = await Id(token).Me.GetMe().GetData();
+        var app = await Id(token).App.Register();
+        var role = await Id(token).Role.Register(app.Id, "coo", "Chief Operations Officer");
+        var claim = await Id(token).Claim.Register(app.Id, "paymentsAccess", "Payments Access");
+        await Id(token).Role.AddClaimToRole(claim.Id, role.Id, "limited");
+        await Id(token).User.AddUserClaim(user.Id, claim.Id, "full");
+        token = await Id().LogUserIn(app.Id);
 
-            // act
-            var response = await Demo(app.Id, token).Index.HasPaymentsAccess();
+        // act
+        var response = await Demo(app.Id, token).Index.HasPaymentsAccess();
 
-            // assert
-            response.StatusCode.IsEqual(HttpStatusCode.OK);
-        }
+        // assert
+        response.StatusCode.IsEqual(HttpStatusCode.OK);
     }
 }

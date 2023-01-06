@@ -2,12 +2,11 @@ using System;
 using System.Threading.Tasks;
 using Annium.Id.Domain.Entities;
 
-namespace Annium.Id.Infrastructure.Db.Repositories
+namespace Annium.Id.Infrastructure.Db.Repositories;
+
+public interface IUserClaimRepository
 {
-    public interface IUserClaimRepository
-    {
-        Task<UserClaim> SaveAsync(UserClaim claim);
-        Task<ClaimValue[]> GetUserClaimsAsync(Guid appId, Guid userId);
-        Task DeleteByIdAsync(Guid userId, Guid claimId);
-    }
+    Task<UserClaim> SaveAsync(UserClaim claim);
+    Task<ClaimValue[]> GetUserClaimsAsync(Guid appId, Guid userId);
+    Task DeleteByIdAsync(Guid userId, Guid claimId);
 }

@@ -2,11 +2,10 @@ using System.Threading.Tasks;
 using Annium.Id.Core;
 using Annium.Id.Domain.Entities;
 
-namespace Annium.Id.Api.Application.Tools
+namespace Annium.Id.Api.Application.Tools;
+
+public interface ITokenGenerator
 {
-    public interface ITokenGenerator
-    {
-        Task<IdToken> GenerateToken(UserLogin login);
-        Task<string> GenerateTokenString(UserLogin login);
-    }
+    Task<IdToken> GenerateToken(UserLogin login);
+    Task<string> GenerateTokenString(UserLogin login);
 }

@@ -1,7 +1,6 @@
-namespace Annium.Id.Site.Public.Pages.ConfirmEmail
-{
-    public partial class ConfirmEmailPage
-    {
+namespace Annium.Id.Site.Public.Pages.ConfirmEmail;
 
-    }
+public partial class ConfirmEmailPage
+{
+
 }

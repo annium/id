@@ -9,85 +9,84 @@ using Annium.Id.Api.ViewModels.Responses.Roles;
 using Annium.Id.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Annium.Id.Api.Controllers
+namespace Annium.Id.Api.Controllers;
+
+[Route("roles")]
+public class RoleController : ServerController
 {
-    [Route("roles")]
-    public class RoleController : ServerController
+    public RoleController(
+        IMediator mediator,
+        IServiceProvider sp
+    ) : base(mediator, sp)
     {
-        public RoleController(
-            IMediator mediator,
-            IServiceProvider sp
-        ) : base(mediator, sp)
+    }
+
+    [HttpPost]
+    [Authorize]
+    public Task<IResult<Guid>> CreateRole([FromBody] CreateRoleRequest request)
+    {
+        return HandleAsync<CreateRoleRequest, Guid>(request);
+    }
+
+    [HttpGet]
+    [Authorize]
+    public Task<IResult<IEnumerable<RoleResponse>>> ListRoles(Guid appId)
+    {
+        var request = new ListRolesRequest { AppId = appId };
+
+        return HandleAsync<ListRolesRequest, IEnumerable<RoleResponse>>(request);
+    }
+
+    [HttpPut("{roleId:guid}")]
+    [Authorize]
+    public Task<IResult> UpdateRole(Guid roleId, [FromBody] UpdateRoleRequestBody requestBody)
+    {
+        var request = new UpdateRoleRequest
         {
-        }
+            RoleId = roleId,
+            Key = requestBody.Key,
+            Name = requestBody.Name
+        };
 
-        [HttpPost]
-        [Authorize]
-        public Task<IResult<Guid>> CreateRole([FromBody] CreateRoleRequest request)
+        return HandleAsync(request);
+    }
+
+    [HttpPost("{roleId:guid}/claims/{claimId:guid}")]
+    [Authorize]
+    public Task<IResult> AddClaimToRole(Guid roleId, Guid claimId, [FromBody] AddClaimToRoleRequestBody requestBody)
+    {
+        var request = new AddClaimToRoleRequest
         {
-            return HandleAsync<CreateRoleRequest, Guid>(request);
-        }
+            RoleId = roleId,
+            ClaimId = claimId,
+            Value = requestBody.Value
+        };
 
-        [HttpGet]
-        [Authorize]
-        public Task<IResult<IEnumerable<RoleResponse>>> ListRoles(Guid appId)
+        return HandleAsync(request);
+    }
+
+    [HttpDelete("{roleId:guid}/claims/{claimId:guid}")]
+    [Authorize]
+    public Task<IResult> DeleteClaimFromRole(Guid roleId, Guid claimId)
+    {
+        var request = new DeleteClaimFromRoleRequest
         {
-            var request = new ListRolesRequest { AppId = appId };
+            RoleId = roleId,
+            ClaimId = claimId
+        };
 
-            return HandleAsync<ListRolesRequest, IEnumerable<RoleResponse>>(request);
-        }
+        return HandleAsync(request);
+    }
 
-        [HttpPut("{roleId:guid}")]
-        [Authorize]
-        public Task<IResult> UpdateRole(Guid roleId, [FromBody] UpdateRoleRequestBody requestBody)
+    [HttpDelete("{roleId:guid}")]
+    [Authorize]
+    public Task<IResult> DeleteRole(Guid roleId)
+    {
+        var request = new DeleteRoleRequest
         {
-            var request = new UpdateRoleRequest
-            {
-                RoleId = roleId,
-                Key = requestBody.Key,
-                Name = requestBody.Name
-            };
+            RoleId = roleId
+        };
 
-            return HandleAsync(request);
-        }
-
-        [HttpPost("{roleId:guid}/claims/{claimId:guid}")]
-        [Authorize]
-        public Task<IResult> AddClaimToRole(Guid roleId, Guid claimId, [FromBody] AddClaimToRoleRequestBody requestBody)
-        {
-            var request = new AddClaimToRoleRequest
-            {
-                RoleId = roleId,
-                ClaimId = claimId,
-                Value = requestBody.Value
-            };
-
-            return HandleAsync(request);
-        }
-
-        [HttpDelete("{roleId:guid}/claims/{claimId:guid}")]
-        [Authorize]
-        public Task<IResult> DeleteClaimFromRole(Guid roleId, Guid claimId)
-        {
-            var request = new DeleteClaimFromRoleRequest
-            {
-                RoleId = roleId,
-                ClaimId = claimId
-            };
-
-            return HandleAsync(request);
-        }
-
-        [HttpDelete("{roleId:guid}")]
-        [Authorize]
-        public Task<IResult> DeleteRole(Guid roleId)
-        {
-            var request = new DeleteRoleRequest
-            {
-                RoleId = roleId
-            };
-
-            return HandleAsync(request);
-        }
+        return HandleAsync(request);
     }
 }

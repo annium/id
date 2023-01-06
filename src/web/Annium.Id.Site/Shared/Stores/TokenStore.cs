@@ -1,36 +1,35 @@
 using Annium.Blazor.Storage;
 using Annium.Id.Api.ViewModels.Responses.Login;
 
-namespace Annium.Id.Site.Shared.Stores
+namespace Annium.Id.Site.Shared.Stores;
+
+internal class TokenStore : ITokenStore
 {
-    internal class TokenStore : ITokenStore
+    private const string Key = "tokens";
+    private readonly ILocalStorage _storage;
+
+    public TokenStore(ILocalStorage storage)
     {
-        private const string Key = "tokens";
-        private readonly ILocalStorage _storage;
-
-        public TokenStore(ILocalStorage storage)
-        {
-            _storage = storage;
-        }
-
-        public TokensResponse? Get()
-        {
-            if (!_storage.HasKey(Key))
-                return null;
-
-            return _storage.Get<TokensResponse>(Key);
-        }
-
-        public void Set(TokensResponse tokens) => _storage.Set(Key, tokens);
-
-
-        public void Clear() => _storage.Remove(Key);
+        _storage = storage;
     }
 
-    public interface ITokenStore : IStore
+    public TokensResponse? Get()
     {
-        TokensResponse? Get();
-        void Set(TokensResponse tokens);
-        void Clear();
+        if (!_storage.HasKey(Key))
+            return null;
+
+        return _storage.Get<TokensResponse>(Key);
     }
+
+    public void Set(TokensResponse tokens) => _storage.Set(Key, tokens);
+
+
+    public void Clear() => _storage.Remove(Key);
+}
+
+public interface ITokenStore : IStore
+{
+    TokensResponse? Get();
+    void Set(TokensResponse tokens);
+    void Clear();
 }

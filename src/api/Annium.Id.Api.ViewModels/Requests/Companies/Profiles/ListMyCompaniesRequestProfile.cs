@@ -1,13 +1,12 @@
 using Annium.Core.Mapper;
 using Annium.Id.Api.Domain.Queries.Companies;
 
-namespace Annium.Id.Api.ViewModels.Requests.Companies.Profiles
+namespace Annium.Id.Api.ViewModels.Requests.Companies.Profiles;
+
+internal class ListMyCompaniesRequestProfile : Profile
 {
-    internal class ListMyCompaniesRequestProfile : Profile
+    public ListMyCompaniesRequestProfile()
     {
-        public ListMyCompaniesRequestProfile()
-        {
-            Map<ListMyCompaniesRequest, ListMyCompaniesQuery>(r => new ListMyCompaniesQuery());
-        }
+        Map<ListMyCompaniesRequest, ListMyCompaniesQuery>(r => new ListMyCompaniesQuery());
     }
 }

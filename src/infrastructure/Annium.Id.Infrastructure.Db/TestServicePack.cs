@@ -1,18 +1,17 @@
 using System;
 using Annium.Core.DependencyInjection;
 
-namespace Annium.Id.Infrastructure.Db
-{
-    public class TestServicePack : ServicePackBase
-    {
-        public TestServicePack()
-        {
-            Add<BaseServicePack>();
-        }
+namespace Annium.Id.Infrastructure.Db;
 
-        public override void Register(IServiceContainer container, IServiceProvider provider)
-        {
-            container.AddEntityFrameworkSqliteInMemory<Context>();
-        }
+public class TestServicePack : ServicePackBase
+{
+    public TestServicePack()
+    {
+        Add<BaseServicePack>();
+    }
+
+    public override void Register(IServiceContainer container, IServiceProvider provider)
+    {
+        container.AddEntityFrameworkSqliteInMemory<Context>();
     }
 }

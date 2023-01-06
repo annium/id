@@ -2,10 +2,9 @@ using System;
 using Annium.Architecture.ViewModel;
 using Annium.Id.Api.Domain.Queries.Apps;
 
-namespace Annium.Id.Api.ViewModels.Requests.Apps
+namespace Annium.Id.Api.ViewModels.Requests.Apps;
+
+public class GetAppApiTokenRequest : IRequest<GetAppApiTokenQuery>
 {
-    public class GetAppApiTokenRequest : IRequest<GetAppApiTokenQuery>
-    {
-        public Guid AppId { get; set; }
-    }
+    public Guid AppId { get; set; }
 }

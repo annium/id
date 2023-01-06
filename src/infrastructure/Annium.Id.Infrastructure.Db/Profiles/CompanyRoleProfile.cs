@@ -1,13 +1,12 @@
 using Annium.Core.Mapper;
 using Annium.Id.Domain.Entities;
 
-namespace Annium.Id.Infrastructure.Db.Profiles
+namespace Annium.Id.Infrastructure.Db.Profiles;
+
+internal class CompanyRoleProfile : Profile
 {
-    internal class CompanyRoleProfile : Profile
+    public CompanyRoleProfile()
     {
-        public CompanyRoleProfile()
-        {
-            Map<CompanyRole, Entities.CompanyRole>().Ignore(x => x.Claims);
-        }
+        Map<CompanyRole, Entities.CompanyRole>().Ignore(x => x.Claims);
     }
 }

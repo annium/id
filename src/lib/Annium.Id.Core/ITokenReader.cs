@@ -1,9 +1,8 @@
 using Annium.Data.Operations;
 
-namespace Annium.Id.Core
+namespace Annium.Id.Core;
+
+public interface ITokenReader
 {
-    public interface ITokenReader
-    {
-        IStatusResult<TokenReadStatus, IdToken> ReadToken(string tokenString, TokenReadOptions options);
-    }
+    IStatusResult<TokenReadStatus, IdToken> ReadToken(string tokenString, TokenReadOptions options);
 }

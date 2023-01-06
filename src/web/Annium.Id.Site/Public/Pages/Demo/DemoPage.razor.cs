@@ -2,31 +2,30 @@ using Annium.Blazor.Core.Extensions;
 using Annium.Components.State.Forms;
 using Annium.Components.State.Forms.Extensions;
 
-namespace Annium.Id.Site.Public.Pages.Demo
-{
-    public partial class DemoPage
-    {
-        private IObjectContainer<Blog> _state = default!;
+namespace Annium.Id.Site.Public.Pages.Demo;
 
-        protected override void OnInitialized()
+public partial class DemoPage
+{
+    private IObjectContainer<Blog> _state = default!;
+
+    protected override void OnInitialized()
+    {
+        _state = StateFactory.Create(new Blog
         {
-            _state = StateFactory.Create(new Blog
+            Name = "Demo",
+            Author = new User
             {
-                Name = "Demo",
-                Author = new User
+                Name = "",
+            },
+            Messages = new[]
+            {
+                new Message
                 {
-                    Name = "",
-                },
-                Messages = new[]
-                {
-                    new Message
-                    {
-                        Text = "Hi"
-                    }
+                    Text = "Hi"
                 }
-            });
-            this.ObserveState();
-            _state.UseValidator(Validator);
-        }
+            }
+        });
+        this.ObserveState();
+        _state.UseValidator(Validator);
     }
 }

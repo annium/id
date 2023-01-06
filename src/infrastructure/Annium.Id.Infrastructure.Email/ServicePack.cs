@@ -3,26 +3,25 @@ using System.IO;
 using Annium.Configuration.Abstractions;
 using Annium.Core.DependencyInjection;
 
-namespace Annium.Id.Infrastructure.Email
+namespace Annium.Id.Infrastructure.Email;
+
+public class ServicePack : ServicePackBase
 {
-    public class ServicePack : ServicePackBase
+    public ServicePack()
     {
-        public ServicePack()
-        {
-            Add<BaseServicePack>();
-        }
+        Add<BaseServicePack>();
+    }
 
-        public override void Configure(IServiceContainer container)
-        {
-            container.AddConfiguration<Configuration>(
-                builder => builder.AddYamlFile(Path.Combine("configuration", "email.yml"))
-            );
-        }
+    public override void Configure(IServiceContainer container)
+    {
+        container.AddConfiguration<Configuration>(
+            builder => builder.AddYamlFile(Path.Combine("configuration", "email.yml"))
+        );
+    }
 
-        public override void Register(IServiceContainer container, IServiceProvider provider)
-        {
-            container.Add<Net.Mail.Configuration, Configuration>().Singleton();
-            container.AddEmailService();
-        }
+    public override void Register(IServiceContainer container, IServiceProvider provider)
+    {
+        container.Add<Net.Mail.Configuration, Configuration>().Singleton();
+        container.AddEmailService();
     }
 }

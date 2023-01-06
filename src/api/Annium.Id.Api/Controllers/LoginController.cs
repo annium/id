@@ -8,51 +8,50 @@ using Annium.Id.Api.ViewModels.Responses.Login;
 using Annium.Id.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Annium.Id.Api.Controllers
+namespace Annium.Id.Api.Controllers;
+
+[Route("me/{appId:guid}")]
+public class LoginController : ServerController
 {
-    [Route("me/{appId:guid}")]
-    public class LoginController : ServerController
+    public LoginController(
+        IMediator mediator,
+        IServiceProvider sp
+    ) : base(mediator, sp)
     {
-        public LoginController(
-            IMediator mediator,
-            IServiceProvider sp
-        ) : base(mediator, sp)
+    }
+
+    [HttpPost("login")]
+    public Task<IResult<TokensResponse>> LogIn(Guid appId, [FromBody] LogInRequestBody requestBody)
+    {
+        var request = new LogInRequest
         {
-        }
+            AppId = appId,
+            Login = requestBody.Login,
+            Password = requestBody.Password
+        };
 
-        [HttpPost("login")]
-        public Task<IResult<TokensResponse>> LogIn(Guid appId, [FromBody] LogInRequestBody requestBody)
+        return HandleAsync<LogInRequest, TokensResponse>(request);
+    }
+
+    [HttpPut("token")]
+    [Authorize(AuthPolicy.CanRefreshToken, false, false)]
+    public Task<IResult<TokensResponse>> UpdateToken(Guid appId, [FromQuery] UpdateTokensRequestBody requestBody)
+    {
+        var request = new UpdateTokensRequest
         {
-            var request = new LogInRequest
-            {
-                AppId = appId,
-                Login = requestBody.Login,
-                Password = requestBody.Password
-            };
+            AppId = appId,
+            RefreshToken = requestBody.RefreshToken
+        };
 
-            return HandleAsync<LogInRequest, TokensResponse>(request);
-        }
+        return HandleAsync<UpdateTokensRequest, TokensResponse>(request);
+    }
 
-        [HttpPut("token")]
-        [Authorize(AuthPolicy.CanRefreshToken, false, false)]
-        public Task<IResult<TokensResponse>> UpdateToken(Guid appId, [FromQuery] UpdateTokensRequestBody requestBody)
-        {
-            var request = new UpdateTokensRequest
-            {
-                AppId = appId,
-                RefreshToken = requestBody.RefreshToken
-            };
+    [HttpDelete("logout")]
+    [Authorize(AuthPolicy.CanLogOut, false)]
+    public Task<IResult> LogOut(Guid appId)
+    {
+        var request = new LogOutRequest { AppId = appId };
 
-            return HandleAsync<UpdateTokensRequest, TokensResponse>(request);
-        }
-
-        [HttpDelete("logout")]
-        [Authorize(AuthPolicy.CanLogOut, false)]
-        public Task<IResult> LogOut(Guid appId)
-        {
-            var request = new LogOutRequest { AppId = appId };
-
-            return HandleAsync(request);
-        }
+        return HandleAsync(request);
     }
 }

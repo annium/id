@@ -2,20 +2,19 @@ using System;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Annium.Id.Api.Application.Tools
+namespace Annium.Id.Api.Application.Tools;
+
+internal class SecurityManager : ISecurityManager, IDisposable
 {
-    internal class SecurityManager : ISecurityManager, IDisposable
+    private readonly HashAlgorithm _hashAlgorithm = SHA512.Create();
+
+    public string Hash(string data)
     {
-        private readonly HashAlgorithm _hashAlgorithm = SHA512.Create();
+        return Convert.ToBase64String(_hashAlgorithm.ComputeHash(Encoding.UTF8.GetBytes(data)));
+    }
 
-        public string Hash(string data)
-        {
-            return Convert.ToBase64String(_hashAlgorithm.ComputeHash(Encoding.UTF8.GetBytes(data)));
-        }
-
-        public void Dispose()
-        {
-            _hashAlgorithm.Dispose();
-        }
+    public void Dispose()
+    {
+        _hashAlgorithm.Dispose();
     }
 }

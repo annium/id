@@ -1,12 +1,11 @@
 using Annium.Net.Http;
 
-namespace Annium.Id.Demo.TestClient
+namespace Annium.Id.Demo.TestClient;
+
+public static class HttpRequestExtensions
 {
-    public static class HttpRequestExtensions
+    public static Client DemoClient(this IHttpRequest request)
     {
-        public static Client DemoClient(this IHttpRequest request)
-        {
-            return new Client(request);
-        }
+        return new Client(request);
     }
 }

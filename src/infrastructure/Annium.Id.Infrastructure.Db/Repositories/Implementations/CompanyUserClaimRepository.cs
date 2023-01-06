@@ -6,67 +6,66 @@ using Annium.Core.Mapper;
 using Annium.Id.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Annium.Id.Infrastructure.Db.Repositories.Implementations
+namespace Annium.Id.Infrastructure.Db.Repositories.Implementations;
+
+internal class CompanyUserClaimRepository : ICompanyUserClaimRepository
 {
-    internal class CompanyUserClaimRepository : ICompanyUserClaimRepository
+    private readonly IContext _context;
+    private readonly IMapper _mapper;
+
+    public CompanyUserClaimRepository(
+        IContext context,
+        IMapper mapper
+    )
     {
-        private readonly IContext _context;
-        private readonly IMapper _mapper;
+        _context = context;
+        _mapper = mapper;
+    }
 
-        public CompanyUserClaimRepository(
-            IContext context,
-            IMapper mapper
-        )
+    public async Task<CompanyUserClaim> SaveAsync(CompanyUserClaim claim)
+    {
+        var entity = await _context.CompanyUserClaims
+            .FirstOrDefaultAsync(x => x.CompanyId == claim.CompanyId && x.UserId == claim.UserId && x.ClaimId == claim.ClaimId);
+
+        if (entity is null)
         {
-            _context = context;
-            _mapper = mapper;
+            entity = _mapper.Map<Entities.CompanyUserClaim>(claim);
+            _context.CompanyUserClaims.Add(entity);
+        }
+        else
+        {
+            entity.Value = claim.Value;
         }
 
-        public async Task<CompanyUserClaim> SaveAsync(CompanyUserClaim claim)
-        {
-            var entity = await _context.CompanyUserClaims
-                .FirstOrDefaultAsync(x => x.CompanyId == claim.CompanyId && x.UserId == claim.UserId && x.ClaimId == claim.ClaimId);
+        await _context.SaveChangesAsync();
 
-            if (entity is null)
-            {
-                entity = _mapper.Map<Entities.CompanyUserClaim>(claim);
-                _context.CompanyUserClaims.Add(entity);
-            }
-            else
-            {
-                entity.Value = claim.Value;
-            }
+        return _mapper.Map<CompanyUserClaim>(entity);
+    }
 
-            await _context.SaveChangesAsync();
+    public async Task<IReadOnlyDictionary<Guid, ClaimValue[]>> GetCompaniesUserClaimsAsync(Guid appId, Guid userId)
+    {
+        var raw = await _context.CompanyUserClaims.AsNoTracking()
+            .Include(x => x.Claim)
+            .Where(x => x.Claim.AppId == appId && x.UserId == userId)
+            .ToListAsync();
 
-            return _mapper.Map<CompanyUserClaim>(entity);
-        }
+        return raw.GroupBy(x => x.CompanyId)
+            .ToDictionary(
+                x => x.Key,
+                x => x.Select(_mapper.Map<ClaimValue>).ToArray()
+            );
+    }
 
-        public async Task<IReadOnlyDictionary<Guid, ClaimValue[]>> GetCompaniesUserClaimsAsync(Guid appId, Guid userId)
-        {
-            var raw = await _context.CompanyUserClaims.AsNoTracking()
-                .Include(x => x.Claim)
-                .Where(x => x.Claim.AppId == appId && x.UserId == userId)
-                .ToListAsync();
+    public async Task DeleteByIdAsync(Guid companyId, Guid userId, Guid claimId)
+    {
+        var entity = await _context.CompanyUserClaims
+            .FirstOrDefaultAsync(x => x.CompanyId == companyId && x.UserId == userId && x.ClaimId == claimId);
 
-            return raw.GroupBy(x => x.CompanyId)
-                .ToDictionary(
-                    x => x.Key,
-                    x => x.Select(_mapper.Map<ClaimValue>).ToArray()
-                );
-        }
+        if (entity is null)
+            return;
 
-        public async Task DeleteByIdAsync(Guid companyId, Guid userId, Guid claimId)
-        {
-            var entity = await _context.CompanyUserClaims
-                .FirstOrDefaultAsync(x => x.CompanyId == companyId && x.UserId == userId && x.ClaimId == claimId);
+        _context.CompanyUserClaims.Remove(entity);
 
-            if (entity is null)
-                return;
-
-            _context.CompanyUserClaims.Remove(entity);
-
-            await _context.SaveChangesAsync();
-        }
+        await _context.SaveChangesAsync();
     }
 }

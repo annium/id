@@ -2,29 +2,28 @@ using System;
 using System.Linq;
 using Annium.Core.DependencyInjection;
 
-namespace Annium.Id.Api
+namespace Annium.Id.Api;
+
+public class ServicePack : ServicePackBase
 {
-    public class ServicePack : ServicePackBase
+    public ServicePack()
     {
-        public ServicePack()
-        {
-            Add<BaseServicePack>();
-            Add<Application.ServicePack>();
-            Add<Infrastructure.Db.ServicePack>();
-            Add<Infrastructure.Email.ServicePack>();
-        }
+        Add<BaseServicePack>();
+        Add<Application.ServicePack>();
+        Add<Infrastructure.Db.ServicePack>();
+        Add<Infrastructure.Email.ServicePack>();
+    }
 
-        public override void Register(IServiceContainer container, IServiceProvider provider)
-        {
-            container.AddLogging();
-        }
+    public override void Register(IServiceContainer container, IServiceProvider provider)
+    {
+        container.AddLogging();
+    }
 
-        public override void Setup(IServiceProvider provider)
-        {
-            var ignored = new[] { "ChainBuilder", "PipeHandler" };
-            provider.UseLogging(route => route
-                // .UseConsole());
-                .For(m => !ignored.Any(m.Source.Contains)).UseConsole());
-        }
+    public override void Setup(IServiceProvider provider)
+    {
+        var ignored = new[] { "ChainBuilder", "PipeHandler" };
+        provider.UseLogging(route => route
+            // .UseConsole());
+            .For(m => !ignored.Any(m.Source.Contains)).UseConsole());
     }
 }

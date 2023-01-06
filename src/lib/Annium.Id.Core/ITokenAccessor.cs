@@ -1,7 +1,6 @@
-namespace Annium.Id.Core
+namespace Annium.Id.Core;
+
+public interface ITokenAccessor
 {
-    public interface ITokenAccessor
-    {
-        IdToken GetToken();
-    }
+    IdToken GetToken();
 }

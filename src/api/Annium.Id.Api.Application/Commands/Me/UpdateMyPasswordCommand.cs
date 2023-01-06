@@ -4,25 +4,24 @@ using Annium.Id.Api.Domain.Commands.Me;
 using Annium.Id.Core;
 using Annium.Id.Infrastructure.Db.Repositories;
 
-namespace Annium.Id.Api.Application.Commands.Me
-{
-    internal class UpdateMyPasswordCommandValidator : Validator<UpdateMyPasswordCommand>
-    {
-        public UpdateMyPasswordCommandValidator(
-        )
-        {
-            Field(e => e.Password).Required().Length(8, 50);
-        }
-    }
+namespace Annium.Id.Api.Application.Commands.Me;
 
-    internal class UpdateMyPasswordCommandComposer : Composer<UpdateMyPasswordCommand>
+internal class UpdateMyPasswordCommandValidator : Validator<UpdateMyPasswordCommand>
+{
+    public UpdateMyPasswordCommandValidator(
+    )
     {
-        public UpdateMyPasswordCommandComposer(
-            ITokenAccessor tokenAccessor,
-            IUserRepository userRepository
-        )
-        {
-            Field(e => e.User).LoadWith(ctx => userRepository.GetByIdAsync(tokenAccessor.GetToken().UserId));
-        }
+        Field(e => e.Password).Required().Length(8, 50);
+    }
+}
+
+internal class UpdateMyPasswordCommandComposer : Composer<UpdateMyPasswordCommand>
+{
+    public UpdateMyPasswordCommandComposer(
+        ITokenAccessor tokenAccessor,
+        IUserRepository userRepository
+    )
+    {
+        Field(e => e.User).LoadWith(ctx => userRepository.GetByIdAsync(tokenAccessor.GetToken().UserId));
     }
 }

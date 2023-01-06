@@ -1,7 +1,6 @@
-namespace Annium.Id.Api.Application.Tools
+namespace Annium.Id.Api.Application.Tools;
+
+public interface ISecurityManager
 {
-    public interface ISecurityManager
-    {
-        string Hash(string data);
-    }
+    string Hash(string data);
 }

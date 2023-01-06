@@ -4,26 +4,25 @@ using Annium.Id.Api.Domain.Commands.Apps;
 using Annium.Id.Core;
 using Annium.Id.Infrastructure.Db.Repositories;
 
-namespace Annium.Id.Api.Application.Commands.Apps
-{
-    internal class UpdateAppCommandValidator : Validator<UpdateAppCommand>
-    {
-        public UpdateAppCommandValidator()
-        {
-            Field(c => c.AppId).Required();
-            Field(c => c.Name).Required().Length(2, 100);
-        }
-    }
+namespace Annium.Id.Api.Application.Commands.Apps;
 
-    internal class UpdateAppCommandComposer : Composer<UpdateAppCommand>
+internal class UpdateAppCommandValidator : Validator<UpdateAppCommand>
+{
+    public UpdateAppCommandValidator()
     {
-        public UpdateAppCommandComposer(
-            ITokenAccessor tokenAccessor,
-            IAppRepository appRepository
-        )
-        {
-            Field(c => c.MyId).LoadWith(_ => tokenAccessor.GetToken().UserId);
-            Field(c => c.App).LoadWith(ctx => appRepository.GetByIdAsync(ctx.Root.AppId));
-        }
+        Field(c => c.AppId).Required();
+        Field(c => c.Name).Required().Length(2, 100);
+    }
+}
+
+internal class UpdateAppCommandComposer : Composer<UpdateAppCommand>
+{
+    public UpdateAppCommandComposer(
+        ITokenAccessor tokenAccessor,
+        IAppRepository appRepository
+    )
+    {
+        Field(c => c.MyId).LoadWith(_ => tokenAccessor.GetToken().UserId);
+        Field(c => c.App).LoadWith(ctx => appRepository.GetByIdAsync(ctx.Root.AppId));
     }
 }

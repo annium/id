@@ -3,52 +3,51 @@ using Annium.Id.Core;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Annium.Id.AspNetCore.Pipeline
+namespace Annium.Id.AspNetCore.Pipeline;
+
+internal class AuthorizationFilter : IAuthorizationFilter
 {
-    internal class AuthorizationFilter : IAuthorizationFilter
+    private readonly AuthorizationFilterOptions _options;
+    private readonly RequestTokenReader _requestTokenReader;
+    private readonly ITokenReader _tokenReader;
+
+    public AuthorizationFilter(
+        AuthorizationFilterOptions options,
+        RequestTokenReader requestTokenReader,
+        ITokenReader tokenReader
+    )
     {
-        private readonly AuthorizationFilterOptions _options;
-        private readonly RequestTokenReader _requestTokenReader;
-        private readonly ITokenReader _tokenReader;
+        _options = options;
+        _requestTokenReader = requestTokenReader;
+        _tokenReader = tokenReader;
+    }
 
-        public AuthorizationFilter(
-            AuthorizationFilterOptions options,
-            RequestTokenReader requestTokenReader,
-            ITokenReader tokenReader
-        )
+    public void OnAuthorization(AuthorizationFilterContext context)
+    {
+        var result = HandleAuthorization(context);
+        if (result != null)
+            context.Result = result;
+    }
+
+    private IActionResult? HandleAuthorization(AuthorizationFilterContext context)
+    {
+        var (tokenString, requestReadResult) = _requestTokenReader.ReadToken(context.HttpContext.Request);
+        if (requestReadResult != null)
+            return requestReadResult;
+
+        var tokenReadOptions = new TokenReadOptions
         {
-            _options = options;
-            _requestTokenReader = requestTokenReader;
-            _tokenReader = tokenReader;
-        }
+            ValidateAudience = _options.ValidateAudience,
+            ValidateExpiration = _options.ValidateExpiration
+        };
+        var readResult = _tokenReader.ReadToken(tokenString, tokenReadOptions);
+        if (readResult.Status == TokenReadStatus.BadSource)
+            return new BadRequestObjectResult(readResult);
+        if (readResult.Status == TokenReadStatus.Failed)
+            return new UnauthorizedObjectResult(readResult);
 
-        public void OnAuthorization(AuthorizationFilterContext context)
-        {
-            var result = HandleAuthorization(context);
-            if (result != null)
-                context.Result = result;
-        }
+        context.HttpContext.Items[Constants.IdTokenProperty] = readResult.Data;
 
-        private IActionResult? HandleAuthorization(AuthorizationFilterContext context)
-        {
-            var (tokenString, requestReadResult) = _requestTokenReader.ReadToken(context.HttpContext.Request);
-            if (requestReadResult != null)
-                return requestReadResult;
-
-            var tokenReadOptions = new TokenReadOptions
-            {
-                ValidateAudience = _options.ValidateAudience,
-                ValidateExpiration = _options.ValidateExpiration
-            };
-            var readResult = _tokenReader.ReadToken(tokenString, tokenReadOptions);
-            if (readResult.Status == TokenReadStatus.BadSource)
-                return new BadRequestObjectResult(readResult);
-            if (readResult.Status == TokenReadStatus.Failed)
-                return new UnauthorizedObjectResult(readResult);
-
-            context.HttpContext.Items[Constants.IdTokenProperty] = readResult.Data;
-
-            return null;
-        }
+        return null;
     }
 }

@@ -1,9 +1,8 @@
 using Annium.Id.Domain.Entities.Utility;
 
-namespace Annium.Id.Api.Application.Tools
+namespace Annium.Id.Api.Application.Tools;
+
+public interface IIdentityDataAccessor
 {
-    public interface IIdentityDataAccessor
-    {
-        IdentityData GetIdentityData();
-    }
+    IdentityData GetIdentityData();
 }

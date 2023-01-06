@@ -1,8 +1,7 @@
-namespace Annium.Id.Api
+namespace Annium.Id.Api;
+
+internal static class AuthPolicy
 {
-    internal static class AuthPolicy
-    {
-        public const string CanRefreshToken = nameof(CanRefreshToken);
-        public const string CanLogOut = nameof(CanLogOut);
-    }
+    public const string CanRefreshToken = nameof(CanRefreshToken);
+    public const string CanLogOut = nameof(CanLogOut);
 }

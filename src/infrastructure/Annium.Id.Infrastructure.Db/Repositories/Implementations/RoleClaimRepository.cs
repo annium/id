@@ -4,53 +4,52 @@ using Annium.Core.Mapper;
 using Annium.Id.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Annium.Id.Infrastructure.Db.Repositories.Implementations
+namespace Annium.Id.Infrastructure.Db.Repositories.Implementations;
+
+internal class RoleClaimRepository : IRoleClaimRepository
 {
-    internal class RoleClaimRepository : IRoleClaimRepository
+    private readonly IContext _context;
+    private readonly IMapper _mapper;
+
+    public RoleClaimRepository(
+        IContext context,
+        IMapper mapper
+    )
     {
-        private readonly IContext _context;
-        private readonly IMapper _mapper;
+        _context = context;
+        _mapper = mapper;
+    }
 
-        public RoleClaimRepository(
-            IContext context,
-            IMapper mapper
-        )
+    public async Task<RoleClaim> SaveAsync(RoleClaim claim)
+    {
+        var entity = await _context.RoleClaims
+            .FirstOrDefaultAsync(x => x.RoleId == claim.RoleId && x.ClaimId == claim.ClaimId);
+
+        if (entity is null)
         {
-            _context = context;
-            _mapper = mapper;
+            entity = _mapper.Map<Entities.RoleClaim>(claim);
+            _context.RoleClaims.Add(entity);
+        }
+        else
+        {
+            entity.Value = claim.Value;
         }
 
-        public async Task<RoleClaim> SaveAsync(RoleClaim claim)
-        {
-            var entity = await _context.RoleClaims
-                .FirstOrDefaultAsync(x => x.RoleId == claim.RoleId && x.ClaimId == claim.ClaimId);
+        await _context.SaveChangesAsync();
 
-            if (entity is null)
-            {
-                entity = _mapper.Map<Entities.RoleClaim>(claim);
-                _context.RoleClaims.Add(entity);
-            }
-            else
-            {
-                entity.Value = claim.Value;
-            }
+        return _mapper.Map<RoleClaim>(entity);
+    }
 
-            await _context.SaveChangesAsync();
+    public async Task DeleteByIdAsync(Guid roleId, Guid claimId)
+    {
+        var entity = await _context.RoleClaims
+            .FirstOrDefaultAsync(x => x.RoleId == roleId && x.ClaimId == claimId);
 
-            return _mapper.Map<RoleClaim>(entity);
-        }
+        if (entity is null)
+            return;
 
-        public async Task DeleteByIdAsync(Guid roleId, Guid claimId)
-        {
-            var entity = await _context.RoleClaims
-                .FirstOrDefaultAsync(x => x.RoleId == roleId && x.ClaimId == claimId);
+        _context.RoleClaims.Remove(entity);
 
-            if (entity is null)
-                return;
-
-            _context.RoleClaims.Remove(entity);
-
-            await _context.SaveChangesAsync();
-        }
+        await _context.SaveChangesAsync();
     }
 }

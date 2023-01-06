@@ -1,6 +1,5 @@
-namespace Annium.Id.Site.Public.Layouts.MinimalCentric
+namespace Annium.Id.Site.Public.Layouts.MinimalCentric;
+
+public partial class MinimalCentricLayout
 {
-    public partial class MinimalCentricLayout
-    {
-    }
 }

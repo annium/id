@@ -9,37 +9,36 @@ using Annium.Id.Api.Domain.Queries.Users;
 using Annium.Id.Domain.Entities;
 using Annium.Id.Infrastructure.Db.Repositories;
 
-namespace Annium.Id.Api.Application.QueryHandlers
+namespace Annium.Id.Api.Application.QueryHandlers;
+
+internal class UserQueryHandler :
+    IQueryHandler<FindUsersQuery, IEnumerable<User>>,
+    IQueryHandler<GetUserQuery, User>
 {
-    internal class UserQueryHandler :
-        IQueryHandler<FindUsersQuery, IEnumerable<User>>,
-        IQueryHandler<GetUserQuery, User>
+    private readonly IUserRepository _userRepository;
+
+    public UserQueryHandler(
+        IUserRepository userRepository
+    )
     {
-        private readonly IUserRepository _userRepository;
+        _userRepository = userRepository;
+    }
 
-        public UserQueryHandler(
-            IUserRepository userRepository
-        )
-        {
-            _userRepository = userRepository;
-        }
+    public async Task<IStatusResult<OperationStatus, IEnumerable<User>>> HandleAsync(
+        FindUsersQuery request,
+        CancellationToken ct
+    )
+    {
+        var users = await _userRepository.FindAllByQueryAsync(request.Query, request.Limit);
 
-        public async Task<IStatusResult<OperationStatus, IEnumerable<User>>> HandleAsync(
-            FindUsersQuery request,
-            CancellationToken ct
-        )
-        {
-            var users = await _userRepository.FindAllByQueryAsync(request.Query, request.Limit);
+        return Result.Status(OperationStatus.Ok, users.AsEnumerable());
+    }
 
-            return Result.Status(OperationStatus.Ok, users.AsEnumerable());
-        }
-
-        public Task<IStatusResult<OperationStatus, User>> HandleAsync(
-            GetUserQuery request,
-            CancellationToken ct
-        )
-        {
-            return Task.FromResult(Result.Status(OperationStatus.Ok, request.User));
-        }
+    public Task<IStatusResult<OperationStatus, User>> HandleAsync(
+        GetUserQuery request,
+        CancellationToken ct
+    )
+    {
+        return Task.FromResult(Result.Status(OperationStatus.Ok, request.User));
     }
 }

@@ -1,9 +1,8 @@
 using Annium.Net.Http;
 
-namespace Annium.Id.Site.Shared.Api.Server
+namespace Annium.Id.Site.Shared.Api.Server;
+
+public static class HttpRequestExtensions
 {
-    public static class HttpRequestExtensions
-    {
-        public static Client Client(this IHttpRequest request) => new Client(request);
-    }
+    public static Client Client(this IHttpRequest request) => new Client(request);
 }

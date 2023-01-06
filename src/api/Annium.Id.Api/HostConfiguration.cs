@@ -1,7 +1,6 @@
-namespace Annium.Id.Api
+namespace Annium.Id.Api;
+
+public class HostConfiguration
 {
-    public class HostConfiguration
-    {
-        public int Port { get; set; } = 5000;
-    }
+    public int Port { get; set; } = 5000;
 }

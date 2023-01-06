@@ -3,11 +3,10 @@ using System.Threading.Tasks;
 using Annium.Data.Operations;
 using Annium.Id.Domain.Entities;
 
-namespace Annium.Id.Infrastructure.Email
+namespace Annium.Id.Infrastructure.Email;
+
+public interface IEmailService
 {
-    public interface IEmailService
-    {
-        Task<IBooleanResult> SendEmailConfirmationAsync(User user, Uri server);
-        Task<IBooleanResult> SendRestoreAccessAsync(User user, Uri server, Tokens tokens);
-    }
+    Task<IBooleanResult> SendEmailConfirmationAsync(User user, Uri server);
+    Task<IBooleanResult> SendRestoreAccessAsync(User user, Uri server, Tokens tokens);
 }

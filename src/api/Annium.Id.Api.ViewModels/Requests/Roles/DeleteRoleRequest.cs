@@ -2,10 +2,9 @@ using System;
 using Annium.Architecture.ViewModel;
 using Annium.Id.Api.Domain.Commands.Roles;
 
-namespace Annium.Id.Api.ViewModels.Requests.Roles
+namespace Annium.Id.Api.ViewModels.Requests.Roles;
+
+public class DeleteRoleRequest : IRequest<DeleteRoleCommand>
 {
-    public class DeleteRoleRequest : IRequest<DeleteRoleCommand>
-    {
-        public Guid RoleId { get; set; }
-    }
+    public Guid RoleId { get; set; }
 }

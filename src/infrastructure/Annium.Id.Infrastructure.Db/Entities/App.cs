@@ -1,12 +1,11 @@
 using System;
 
-namespace Annium.Id.Infrastructure.Db.Entities
+namespace Annium.Id.Infrastructure.Db.Entities;
+
+internal class App : BaseIdEntity
 {
-    internal class App : BaseIdEntity
-    {
-        public Guid OwnerId { get; set; }
-        public User Owner { get; set; } = null!;
-        public string Name { get; set; } = string.Empty;
-        public Guid ApiToken { get; set; }
-    }
+    public Guid OwnerId { get; set; }
+    public User Owner { get; set; } = null!;
+    public string Name { get; set; } = string.Empty;
+    public Guid ApiToken { get; set; }
 }

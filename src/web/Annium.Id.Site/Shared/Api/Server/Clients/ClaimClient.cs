@@ -6,52 +6,51 @@ using Annium.Id.Api.ViewModels.Requests.Claims;
 using Annium.Id.Api.ViewModels.Responses.Claims;
 using Annium.Net.Http;
 
-namespace Annium.Id.Site.Shared.Api.Server.Clients
+namespace Annium.Id.Site.Shared.Api.Server.Clients;
+
+public class ClaimClient : ClientBase
 {
-    public class ClaimClient : ClientBase
+    public ClaimClient(IHttpRequest request) : base(request)
     {
-        public ClaimClient(IHttpRequest request) : base(request)
-        {
-        }
+    }
 
-        public async Task<IResult<Guid>> CreateClaim(
-            CreateClaimRequest body
-        )
-        {
-            return await Request.Clone()
-                .Post("claims")
-                .JsonContent(body)
-                .AsAsync(Result.New(default(Guid)).Error("Request failed"));
-        }
+    public async Task<IResult<Guid>> CreateClaim(
+        CreateClaimRequest body
+    )
+    {
+        return await Request.Clone()
+            .Post("claims")
+            .JsonContent(body)
+            .AsAsync(Result.New(default(Guid)).Error("Request failed"));
+    }
 
-        public async Task<IResult<IEnumerable<ClaimResponse>>> ListClaims(
-            Guid appId
-        )
-        {
-            return await Request.Clone()
-                .Get("claims")
-                .Param("appId", appId)
-                .AsAsync(Result.New<IEnumerable<ClaimResponse>>(Array.Empty<ClaimResponse>()).Error("Request failed"));
-        }
+    public async Task<IResult<IEnumerable<ClaimResponse>>> ListClaims(
+        Guid appId
+    )
+    {
+        return await Request.Clone()
+            .Get("claims")
+            .Param("appId", appId)
+            .AsAsync(Result.New<IEnumerable<ClaimResponse>>(Array.Empty<ClaimResponse>()).Error("Request failed"));
+    }
 
-        public async Task<IResult> UpdateClaim(
-            Guid claimId,
-            UpdateClaimRequestBody body
-        )
-        {
-            return await Request.Clone()
-                .Put($"claims/{claimId}")
-                .JsonContent(body)
-                .AsAsync(Result.New().Error("Request failed"));
-        }
+    public async Task<IResult> UpdateClaim(
+        Guid claimId,
+        UpdateClaimRequestBody body
+    )
+    {
+        return await Request.Clone()
+            .Put($"claims/{claimId}")
+            .JsonContent(body)
+            .AsAsync(Result.New().Error("Request failed"));
+    }
 
-        public async Task<IResult> DeleteClaim(
-            Guid claimId
-        )
-        {
-            return await Request.Clone()
-                .Delete($"claims/{claimId}")
-                .AsAsync(Result.New().Error("Request failed"));
-        }
+    public async Task<IResult> DeleteClaim(
+        Guid claimId
+    )
+    {
+        return await Request.Clone()
+            .Delete($"claims/{claimId}")
+            .AsAsync(Result.New().Error("Request failed"));
     }
 }

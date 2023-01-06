@@ -1,7 +1,6 @@
-namespace Annium.Id.Core
+namespace Annium.Id.Core;
+
+public interface ITokenWriter
 {
-    public interface ITokenWriter
-    {
-        string WriteToken(IdToken token);
-    }
+    string WriteToken(IdToken token);
 }

@@ -1,19 +1,18 @@
 using Annium.Extensions.Validation;
 
-namespace Annium.Id.Site.Public.Pages.Login
-{
-    public class LoginData
-    {
-        public string Login { get; set; } = string.Empty;
-        public string Password { get; set; } = string.Empty;
-    }
+namespace Annium.Id.Site.Public.Pages.Login;
 
-    public class LoginDataValidator : Validator<LoginData>
+public class LoginData
+{
+    public string Login { get; set; } = string.Empty;
+    public string Password { get; set; } = string.Empty;
+}
+
+public class LoginDataValidator : Validator<LoginData>
+{
+    public LoginDataValidator()
     {
-        public LoginDataValidator()
-        {
-            Field(x => x.Login).Required().Then().MinLength(3).MaxLength(50);
-            Field(x => x.Password).Required().Then().MinLength(8).MaxLength(50);
-        }
+        Field(x => x.Login).Required().Then().MinLength(3).MaxLength(50);
+        Field(x => x.Password).Required().Then().MinLength(8).MaxLength(50);
     }
 }

@@ -2,10 +2,9 @@ using System;
 using Annium.Architecture.ViewModel;
 using Annium.Id.Api.Domain.Commands.Companies;
 
-namespace Annium.Id.Api.ViewModels.Requests.Companies
+namespace Annium.Id.Api.ViewModels.Requests.Companies;
+
+public class UnregisterCompanyRequest : IRequest<UnregisterCompanyCommand>
 {
-    public class UnregisterCompanyRequest : IRequest<UnregisterCompanyCommand>
-    {
-        public Guid CompanyId { get; set; }
-    }
+    public Guid CompanyId { get; set; }
 }

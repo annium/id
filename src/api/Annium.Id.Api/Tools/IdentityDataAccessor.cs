@@ -5,27 +5,26 @@ using Annium.Id.Api.Application.Tools;
 using Annium.Id.Domain.Entities.Utility;
 using Microsoft.AspNetCore.Http;
 
-namespace Annium.Id.Api.Tools
+namespace Annium.Id.Api.Tools;
+
+internal class IdentityDataAccessor : IIdentityDataAccessor
 {
-    internal class IdentityDataAccessor : IIdentityDataAccessor
+    private readonly IHttpContextAccessor _httpContextAccessor;
+
+    public IdentityDataAccessor(
+        IHttpContextAccessor httpContextAccessor
+    )
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        _httpContextAccessor = httpContextAccessor;
+    }
 
-        public IdentityDataAccessor(
-            IHttpContextAccessor httpContextAccessor
-        )
-        {
-            _httpContextAccessor = httpContextAccessor;
-        }
+    public IdentityData GetIdentityData()
+    {
+        var context = _httpContextAccessor.HttpContext ?? throw new InvalidOperationException("HttpContext is null");
 
-        public IdentityData GetIdentityData()
-        {
-            var context = _httpContextAccessor.HttpContext ?? throw new InvalidOperationException("HttpContext is null");
+        var ipAddress = context.Connection.RemoteIpAddress ?? IPAddress.Loopback;
+        var client = context.Request.Headers.ContainsKey("User-Agent") ? context.Request.Headers["User-Agent"].First() : string.Empty;
 
-            var ipAddress = context.Connection.RemoteIpAddress ?? IPAddress.Loopback;
-            var client = context.Request.Headers.ContainsKey("User-Agent") ? context.Request.Headers["User-Agent"].First() : string.Empty;
-
-            return new IdentityData(ipAddress, client);
-        }
+        return new IdentityData(ipAddress, client);
     }
 }

@@ -2,10 +2,9 @@ using System;
 using Annium.Architecture.ViewModel;
 using Annium.Id.Api.Domain.Queries.Companies;
 
-namespace Annium.Id.Api.ViewModels.Requests.Companies
+namespace Annium.Id.Api.ViewModels.Requests.Companies;
+
+public class GetCompanyUsersRequest : IRequest<GetCompanyUsersQuery>
 {
-    public class GetCompanyUsersRequest : IRequest<GetCompanyUsersQuery>
-    {
-        public Guid CompanyId { get; set; }
-    }
+    public Guid CompanyId { get; set; }
 }

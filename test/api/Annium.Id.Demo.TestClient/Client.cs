@@ -1,14 +1,13 @@
 using Annium.Net.Http;
 
-namespace Annium.Id.Demo.TestClient
-{
-    public class Client
-    {
-        public IndexClient Index { get; }
+namespace Annium.Id.Demo.TestClient;
 
-        public Client(IHttpRequest request)
-        {
-            Index = new IndexClient(request);
-        }
+public class Client
+{
+    public IndexClient Index { get; }
+
+    public Client(IHttpRequest request)
+    {
+        Index = new IndexClient(request);
     }
 }

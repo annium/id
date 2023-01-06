@@ -1,22 +1,21 @@
 using Annium.Core.DependencyInjection;
 
-namespace Annium.Id.Infrastructure.Email
-{
-    public class TestServicePack : ServicePackBase
-    {
-        public TestServicePack()
-        {
-            Add<BaseServicePack>();
-        }
+namespace Annium.Id.Infrastructure.Email;
 
-        public override void Configure(IServiceContainer container)
+public class TestServicePack : ServicePackBase
+{
+    public TestServicePack()
+    {
+        Add<BaseServicePack>();
+    }
+
+    public override void Configure(IServiceContainer container)
+    {
+        var cfg = new Configuration
         {
-            var cfg = new Configuration
-            {
-                FromAddress = "support@annium.com",
-                FromDisplay = "Annium"
-            };
-            container.Add(cfg).AsSelf().Singleton();
-        }
+            FromAddress = "support@annium.com",
+            FromDisplay = "Annium"
+        };
+        container.Add(cfg).AsSelf().Singleton();
     }
 }

@@ -1,38 +1,37 @@
 using System;
 using System.Collections.Generic;
 
-namespace Annium.Id.Domain.Entities
+namespace Annium.Id.Domain.Entities;
+
+public class CompanyRole
 {
-    public class CompanyRole
+    public Guid Id { get; }
+    public Guid AppId { get; }
+    public string Key { get; set; }
+    public string Name { get; set; }
+    public IEnumerable<ClaimValue> Claims { get; }
+
+    public CompanyRole(
+        Guid appId,
+        string key,
+        string name,
+        IEnumerable<ClaimValue> claims
+    )
     {
-        public Guid Id { get; }
-        public Guid AppId { get; }
-        public string Key { get; set; }
-        public string Name { get; set; }
-        public IEnumerable<ClaimValue> Claims { get; }
+        AppId = appId;
+        Key = key;
+        Name = name;
+        Claims = claims;
+    }
 
-        public CompanyRole(
-            Guid appId,
-            string key,
-            string name,
-            IEnumerable<ClaimValue> claims
-        )
-        {
-            AppId = appId;
-            Key = key;
-            Name = name;
-            Claims = claims;
-        }
-
-        internal CompanyRole(
-            Guid id,
-            Guid appId,
-            string key,
-            string name,
-            IEnumerable<ClaimValue> claims
-        ) : this(appId, key, name, claims)
-        {
-            Id = id;
-        }
+    internal CompanyRole(
+        Guid id,
+        Guid appId,
+        string key,
+        string name,
+        IEnumerable<ClaimValue> claims
+    ) : this(appId, key, name, claims)
+    {
+        Id = id;
     }
 }

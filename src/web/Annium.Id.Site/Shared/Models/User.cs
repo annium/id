@@ -1,10 +1,9 @@
 using System;
 
-namespace Annium.Id.Site.Shared.Models
+namespace Annium.Id.Site.Shared.Models;
+
+public class User
 {
-    public class User
-    {
-        public Guid Id { get; set; }
-        public string Login { get; set; } = string.Empty;
-    }
+    public Guid Id { get; set; }
+    public string Login { get; set; } = string.Empty;
 }

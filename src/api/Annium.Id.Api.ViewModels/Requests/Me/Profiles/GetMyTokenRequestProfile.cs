@@ -1,13 +1,12 @@
 using Annium.Core.Mapper;
 using Annium.Id.Api.Domain.Queries.Me;
 
-namespace Annium.Id.Api.ViewModels.Requests.Me.Profiles
+namespace Annium.Id.Api.ViewModels.Requests.Me.Profiles;
+
+internal class GetMyTokenRequestProfile : Profile
 {
-    internal class GetMyTokenRequestProfile : Profile
+    public GetMyTokenRequestProfile()
     {
-        public GetMyTokenRequestProfile()
-        {
-            Map<GetMyTokenRequest, GetMyTokenQuery>(r => new GetMyTokenQuery());
-        }
+        Map<GetMyTokenRequest, GetMyTokenQuery>(r => new GetMyTokenQuery());
     }
 }

@@ -4,53 +4,52 @@ using Annium.Core.Mapper;
 using Annium.Id.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Annium.Id.Infrastructure.Db.Repositories.Implementations
+namespace Annium.Id.Infrastructure.Db.Repositories.Implementations;
+
+internal class CompanyRoleClaimRepository : ICompanyRoleClaimRepository
 {
-    internal class CompanyRoleClaimRepository : ICompanyRoleClaimRepository
+    private readonly IContext _context;
+    private readonly IMapper _mapper;
+
+    public CompanyRoleClaimRepository(
+        IContext context,
+        IMapper mapper
+    )
     {
-        private readonly IContext _context;
-        private readonly IMapper _mapper;
+        _context = context;
+        _mapper = mapper;
+    }
 
-        public CompanyRoleClaimRepository(
-            IContext context,
-            IMapper mapper
-        )
+    public async Task<CompanyRoleClaim> SaveAsync(CompanyRoleClaim claim)
+    {
+        var entity = await _context.CompanyRoleClaims
+            .FirstOrDefaultAsync(x => x.RoleId == claim.RoleId && x.ClaimId == claim.ClaimId);
+
+        if (entity is null)
         {
-            _context = context;
-            _mapper = mapper;
+            entity = _mapper.Map<Entities.CompanyRoleClaim>(claim);
+            _context.CompanyRoleClaims.Add(entity);
+        }
+        else
+        {
+            entity.Value = claim.Value;
         }
 
-        public async Task<CompanyRoleClaim> SaveAsync(CompanyRoleClaim claim)
-        {
-            var entity = await _context.CompanyRoleClaims
-                .FirstOrDefaultAsync(x => x.RoleId == claim.RoleId && x.ClaimId == claim.ClaimId);
+        await _context.SaveChangesAsync();
 
-            if (entity is null)
-            {
-                entity = _mapper.Map<Entities.CompanyRoleClaim>(claim);
-                _context.CompanyRoleClaims.Add(entity);
-            }
-            else
-            {
-                entity.Value = claim.Value;
-            }
+        return _mapper.Map<CompanyRoleClaim>(entity);
+    }
 
-            await _context.SaveChangesAsync();
+    public async Task DeleteByIdAsync(Guid roleId, Guid claimId)
+    {
+        var entity = await _context.CompanyRoleClaims
+            .FirstOrDefaultAsync(x => x.RoleId == roleId && x.ClaimId == claimId);
 
-            return _mapper.Map<CompanyRoleClaim>(entity);
-        }
+        if (entity is null)
+            return;
 
-        public async Task DeleteByIdAsync(Guid roleId, Guid claimId)
-        {
-            var entity = await _context.CompanyRoleClaims
-                .FirstOrDefaultAsync(x => x.RoleId == roleId && x.ClaimId == claimId);
+        _context.CompanyRoleClaims.Remove(entity);
 
-            if (entity is null)
-                return;
-
-            _context.CompanyRoleClaims.Remove(entity);
-
-            await _context.SaveChangesAsync();
-        }
+        await _context.SaveChangesAsync();
     }
 }

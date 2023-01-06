@@ -10,58 +10,57 @@ using MessagePack;
 using Microsoft.IdentityModel.Tokens;
 using SystemClaim = System.Security.Claims.Claim;
 
-namespace Annium.Id.Core.Internal
+namespace Annium.Id.Core.Internal;
+
+internal class TokenWriter : ITokenWriter
 {
-    internal class TokenWriter : ITokenWriter
+    private readonly RsaSecurityKey _signingKey;
+    private readonly AuthOptions _options;
+    private readonly ITimeProvider _timeProvider;
+
+    public TokenWriter(
+        AuthOptions options,
+        ITimeProvider timeProvider
+    )
     {
-        private readonly RsaSecurityKey _signingKey;
-        private readonly AuthOptions _options;
-        private readonly ITimeProvider _timeProvider;
-
-        public TokenWriter(
-            AuthOptions options,
-            ITimeProvider timeProvider
-        )
+        using (var s = File.OpenRead(options.PrivateKeyFile))
         {
-            using (var s = File.OpenRead(options.PrivateKeyFile))
-            {
-                var provider = new RSACryptoServiceProvider();
-                provider.ImportParameters(new KeyReader().ReadRsaKey(s));
-                _signingKey = new RsaSecurityKey(provider);
-            }
-
-            _options = options;
-            _timeProvider = timeProvider;
+            var provider = new RSACryptoServiceProvider();
+            provider.ImportParameters(new KeyReader().ReadRsaKey(s));
+            _signingKey = new RsaSecurityKey(provider);
         }
 
-        public string WriteToken(IdToken token)
+        _options = options;
+        _timeProvider = timeProvider;
+    }
+
+    public string WriteToken(IdToken token)
+    {
+        var packedToken = Convert.ToBase64String(MessagePackSerializer.Serialize(
+            token,
+            MessagePackSerializerOptions.Standard.WithCompression(MessagePackCompression.Lz4BlockArray)
+        ));
+
+        var instant = _timeProvider.Now;
+        var now = instant.ToDateTimeUtc();
+        var expires = (instant + _options.AccessTokenLifeTime).ToDateTimeUtc();
+
+        var claims = new List<SystemClaim>
         {
-            var packedToken = Convert.ToBase64String(MessagePackSerializer.Serialize(
-                token,
-                MessagePackSerializerOptions.Standard.WithCompression(MessagePackCompression.Lz4BlockArray)
-            ));
+            new SystemClaim(Claims.Id, packedToken),
+            new SystemClaim(Claims.IssuedAt, now.ToString(CultureInfo.InvariantCulture)),
+            new SystemClaim(Claims.TokenId, Guid.NewGuid().ToString())
+        };
 
-            var instant = _timeProvider.Now;
-            var now = instant.ToDateTimeUtc();
-            var expires = (instant + _options.AccessTokenLifeTime).ToDateTimeUtc();
+        var jwt = new JwtSecurityToken(
+            Constants.Issuer,
+            token.App.Id.ToString(),
+            claims,
+            expires: expires,
+            notBefore: now,
+            signingCredentials: new SigningCredentials(_signingKey, SecurityAlgorithms.RsaSha256)
+        );
 
-            var claims = new List<SystemClaim>
-            {
-                new SystemClaim(Claims.Id, packedToken),
-                new SystemClaim(Claims.IssuedAt, now.ToString(CultureInfo.InvariantCulture)),
-                new SystemClaim(Claims.TokenId, Guid.NewGuid().ToString())
-            };
-
-            var jwt = new JwtSecurityToken(
-                Constants.Issuer,
-                token.App.Id.ToString(),
-                claims,
-                expires: expires,
-                notBefore: now,
-                signingCredentials: new SigningCredentials(_signingKey, SecurityAlgorithms.RsaSha256)
-            );
-
-            return new JwtSecurityTokenHandler().WriteToken(jwt);
-        }
+        return new JwtSecurityTokenHandler().WriteToken(jwt);
     }
 }

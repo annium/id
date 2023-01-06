@@ -1,16 +1,15 @@
 using Annium.Net.Http;
 using Annium.Net.Mail;
 
-namespace Annium.Id.Api.TestClient
+namespace Annium.Id.Api.TestClient;
+
+public static class HttpRequestExtensions
 {
-    public static class HttpRequestExtensions
+    public static ExtendedClient ApiClient(
+        this IHttpRequest request,
+        TestEmailService emailService
+    )
     {
-        public static ExtendedClient ApiClient(
-            this IHttpRequest request,
-            TestEmailService emailService
-        )
-        {
-            return new ExtendedClient(request, emailService);
-        }
+        return new ExtendedClient(request, emailService);
     }
 }
