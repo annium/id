@@ -23,7 +23,7 @@ internal class IdentityDataAccessor : IIdentityDataAccessor
         var context = _httpContextAccessor.HttpContext ?? throw new InvalidOperationException("HttpContext is null");
 
         var ipAddress = context.Connection.RemoteIpAddress ?? IPAddress.Loopback;
-        var client = context.Request.Headers.ContainsKey("User-Agent") ? context.Request.Headers["User-Agent"].First() : string.Empty;
+        var client = context.Request.Headers.ContainsKey("User-Agent") ? context.Request.Headers["User-Agent"].First() ?? string.Empty : string.Empty;
 
         return new IdentityData(ipAddress, client);
     }
