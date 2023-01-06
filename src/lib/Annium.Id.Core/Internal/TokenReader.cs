@@ -13,9 +13,9 @@ using NodaTime;
 
 namespace Annium.Id.Core.Internal
 {
-    internal class TokenReader : ITokenReader, ILogSubject
+    internal class TokenReader : ITokenReader, ILogSubject<TokenReader>
     {
-        public ILogger Logger { get; }
+        public ILogger<TokenReader> Logger { get; }
         private readonly RsaSecurityKey _signingKey;
         private readonly AuthOptions _authOptions;
         private readonly ITimeProvider _timeProvider;

@@ -10,7 +10,7 @@ namespace Annium.Id.Site
         {
             // core
             container.AddTime().WithRealTime().SetDefault();
-            container.AddRuntimeTools(GetType().Assembly, false);
+            container.AddRuntime(GetType().Assembly);
             container.AddMapper();
             container.AddHttpRequestFactory();
             container.AddComponentFormStateFactory();
@@ -21,10 +21,9 @@ namespace Annium.Id.Site
             // container.AddLogging(route => route.UseConsole());
 
             // app
-            container.Collection.AddAntDesign();
-            container.AddJsonSerializers()
-                .Configure(opts => opts.ConfigureForOperations().ConfigureForNodaTime())
-                .SetDefault();
+            container.AddAntDesign();
+            container.AddSerializers()
+                .WithJson(opts => opts.ConfigureForOperations().ConfigureForNodaTime(), isDefault: true);
             container.Add<Theme>().AsSelf().Singleton();
             container.AddStorages();
             container.AddApiServices();

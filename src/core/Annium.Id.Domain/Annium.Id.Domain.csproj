@@ -3,15 +3,15 @@
         <PackageId>Annium.Id.Domain</PackageId>
         <PackageVersion>0.1.0</PackageVersion>
         <Description>Annium.Id.Domain</Description>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net7.0</TargetFramework>
         <OutputType>Library</OutputType>
         <DebugType>portable</DebugType>
-        <LangVersion>10.0</LangVersion>
+        <LangVersion>11.0</LangVersion>
         <WarningsAsErrors>true</WarningsAsErrors>
         <IsPackable>true</IsPackable>
         <Nullable>enable</Nullable>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="NodaTime" Version="3.1.0" />
+        <PackageReference Include="NodaTime" Version="3.1.6" />
     </ItemGroup>
 </Project>

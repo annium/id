@@ -3,10 +3,10 @@
         <PackageId>Annium.Id.Core</PackageId>
         <PackageVersion>0.1.0</PackageVersion>
         <Description>Annium.Id.Core</Description>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net7.0</TargetFramework>
         <OutputType>Library</OutputType>
         <DebugType>portable</DebugType>
-        <LangVersion>10.0</LangVersion>
+        <LangVersion>11.0</LangVersion>
         <WarningsAsErrors>true</WarningsAsErrors>
         <IsPackable>true</IsPackable>
         <Nullable>enable</Nullable>
@@ -16,7 +16,7 @@
         <PackageReference Include="Annium.Data.Operations" Version="0.1.0" />
         <PackageReference Include="Annium.Logging.Abstractions" Version="0.1.0" />
         <PackageReference Include="Annium.Security.Cryptography" Version="0.1.0" />
-        <PackageReference Include="MessagePack" Version="2.3.112" />
-        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.19.0" />
+        <PackageReference Include="MessagePack" Version="2.4.59" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.25.1" />
     </ItemGroup>
 </Project>

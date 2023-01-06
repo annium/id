@@ -13,7 +13,7 @@ namespace Annium.Id.Api
     {
         public override void Configure(IServiceContainer container)
         {
-            container.AddRuntimeTools(GetType().Assembly, false);
+            container.AddRuntime(GetType().Assembly);
         }
 
         public override void Register(IServiceContainer container, IServiceProvider provider)
@@ -37,9 +37,8 @@ namespace Annium.Id.Api
             container.Add<IIdentityDataAccessor, IdentityDataAccessor>().Singleton();
 
             container.AddHttpRequestFactory().SetDefault();
-            container.AddJsonSerializers()
-                .Configure(opts => opts.ConfigureForOperations().ConfigureForNodaTime())
-                .SetDefault();
+            container.AddSerializers()
+                .WithJson(opts => opts.ConfigureForOperations().ConfigureForNodaTime(), isDefault: true);
             container.AddXRest();
             container.AddLocalization(opts => opts.UseYamlStorage());
             container.AddComposition();

@@ -13,12 +13,11 @@ namespace Annium.Id.Demo
 
         public override void Register(IServiceContainer container, IServiceProvider provider)
         {
-            container.AddRuntimeTools(GetType().Assembly, false);
+            container.AddRuntime(GetType().Assembly);
 
             container.AddTime().WithRealTime().SetDefault();
-            container.AddJsonSerializers()
-                .Configure(opts => opts.ConfigureForOperations().ConfigureForNodaTime())
-                .SetDefault();
+            container.AddSerializers()
+                .WithJson(opts => opts.ConfigureForOperations().ConfigureForNodaTime(), isDefault: true);
             container.AddHttpRequestFactory().SetDefault();
             container.AddXRest();
 

@@ -6,7 +6,7 @@ namespace Annium.Id.Infrastructure.DbMigrator
     {
         public override void Configure(IServiceContainer container)
         {
-            container.AddRuntimeTools(GetType().Assembly, false);
+            container.AddRuntime(GetType().Assembly);
             container.AddMapper();
         }
     }
