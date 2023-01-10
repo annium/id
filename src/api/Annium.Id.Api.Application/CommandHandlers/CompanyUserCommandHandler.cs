@@ -63,7 +63,7 @@ internal class CompanyUserCommandHandler :
         if (myId != company.OwnerId)
             return Result.Status(OperationStatus.Forbidden).Error("Need to be company owner to add company role to company user");
 
-        if (await _companyUserRepository.GetByIdAsync(company.Id, user.Id) is null)
+        if (await _companyUserRepository.TryGetByIdAsync(company.Id, user.Id) is null)
             return Result.Status(OperationStatus.Forbidden).Error("User is not company member");
 
         var companyUserRole = new CompanyUserRole(company.Id, user.Id, role.Id);
@@ -85,7 +85,7 @@ internal class CompanyUserCommandHandler :
         if (myId != company.OwnerId)
             return Result.Status(OperationStatus.Forbidden).Error("Need to be company owner to delete company role from company user");
 
-        if (await _companyUserRepository.GetByIdAsync(company.Id, user.Id) is null)
+        if (await _companyUserRepository.TryGetByIdAsync(company.Id, user.Id) is null)
             return Result.Status(OperationStatus.Forbidden).Error("User is not company member");
 
         await _companyUserRoleRepository.DeleteByIdAsync(company.Id, user.Id, role.Id);
@@ -106,7 +106,7 @@ internal class CompanyUserCommandHandler :
         if (myId != company.OwnerId)
             return Result.Status(OperationStatus.Forbidden).Error("Need to be company owner to add company claim to company user");
 
-        if (await _companyUserRepository.GetByIdAsync(company.Id, user.Id) is null)
+        if (await _companyUserRepository.TryGetByIdAsync(company.Id, user.Id) is null)
             return Result.Status(OperationStatus.Forbidden).Error("User is not company member");
 
         var companyUserClaim = new CompanyUserClaim(company.Id, user.Id, claim.Id, request.Value);
@@ -128,7 +128,7 @@ internal class CompanyUserCommandHandler :
         if (myId != company.OwnerId)
             return Result.Status(OperationStatus.Forbidden).Error("Need to be company owner to delete company claim from company user");
 
-        if (await _companyUserRepository.GetByIdAsync(company.Id, user.Id) is null)
+        if (await _companyUserRepository.TryGetByIdAsync(company.Id, user.Id) is null)
             return Result.Status(OperationStatus.Forbidden).Error("User is not company member");
 
         await _companyUserClaimRepository.DeleteByIdAsync(company.Id, user.Id, claim.Id);
@@ -148,7 +148,7 @@ internal class CompanyUserCommandHandler :
         if (myId != company.OwnerId)
             return Result.Status(OperationStatus.Forbidden).Error("Need to be company owner to delete user from company");
 
-        if (await _companyUserRepository.GetByIdAsync(company.Id, user.Id) is null)
+        if (await _companyUserRepository.TryGetByIdAsync(company.Id, user.Id) is null)
             return Result.Status(OperationStatus.Forbidden).Error("User is not company member");
 
         await _companyUserRepository.DeleteByIdAsync(company.Id, user.Id);

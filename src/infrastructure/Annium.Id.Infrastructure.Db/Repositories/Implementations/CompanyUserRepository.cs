@@ -37,12 +37,12 @@ internal class CompanyUserRepository : ICompanyUserRepository
         return _mapper.Map<CompanyUser>(entity);
     }
 
-    public async Task<CompanyUser?> GetByIdAsync(Guid companyId, Guid userId)
+    public async Task<CompanyUser?> TryGetByIdAsync(Guid companyId, Guid userId)
     {
         var entity = await _context.CompanyUsers.AsNoTracking()
             .FirstOrDefaultAsync(x => x.CompanyId == companyId && x.UserId == userId);
 
-        return _mapper.Map<CompanyUser>(entity);
+        return _mapper.Map<CompanyUser?>(entity);
     }
 
     public async Task<User[]> GetAllAsync(Guid companyId)

@@ -35,7 +35,7 @@ internal class CompanyCommandHandler :
 
         if (parentId.HasValue)
         {
-            var parent = await _companyRepository.GetByIdAsync(parentId.Value);
+            var parent = await _companyRepository.TryGetByIdAsync(parentId.Value);
             if (parent is null)
                 return Result.Status(OperationStatus.NotFound, Guid.Empty).Error("Parent company not found");
 
@@ -68,7 +68,7 @@ internal class CompanyCommandHandler :
 
         if (parentId.HasValue)
         {
-            var parent = await _companyRepository.GetByIdAsync(parentId.Value);
+            var parent = await _companyRepository.TryGetByIdAsync(parentId.Value);
             if (parent is null)
                 return Result.Status(OperationStatus.NotFound).Error("Parent company not found");
 

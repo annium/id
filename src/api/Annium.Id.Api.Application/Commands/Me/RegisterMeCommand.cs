@@ -14,9 +14,9 @@ internal class RegisterMeCommandValidator : Validator<RegisterMeCommand>
     {
         Field(e => e.Server).Required().Must(x => Uri.TryCreate(x, UriKind.Absolute, out _), "Server Uri is not valid");
         Field(e => e.Login).Required().Length(3, 50).Then()
-            .Unique(async (c, login) => await userRepository.FindByLoginAsync(login) != null, "User with {1} {2} already exists");
+            .Unique(async (_, login) => await userRepository.TryFindByLoginAsync(login) != null, "User with {1} {2} already exists");
         Field(e => e.Email).Required().Length(3, 100).Email().Then()
-            .Unique(async (c, email) => await userRepository.FindByEmailAsync(email) != null, "User with {1} {2} already exists");
+            .Unique(async (_, email) => await userRepository.TryFindByEmailAsync(email) != null, "User with {1} {2} already exists");
     }
 }
 

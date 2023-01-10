@@ -52,20 +52,15 @@ internal class AppRepository : IAppRepository
         return entities.Select(_mapper.Map<App>).ToArray();
     }
 
-    public async Task<App?> GetByIdAsync(Guid id)
+    public async Task<App> GetByIdAsync(Guid id)
     {
         var entity = await _context.Apps.AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == id);
 
+        if (entity is null)
+            throw new InvalidOperationException($"App {id} not found");
+
         return _mapper.Map<App>(entity);
-    }
-
-    public async Task<App?> FindByApiTokenAsync(Guid token)
-    {
-        var app = await _context.Apps.AsNoTracking()
-            .FirstOrDefaultAsync(x => x.ApiToken == token);
-
-        return _mapper.Map<App>(app);
     }
 
     public async Task<App> UpdateAsync(App app)

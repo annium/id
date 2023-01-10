@@ -8,8 +8,8 @@ public interface ICompanyClaimRepository
 {
     Task<CompanyClaim> CreateAsync(CompanyClaim companyClaim);
     Task<CompanyClaim[]> GetAllAsync(Guid appId);
-    Task<CompanyClaim?> GetByIdAsync(Guid id);
-    Task<CompanyClaim?> FindByKeyAsync(Guid appId, string key);
+    Task<CompanyClaim> GetByIdAsync(Guid id);
+    Task<CompanyClaim?> TryFindByKeyAsync(Guid appId, string key);
     Task<CompanyClaim> UpdateAsync(CompanyClaim companyClaim);
     Task DeleteByIdAsync(Guid id);
 }

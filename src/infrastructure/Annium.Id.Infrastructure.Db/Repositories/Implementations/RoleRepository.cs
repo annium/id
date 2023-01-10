@@ -40,20 +40,23 @@ internal class RoleRepository : IRoleRepository
         return raw.Select(_mapper.Map<Role>).ToArray();
     }
 
-    public async Task<Role?> GetByIdAsync(Guid id)
+    public async Task<Role> GetByIdAsync(Guid id)
     {
         var role = await _context.Roles.AsNoTracking()
             .FirstOrDefaultAsync(c => c.Id == id);
 
+        if (role is null)
+            throw new InvalidOperationException($"Role {id} not found");
+
         return _mapper.Map<Role>(role);
     }
 
-    public async Task<Role?> FindByKeyAsync(Guid appId, string key)
+    public async Task<Role?> TryFindByKeyAsync(Guid appId, string key)
     {
         var role = await _context.Roles.AsNoTracking()
             .FirstOrDefaultAsync(c => c.AppId == appId && c.Key == key);
 
-        return _mapper.Map<Role>(role);
+        return _mapper.Map<Role?>(role);
     }
 
     public async Task<Role> UpdateAsync(Role role)

@@ -123,10 +123,10 @@ internal class MeCommandHandler :
     {
         var user = request.User;
 
-        if (request.Login != user.Login && await _userRepository.FindByLoginAsync(request.Login) != null)
+        if (request.Login != user.Login && await _userRepository.TryFindByLoginAsync(request.Login) != null)
             return Result.Status(OperationStatus.Conflict).Error($"Login {request.Login} is already used");
 
-        if (request.Email != user.Email && await _userRepository.FindByEmailAsync(request.Email) != null)
+        if (request.Email != user.Email && await _userRepository.TryFindByEmailAsync(request.Email) != null)
             return Result.Status(OperationStatus.Conflict).Error($"Email {request.Email} is already used");
 
         user.Login = request.Login;

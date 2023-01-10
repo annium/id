@@ -40,20 +40,23 @@ internal class ClaimRepository : IClaimRepository
         return claims.Select(_mapper.Map<Claim>).ToArray();
     }
 
-    public async Task<Claim?> GetByIdAsync(Guid id)
+    public async Task<Claim> GetByIdAsync(Guid id)
     {
         var claim = await _context.Claims.AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == id);
 
+        if (claim is null)
+            throw new InvalidOperationException($"Claim {id} not found");
+
         return _mapper.Map<Claim>(claim);
     }
 
-    public async Task<Claim?> FindByKeyAsync(Guid appId, string key)
+    public async Task<Claim?> TryFindByKeyAsync(Guid appId, string key)
     {
         var claim = await _context.Claims.AsNoTracking()
             .FirstOrDefaultAsync(x => x.AppId == appId && x.Key == key);
 
-        return _mapper.Map<Claim>(claim);
+        return _mapper.Map<Claim?>(claim);
     }
 
     public async Task<Claim> UpdateAsync(Claim claim)

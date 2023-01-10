@@ -8,8 +8,8 @@ namespace Annium.Id.Infrastructure.Db.Repositories;
 public interface IUserLoginRepository
 {
     Task<UserLogin> CreateAsync(UserLogin login);
-    Task<UserLogin?> GetByIdAsync(Guid id);
-    Task<UserLogin?> FindByRefreshTokenAsync(Guid token);
+    Task<UserLogin> GetByIdAsync(Guid id);
+    Task<UserLogin> FindByRefreshTokenAsync(Guid token);
     Task<UserLogin> UpdateRefreshTokenAsync(UserLogin login);
     Task DeleteByIdAsync(Guid id);
     Task DeleteExpiredByUserIdAsync(Guid userId, Instant instant);

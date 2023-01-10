@@ -12,6 +12,6 @@ internal class ListMyCompaniesQueryComposer : Composer<ListMyCompaniesQuery>
         IUserRepository userRepository
     )
     {
-        Field(c => c.User).LoadWith(ctx => userRepository.GetByIdAsync(tokenAccessor.GetToken().UserId));
+        Field(c => c.User).LoadWith(_ => userRepository.GetByIdAsync(tokenAccessor.GetToken().UserId));
     }
 }

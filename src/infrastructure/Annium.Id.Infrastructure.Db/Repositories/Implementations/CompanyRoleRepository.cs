@@ -40,20 +40,23 @@ internal class CompanyRoleRepository : ICompanyRoleRepository
         return raw.Select(_mapper.Map<CompanyRole>).ToArray();
     }
 
-    public async Task<CompanyRole?> GetByIdAsync(Guid id)
+    public async Task<CompanyRole> GetByIdAsync(Guid id)
     {
         var entity = await _context.CompanyRoles.AsNoTracking()
             .FirstOrDefaultAsync(c => c.Id == id);
 
+        if (entity is null)
+            throw new InvalidOperationException($"Role {id} not found");
+
         return _mapper.Map<CompanyRole>(entity);
     }
 
-    public async Task<CompanyRole?> FindByKeyAsync(Guid appId, string key)
+    public async Task<CompanyRole?> TryFindByKeyAsync(Guid appId, string key)
     {
         var entity = await _context.CompanyRoles.AsNoTracking()
             .FirstOrDefaultAsync(c => c.AppId == appId && c.Key == key);
 
-        return _mapper.Map<CompanyRole>(entity);
+        return _mapper.Map<CompanyRole?>(entity);
     }
 
     public async Task<CompanyRole> UpdateAsync(CompanyRole role)

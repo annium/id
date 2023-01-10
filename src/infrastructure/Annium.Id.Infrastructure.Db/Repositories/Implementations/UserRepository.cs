@@ -31,10 +31,13 @@ internal class UserRepository : IUserRepository
         return _mapper.Map<User>(entity);
     }
 
-    public async Task<User?> GetByIdAsync(Guid id)
+    public async Task<User> GetByIdAsync(Guid id)
     {
         var entity = await _context.Users.AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == id);
+
+        if (entity is null)
+            throw new InvalidOperationException($"User {id} not found");
 
         return _mapper.Map<User>(entity);
     }
@@ -49,18 +52,40 @@ internal class UserRepository : IUserRepository
         return _mapper.Map<User[]>(entities);
     }
 
-    public async Task<User?> FindByLoginAsync(string login)
+    public async Task<User?> TryFindByLoginAsync(string login)
     {
         var entity = await _context.Users.AsNoTracking()
             .FirstOrDefaultAsync(x => x.Login == login);
 
+        return _mapper.Map<User?>(entity);
+    }
+
+    public async Task<User> FindByLoginAsync(string login)
+    {
+        var entity = await _context.Users.AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Login == login);
+
+        if (entity is null)
+            throw new InvalidOperationException($"User with login {login} not found");
+
         return _mapper.Map<User>(entity);
     }
 
-    public async Task<User?> FindByEmailAsync(string email)
+    public async Task<User?> TryFindByEmailAsync(string email)
     {
         var entity = await _context.Users.AsNoTracking()
             .FirstOrDefaultAsync(x => x.Email == email);
+
+        return _mapper.Map<User?>(entity);
+    }
+
+    public async Task<User> FindByEmailAsync(string email)
+    {
+        var entity = await _context.Users.AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Email == email);
+
+        if (entity is null)
+            throw new InvalidOperationException($"User with email {email} not found");
 
         return _mapper.Map<User>(entity);
     }

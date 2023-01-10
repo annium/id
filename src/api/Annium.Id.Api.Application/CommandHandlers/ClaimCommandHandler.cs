@@ -61,7 +61,7 @@ internal class ClaimCommandHandler :
         if (myId != app.OwnerId)
             return Result.Status(OperationStatus.Forbidden).Error("Need to be application owner to update claim");
 
-        if (request.Key != claim.Key && await _claimRepository.FindByKeyAsync(app.Id, request.Key) != null)
+        if (request.Key != claim.Key && await _claimRepository.TryFindByKeyAsync(app.Id, request.Key) != null)
             return Result.Status(OperationStatus.Conflict).Error($"Claim key {request.Key} is already used");
 
         claim.Key = request.Key;

@@ -61,12 +61,23 @@ internal class CompanyRepository : ICompanyRepository
         return entities.Select(_mapper.Map<Company>).ToArray();
     }
 
-    public async Task<Company?> GetByIdAsync(Guid id)
+    public async Task<Company?> TryGetByIdAsync(Guid id)
     {
         var entity = await _context.Companies.AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == id);
 
         return _mapper.Map<Company?>(entity);
+    }
+
+    public async Task<Company> GetByIdAsync(Guid id)
+    {
+        var entity = await _context.Companies.AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Id == id);
+
+        if (entity is null)
+            throw new InvalidOperationException($"Company {id} not found");
+
+        return _mapper.Map<Company>(entity);
     }
 
     public async Task<Company> UpdateAsync(Company company)

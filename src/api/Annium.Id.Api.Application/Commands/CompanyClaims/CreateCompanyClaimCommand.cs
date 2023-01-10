@@ -14,7 +14,7 @@ internal class CreateCompanyClaimCommandValidator : Validator<CreateCompanyClaim
     {
         Field(c => c.AppId).Required();
         Field(c => c.Key).Required().Length(3, 100).Then()
-            .Unique(async (c, key) => await companyClaimRepository.FindByKeyAsync(c.AppId, key) != null, "Company claim with {1} {2} already exists");
+            .Unique(async (c, key) => await companyClaimRepository.TryFindByKeyAsync(c.AppId, key) != null, "Company claim with {1} {2} already exists");
         Field(c => c.Name).Required().Length(3, 100);
     }
 }
