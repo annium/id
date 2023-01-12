@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Annium.Core.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Annium.Id.Demo;
 
@@ -8,26 +9,26 @@ public class ServicePack : ServicePackBase
 {
     public override void Configure(IServiceContainer container)
     {
-        // register configurations
+        container.AddRuntime(GetType().Assembly);
     }
 
     public override void Register(IServiceContainer container, IServiceProvider provider)
     {
-        container.AddRuntime(GetType().Assembly);
-
         container.AddTime().WithRealTime().SetDefault();
+        container.AddMapper();
         container.AddSerializers()
             .WithJson(opts => opts.ConfigureForOperations().ConfigureForNodaTime(), isDefault: true);
         container.AddHttpRequestFactory().SetDefault();
+        container.AddLogging();
         container.AddXRest();
 
+        // auth
         // FIXME: removed, cause id is set dynamically from tests
         // container.AddIdAuthorization(options =>
         // {
         //     options.Audience = Constants.AppId;
         //     options.PublicKeyFile = Path.Combine("keys", "public.key");
         // });
-        container.AddLogging();
         container.AddIdPolicy(
             "isAdmin",
             token => token.App.Roles.Contains("admin")
@@ -43,7 +44,11 @@ public class ServicePack : ServicePackBase
                 c => c.Id == companyId && c.Claims.ContainsKey("paymentsAccess") && c.Claims["paymentsAccess"] == "full"
             )
         );
-        container.AddMapper();
+
+        // host
+        container.Collection.AddCors();
+        container.Collection.AddControllers()
+            .AddDefaultJsonOptions();
     }
 
     public override void Setup(IServiceProvider provider)

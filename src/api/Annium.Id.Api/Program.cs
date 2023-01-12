@@ -17,3 +17,8 @@ app.UseRequestLocalization("en", "ru");
 app.MapControllers();
 
 await app.RunAsync();
+
+
+public partial class Api
+{
+}

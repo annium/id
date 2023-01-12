@@ -14,12 +14,9 @@ public class IntegrationTestBase : IntegrationTest
 {
     #region id
 
-    public IHttpRequest IdApi => GetAppFactory<Startup>(
+    public IHttpRequest IdApi => GetAppFactory<global::Api>(
         builder => builder.UseServicePack<TestServicePack>(),
-        container =>
-        {
-            container.Add(EmailService).AsSelf().AsInterfaces().Singleton();
-        }
+        container => { container.Add(EmailService).AsSelf().AsInterfaces().Singleton(); }
     ).GetHttpRequest();
 
     public ExtendedClient Id()
@@ -32,7 +29,7 @@ public class IntegrationTestBase : IntegrationTest
         return IdApi.BearerAuthorization(token).ApiClient(EmailService);
     }
 
-    protected readonly TestEmailService EmailService = new TestEmailService();
+    protected readonly TestEmailService EmailService = new();
 
     #endregion
 
@@ -40,7 +37,7 @@ public class IntegrationTestBase : IntegrationTest
 
     public IHttpRequest DemoApi(Guid appId)
     {
-        return GetAppFactory<Demo.Startup>(
+        return GetAppFactory<global::Demo>(
             builder => builder.UseServicePack<Demo.ServicePack>(),
             services =>
             {

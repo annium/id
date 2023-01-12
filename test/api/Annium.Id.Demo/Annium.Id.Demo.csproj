@@ -16,6 +16,7 @@
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Annium.Core.DependencyInjection" Version="0.1.0" />
+        <PackageReference Include="Annium.Infrastructure.Hosting" Version="0.1.0" />
         <PackageReference Include="Annium.Logging.Console" Version="0.1.0" />
         <PackageReference Include="Annium.Logging.Microsoft" Version="0.1.0" />
         <PackageReference Include="Annium.Net.Http" Version="0.1.0" />

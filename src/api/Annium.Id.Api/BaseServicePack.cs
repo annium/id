@@ -5,6 +5,7 @@ using Annium.Core.Runtime.Types;
 using Annium.Id.Api.Application.Tools;
 using Annium.Id.Api.Tools;
 using Annium.Id.Core;
+using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
 
 namespace Annium.Id.Api;
@@ -19,6 +20,16 @@ internal class BaseServicePack : ServicePackBase
     public override void Register(IServiceContainer container, IServiceProvider provider)
     {
         container.AddTime().WithRealTime().SetDefault();
+        container.AddHttpRequestFactory().SetDefault();
+        container.AddSerializers()
+            .WithJson(opts => opts.ConfigureForOperations().ConfigureForNodaTime(), isDefault: true);
+        container.AddXRest();
+        container.AddLocalization(opts => opts.UseYamlStorage());
+        container.AddComposition();
+        container.AddValidation();
+        container.AddMapper();
+        container.AddMediatorConfiguration(ConfigureMediator);
+        container.AddMediator();
 
         // auth
         container.AddIdAuthorization((sp, opts) =>
@@ -36,16 +47,10 @@ internal class BaseServicePack : ServicePackBase
         // tools
         container.Add<IIdentityDataAccessor, IdentityDataAccessor>().Singleton();
 
-        container.AddHttpRequestFactory().SetDefault();
-        container.AddSerializers()
-            .WithJson(opts => opts.ConfigureForOperations().ConfigureForNodaTime(), isDefault: true);
-        container.AddXRest();
-        container.AddLocalization(opts => opts.UseYamlStorage());
-        container.AddComposition();
-        container.AddValidation();
-        container.AddMapper();
-        container.AddMediatorConfiguration(ConfigureMediator);
-        container.AddMediator();
+        // host
+        container.Collection.AddCors();
+        container.Collection.AddControllers()
+            .AddDefaultJsonOptions();
     }
 
     private void ConfigureMediator(MediatorConfiguration cfg, ITypeManager typeManager)
