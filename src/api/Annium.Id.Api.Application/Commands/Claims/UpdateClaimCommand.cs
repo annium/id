@@ -24,6 +24,6 @@ internal class UpdateClaimCommandComposer : Composer<UpdateClaimCommand>
     )
     {
         Field(c => c.MyId).LoadWith(_ => tokenAccessor.GetToken().UserId);
-        Field(c => c.Claim).LoadWith(ctx => claimRepository.GetByIdAsync(ctx.Root.ClaimId));
+        Field(c => c.Claim).LoadWith(ctx => claimRepository.TryGetByIdAsync(ctx.Root.ClaimId));
     }
 }

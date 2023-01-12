@@ -32,6 +32,14 @@ internal class UserLoginRepository : IUserLoginRepository
         return _mapper.Map<UserLogin>(entity);
     }
 
+    public async Task<UserLogin?> TryGetByIdAsync(Guid id)
+    {
+        var entity = await _context.UserLogins.AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Id == id);
+
+        return _mapper.Map<UserLogin?>(entity);
+    }
+
     public async Task<UserLogin> GetByIdAsync(Guid id)
     {
         var entity = await _context.UserLogins.AsNoTracking()
@@ -41,6 +49,14 @@ internal class UserLoginRepository : IUserLoginRepository
             throw new InvalidOperationException($"Claim {id} not found");
 
         return _mapper.Map<UserLogin>(entity);
+    }
+
+    public async Task<UserLogin?> TryFindByRefreshTokenAsync(Guid token)
+    {
+        var entity = await _context.UserLogins.AsNoTracking()
+            .FirstOrDefaultAsync(x => x.RefreshToken == token);
+
+        return _mapper.Map<UserLogin?>(entity);
     }
 
     public async Task<UserLogin> FindByRefreshTokenAsync(Guid token)

@@ -22,6 +22,6 @@ internal class DeleteRoleCommandComposer : Composer<DeleteRoleCommand>
     )
     {
         Field(c => c.MyId).LoadWith(_ => tokenAccessor.GetToken().UserId);
-        Field(c => c.Role).LoadWith(ctx => roleRepository.GetByIdAsync(ctx.Root.RoleId));
+        Field(c => c.Role).LoadWith(ctx => roleRepository.TryGetByIdAsync(ctx.Root.RoleId));
     }
 }

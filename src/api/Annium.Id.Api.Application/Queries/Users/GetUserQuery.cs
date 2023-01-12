@@ -20,6 +20,6 @@ internal class GetUserQueryComposer : Composer<GetUserQuery>
         IUserRepository userRepository
     )
     {
-        Field(c => c.User).LoadWith(ctx => userRepository.GetByIdAsync(ctx.Root.UserId));
+        Field(c => c.User).LoadWith(ctx => userRepository.TryGetByIdAsync(ctx.Root.UserId));
     }
 }

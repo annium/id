@@ -21,7 +21,7 @@ internal class UpdateTokensCommandComposer : Composer<UpdateTokensCommand>
         IUserLoginRepository userLoginRepository
     )
     {
-        Field(c => c.App).LoadWith(ctx => appRepository.GetByIdAsync(ctx.Root.AppId));
-        Field(e => e.Login).LoadWith(ctx => userLoginRepository.FindByRefreshTokenAsync(ctx.Root.RefreshToken));
+        Field(c => c.App).LoadWith(ctx => appRepository.TryGetByIdAsync(ctx.Root.AppId));
+        Field(e => e.Login).LoadWith(ctx => userLoginRepository.TryFindByRefreshTokenAsync(ctx.Root.RefreshToken));
     }
 }

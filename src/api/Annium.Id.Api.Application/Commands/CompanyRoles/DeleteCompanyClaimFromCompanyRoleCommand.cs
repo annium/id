@@ -24,7 +24,7 @@ internal class DeleteCompanyClaimFromCompanyRoleCommandComposer : Composer<Delet
     )
     {
         Field(c => c.MyId).LoadWith(_ => tokenAccessor.GetToken().UserId);
-        Field(c => c.Role).LoadWith(ctx => companyRoleRepository.GetByIdAsync(ctx.Root.RoleId));
-        Field(c => c.Claim).LoadWith(ctx => companyClaimRepository.GetByIdAsync(ctx.Root.ClaimId));
+        Field(c => c.Role).LoadWith(ctx => companyRoleRepository.TryGetByIdAsync(ctx.Root.RoleId));
+        Field(c => c.Claim).LoadWith(ctx => companyClaimRepository.TryGetByIdAsync(ctx.Root.ClaimId));
     }
 }

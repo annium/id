@@ -40,6 +40,14 @@ internal class RoleRepository : IRoleRepository
         return raw.Select(_mapper.Map<Role>).ToArray();
     }
 
+    public async Task<Role?> TryGetByIdAsync(Guid id)
+    {
+        var role = await _context.Roles.AsNoTracking()
+            .FirstOrDefaultAsync(c => c.Id == id);
+
+        return _mapper.Map<Role?>(role);
+    }
+
     public async Task<Role> GetByIdAsync(Guid id)
     {
         var role = await _context.Roles.AsNoTracking()

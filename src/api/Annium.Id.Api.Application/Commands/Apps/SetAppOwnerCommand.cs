@@ -24,7 +24,7 @@ internal class SetAppOwnerCommandComposer : Composer<SetAppOwnerCommand>
     )
     {
         Field(c => c.MyId).LoadWith(_ => tokenAccessor.GetToken().UserId);
-        Field(c => c.App).LoadWith(ctx => appRepository.GetByIdAsync(ctx.Root.AppId));
-        Field(c => c.NewOwner).LoadWith(ctx => userRepository.GetByIdAsync(ctx.Root.NewOwnerId));
+        Field(c => c.App).LoadWith(ctx => appRepository.TryGetByIdAsync(ctx.Root.AppId));
+        Field(c => c.NewOwner).LoadWith(ctx => userRepository.TryGetByIdAsync(ctx.Root.NewOwnerId));
     }
 }

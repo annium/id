@@ -7,6 +7,7 @@ namespace Annium.Id.Infrastructure.Db.Repositories;
 public interface IUserRepository
 {
     Task<User> CreateAsync(User user);
+    Task<User?> TryGetByIdAsync(Guid id);
     Task<User> GetByIdAsync(Guid id);
     Task<User[]> FindAllByQueryAsync(string query, int limit);
     Task<User?> TryFindByLoginAsync(string login);

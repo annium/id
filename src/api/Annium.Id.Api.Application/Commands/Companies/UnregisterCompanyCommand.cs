@@ -22,6 +22,6 @@ internal class UnregisterCompanyCommandComposer : Composer<UnregisterCompanyComm
     )
     {
         Field(c => c.MyId).LoadWith(_ => tokenAccessor.GetToken().UserId);
-        Field(c => c.Company).LoadWith(ctx => companyRepository.GetByIdAsync(ctx.Root.CompanyId));
+        Field(c => c.Company).LoadWith(ctx => companyRepository.TryGetByIdAsync(ctx.Root.CompanyId));
     }
 }

@@ -31,6 +31,14 @@ internal class UserRepository : IUserRepository
         return _mapper.Map<User>(entity);
     }
 
+    public async Task<User?> TryGetByIdAsync(Guid id)
+    {
+        var entity = await _context.Users.AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Id == id);
+
+        return _mapper.Map<User?>(entity);
+    }
+
     public async Task<User> GetByIdAsync(Guid id)
     {
         var entity = await _context.Users.AsNoTracking()

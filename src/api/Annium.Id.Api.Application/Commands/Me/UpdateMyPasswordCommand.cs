@@ -22,6 +22,6 @@ internal class UpdateMyPasswordCommandComposer : Composer<UpdateMyPasswordComman
         IUserRepository userRepository
     )
     {
-        Field(e => e.User).LoadWith(_ => userRepository.GetByIdAsync(tokenAccessor.GetToken().UserId));
+        Field(e => e.User).LoadWith(_ => userRepository.TryGetByIdAsync(tokenAccessor.GetToken().UserId));
     }
 }

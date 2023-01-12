@@ -52,6 +52,14 @@ internal class AppRepository : IAppRepository
         return entities.Select(_mapper.Map<App>).ToArray();
     }
 
+    public async Task<App?> TryGetByIdAsync(Guid id)
+    {
+        var entity = await _context.Apps.AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Id == id);
+
+        return _mapper.Map<App?>(entity);
+    }
+
     public async Task<App> GetByIdAsync(Guid id)
     {
         var entity = await _context.Apps.AsNoTracking()

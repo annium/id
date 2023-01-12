@@ -12,6 +12,6 @@ internal class ListMyAppsQueryComposer : Composer<ListMyAppsQuery>
         IUserRepository userRepository
     )
     {
-        Field(c => c.User).LoadWith(_ => userRepository.GetByIdAsync(tokenAccessor.GetToken().UserId));
+        Field(c => c.User).LoadWith(_ => userRepository.TryGetByIdAsync(tokenAccessor.GetToken().UserId));
     }
 }

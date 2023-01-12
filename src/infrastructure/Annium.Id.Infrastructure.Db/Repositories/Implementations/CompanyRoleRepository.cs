@@ -40,6 +40,14 @@ internal class CompanyRoleRepository : ICompanyRoleRepository
         return raw.Select(_mapper.Map<CompanyRole>).ToArray();
     }
 
+    public async Task<CompanyRole?> TryGetByIdAsync(Guid id)
+    {
+        var entity = await _context.CompanyRoles.AsNoTracking()
+            .FirstOrDefaultAsync(c => c.Id == id);
+
+        return _mapper.Map<CompanyRole?>(entity);
+    }
+
     public async Task<CompanyRole> GetByIdAsync(Guid id)
     {
         var entity = await _context.CompanyRoles.AsNoTracking()

@@ -40,6 +40,14 @@ internal class CompanyClaimRepository : ICompanyClaimRepository
         return claims.Select(_mapper.Map<CompanyClaim>).ToArray();
     }
 
+    public async Task<CompanyClaim?> TryGetByIdAsync(Guid id)
+    {
+        var claim = await _context.CompanyClaims.AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Id == id);
+
+        return _mapper.Map<CompanyClaim?>(claim);
+    }
+
     public async Task<CompanyClaim> GetByIdAsync(Guid id)
     {
         var claim = await _context.CompanyClaims.AsNoTracking()

@@ -22,7 +22,7 @@ internal class ConfirmMyEmailCommandComposer : Composer<ConfirmMyEmailCommand>
         IUserRepository userRepository
     )
     {
-        Field(c => c.App).LoadWith(ctx => appRepository.GetByIdAsync(ctx.Root.AppId));
-        Field(c => c.User).LoadWith(ctx => userRepository.GetByIdAsync(ctx.Root.Id));
+        Field(c => c.App).LoadWith(ctx => appRepository.TryGetByIdAsync(ctx.Root.AppId));
+        Field(c => c.User).LoadWith(ctx => userRepository.TryGetByIdAsync(ctx.Root.Id));
     }
 }

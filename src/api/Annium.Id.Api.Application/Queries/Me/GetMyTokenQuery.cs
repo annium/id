@@ -17,6 +17,6 @@ internal class GetTokenQueryComposer : Composer<GetMyTokenQuery>
         IUserLoginRepository userLoginRepository
     )
     {
-        Field(e => e.Login).LoadWith(_ => userLoginRepository.GetByIdAsync(tokenAccessor.GetToken().LoginId));
+        Field(e => e.Login).LoadWith(_ => userLoginRepository.TryGetByIdAsync(tokenAccessor.GetToken().LoginId));
     }
 }

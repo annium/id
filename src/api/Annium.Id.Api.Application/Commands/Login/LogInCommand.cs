@@ -22,7 +22,7 @@ internal class LogInCommandComposer : Composer<LogInCommand>
         IUserRepository userRepository
     )
     {
-        Field(c => c.App).LoadWith(ctx => appRepository.GetByIdAsync(ctx.Root.AppId));
-        Field(c => c.User).LoadWith(ctx => userRepository.FindByLoginAsync(ctx.Root.Login));
+        Field(c => c.App).LoadWith(ctx => appRepository.TryGetByIdAsync(ctx.Root.AppId));
+        Field(c => c.User).LoadWith(ctx => userRepository.TryFindByLoginAsync(ctx.Root.Login));
     }
 }

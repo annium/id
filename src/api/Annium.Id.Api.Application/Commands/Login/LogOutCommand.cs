@@ -22,6 +22,6 @@ internal class LogOutCommandComposer : Composer<LogOutCommand>
     )
     {
         Field(c => c.LoginId).LoadWith(_ => tokenAccessor.GetToken().LoginId);
-        Field(c => c.App).LoadWith(ctx => appRepository.GetByIdAsync(ctx.Root.AppId));
+        Field(c => c.App).LoadWith(ctx => appRepository.TryGetByIdAsync(ctx.Root.AppId));
     }
 }

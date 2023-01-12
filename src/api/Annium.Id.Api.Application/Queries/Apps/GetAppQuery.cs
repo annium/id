@@ -19,6 +19,6 @@ internal class GetAppQueryComposer : Composer<GetAppQuery>
         IAppRepository appRepository
     )
     {
-        Field(c => c.App).LoadWith(ctx => appRepository.GetByIdAsync(ctx.Root.AppId));
+        Field(c => c.App).LoadWith(ctx => appRepository.TryGetByIdAsync(ctx.Root.AppId));
     }
 }

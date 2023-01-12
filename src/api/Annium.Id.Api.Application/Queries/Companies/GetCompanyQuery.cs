@@ -19,6 +19,6 @@ internal class GetCompanyQueryComposer : Composer<GetCompanyQuery>
         ICompanyRepository companyRepository
     )
     {
-        Field(c => c.Company).LoadWith(ctx => companyRepository.GetByIdAsync(ctx.Root.CompanyId));
+        Field(c => c.Company).LoadWith(ctx => companyRepository.TryGetByIdAsync(ctx.Root.CompanyId));
     }
 }

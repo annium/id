@@ -24,8 +24,8 @@ internal class RestoreMyAccessCommandComposer : Composer<RestoreMyAccessCommand>
         IUserRepository userRepository
     )
     {
-        Field(c => c.App).LoadWith(ctx => appRepository.GetByIdAsync(ctx.Root.AppId));
+        Field(c => c.App).LoadWith(ctx => appRepository.TryGetByIdAsync(ctx.Root.AppId));
         Field(e => e.ServerUri).LoadWith(ctx => new Uri(ctx.Root.Server));
-        Field(c => c.User).LoadWith(ctx => userRepository.FindByEmailAsync(ctx.Root.Email));
+        Field(c => c.User).LoadWith(ctx => userRepository.TryFindByEmailAsync(ctx.Root.Email));
     }
 }

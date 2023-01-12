@@ -29,6 +29,6 @@ internal class RegisterMeCommandComposer : Composer<RegisterMeCommand>
         Field(e => e.ServerUri).LoadWith(ctx => new Uri(ctx.Root.Server));
         Field(e => e.Referral)
             .When(ctx => ctx.Root.ReferralId.HasValue)
-            .LoadWith(async ctx => await userRepository.GetByIdAsync(ctx.Root.ReferralId!.Value));
+            .LoadWith(async ctx => await userRepository.TryGetByIdAsync(ctx.Root.ReferralId!.Value));
     }
 }
