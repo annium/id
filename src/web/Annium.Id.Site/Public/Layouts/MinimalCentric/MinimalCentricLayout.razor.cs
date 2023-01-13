@@ -1,5 +1,0 @@
-namespace Annium.Id.Site.Public.Layouts.MinimalCentric;
-
-public partial class MinimalCentricLayout
-{
-}

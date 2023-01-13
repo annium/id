@@ -1,0 +1,23 @@
+using System;
+using Annium.Architecture.CQRS.Commands;
+using Core.Domain.Entities;
+
+namespace Server.Domain.Commands.Users;
+
+public class DeleteRoleFromUserCommand : ICommand
+{
+    public Guid UserId { get; }
+    public Guid RoleId { get; }
+    public Guid MyId { get; private set; }
+    public User User { get; private set; } = null!;
+    public Role Role { get; private set; } = null!;
+
+    public DeleteRoleFromUserCommand(
+        Guid userId,
+        Guid roleId
+    )
+    {
+        UserId = userId;
+        RoleId = roleId;
+    }
+}

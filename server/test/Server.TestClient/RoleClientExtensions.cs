@@ -1,0 +1,46 @@
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using Annium.Data.Operations;
+using Annium.Net.Http;
+using Server.ViewModels.Requests.Roles;
+using Server.ViewModels.Responses.Roles;
+
+namespace Server.TestClient;
+
+public static class RoleClientExtensions
+{
+    public static async Task<RoleResponse> Register(
+        this RoleClient client,
+        Guid appId,
+        string key = "one",
+        string name = "First role"
+    )
+    {
+        var request = new CreateRoleRequest { AppId = appId, Key = key, Name = name };
+        var roleId = await client.CreateRole(request).GetData();
+        var roles = await client.ListRoles(appId).GetData();
+
+        return roles.Single(x => x.Id == roleId);
+    }
+
+    public static Task<RoleResponse> RegisterOther(
+        this RoleClient client,
+        Guid appId,
+        string key = "two",
+        string name = "Second role"
+    )
+    {
+        return client.Register(appId, key, name);
+    }
+
+    public static Task<IHttpResponse<IResult>> AddClaimToRole(
+        this RoleClient client,
+        Guid claimId,
+        Guid roleId,
+        string value = "Some"
+    )
+    {
+        return client.AddClaimToRole(claimId, roleId, new AddClaimToRoleRequestBody { Value = value });
+    }
+}

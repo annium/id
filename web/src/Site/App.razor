@@ -1,0 +1,15 @@
+@using Annium.Blazor.Css
+@using Microsoft.AspNetCore.Components.Routing
+@using Site.Public.Layouts.MinimalCentric
+@using Site.Public.Pages.NotFound
+<Router AppAssembly="@typeof(Program).Assembly">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" />
+    </Found>
+    <NotFound>
+        <LayoutView Layout="@typeof(MinimalCentricLayout)">
+            <NotFoundPage />
+        </LayoutView>
+    </NotFound>
+</Router>
+<StyleSheet />

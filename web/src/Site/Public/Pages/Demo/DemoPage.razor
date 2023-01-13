@@ -1,0 +1,22 @@
+﻿@namespace Site.Public.Pages.Demo
+
+@page "/demo"
+@using Annium.Components.State.Forms
+@using Annium.Extensions.Validation
+@using Annium.Serialization.Abstractions
+@using Site.Public.Layouts.MinimalCentric
+@layout MinimalCentricLayout
+
+@inject IStateFactory StateFactory
+@inject ISerializer<string> Serializer
+@inject IValidator<Blog> Validator
+
+Name:
+<FormField TValue="string" state="@_state.At(x => x.Name)">
+    <TextField TValue="string" />
+</FormField>
+<CheckboxField state="@_state.At(x => x.Messages).At(x => x[0]).At(x => x.IsRead)">
+    is message read?
+</CheckboxField>
+
+@(Serializer.Serialize(_state.Value))

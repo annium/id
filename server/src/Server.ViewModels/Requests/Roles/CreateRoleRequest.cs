@@ -1,0 +1,12 @@
+using System;
+using Annium.Architecture.ViewModel;
+using Server.Domain.Commands.Roles;
+
+namespace Server.ViewModels.Requests.Roles;
+
+public class CreateRoleRequest : IRequest<CreateRoleCommand>
+{
+    public Guid AppId { get; set; }
+    public string Key { get; set; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
+}

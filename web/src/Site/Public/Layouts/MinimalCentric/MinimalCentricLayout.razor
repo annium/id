@@ -1,0 +1,21 @@
+@namespace Site.Public.Layouts.MinimalCentric
+
+@inherits LayoutComponentBase
+
+@inject Style Style;
+
+<Layout>
+    <Content>
+        <Row>
+            <Col class="@Style.Column">
+                <div class="@Style.Container">
+                    <Logo Class="@Style.Logo" />
+                    @Body
+                </div>
+                <div class="@Style.Credentials">
+                    Built with love by the <a class="@Style.Link" href="https://annium.com/"> Annium</a> team.
+                </div>
+            </Col>
+        </Row>
+    </Content>
+</Layout>

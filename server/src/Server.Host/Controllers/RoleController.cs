@@ -1,0 +1,92 @@
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Annium.AspNetCore.Extensions;
+using Annium.Core.Mediator;
+using Annium.Data.Operations;
+using Annium.Id.AspNetCore;
+using Microsoft.AspNetCore.Mvc;
+using Server.ViewModels.Requests.Roles;
+using Server.ViewModels.Responses.Roles;
+
+namespace Server.Host.Controllers;
+
+[Route("roles")]
+public class RoleController : ServerController
+{
+    public RoleController(
+        IMediator mediator,
+        IServiceProvider sp
+    ) : base(mediator, sp)
+    {
+    }
+
+    [HttpPost]
+    [Authorize]
+    public Task<IResult<Guid>> CreateRole([FromBody] CreateRoleRequest request)
+    {
+        return HandleAsync<CreateRoleRequest, Guid>(request);
+    }
+
+    [HttpGet]
+    [Authorize]
+    public Task<IResult<IEnumerable<RoleResponse>>> ListRoles(Guid appId)
+    {
+        var request = new ListRolesRequest { AppId = appId };
+
+        return HandleAsync<ListRolesRequest, IEnumerable<RoleResponse>>(request);
+    }
+
+    [HttpPut("{roleId:guid}")]
+    [Authorize]
+    public Task<IResult> UpdateRole(Guid roleId, [FromBody] UpdateRoleRequestBody requestBody)
+    {
+        var request = new UpdateRoleRequest
+        {
+            RoleId = roleId,
+            Key = requestBody.Key,
+            Name = requestBody.Name
+        };
+
+        return HandleAsync(request);
+    }
+
+    [HttpPost("{roleId:guid}/claims/{claimId:guid}")]
+    [Authorize]
+    public Task<IResult> AddClaimToRole(Guid roleId, Guid claimId, [FromBody] AddClaimToRoleRequestBody requestBody)
+    {
+        var request = new AddClaimToRoleRequest
+        {
+            RoleId = roleId,
+            ClaimId = claimId,
+            Value = requestBody.Value
+        };
+
+        return HandleAsync(request);
+    }
+
+    [HttpDelete("{roleId:guid}/claims/{claimId:guid}")]
+    [Authorize]
+    public Task<IResult> DeleteClaimFromRole(Guid roleId, Guid claimId)
+    {
+        var request = new DeleteClaimFromRoleRequest
+        {
+            RoleId = roleId,
+            ClaimId = claimId
+        };
+
+        return HandleAsync(request);
+    }
+
+    [HttpDelete("{roleId:guid}")]
+    [Authorize]
+    public Task<IResult> DeleteRole(Guid roleId)
+    {
+        var request = new DeleteRoleRequest
+        {
+            RoleId = roleId
+        };
+
+        return HandleAsync(request);
+    }
+}

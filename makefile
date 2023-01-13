@@ -1,29 +1,29 @@
 PROJECT_NAME := id
 TAG_PREFIX := registry.annium.com/$(PROJECT_NAME)
-TFM := net5.0
+TFM := net7.0
 BIN_DEBUG := bin/Debug/$(TFM)
 
 configure:
-	@# api
-	$(call copy,shared,application.yml email.yml,run/api/configuration src/api/Annium.Id.Api/configuration)
-	$(call copy,docker,db.yml,run/api/configuration)
-	$(call copy,local,db.yml,src/api/Annium.Id.Api/configuration)
-	$(call copy,shared,private.key public.key,run/api/keys src/api/Annium.Id.Api/keys)
+	@# host
+	$(call copy,shared,application.yml email.yml,run/server/configuration server/src/Server.Host/configuration)
+	$(call copy,docker,db.yml,run/server/configuration)
+	$(call copy,local,db.yml,server/src/Server.Host/configuration)
+	$(call copy,shared,private.key public.key,run/server/keys server/src/Server.Host/keys)
 
 	@# db
 	$(call copy,docker,db.env,run/db)
 
 	@# migrator
-	$(call copy,local,db.yml,src/infrastructure/Annium.Id.Infrastructure.DbMigrator/configuration)
+	$(call copy,local,db.yml,server/src/Server.Db.Migrator/configuration)
 
-	@# tests api
-	$(call copy,shared,private.key public.key,test/api/Annium.Id.Api.IntegrationTests/keys)
+	@# server tests
+	$(call copy,shared,private.key public.key,server/test/Server.IntegrationTests/keys)
 
-	@# tests demo
-	$(call copy,shared,private.key public.key,test/api/Annium.Id.DemoClient/keys)
+	@# demo host
+	$(call copy,shared,private.key public.key,server/test/Server.DemoHost/keys)
 
-	@# tests core
-	$(call copy,shared,private.key public.key,test/lib/Annium.Id.Core.Tests/keys)
+	@# core tests
+	$(call copy,shared,private.key public.key,lib/test/Annium.Id.Core.Tests/keys)
 
 deconfigure:
 	rm -rf run
@@ -32,73 +32,69 @@ deconfigure:
 
 db-drop db-migrate-up db-migrate-down migrations-add migrations-list migrations-remove:
 	@pwsh tools/ef/$@.ps1 \
-		-startup src/infrastructure/Annium.Id.Infrastructure.DbMigrator \
- 		-project src/infrastructure/Annium.Id.Infrastructure.DbMigrator \
+		-startup server/src/Server.Db.Migrator \
+ 		-project server/src/Server.Db.Migrator \
 		-context Context
 
 
-start: start-api start-demo
+start: start-server start-demo
 
-start-api:
-	$(call start-dotnet,src,api,Annium.Id.Api,9501)
+start-server:
+	$(call start-dotnet,server/src,Server.Host,9501)
 
 start-demo:
-	$(call start-dotnet,test,api,Annium.Id.Demo,9502)
+	$(call start-dotnet,server/test,Server.DemoHost,9502)
 
-stop: stop-api stop-demo
+stop: stop-server stop-demo
 
-stop-api:
-	$(call stop-dotnet,Annium.Id.Api)
+stop-server:
+	$(call stop-dotnet,Server.Host)
 
 stop-demo:
-	$(call stop-dotnet,Annium.Id.Demo)
+	$(call stop-dotnet,Server.DemoHost)
 
 
-gwc: gwc-api
+gwc: gwc-server
 
-gwc-api:
+gwc-server:
 	xrest dotnet gen \
 		-s http://localhost:9501 \
-		-a src/api/Annium.Id.Api/$(BIN_DEBUG)/Annium.Id.Api.dll \
-		-o src/web/Annium.Id.Site/Shared/Api/Server \
-		-ns Annium.Id.Site.Shared.Api.Server
+		-a server/src/Server.Host/$(BIN_DEBUG)/Server.Host.dll \
+		-o web/src/Site/Shared/Api/Server \
+		-ns Site.Shared.Api.Server
 
-gtc: gtc-api gtc-demo
+gtc: gtc-server gtc-demo
 
-gtc-api:
+gtc-server:
 	xrest dotnet gen \
 		-s http://localhost:9501 \
-		-a src/api/Annium.Id.Api/$(BIN_DEBUG)/Annium.Id.Api.dll \
-		-o test/api/Annium.Id.Api.TestClient \
+		-a server/src/Server.Host/$(BIN_DEBUG)/Server.Host.dll \
+		-o server/test/Server.Host.TestClient \
 		-t
 
 gtc-demo:
 	xrest dotnet gen \
 		-s http://localhost:9502 \
-		-a test/api/Annium.Id.Demo/$(BIN_DEBUG)/Annium.Id.Demo.dll \
-		-o test/api/Annium.Id.Demo.TestClient \
+		-a server/test/Server.DemoHost/$(BIN_DEBUG)/Server.DemoHost.dll \
+		-o server/test/Server.DemoHost.TestClient \
 		-t
 
 
-publish: publish-api publish-migrations publish-site
+publish: publish-server publish-site
 
-publish-api:
-	$(call publish,api,.,src/api/Annium.Id.Api/app.dockerfile)
-
-publish-migrations:
-	$(call publish,migrations,.,src/infrastructure/Annium.Id.Infrastructure.DbMigrator/migrations.dockerfile)
+publish-server:
+	$(call publish,server,.,server/src/Server.Host/app.dockerfile)
 
 publish-site:
-	$(call publish,site,.,src/web/Annium.Id.Site/app.dockerfile)
+	$(call publish,site,.,web/src/Site/app.dockerfile)
 
 
 # control
 define start-dotnet
-	@$(eval section := $(1))
-	@$(eval component := $(2))
-	@$(eval project := $(3))
-	@$(eval port := $(4))
-	cd $(section)/$(component)/$(project) && dotnet $(BIN_DEBUG)/$(project).dll -port $(port) &
+	@$(eval folder := $(1))
+	@$(eval project := $(2))
+	@$(eval port := $(3))
+	cd $(folder)/$(project) && dotnet $(BIN_DEBUG)/$(project).dll -port $(port) &
 endef
 
 define stop-dotnet
@@ -124,26 +120,3 @@ define clean
 endef
 
 .PHONY: $(MAKECMDGOALS)
-
-# https://github.com/aspnet/EntityFrameworkCore/issues/18292 - to cleanup migrations flow
-# test targets for migrations
-# migrations-build:
-# 	docker build -t migrations -f src/Annium.Id.Api/migrations.Dockerfile server
-
-# migrations-run:
-# 	docker run --rm -d --name migrations \
-# 		-v ~/projects/annium/id/run/configuration/:/code/src/Annium.Id.Api/configuration \
-# 		--network id_net \
-# 		migrations \
-# 		sleep 3600
-# 		# -v ~/projects/annium/id/src/Annium.Id.Api/configuration/:/app/configuration/ \
-
-# migrations-test:
-# 	docker exec -it migrations \
-# 		dotnet ef migrations list \
-# 		--project src/Annium.Id.Db \
-# 		--startup-project src/Annium.Id.Api \
-# 		--no-build
-
-# migrations-kill:
-# 	docker kill migrations

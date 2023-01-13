@@ -1,0 +1,16 @@
+using System;
+using System.Threading.Tasks;
+using Core.Domain.Entities;
+
+namespace Server.Db.Repositories;
+
+public interface IRoleRepository
+{
+    Task<Role> CreateAsync(Role role);
+    Task<Role[]> GetAllAsync(Guid appId);
+    Task<Role?> TryGetByIdAsync(Guid id);
+    Task<Role> GetByIdAsync(Guid id);
+    Task<Role?> TryFindByKeyAsync(Guid appId, string key);
+    Task<Role> UpdateAsync(Role role);
+    Task DeleteByIdAsync(Guid id);
+}
