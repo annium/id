@@ -25,5 +25,8 @@ internal class UpdateCompanyCommandComposer : Composer<UpdateCompanyCommand>
     {
         Field(c => c.MyId).LoadWith(_ => tokenAccessor.GetToken().UserId);
         Field(c => c.Company).LoadWith(ctx => companyRepository.TryGetByIdAsync(ctx.Root.CompanyId));
+        Field(c => c.Parent)
+            .When(ctx => ctx.Root.ParentId.HasValue)
+            .LoadWith(ctx => companyRepository.TryGetByIdAsync(ctx.Root.ParentId!.Value));
     }
 }

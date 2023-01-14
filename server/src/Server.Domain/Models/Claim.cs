@@ -1,32 +1,35 @@
 using System;
+using Annium.Data.Models;
 
 namespace Server.Domain.Models;
 
-public class Claim
+public class Claim : IIdEntity<Guid>
 {
-    public Guid Id { get; }
-    public Guid AppId { get; }
-    public string Key { get; set; }
-    public string Name { get; set; }
+    public Guid Id { get; private init; }
+    public Guid AppId { get; private init; }
+    public App App { get; private init; } = default!;
+    public string Key { get; private set; } = string.Empty;
+    public string Name { get; private set; } = string.Empty;
 
     public Claim(
-        Guid appId,
+        App app,
         string key,
         string name
     )
     {
-        AppId = appId;
+        Id = Guid.NewGuid();
+        AppId = app.Id;
         Key = key;
         Name = name;
     }
 
-    internal Claim(
-        Guid id,
-        Guid appId,
-        string key,
-        string name
-    ) : this(appId, key, name)
+    internal Claim()
     {
-        Id = id;
+    }
+
+    public void Update(string key, string name)
+    {
+        Key = key;
+        Name = name;
     }
 }

@@ -69,8 +69,7 @@ internal class LoginCommandHandler :
         if (login.RefreshTokenExpires < _timeProvider.Now)
             return Result.Status(OperationStatus.Forbidden, default(Tokens)!).Error("Refresh token expired");
 
-        login.RefreshToken = Guid.NewGuid();
-        login.RefreshTokenExpires = _timeProvider.Now + _options.RefreshTokenLifeTime;
+        login.Update(Guid.NewGuid(), _timeProvider.Now + _options.RefreshTokenLifeTime);
         await _userLoginRepository.UpdateRefreshTokenAsync(login);
         var token = await _tokenGenerator.GenerateTokenString(login);
 

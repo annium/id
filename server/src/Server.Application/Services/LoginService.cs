@@ -36,8 +36,8 @@ internal class LoginService : ILoginService
         var instant = _timeProvider.Now;
         var identity = _identityDataAccessor.GetIdentityData();
         var login = new UserLogin(
-            app.Id,
-            user.Id,
+            app,
+            user,
             instant,
             identity.IpAddress.ToString(),
             identity.Client,

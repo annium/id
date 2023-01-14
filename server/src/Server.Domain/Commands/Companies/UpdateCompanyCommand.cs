@@ -11,6 +11,7 @@ public class UpdateCompanyCommand : ICommand
     public string Name { get; }
     public Guid MyId { get; private set; }
     public Company Company { get; private set; } = null!;
+    public Company? Parent { get; private set; } = default;
 
     public UpdateCompanyCommand(
         Guid companyId,

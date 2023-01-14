@@ -43,7 +43,7 @@ internal class UserCommandHandler :
         if (myId != app.OwnerId)
             return Result.Status(OperationStatus.Forbidden).Error("Need to be application owner to add role to user");
 
-        var userRole = new UserRole(user.Id, role.Id);
+        var userRole = new UserRole(user, role);
         await _userRoleRepository.SaveAsync(userRole);
 
         return Result.Status(OperationStatus.Ok);
@@ -80,7 +80,7 @@ internal class UserCommandHandler :
         if (myId != app.OwnerId)
             return Result.Status(OperationStatus.Forbidden).Error("Need to be application owner to add claim to user");
 
-        var userClaim = new UserClaim(user.Id, claim.Id, request.Value);
+        var userClaim = new UserClaim(user, claim, request.Value);
         await _userClaimRepository.SaveAsync(userClaim);
 
         return Result.Status(OperationStatus.Ok);

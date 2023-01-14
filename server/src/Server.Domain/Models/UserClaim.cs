@@ -4,18 +4,26 @@ namespace Server.Domain.Models;
 
 public class UserClaim
 {
-    public Guid UserId { get; }
-    public Guid ClaimId { get; }
-    public string Value { get; set; }
+    public Guid UserId { get; private init; }
+    public User User { get; private init; } = default!;
+    public Guid ClaimId { get; private init; }
+    public Claim Claim { get; private init; } = default!;
+    public string Value { get; private init; } = string.Empty;
 
     public UserClaim(
-        Guid userId,
-        Guid claimId,
+        User user,
+        Claim claim,
         string value
     )
     {
-        UserId = userId;
-        ClaimId = claimId;
+        UserId = user.Id;
+        User = user;
+        ClaimId = claim.Id;
+        Claim = claim;
         Value = value;
+    }
+
+    internal UserClaim()
+    {
     }
 }

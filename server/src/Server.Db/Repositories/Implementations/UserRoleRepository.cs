@@ -44,10 +44,9 @@ internal class UserRoleRepository : IUserRoleRepository
             .ToListAsync();
 
         return raw.Select(x => new Role(
-            x.Role.AppId,
+            null!,
             x.Role.Key,
-            x.Role.Name,
-            x.Role.Claims.Select(y => new ClaimValue(y.ClaimId, y.Claim.Key, y.Claim.Name, y.Value)).ToArray()
+            x.Role.Name
         )).ToArray();
     }
 

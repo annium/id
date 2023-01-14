@@ -4,15 +4,23 @@ namespace Server.Domain.Models;
 
 public class CompanyUser
 {
-    public Guid CompanyId { get; }
-    public Guid UserId { get; }
+    public Guid CompanyId { get; private init; }
+    public Company Company { get; private init; } = default!;
+    public Guid UserId { get; private init; }
+    public User User { get; private init; } = default!;
 
     public CompanyUser(
-        Guid companyId,
-        Guid userId
+        Company company,
+        User user
     )
     {
-        CompanyId = companyId;
-        UserId = userId;
+        CompanyId = company.Id;
+        Company = company;
+        UserId = user.Id;
+        User = user;
+    }
+
+    internal CompanyUser()
+    {
     }
 }

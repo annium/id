@@ -52,7 +52,7 @@ internal class MeCommandHandler :
             request.Login,
             string.Empty,
             request.Email,
-            request.ReferralId
+            request.Referral
         );
 
         user = await _userRepository.CreateAsync(user);
@@ -77,7 +77,8 @@ internal class MeCommandHandler :
             return Result.Status<OperationStatus, Tokens>(OperationStatus.Forbidden, default!).Error("Email already confirmed");
 
         // set random password to allow check above be bypassed only once
-        user.PasswordHash = _securityManager.Hash(Guid.NewGuid().ToString());
+        var passwordHash = _securityManager.Hash(Guid.NewGuid().ToString());
+        user.SetPasswordHash(passwordHash);
         await _userRepository.UpdateAsync(user);
 
         var tokens = await _loginService.LogUserInAsync(app, user);
@@ -109,7 +110,8 @@ internal class MeCommandHandler :
     {
         var user = request.User;
 
-        user.PasswordHash = _securityManager.Hash(request.Password);
+        var passwordHash = _securityManager.Hash(request.Password);
+        user.SetPasswordHash(passwordHash);
 
         await _userRepository.UpdateAsync(user);
 
@@ -129,8 +131,7 @@ internal class MeCommandHandler :
         if (request.Email != user.Email && await _userRepository.TryFindByEmailAsync(request.Email) != null)
             return Result.Status(OperationStatus.Conflict).Error($"Email {request.Email} is already used");
 
-        user.Login = request.Login;
-        user.Email = request.Email;
+        user.Update(request.Login, request.Email);
 
         await _userRepository.UpdateAsync(user);
 

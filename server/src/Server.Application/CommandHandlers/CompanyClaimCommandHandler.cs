@@ -64,8 +64,7 @@ internal class CompanyClaimCommandHandler :
         if (request.Key != claim.Key && await _companyClaimRepository.TryFindByKeyAsync(app.Id, request.Key) != null)
             return Result.Status(OperationStatus.Conflict).Error($"Company claim key {request.Key} is already used");
 
-        claim.Key = request.Key;
-        claim.Name = request.Name;
+        claim.Update(request.Key, request.Name);
 
         await _companyClaimRepository.UpdateAsync(claim);
 

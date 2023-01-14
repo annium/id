@@ -4,15 +4,23 @@ namespace Server.Domain.Models;
 
 public class UserRole
 {
-    public Guid UserId { get; }
-    public Guid RoleId { get; }
+    public Guid UserId { get; private init; }
+    public User User { get; private init; } = default!;
+    public Guid RoleId { get; private init; }
+    public Role Role { get; private init; } = default!;
 
     public UserRole(
-        Guid userId,
-        Guid roleId
+        User user,
+        Role role
     )
     {
-        UserId = userId;
-        RoleId = roleId;
+        UserId = user.Id;
+        User = user;
+        RoleId = role.Id;
+        Role = role;
+    }
+
+    internal UserRole()
+    {
     }
 }

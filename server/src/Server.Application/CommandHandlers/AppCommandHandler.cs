@@ -31,7 +31,7 @@ internal class AppCommandHandler :
         CancellationToken cancellationToken
     )
     {
-        var app = new App(request.MyId, request.Name, Guid.NewGuid());
+        var app = new App(request.Me, request.Name, Guid.NewGuid());
 
         app = await _appRepository.CreateAsync(app);
 
@@ -49,7 +49,7 @@ internal class AppCommandHandler :
         if (myId != app.OwnerId)
             return Result.Status(OperationStatus.Forbidden).Error("Need to be application owner to update app");
 
-        app.Name = request.Name;
+        app.SetName(request.Name);
 
         await _appRepository.UpdateAsync(app);
 
@@ -68,7 +68,7 @@ internal class AppCommandHandler :
         if (myId != app.OwnerId)
             return Result.Status(OperationStatus.Forbidden).Error("Need to be application owner to change app owner");
 
-        app.OwnerId = newOwner.Id;
+        app.SetOwner(newOwner);
 
         await _appRepository.UpdateAsync(app);
 

@@ -1,0 +1,18 @@
+using System;
+using Annium.linq2db.Extensions.Configuration;
+using LinqToDB.Mapping;
+using Server.Domain.Models;
+
+namespace Server.Db.Internal.Configurations;
+
+internal class AppConfiguration : IdEntityConfiguration<App, Guid>
+{
+    public override void Configure(EntityMappingBuilder<App> builder)
+    {
+        builder.HasSchemaName(Constants.Schema).HasTableName("apps");
+        base.Configure(builder);
+        builder.Association(x => x.Owner, x => x.OwnerId, x => x.Id, false);
+        builder.Property(x => x.Name).IsColumn();
+        builder.Property(x => x.ApiToken).IsColumn();
+    }
+}

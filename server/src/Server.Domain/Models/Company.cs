@@ -1,32 +1,44 @@
 using System;
+using Annium.Data.Models;
 
 namespace Server.Domain.Models;
 
-public class Company
+public class Company : IIdEntity<Guid>
 {
-    public Guid Id { get; }
-    public Guid OwnerId { get; set; }
-    public Guid? ParentId { get; set; }
-    public string Name { get; set; }
+    public Guid Id { get; private init; }
+    public Guid OwnerId { get; private set; }
+    public User Owner { get; private set; } = default!;
+    public Guid? ParentId { get; private set; }
+    public Company? Parent { get; private set; }
+    public string Name { get; private set; } = string.Empty;
 
     public Company(
-        Guid ownerId,
-        Guid? parentId,
+        User owner,
+        Company? parent,
         string name
     )
     {
-        OwnerId = ownerId;
-        ParentId = parentId;
+        Id = Guid.NewGuid();
+        OwnerId = owner.Id;
+        Owner = owner;
+        ParentId = parent?.Id;
+        Parent = parent;
         Name = name;
     }
 
-    internal Company(
-        Guid id,
-        Guid ownerId,
-        Guid? parentId,
-        string name
-    ) : this(ownerId, parentId, name)
+    internal Company()
     {
-        Id = id;
+    }
+
+    public void Update(Company? parent, string name)
+    {
+        ParentId = parent?.Id;
+        Parent = parent;
+        Name = name;
+    }
+
+    public void SetOwner(User user)
+    {
+        Owner = user;
     }
 }

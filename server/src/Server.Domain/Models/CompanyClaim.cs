@@ -1,13 +1,15 @@
 using System;
+using Annium.Data.Models;
 
 namespace Server.Domain.Models;
 
-public class CompanyClaim
+public class CompanyClaim : IIdEntity<Guid>
 {
-    public Guid Id { get; }
-    public Guid AppId { get; }
-    public string Key { get; set; }
-    public string Name { get; set; }
+    public Guid Id { get; private init; }
+    public Guid AppId { get; private init; }
+    public App App { get; private init; } = default;
+    public string Key { get; private set; } = string.Empty;
+    public string Name { get; private set; } = string.Empty;
 
     public CompanyClaim(
         Guid appId,
@@ -15,18 +17,19 @@ public class CompanyClaim
         string name
     )
     {
+        Id = Guid.NewGuid();
         AppId = appId;
         Key = key;
         Name = name;
     }
 
-    internal CompanyClaim(
-        Guid id,
-        Guid appId,
-        string key,
-        string name
-    ) : this(appId, key, name)
+    internal CompanyClaim()
     {
-        Id = id;
+    }
+
+    public void Update(string key, string name)
+    {
+        Key = key;
+        Name = name;
     }
 }

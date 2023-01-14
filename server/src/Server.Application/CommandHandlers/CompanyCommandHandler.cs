@@ -30,24 +30,13 @@ internal class CompanyCommandHandler :
         CancellationToken cancellationToken
     )
     {
-        var myId = request.MyId;
-        var parentId = request.ParentId;
+        var me = request.Me;
+        var parent = request.Parent;
 
-        if (parentId.HasValue)
-        {
-            var parent = await _companyRepository.TryGetByIdAsync(parentId.Value);
-            if (parent is null)
-                return Result.Status(OperationStatus.NotFound, Guid.Empty).Error("Parent company not found");
+        if (parent is not null && me.Id != parent.OwnerId)
+            return Result.Status(OperationStatus.Forbidden, Guid.Empty).Error("Need to be owner of parent company to create child company");
 
-            if (myId != parent.OwnerId)
-                return Result.Status(OperationStatus.Forbidden, Guid.Empty).Error("Need to be owner of parent company to create child company");
-        }
-
-        var company = new Company(
-            myId,
-            parentId,
-            request.Name
-        );
+        var company = new Company(me, parent, request.Name);
 
         company = await _companyRepository.CreateAsync(company);
 
@@ -60,24 +49,16 @@ internal class CompanyCommandHandler :
     )
     {
         var myId = request.MyId;
-        var parentId = request.ParentId;
+        var parent = request.Parent;
         var company = request.Company;
 
         if (myId != company.OwnerId)
             return Result.Status(OperationStatus.Forbidden).Error("Need to be company owner to update company");
 
-        if (parentId.HasValue)
-        {
-            var parent = await _companyRepository.TryGetByIdAsync(parentId.Value);
-            if (parent is null)
-                return Result.Status(OperationStatus.NotFound).Error("Parent company not found");
+        if (parent is not null && myId != parent.OwnerId)
+            return Result.Status(OperationStatus.Forbidden).Error("Need to be owner of parent company to set child company parent");
 
-            if (myId != parent.OwnerId)
-                return Result.Status(OperationStatus.Forbidden).Error("Need to be owner of parent company to set child company parent");
-        }
-
-        company.ParentId = request.ParentId;
-        company.Name = request.Name;
+        company.Update(parent, request.Name);
 
         await _companyRepository.UpdateAsync(company);
 
@@ -96,7 +77,7 @@ internal class CompanyCommandHandler :
         if (myId != company.OwnerId)
             return Result.Status(OperationStatus.Forbidden).Error("Need to be company owner to change company owner");
 
-        company.OwnerId = user.Id;
+        company.SetOwner(user);
 
         await _companyRepository.UpdateAsync(company);
 

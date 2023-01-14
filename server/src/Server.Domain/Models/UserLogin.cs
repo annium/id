@@ -1,22 +1,25 @@
 using System;
+using Annium.Data.Models;
 using NodaTime;
 
 namespace Server.Domain.Models;
 
-public class UserLogin
+public class UserLogin : IIdEntity<Guid>
 {
-    public Guid Id { get; }
-    public Guid AppId { get; }
-    public Guid UserId { get; }
-    public Instant LoggedAt { get; }
-    public string IpAddress { get; }
-    public string Client { get; }
-    public Guid RefreshToken { get; set; }
-    public Instant RefreshTokenExpires { get; set; }
+    public Guid Id { get; private init; }
+    public Guid AppId { get; private init; }
+    public App App { get; private init; } = default!;
+    public Guid UserId { get; private init; }
+    public User User { get; private init; } = default!;
+    public Instant LoggedAt { get; private init; }
+    public string IpAddress { get; private init; } = string.Empty;
+    public string Client { get; private init; } = string.Empty;
+    public Guid RefreshToken { get; private set; }
+    public Instant RefreshTokenExpires { get; private set; }
 
     public UserLogin(
-        Guid appId,
-        Guid userId,
+        App app,
+        User user,
         Instant loggedAt,
         string ipAddress,
         string client,
@@ -24,8 +27,11 @@ public class UserLogin
         Instant refreshTokenExpires
     )
     {
-        AppId = appId;
-        UserId = userId;
+        Id = Guid.NewGuid();
+        AppId = app.Id;
+        App = app;
+        UserId = user.Id;
+        User = user;
         LoggedAt = loggedAt;
         IpAddress = ipAddress;
         Client = client;
@@ -33,17 +39,13 @@ public class UserLogin
         RefreshTokenExpires = refreshTokenExpires;
     }
 
-    internal UserLogin(
-        Guid id,
-        Guid appId,
-        Guid userId,
-        Instant loggedAt,
-        string ipAddress,
-        string client,
-        Guid refreshToken,
-        Instant refreshTokenExpires
-    ) : this(appId, userId, loggedAt, ipAddress, client, refreshToken, refreshTokenExpires)
+    internal UserLogin()
     {
-        Id = id;
+    }
+
+    public void Update(Guid refreshToken, Instant refreshTokenExpires)
+    {
+        RefreshToken = refreshToken;
+        RefreshTokenExpires = refreshTokenExpires;
     }
 }

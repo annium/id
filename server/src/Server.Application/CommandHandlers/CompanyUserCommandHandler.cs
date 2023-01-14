@@ -44,7 +44,7 @@ internal class CompanyUserCommandHandler :
         if (myId != company.OwnerId)
             return Result.Status(OperationStatus.Forbidden).Error("Need to be company owner to add user to company");
 
-        var companyUser = new CompanyUser(company.Id, user.Id);
+        var companyUser = new CompanyUser(company, user);
         await _companyUserRepository.SaveAsync(companyUser);
 
         return Result.Status(OperationStatus.Ok);
@@ -66,7 +66,7 @@ internal class CompanyUserCommandHandler :
         if (await _companyUserRepository.TryGetByIdAsync(company.Id, user.Id) is null)
             return Result.Status(OperationStatus.Forbidden).Error("User is not company member");
 
-        var companyUserRole = new CompanyUserRole(company.Id, user.Id, role.Id);
+        var companyUserRole = new CompanyUserRole(company, user, role);
         await _companyUserRoleRepository.SaveAsync(companyUserRole);
 
         return Result.Status(OperationStatus.Ok);
@@ -109,7 +109,7 @@ internal class CompanyUserCommandHandler :
         if (await _companyUserRepository.TryGetByIdAsync(company.Id, user.Id) is null)
             return Result.Status(OperationStatus.Forbidden).Error("User is not company member");
 
-        var companyUserClaim = new CompanyUserClaim(company.Id, user.Id, claim.Id, request.Value);
+        var companyUserClaim = new CompanyUserClaim(company, user, claim, request.Value);
         await _companyUserClaimRepository.SaveAsync(companyUserClaim);
 
         return Result.Status(OperationStatus.Ok);

@@ -38,11 +38,7 @@ internal class ClaimCommandHandler :
         if (myId != app.OwnerId)
             return Result.Status(OperationStatus.Forbidden, Guid.Empty).Error("Need to be application owner to create claim");
 
-        var claim = new Claim(
-            app.Id,
-            request.Key,
-            request.Name
-        );
+        var claim = new Claim(app, request.Key, request.Name);
 
         claim = await _claimRepository.CreateAsync(claim);
 
@@ -64,8 +60,7 @@ internal class ClaimCommandHandler :
         if (request.Key != claim.Key && await _claimRepository.TryFindByKeyAsync(app.Id, request.Key) != null)
             return Result.Status(OperationStatus.Conflict).Error($"Claim key {request.Key} is already used");
 
-        claim.Key = request.Key;
-        claim.Name = request.Name;
+        claim.Update(request.Key, request.Name);
 
         await _claimRepository.UpdateAsync(claim);
 

@@ -43,12 +43,7 @@ internal class RoleCommandHandler :
         if (myId != app.OwnerId)
             return Result.Status(OperationStatus.Forbidden, Guid.Empty).Error("Need to be application owner to create role");
 
-        var role = new Role(
-            app.Id,
-            request.Key,
-            request.Name,
-            Array.Empty<ClaimValue>()
-        );
+        var role = new Role(app, request.Key, request.Name);
 
         role = await _roleRepository.CreateAsync(role);
 
@@ -70,8 +65,7 @@ internal class RoleCommandHandler :
         if (request.Key != role.Key && await _roleRepository.TryFindByKeyAsync(app.Id, request.Key) != null)
             return Result.Status(OperationStatus.Conflict).Error($"Role key {request.Key} is already used");
 
-        role.Key = request.Key;
-        role.Name = request.Name;
+        role.Update(request.Key, request.Name);
 
         await _roleRepository.UpdateAsync(role);
 
@@ -94,7 +88,7 @@ internal class RoleCommandHandler :
         if (claim.AppId != app.Id)
             return Result.Status(OperationStatus.Forbidden).Error("Claim belongs to another application");
 
-        var roleClaim = new RoleClaim(role.Id, claim.Id, request.Value);
+        var roleClaim = new RoleClaim(role, claim, request.Value);
 
         await _roleClaimRepository.SaveAsync(roleClaim);
 
