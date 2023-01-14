@@ -7,8 +7,6 @@ internal class BaseServicePack : ServicePackBase
 {
     public override void Register(IServiceContainer container, IServiceProvider provider)
     {
-        container.Add<IContext, Context>().Scoped();
-
         // repositories
         container.AddAll(GetType().Assembly)
             .Where(x => x.IsClass && x.Name.EndsWith("Repository"))
