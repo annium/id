@@ -30,12 +30,6 @@ deconfigure:
 	$(call clean,/configuration/ /keys/)
 
 
-db-migrate-up db-migrate-down migrations-add migrations-list migrations-remove:
-	@pwsh tools/ef/$@.ps1 \
-		-startup server/src/Server.Db.Migrator \
- 		-project server/src/Server.Db.Migrator \
-		-context Context
-
 db-drop:
 	docker-compose rm -vfs db
 	docker volume rm -f id_db
