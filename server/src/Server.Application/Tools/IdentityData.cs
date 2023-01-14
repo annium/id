@@ -1,6 +1,6 @@
 using System.Net;
 
-namespace Core.Domain.Entities.Utility;
+namespace Server.Application.Tools;
 
 public class IdentityData
 {

@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Net;
-using Core.Domain.Entities.Utility;
 using Microsoft.AspNetCore.Http;
 using Server.Application.Tools;
 
