@@ -3,4 +3,3 @@ port: 9591
 database: db
 user: dbuser
 password: asdasd
-log_queries: true
