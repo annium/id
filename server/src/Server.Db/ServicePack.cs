@@ -2,8 +2,9 @@ using System;
 using System.IO;
 using Annium.Configuration.Abstractions;
 using Annium.Core.DependencyInjection;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+using Annium.linq2db.PostgreSql;
+using Server.Db.Internal;
+using Xdb.Core.Migrations;
 
 namespace Server.Db;
 
@@ -16,26 +17,20 @@ public class ServicePack : ServicePackBase
 
     public override void Configure(IServiceContainer container)
     {
-        container.AddConfiguration<Configuration>(
-            builder => builder.AddYamlFile(Path.Combine("configuration", "db.yml"))
+        container.AddConfiguration<PostgreSqlConfiguration>(x => x
+            .AddYamlFile(Path.Combine("configuration", "db.yml"))
         );
     }
 
     public override void Register(IServiceContainer container, IServiceProvider provider)
     {
-        // register context
-        container.Collection
-            .AddDbContext<Context>((sp, builder) =>
-            {
-                var cfg = sp.Resolve<Configuration>();
-                builder.UseNpgsql(
-                    string.Join(';', $"Host={cfg.Host}", $"Port={cfg.Port}", $"Database={cfg.Database}", $"Username={cfg.User}", $"Password={cfg.Password}", "SSL Mode=Prefer", "Trust Server Certificate=true"),
-                    options =>
-                    {
-                        options.EnableRetryOnFailure(10, TimeSpan.FromSeconds(30), Array.Empty<string>());
-                        options.MigrationsAssembly("Server.Db.Migrator");
-                    }
-                );
-            });
+        container.AddPostgreSql<ServerConnection>();
+    }
+
+    public override void Setup(IServiceProvider provider)
+    {
+        Migrator.ForPostgresql(provider.Resolve<PostgreSqlConfiguration>().ConnectionString, Constants.Schema)
+            .WithScriptsFromAssembly(GetType().Assembly)
+            .Execute();
     }
 }
