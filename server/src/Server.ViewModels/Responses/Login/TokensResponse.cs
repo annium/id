@@ -1,7 +1,7 @@
 using System;
 using Annium.Architecture.ViewModel;
-using Core.Domain.Entities;
 using NodaTime;
+using Server.Domain.Models;
 
 namespace Server.ViewModels.Responses.Login;
 

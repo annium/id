@@ -1,6 +1,6 @@
 using System.Linq;
 using Annium.Core.Mapper;
-using Core.Domain.Entities;
+using Server.Domain.Models;
 
 namespace Server.Db.Profiles;
 

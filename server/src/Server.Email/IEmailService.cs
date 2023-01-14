@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Annium.Data.Operations;
-using Core.Domain.Entities;
+using Server.Domain.Models;
 
 namespace Server.Email;
 

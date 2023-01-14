@@ -12,9 +12,6 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
     <ItemGroup>
-        <ProjectReference Include="../../../core/src/Core.Domain/Core.Domain.csproj" />
-    </ItemGroup>
-    <ItemGroup>
         <PackageReference Include="Annium.Architecture.CQRS" Version="0.1.0" />
     </ItemGroup>
 </Project>

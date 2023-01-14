@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 using Annium.Architecture.Base;
 using Annium.Architecture.CQRS.Commands;
 using Annium.Data.Operations;
-using Core.Domain.Entities;
 using Server.Db.Repositories;
 using Server.Domain.Commands.Apps;
+using Server.Domain.Models;
 
 namespace Server.Application.CommandHandlers;
 

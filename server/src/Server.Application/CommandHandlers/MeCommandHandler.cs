@@ -5,11 +5,11 @@ using Annium.Architecture.Base;
 using Annium.Architecture.CQRS.Commands;
 using Annium.Core.Primitives;
 using Annium.Data.Operations;
-using Core.Domain.Entities;
 using Server.Application.Services;
 using Server.Application.Tools;
 using Server.Db.Repositories;
 using Server.Domain.Commands.Me;
+using Server.Domain.Models;
 using Server.Email;
 
 namespace Server.Application.CommandHandlers;

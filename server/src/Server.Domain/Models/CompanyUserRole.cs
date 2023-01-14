@@ -1,6 +1,6 @@
 using System;
 
-namespace Core.Domain.Entities;
+namespace Server.Domain.Models;
 
 public class CompanyUserRole
 {

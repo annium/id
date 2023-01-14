@@ -2,9 +2,9 @@ using System;
 using System.Threading.Tasks;
 using Annium.Core.Primitives;
 using Annium.Id.Core;
-using Core.Domain.Entities;
 using Server.Application.Tools;
 using Server.Db.Repositories;
+using Server.Domain.Models;
 
 namespace Server.Application.Services;
 

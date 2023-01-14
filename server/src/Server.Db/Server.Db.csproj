@@ -13,7 +13,7 @@
     </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="../../../lib/src/Annium.Id.Core/Annium.Id.Core.csproj" />
-        <ProjectReference Include="../../../core/src/Core.Domain/Core.Domain.csproj" />
+        <ProjectReference Include="../Server.Domain/Server.Domain.csproj" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Annium.Configuration.Yaml" Version="0.1.0" />

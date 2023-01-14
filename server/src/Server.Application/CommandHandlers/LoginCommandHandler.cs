@@ -6,11 +6,11 @@ using Annium.Architecture.CQRS.Commands;
 using Annium.Core.Primitives;
 using Annium.Data.Operations;
 using Annium.Id.Core;
-using Core.Domain.Entities;
 using Server.Application.Services;
 using Server.Application.Tools;
 using Server.Db.Repositories;
 using Server.Domain.Commands.Login;
+using Server.Domain.Models;
 
 namespace Server.Application.CommandHandlers;
 

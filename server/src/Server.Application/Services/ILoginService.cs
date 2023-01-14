@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using Core.Domain.Entities;
+using Server.Domain.Models;
 
 namespace Server.Application.Services;
 

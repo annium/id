@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using Annium.Architecture.Base;
 using Annium.Architecture.CQRS.Queries;
 using Annium.Data.Operations;
-using Core.Domain.Entities;
 using Server.Db.Repositories;
+using Server.Domain.Models;
 using Server.Domain.Queries.CompanyRoles;
 
 namespace Server.Application.QueryHandlers;

@@ -1,5 +1,5 @@
 using Annium.Architecture.CQRS.Queries;
-using Core.Domain.Entities;
+using Server.Domain.Models;
 
 namespace Server.Domain.Queries.Me;
 

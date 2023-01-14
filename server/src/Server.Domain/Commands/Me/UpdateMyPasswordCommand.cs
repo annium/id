@@ -1,5 +1,5 @@
 using Annium.Architecture.CQRS.Commands;
-using Core.Domain.Entities;
+using Server.Domain.Models;
 
 namespace Server.Domain.Commands.Me;
 

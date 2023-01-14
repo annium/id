@@ -1,6 +1,6 @@
 using System;
 using Annium.Architecture.ViewModel;
-using Core.Domain.Entities;
+using Server.Domain.Models;
 using Server.ViewModels.Responses.CompanyClaims;
 
 namespace Server.ViewModels.Responses.CompanyRoles;

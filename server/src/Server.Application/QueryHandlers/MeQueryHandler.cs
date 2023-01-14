@@ -4,8 +4,8 @@ using Annium.Architecture.Base;
 using Annium.Architecture.CQRS.Queries;
 using Annium.Data.Operations;
 using Annium.Id.Core;
-using Core.Domain.Entities;
 using Server.Application.Tools;
+using Server.Domain.Models;
 using Server.Domain.Queries.Me;
 
 namespace Server.Application.QueryHandlers;

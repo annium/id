@@ -2,7 +2,7 @@ using System;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using Annium.Data.Operations;
-using Core.Domain.Entities;
+using Server.Domain.Models;
 using Server.Email.Models;
 
 namespace Server.Email;

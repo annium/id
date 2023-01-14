@@ -1,8 +1,8 @@
 using System;
 using System.Threading.Tasks;
 using Annium.Core.Mapper;
-using Core.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Server.Domain.Models;
 
 namespace Server.Db.Repositories.Implementations;
 

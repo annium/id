@@ -13,12 +13,10 @@
     </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="../Server.Db/Server.Db.csproj" />
-        <ProjectReference Include="../Server.Domain/Server.Domain.csproj" />
         <ProjectReference Include="../Server.Email/Server.Email.csproj" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Annium.Architecture.Mediator" Version="0.1.0" />
-        <PackageReference Include="Annium.Core.Runtime" Version="0.1.0" />
         <PackageReference Include="Annium.Diagnostics.Debug" Version="0.1.0" />
         <PackageReference Include="Annium.Extensions.Validation" Version="0.1.0" />
         <PackageReference Include="Annium.Localization.Yaml" Version="0.1.0" />

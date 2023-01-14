@@ -14,7 +14,4 @@
     <ItemGroup>
         <ProjectReference Include="../../src/Server.Host/Server.Host.csproj" />
     </ItemGroup>
-    <ItemGroup>
-        <PackageReference Include="Annium.Net.Http" Version="0.1.0" />
-    </ItemGroup>
 </Project>

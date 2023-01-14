@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using Annium.Id.Core;
-using Core.Domain.Entities;
+using Server.Domain.Models;
 
 namespace Server.Application.Tools;
 

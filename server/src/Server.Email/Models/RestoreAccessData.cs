@@ -1,4 +1,4 @@
-using Core.Domain.Entities;
+using Server.Domain.Models;
 
 namespace Server.Email.Models;
 

@@ -1,7 +1,7 @@
 using System;
 using NodaTime;
 
-namespace Core.Domain.Entities;
+namespace Server.Domain.Models;
 
 public class UserLogin
 {

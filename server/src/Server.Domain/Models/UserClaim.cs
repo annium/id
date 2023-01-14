@@ -1,22 +1,19 @@
 using System;
 
-namespace Core.Domain.Entities;
+namespace Server.Domain.Models;
 
-public class CompanyUserClaim
+public class UserClaim
 {
-    public Guid CompanyId { get; }
     public Guid UserId { get; }
     public Guid ClaimId { get; }
     public string Value { get; set; }
 
-    public CompanyUserClaim(
-        Guid companyId,
+    public UserClaim(
         Guid userId,
         Guid claimId,
         string value
     )
     {
-        CompanyId = companyId;
         UserId = userId;
         ClaimId = claimId;
         Value = value;

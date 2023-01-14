@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Core.Domain.Entities;
+namespace Server.Domain.Models;
 
 public class CompanyRole
 {
