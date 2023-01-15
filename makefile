@@ -13,9 +13,6 @@ configure:
 	@# db
 	$(call copy,docker,db.env,run/db)
 
-	@# migrator
-	$(call copy,local,db.yml,server/src/Server.Db.Migrator/configuration)
-
 	@# server tests
 	$(call copy,shared,private.key public.key,server/test/Server.IntegrationTests/keys)
 
