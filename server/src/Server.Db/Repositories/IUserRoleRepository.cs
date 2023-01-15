@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Server.Domain.Models;
 
@@ -6,7 +7,7 @@ namespace Server.Db.Repositories;
 
 public interface IUserRoleRepository
 {
-    Task<UserRole> SaveAsync(UserRole userRole);
-    Task<Role[]> GetUserRolesAsync(Guid appId, Guid userId);
+    Task SaveAsync(UserRole userRole);
+    Task<IReadOnlyCollection<Role>> GetUserRolesAsync(Guid appId, Guid userId);
     Task DeleteByIdAsync(Guid userId, Guid roleId);
 }

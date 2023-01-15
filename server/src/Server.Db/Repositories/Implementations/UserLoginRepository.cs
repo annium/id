@@ -1,8 +1,7 @@
 using System;
-using System.Linq;
 using System.Threading.Tasks;
-using Annium.Core.Mapper;
-using Microsoft.EntityFrameworkCore;
+using Annium.linq2db.Extensions.Extensions;
+using LinqToDB;
 using NodaTime;
 using Server.Domain.Models;
 
@@ -10,119 +9,73 @@ namespace Server.Db.Repositories.Implementations;
 
 internal class UserLoginRepository : IUserLoginRepository
 {
-    private readonly IContext _context;
-    private readonly IMapper _mapper;
+    private readonly ServerConnection _db;
 
-    public UserLoginRepository(
-        IContext context,
-        IMapper mapper
-    )
+    public UserLoginRepository(ServerConnection db)
     {
-        _context = context;
-        _mapper = mapper;
+        _db = db;
     }
 
-    public async Task<UserLogin> CreateAsync(UserLogin login)
+    public async Task CreateAsync(UserLogin login)
     {
-        var entity = _mapper.Map<Entities.UserLogin>(login);
-
-        _context.UserLogins.Add(entity);
-        await _context.SaveChangesAsync();
-
-        return _mapper.Map<UserLogin>(entity);
+        await _db.UserLogins.InsertAsync(login);
     }
 
     public async Task<UserLogin?> TryGetByIdAsync(Guid id)
     {
-        var entity = await _context.UserLogins.AsNoTracking()
+        var entity = await _db.UserLogins
             .FirstOrDefaultAsync(x => x.Id == id);
 
-        return _mapper.Map<UserLogin?>(entity);
+        return entity;
     }
 
     public async Task<UserLogin> GetByIdAsync(Guid id)
     {
-        var entity = await _context.UserLogins.AsNoTracking()
+        var entity = await _db.UserLogins
             .FirstOrDefaultAsync(x => x.Id == id);
 
         if (entity is null)
             throw new InvalidOperationException($"Claim {id} not found");
 
-        return _mapper.Map<UserLogin>(entity);
+        return entity;
     }
 
     public async Task<UserLogin?> TryFindByRefreshTokenAsync(Guid token)
     {
-        var entity = await _context.UserLogins.AsNoTracking()
+        var entity = await _db.UserLogins
             .FirstOrDefaultAsync(x => x.RefreshToken == token);
 
-        return _mapper.Map<UserLogin?>(entity);
+        return entity;
     }
 
     public async Task<UserLogin> FindByRefreshTokenAsync(Guid token)
     {
-        var entity = await _context.UserLogins.AsNoTracking()
+        var entity = await _db.UserLogins
             .FirstOrDefaultAsync(x => x.RefreshToken == token);
 
         if (entity is null)
             throw new InvalidOperationException($"User login with refresh token {token} not found");
 
-        return _mapper.Map<UserLogin>(entity);
+        return entity;
     }
 
-    public async Task<UserLogin> UpdateRefreshTokenAsync(UserLogin login)
+    public async Task UpdateRefreshTokenAsync(UserLogin login)
     {
-        var entity = await _context.UserLogins
-            .SingleAsync(x => x.Id == login.Id);
-
-        entity.RefreshToken = login.RefreshToken;
-        entity.RefreshTokenExpires = _mapper.Map<DateTime>(login.RefreshTokenExpires);
-
-        await _context.SaveChangesAsync();
-
-        return _mapper.Map<UserLogin>(entity);
+        await _db.UserLogins.UpdateAsync(login);
     }
 
     public async Task DeleteByIdAsync(Guid id)
     {
-        var entity = await _context.UserLogins
-            .FirstOrDefaultAsync(x => x.Id == id);
-
-        if (entity is null)
-            return;
-
-        _context.UserLogins.Remove(entity);
-
-        await _context.SaveChangesAsync();
+        await _db.UserLogins.DeleteAsync(x => x.Id == id);
     }
 
     public async Task DeleteExpiredByUserIdAsync(Guid userId, Instant instant)
     {
-        var expires = _mapper.Map<DateTime>(instant);
-
-        var entities = await _context.UserLogins
-            .Where(x => x.UserId == userId && x.RefreshTokenExpires <= expires)
-            .ToListAsync();
-
-        if (entities.Count == 0)
-            return;
-
-        _context.UserLogins.RemoveRange(entities);
-
-        await _context.SaveChangesAsync();
+        await _db.UserLogins.DeleteAsync(x => x.UserId == userId && x.RefreshTokenExpires <= instant);
     }
 
-    public async Task DeleteAllByUserIdAsync(Guid userId)
+    public async Task DeleteAllByUserIdAsync(Guid id)
     {
-        var entities = await _context.UserLogins
-            .Where(x => x.UserId == userId)
-            .ToListAsync();
-
-        if (entities.Count == 0)
-            return;
-
-        _context.UserLogins.RemoveRange(entities);
-
-        await _context.SaveChangesAsync();
+        await _db.UserLogins.DeleteAsync(x => x.Id == id);
     }
 }

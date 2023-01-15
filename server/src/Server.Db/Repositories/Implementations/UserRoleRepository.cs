@@ -1,65 +1,40 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Annium.Core.Mapper;
-using Microsoft.EntityFrameworkCore;
+using Annium.linq2db.Extensions.Extensions;
+using LinqToDB;
 using Server.Domain.Models;
 
 namespace Server.Db.Repositories.Implementations;
 
 internal class UserRoleRepository : IUserRoleRepository
 {
-    private readonly IContext _context;
-    private readonly IMapper _mapper;
+    private readonly ServerConnection _db;
 
-    public UserRoleRepository(
-        IContext context,
-        IMapper mapper
-    )
+    public UserRoleRepository(ServerConnection db)
     {
-        _context = context;
-        _mapper = mapper;
+        _db = db;
     }
 
-    public async Task<UserRole> SaveAsync(UserRole userRole)
+    public async Task SaveAsync(UserRole userRole)
     {
-        var entity = await _context.UserRoles
-            .FirstOrDefaultAsync(x => x.UserId == userRole.UserId && x.RoleId == userRole.RoleId);
-
-        if (entity is null)
-        {
-            entity = _mapper.Map<Entities.UserRole>(userRole);
-            _context.UserRoles.Add(entity);
-            await _context.SaveChangesAsync();
-        }
-
-        return _mapper.Map<UserRole>(entity);
+        await _db.UserRoles.InsertOrUpdateAsync(userRole);
     }
 
-    public async Task<Role[]> GetUserRolesAsync(Guid appId, Guid userId)
+    public async Task<IReadOnlyCollection<Role>> GetUserRolesAsync(Guid appId, Guid userId)
     {
-        var raw = await _context.UserRoles.AsNoTracking()
-            .Include(x => x.Role).ThenInclude(x => x.Claims).ThenInclude(x => x.Claim)
+        var entities = await _db.UserRoles
+            .LoadWith(x => x.Role).ThenLoad(x => x.Claims).ThenLoad(x => x.Claim)
             .Where(x => x.Role.AppId == appId && x.UserId == userId)
-            .ToListAsync();
+            .Select(x => x.Role)
+            .ToArrayAsync();
 
-        return raw.Select(x => new Role(
-            null!,
-            x.Role.Key,
-            x.Role.Name
-        )).ToArray();
+        return entities;
     }
 
     public async Task DeleteByIdAsync(Guid userId, Guid roleId)
     {
-        var entity = await _context.UserRoles
-            .FirstOrDefaultAsync(x => x.UserId == userId && x.RoleId == roleId);
-
-        if (entity is null)
-            return;
-
-        _context.UserRoles.Remove(entity);
-
-        await _context.SaveChangesAsync();
+        await _db.UserRoles.DeleteAsync(x => x.UserId == userId && x.RoleId == roleId);
     }
 }

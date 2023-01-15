@@ -1,96 +1,69 @@
 using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Annium.Core.Mapper;
-using Microsoft.EntityFrameworkCore;
+using Annium.linq2db.Extensions.Extensions;
+using LinqToDB;
 using Server.Domain.Models;
 
 namespace Server.Db.Repositories.Implementations;
 
 internal class RoleRepository : IRoleRepository
 {
-    private readonly IContext _context;
-    private readonly IMapper _mapper;
+    private readonly ServerConnection _db;
 
-    public RoleRepository(
-        IContext context,
-        IMapper mapper
-    )
+    public RoleRepository(ServerConnection db)
     {
-        _context = context;
-        _mapper = mapper;
+        _db = db;
     }
 
-    public async Task<Role> CreateAsync(Role role)
+    public async Task CreateAsync(Role role)
     {
-        var entity = _mapper.Map<Entities.Role>(role);
-
-        _context.Roles.Add(entity);
-        await _context.SaveChangesAsync();
-
-        return _mapper.Map<Role>(entity);
+        await _db.Roles.InsertAsync(role);
     }
 
-    public async Task<Role[]> GetAllAsync(Guid appId)
+    public async Task<IReadOnlyCollection<Role>> GetAllAsync(Guid appId)
     {
-        var raw = await _context.Roles.AsNoTracking()
-            .Include(x => x.Claims).ThenInclude(x => x.Claim)
-            .ToListAsync();
+        var entities = await _db.Roles
+            .LoadWith(x => x.Claims).ThenLoad(x => x.Claim)
+            .ToArrayAsync();
 
-        return raw.Select(_mapper.Map<Role>).ToArray();
+        return entities;
     }
 
     public async Task<Role?> TryGetByIdAsync(Guid id)
     {
-        var role = await _context.Roles.AsNoTracking()
+        var entity = await _db.Roles
             .FirstOrDefaultAsync(c => c.Id == id);
 
-        return _mapper.Map<Role?>(role);
+        return entity;
     }
 
     public async Task<Role> GetByIdAsync(Guid id)
     {
-        var role = await _context.Roles.AsNoTracking()
+        var entity = await _db.Roles
             .FirstOrDefaultAsync(c => c.Id == id);
 
-        if (role is null)
+        if (entity is null)
             throw new InvalidOperationException($"Role {id} not found");
 
-        return _mapper.Map<Role>(role);
+        return entity;
     }
 
     public async Task<Role?> TryFindByKeyAsync(Guid appId, string key)
     {
-        var role = await _context.Roles.AsNoTracking()
+        var entity = await _db.Roles
             .FirstOrDefaultAsync(c => c.AppId == appId && c.Key == key);
 
-        return _mapper.Map<Role?>(role);
+        return entity;
     }
 
-    public async Task<Role> UpdateAsync(Role role)
+    public async Task UpdateAsync(Role role)
     {
-        var entity = await _context.Roles
-            .Include(x => x.Claims).ThenInclude(x => x.Claim)
-            .SingleAsync(x => x.Id == role.Id);
-
-        entity.Key = role.Key;
-        entity.Name = role.Name;
-
-        await _context.SaveChangesAsync();
-
-        return _mapper.Map<Role>(entity);
+        await _db.Roles.UpdateAsync(role);
     }
 
     public async Task DeleteByIdAsync(Guid id)
     {
-        var entity = await _context.Roles
-            .FirstOrDefaultAsync(x => x.Id == id);
-
-        if (entity is null)
-            return;
-
-        _context.Roles.Remove(entity);
-
-        await _context.SaveChangesAsync();
+        await _db.Roles.DeleteAsync(x => x.Id == id);
     }
 }

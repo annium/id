@@ -12,6 +12,6 @@ public class TestServicePack : ServicePackBase
 
     public override void Register(IServiceContainer container, IServiceProvider provider)
     {
-        container.AddEntityFrameworkSqliteInMemory<Context>();
+        // container.AddEntityFrameworkSqliteInMemory<Context>();
     }
 }

@@ -1,109 +1,81 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Annium.Core.Mapper;
-using Microsoft.EntityFrameworkCore;
+using Annium.linq2db.Extensions.Extensions;
+using LinqToDB;
 using Server.Domain.Models;
 
 namespace Server.Db.Repositories.Implementations;
 
 internal class AppRepository : IAppRepository
 {
-    private readonly IContext _context;
-    private readonly IMapper _mapper;
+    private readonly ServerConnection _db;
 
-    public AppRepository(
-        IContext context,
-        IMapper mapper
-    )
+    public AppRepository(ServerConnection db)
     {
-        _context = context;
-        _mapper = mapper;
+        _db = db;
     }
 
-    public async Task<App> CreateAsync(App app)
+    public async Task CreateAsync(App app)
     {
-        var entity = _mapper.Map<Entities.App>(app);
-
-        _context.Apps.Add(entity);
-        await _context.SaveChangesAsync();
-
-        return _mapper.Map<App>(entity);
+        await _db.Apps.InsertAsync(app);
     }
 
-    public async Task<App[]> FindAllAsync(string name)
+    public async Task<IReadOnlyCollection<App>> FindAllAsync(string name)
     {
-        var query = _context.Apps.AsNoTracking();
+        IQueryable<App> query = _db.Apps;
 
         if (!string.IsNullOrWhiteSpace(name))
             query = query.Where(x => x.Name.StartsWith(name));
 
-        var entities = await query.ToListAsync();
+        var entities = await query.ToArrayAsync();
 
-        return entities.Select(_mapper.Map<App>).ToArray();
+        return entities;
     }
 
-    public async Task<App[]> FindMyAsync(Guid ownerId)
+    public async Task<IReadOnlyCollection<App>> FindMyAsync(Guid ownerId)
     {
-        var entities = await _context.Apps.AsNoTracking()
+        var entities = await _db.Apps
             .Where(x => x.OwnerId == ownerId)
-            .ToListAsync();
+            .ToArrayAsync();
 
-        return entities.Select(_mapper.Map<App>).ToArray();
+        return entities;
     }
 
     public async Task<App?> TryGetByIdAsync(Guid id)
     {
-        var entity = await _context.Apps.AsNoTracking()
+        var entity = await _db.Apps
             .FirstOrDefaultAsync(x => x.Id == id);
 
-        return _mapper.Map<App?>(entity);
+        return entity;
     }
 
     public async Task<App> GetByIdAsync(Guid id)
     {
-        var entity = await _context.Apps.AsNoTracking()
+        var entity = await _db.Apps
             .FirstOrDefaultAsync(x => x.Id == id);
 
         if (entity is null)
             throw new InvalidOperationException($"App {id} not found");
 
-        return _mapper.Map<App>(entity);
+        return entity;
     }
 
-    public async Task<App> UpdateAsync(App app)
+    public async Task UpdateAsync(App app)
     {
-        var entity = await _context.Apps
-            .SingleAsync(x => x.Id == app.Id);
-
-        entity.OwnerId = app.OwnerId;
-        entity.Name = app.Name;
-
-        await _context.SaveChangesAsync();
-
-        return _mapper.Map<App>(entity);
+        await _db.Apps.UpdateAsync(app);
     }
 
-    public async Task UpdateApiTokenAsync(Guid appId, Guid apiToken)
+    public async Task UpdateApiTokenAsync(Guid id, Guid apiToken)
     {
-        var entity = await _context.Apps
-            .SingleAsync(x => x.Id == appId);
-
-        entity.ApiToken = apiToken;
-
-        await _context.SaveChangesAsync();
+        var entity = await _db.Apps.SingleAsync(x => x.Id == id);
+        entity.SetApiToken(apiToken);
+        await _db.Apps.UpdateAsync(entity);
     }
 
     public async Task DeleteByIdAsync(Guid id)
     {
-        var entity = await _context.Apps
-            .FirstOrDefaultAsync(x => x.Id == id);
-
-        if (entity is null)
-            return;
-
-        _context.Apps.Remove(entity);
-
-        await _context.SaveChangesAsync();
+        await _db.Apps.DeleteAsync(x => x.Id == id);
     }
 }

@@ -1,108 +1,83 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Annium.Core.Mapper;
-using Microsoft.EntityFrameworkCore;
+using Annium.linq2db.Extensions.Extensions;
+using LinqToDB;
 using Server.Domain.Models;
 
 namespace Server.Db.Repositories.Implementations;
 
 internal class CompanyRepository : ICompanyRepository
 {
-    private readonly IContext _context;
-    private readonly IMapper _mapper;
+    private readonly ServerConnection _db;
 
-    public CompanyRepository(
-        IContext context,
-        IMapper mapper
-    )
+    public CompanyRepository(ServerConnection db)
     {
-        _context = context;
-        _mapper = mapper;
+        _db = db;
     }
 
-    public async Task<Company> CreateAsync(Company company)
+    public async Task CreateAsync(Company company)
     {
-        var entity = _mapper.Map<Entities.Company>(company);
-
-        _context.Companies.Add(entity);
-        await _context.SaveChangesAsync();
-
-        return _mapper.Map<Company>(entity);
+        await _db.Companies.InsertAsync(company);
     }
 
-    public async Task<Company[]> FindAllAsync(string name)
+    public async Task<IReadOnlyCollection<Company>> FindAllAsync(string name)
     {
-        var query = _context.Companies.AsNoTracking();
+        IQueryable<Company> query = _db.Companies;
 
         if (!string.IsNullOrWhiteSpace(name))
             query = query.Where(x => x.Name.StartsWith(name));
 
-        var companies = await query.ToListAsync();
+        var entities = await query.ToArrayAsync();
 
-        return companies.Select(_mapper.Map<Company>).ToArray();
+        return entities;
     }
 
-    public async Task<Company[]> FindMyAsync(Guid ownerId)
+    public async Task<IReadOnlyCollection<Company>> FindMyAsync(Guid ownerId)
     {
-        var companies = await _context.Companies.AsNoTracking()
+        var entities = await _db.Companies
             .Where(x => x.OwnerId == ownerId)
-            .ToListAsync();
+            .ToArrayAsync();
 
-        return companies.Select(_mapper.Map<Company>).ToArray();
+        return entities;
     }
 
-    public async Task<Company[]> GetAllByIdsAsync(Guid[] ids)
+    public async Task<IReadOnlyCollection<Company>> GetAllByIdsAsync(IReadOnlyCollection<Guid> ids)
     {
-        var entities = await _context.Companies.AsNoTracking()
+        var entities = await _db.Companies
             .Where(x => ids.Contains(x.Id))
             .ToArrayAsync();
 
-        return entities.Select(_mapper.Map<Company>).ToArray();
+        return entities;
     }
 
     public async Task<Company?> TryGetByIdAsync(Guid id)
     {
-        var entity = await _context.Companies.AsNoTracking()
+        var entity = await _db.Companies
             .FirstOrDefaultAsync(x => x.Id == id);
 
-        return _mapper.Map<Company?>(entity);
+        return entity;
     }
 
     public async Task<Company> GetByIdAsync(Guid id)
     {
-        var entity = await _context.Companies.AsNoTracking()
+        var entity = await _db.Companies
             .FirstOrDefaultAsync(x => x.Id == id);
 
         if (entity is null)
             throw new InvalidOperationException($"Company {id} not found");
 
-        return _mapper.Map<Company>(entity);
+        return entity;
     }
 
-    public async Task<Company> UpdateAsync(Company company)
+    public async Task UpdateAsync(Company company)
     {
-        var entity = await _context.Companies
-            .SingleAsync(x => x.Id == company.Id);
-
-        entity.OwnerId = company.OwnerId;
-        entity.Name = company.Name;
-
-        await _context.SaveChangesAsync();
-
-        return _mapper.Map<Company>(entity);
+        await _db.Companies.UpdateAsync(company);
     }
 
     public async Task DeleteByIdAsync(Guid id)
     {
-        var entity = await _context.Companies
-            .FirstOrDefaultAsync(x => x.Id == id);
-
-        if (entity is null)
-            return;
-
-        _context.Companies.Remove(entity);
-
-        await _context.SaveChangesAsync();
+        await _db.Companies.DeleteAsync(x => x.Id == id);
     }
 }

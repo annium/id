@@ -7,7 +7,7 @@ namespace Server.Db.Repositories;
 
 public interface ICompanyUserClaimRepository
 {
-    Task<CompanyUserClaim> SaveAsync(CompanyUserClaim claim);
-    Task<IReadOnlyDictionary<Guid, ClaimValue[]>> GetCompaniesUserClaimsAsync(Guid appId, Guid userId);
+    Task SaveAsync(CompanyUserClaim claim);
+    Task<IReadOnlyDictionary<Guid, IReadOnlyCollection<CompanyUserClaim>>> GetCompaniesUserClaimsAsync(Guid appId, Guid userId);
     Task DeleteByIdAsync(Guid companyId, Guid userId, Guid claimId);
 }

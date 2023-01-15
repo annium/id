@@ -2,70 +2,42 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Annium.Core.Mapper;
-using Microsoft.EntityFrameworkCore;
+using Annium.linq2db.Extensions.Extensions;
+using LinqToDB;
 using Server.Domain.Models;
 
 namespace Server.Db.Repositories.Implementations;
 
 internal class CompanyUserClaimRepository : ICompanyUserClaimRepository
 {
-    private readonly IContext _context;
-    private readonly IMapper _mapper;
+    private readonly ServerConnection _db;
 
-    public CompanyUserClaimRepository(
-        IContext context,
-        IMapper mapper
-    )
+    public CompanyUserClaimRepository(ServerConnection db)
     {
-        _context = context;
-        _mapper = mapper;
+        _db = db;
     }
 
-    public async Task<CompanyUserClaim> SaveAsync(CompanyUserClaim claim)
+    public async Task SaveAsync(CompanyUserClaim claim)
     {
-        var entity = await _context.CompanyUserClaims
-            .FirstOrDefaultAsync(x => x.CompanyId == claim.CompanyId && x.UserId == claim.UserId && x.ClaimId == claim.ClaimId);
-
-        if (entity is null)
-        {
-            entity = _mapper.Map<Entities.CompanyUserClaim>(claim);
-            _context.CompanyUserClaims.Add(entity);
-        }
-        else
-        {
-            entity.Value = claim.Value;
-        }
-
-        await _context.SaveChangesAsync();
-
-        return _mapper.Map<CompanyUserClaim>(entity);
+        await _db.CompanyUserClaims.InsertOrUpdateAsync(claim);
     }
 
-    public async Task<IReadOnlyDictionary<Guid, ClaimValue[]>> GetCompaniesUserClaimsAsync(Guid appId, Guid userId)
+    public async Task<IReadOnlyDictionary<Guid, IReadOnlyCollection<CompanyUserClaim>>> GetCompaniesUserClaimsAsync(Guid appId, Guid userId)
     {
-        var raw = await _context.CompanyUserClaims.AsNoTracking()
-            .Include(x => x.Claim)
+        var entities = await _db.CompanyUserClaims
+            .LoadWith(x => x.Claim)
             .Where(x => x.Claim.AppId == appId && x.UserId == userId)
-            .ToListAsync();
+            .ToArrayAsync();
 
-        return raw.GroupBy(x => x.CompanyId)
+        return entities.GroupBy(x => x.CompanyId)
             .ToDictionary(
                 x => x.Key,
-                x => x.Select(_mapper.Map<ClaimValue>).ToArray()
+                x => (IReadOnlyCollection<CompanyUserClaim>) x.ToArray()
             );
     }
 
     public async Task DeleteByIdAsync(Guid companyId, Guid userId, Guid claimId)
     {
-        var entity = await _context.CompanyUserClaims
-            .FirstOrDefaultAsync(x => x.CompanyId == companyId && x.UserId == userId && x.ClaimId == claimId);
-
-        if (entity is null)
-            return;
-
-        _context.CompanyUserClaims.Remove(entity);
-
-        await _context.SaveChangesAsync();
+        await _db.CompanyUserClaims.DeleteAsync(x => x.CompanyId == companyId && x.UserId == userId && x.ClaimId == claimId);
     }
 }

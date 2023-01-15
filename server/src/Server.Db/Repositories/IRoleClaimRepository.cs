@@ -6,6 +6,6 @@ namespace Server.Db.Repositories;
 
 public interface IRoleClaimRepository
 {
-    Task<RoleClaim> SaveAsync(RoleClaim claim);
+    Task SaveAsync(RoleClaim claim);
     Task DeleteByIdAsync(Guid roleId, Guid claimId);
 }

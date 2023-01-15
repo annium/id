@@ -1,95 +1,70 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Annium.Core.Mapper;
-using Microsoft.EntityFrameworkCore;
+using Annium.linq2db.Extensions.Extensions;
+using LinqToDB;
 using Server.Domain.Models;
 
 namespace Server.Db.Repositories.Implementations;
 
 internal class ClaimRepository : IClaimRepository
 {
-    private readonly IContext _context;
-    private readonly IMapper _mapper;
+    private readonly ServerConnection _db;
 
-    public ClaimRepository(
-        IContext context,
-        IMapper mapper
-    )
+    public ClaimRepository(ServerConnection db)
     {
-        _context = context;
-        _mapper = mapper;
+        _db = db;
     }
 
-    public async Task<Claim> CreateAsync(Claim claim)
+    public async Task CreateAsync(Claim claim)
     {
-        var entity = _mapper.Map<Entities.Claim>(claim);
-
-        _context.Claims.Add(entity);
-        await _context.SaveChangesAsync();
-
-        return _mapper.Map<Claim>(entity);
+        await _db.Claims.InsertAsync(claim);
     }
 
-    public async Task<Claim[]> GetAllAsync(Guid appId)
+    public async Task<IReadOnlyCollection<Claim>> GetAllAsync(Guid appId)
     {
-        var claims = await _context.Claims.AsNoTracking()
+        var entities = await _db.Claims
             .Where(x => x.AppId == appId)
             .ToArrayAsync();
 
-        return claims.Select(_mapper.Map<Claim>).ToArray();
+        return entities;
     }
 
     public async Task<Claim?> TryGetByIdAsync(Guid id)
     {
-        var claim = await _context.Claims.AsNoTracking()
+        var entity = await _db.Claims
             .FirstOrDefaultAsync(x => x.Id == id);
 
-        return _mapper.Map<Claim?>(claim);
+        return entity;
     }
 
     public async Task<Claim> GetByIdAsync(Guid id)
     {
-        var claim = await _context.Claims.AsNoTracking()
+        var entity = await _db.Claims
             .FirstOrDefaultAsync(x => x.Id == id);
 
-        if (claim is null)
+        if (entity is null)
             throw new InvalidOperationException($"Claim {id} not found");
 
-        return _mapper.Map<Claim>(claim);
+        return entity;
     }
 
     public async Task<Claim?> TryFindByKeyAsync(Guid appId, string key)
     {
-        var claim = await _context.Claims.AsNoTracking()
+        var entity = await _db.Claims
             .FirstOrDefaultAsync(x => x.AppId == appId && x.Key == key);
 
-        return _mapper.Map<Claim?>(claim);
+        return entity;
     }
 
-    public async Task<Claim> UpdateAsync(Claim claim)
+    public async Task UpdateAsync(Claim claim)
     {
-        var entity = await _context.Claims
-            .SingleAsync(x => x.Id == claim.Id);
-
-        entity.Key = claim.Key;
-        entity.Name = claim.Name;
-
-        await _context.SaveChangesAsync();
-
-        return _mapper.Map<Claim>(entity);
+        await _db.Claims.UpdateAsync(claim);
     }
 
     public async Task DeleteByIdAsync(Guid id)
     {
-        var entity = await _context.Claims
-            .FirstOrDefaultAsync(x => x.Id == id);
-
-        if (entity is null)
-            return;
-
-        _context.Claims.Remove(entity);
-
-        await _context.SaveChangesAsync();
+        await _db.Claims.DeleteAsync(x => x.Id == id);
     }
 }

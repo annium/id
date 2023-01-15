@@ -2,65 +2,42 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Annium.Core.Mapper;
-using Microsoft.EntityFrameworkCore;
+using Annium.linq2db.Extensions.Extensions;
+using LinqToDB;
 using Server.Domain.Models;
 
 namespace Server.Db.Repositories.Implementations;
 
 internal class CompanyUserRoleRepository : ICompanyUserRoleRepository
 {
-    private readonly IContext _context;
-    private readonly IMapper _mapper;
+    private readonly ServerConnection _db;
 
-    public CompanyUserRoleRepository(
-        IContext context,
-        IMapper mapper
-    )
+    public CompanyUserRoleRepository(ServerConnection db)
     {
-        _context = context;
-        _mapper = mapper;
+        _db = db;
     }
 
-    public async Task<CompanyUserRole> SaveAsync(CompanyUserRole userRole)
+    public async Task SaveAsync(CompanyUserRole userRole)
     {
-        var entity = await _context.CompanyUserRoles
-            .FirstOrDefaultAsync(x => x.CompanyId == userRole.CompanyId && x.UserId == userRole.UserId && x.RoleId == userRole.RoleId);
-
-        if (entity is null)
-        {
-            entity = _mapper.Map<Entities.CompanyUserRole>(userRole);
-            _context.CompanyUserRoles.Add(entity);
-            await _context.SaveChangesAsync();
-        }
-
-        return _mapper.Map<CompanyUserRole>(entity);
+        await _db.CompanyUserRoles.InsertOrUpdateAsync(userRole);
     }
 
-    public async Task<IReadOnlyDictionary<Guid, CompanyRole[]>> GetCompaniesUserRolesAsync(Guid appId, Guid userId)
+    public async Task<IReadOnlyDictionary<Guid, IReadOnlyCollection<CompanyRole>>> GetCompaniesUserRolesAsync(Guid appId, Guid userId)
     {
-        var raw = await _context.CompanyUserRoles.AsNoTracking()
-            .Include(x => x.Role).ThenInclude(x => x.Claims).ThenInclude(x => x.Claim)
+        var entities = await _db.CompanyUserRoles
+            .LoadWith(x => x.Role).ThenLoad(x => x.Claims).ThenLoad(x => x.Claim)
             .Where(x => x.Role.AppId == appId && x.UserId == userId)
-            .ToListAsync();
+            .ToArrayAsync();
 
-        return raw.GroupBy(x => x.CompanyId)
+        return entities.GroupBy(x => x.CompanyId)
             .ToDictionary(
                 x => x.Key,
-                x => x.Select(_mapper.Map<CompanyRole>).ToArray()
+                x => (IReadOnlyCollection<CompanyRole>) x.Select(y => y.Role).ToArray()
             );
     }
 
     public async Task DeleteByIdAsync(Guid companyId, Guid userId, Guid roleId)
     {
-        var entity = await _context.CompanyUserRoles
-            .FirstOrDefaultAsync(x => x.CompanyId == companyId && x.UserId == userId && x.RoleId == roleId);
-
-        if (entity is null)
-            return;
-
-        _context.CompanyUserRoles.Remove(entity);
-
-        await _context.SaveChangesAsync();
+        await _db.CompanyUserRoles.DeleteAsync(x => x.CompanyId == companyId && x.UserId == userId && x.RoleId == roleId);
     }
 }
