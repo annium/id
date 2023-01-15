@@ -40,7 +40,7 @@ internal class ClaimCommandHandler :
 
         var claim = new Claim(app, request.Key, request.Name);
 
-        claim = await _claimRepository.CreateAsync(claim);
+        await _claimRepository.CreateAsync(claim);
 
         return Result.Status(OperationStatus.Ok, claim.Id);
     }

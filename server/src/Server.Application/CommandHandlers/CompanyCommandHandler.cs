@@ -38,7 +38,7 @@ internal class CompanyCommandHandler :
 
         var company = new Company(me, parent, request.Name);
 
-        company = await _companyRepository.CreateAsync(company);
+        await _companyRepository.CreateAsync(company);
 
         return Result.Status(OperationStatus.Ok, company.Id);
     }

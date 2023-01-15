@@ -54,7 +54,7 @@ internal class TokenGenerator : ITokenGenerator
         var companyTokens = companies.Select(company => BuildCompanyToken(
             company,
             companyUserRoles.ContainsKey(company.Id) ? companyUserRoles[company.Id] : Array.Empty<CompanyRole>(),
-            companyUserClaims.ContainsKey(company.Id) ? companyUserClaims[company.Id] : Array.Empty<ClaimValue>()
+            companyUserClaims.ContainsKey(company.Id) ? companyUserClaims[company.Id] : Array.Empty<CompanyUserClaim>()
         )).ToArray();
 
         var token = new IdToken(login.UserId, login.Id, appToken, companyTokens);
@@ -71,8 +71,8 @@ internal class TokenGenerator : ITokenGenerator
 
     private AppToken BuildAppToken(
         App app,
-        Role[] userRoles,
-        ClaimValue[] userClaims
+        IReadOnlyCollection<Role> userRoles,
+        IReadOnlyCollection<UserClaim> userClaims
     )
     {
         var roles = userRoles.Select(r => r.Key).ToArray();
@@ -82,15 +82,15 @@ internal class TokenGenerator : ITokenGenerator
         foreach (var roleClaim in role.Claims)
             claims[roleClaim.Claim.Key] = roleClaim.Value;
         foreach (var userClaim in userClaims)
-            claims[userClaim.Key] = userClaim.Value;
+            claims[userClaim.Claim.Key] = userClaim.Value;
 
         return new AppToken(app.Id, roles, claims);
     }
 
     private CompanyToken BuildCompanyToken(
         Company company,
-        CompanyRole[] userRoles,
-        ClaimValue[] userClaims
+        IReadOnlyCollection<CompanyRole> userRoles,
+        IReadOnlyCollection<CompanyUserClaim> userClaims
     )
     {
         var roles = userRoles.Select(r => r.Key).ToArray();
@@ -100,7 +100,7 @@ internal class TokenGenerator : ITokenGenerator
         foreach (var roleClaim in role.Claims)
             claims[roleClaim.Claim.Key] = roleClaim.Value;
         foreach (var userClaim in userClaims)
-            claims[userClaim.Key] = userClaim.Value;
+            claims[userClaim.Claim.Key] = userClaim.Value;
 
         return new CompanyToken(company.Id, roles, claims);
     }

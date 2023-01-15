@@ -55,7 +55,7 @@ internal class MeCommandHandler :
             request.Referral
         );
 
-        user = await _userRepository.CreateAsync(user);
+        await _userRepository.CreateAsync(user);
 
         var result = await _emailService.SendEmailConfirmationAsync(user, request.ServerUri);
         if (result.IsFailure)

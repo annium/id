@@ -33,7 +33,7 @@ internal class AppCommandHandler :
     {
         var app = new App(request.Me, request.Name, Guid.NewGuid());
 
-        app = await _appRepository.CreateAsync(app);
+        await _appRepository.CreateAsync(app);
 
         return Result.Status(OperationStatus.Ok, app.Id);
     }

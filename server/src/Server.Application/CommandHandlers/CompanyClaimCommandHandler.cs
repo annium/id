@@ -44,7 +44,7 @@ internal class CompanyClaimCommandHandler :
             request.Name
         );
 
-        claim = await _companyClaimRepository.CreateAsync(claim);
+        await _companyClaimRepository.CreateAsync(claim);
 
         return Result.Status(OperationStatus.Ok, claim.Id);
     }

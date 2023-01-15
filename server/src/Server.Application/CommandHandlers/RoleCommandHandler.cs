@@ -45,7 +45,7 @@ internal class RoleCommandHandler :
 
         var role = new Role(app, request.Key, request.Name);
 
-        role = await _roleRepository.CreateAsync(role);
+        await _roleRepository.CreateAsync(role);
 
         return Result.Status(OperationStatus.Ok, role.Id);
     }
