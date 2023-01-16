@@ -294,7 +294,10 @@ public class CompanyRoleControllerTest : IntegrationTestBase
         roles.Has(1);
         roles.At(0).Id.IsEqual(role.Id);
         var c = roles.At(0).Claims.At(0);
-        c.IsEqual(new CompanyClaimValueResponse { Id = claim.Id, Key = claim.Key, Name = claim.Name, Value = claimValue });
+        c.RoleId.Is(role.Id);
+        c.ClaimId.Is(claim.Id);
+        c.Claim.IsEqual(new CompanyClaimResponse { Id = claim.Id, AppId = claim.AppId, Key = claim.Key, Name = claim.Name });
+        c.Value.Is(claimValue);
     }
 
     [Fact]

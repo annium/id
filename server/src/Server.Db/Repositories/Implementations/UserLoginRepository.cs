@@ -76,6 +76,6 @@ internal class UserLoginRepository : IUserLoginRepository
 
     public async Task DeleteAllByUserIdAsync(Guid id)
     {
-        await _db.UserLogins.DeleteAsync(x => x.Id == id);
+        await _db.UserLogins.DeleteAsync(x => x.UserId == id);
     }
 }

@@ -27,10 +27,9 @@ internal class UserRoleRepository : IUserRoleRepository
         var entities = await _db.UserRoles
             .LoadWith(x => x.Role).ThenLoad(x => x.Claims).ThenLoad(x => x.Claim)
             .Where(x => x.Role.AppId == appId && x.UserId == userId)
-            .Select(x => x.Role)
             .ToArrayAsync();
 
-        return entities;
+        return entities.Select(x => x.Role).ToArray();
     }
 
     public async Task DeleteByIdAsync(Guid userId, Guid roleId)

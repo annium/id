@@ -5,7 +5,6 @@ using Annium.Testing;
 using Server.TestClient;
 using Server.ViewModels.Requests.Roles;
 using Server.ViewModels.Responses.Claims;
-using Server.ViewModels.Responses.Roles;
 using Xunit;
 
 namespace Server.IntegrationTests.Controllers;
@@ -118,17 +117,12 @@ public class RoleControllerTest : IntegrationTestBase
         var roles = await Id(token).Role.ListRoles(app.Id).GetData();
 
         // assert
-        roles.IsEqual(new[]
-        {
-            new RoleResponse
-            {
-                Id = role.Id,
-                AppId = app.Id,
-                Key = roleKey,
-                Name = roleName,
-                Claims = Array.Empty<ClaimValueResponse>()
-            }
-        });
+        roles.Has(1);
+        roles.At(0).Id.Is(role.Id);
+        roles.At(0).AppId.Is(role.AppId);
+        roles.At(0).Key.Is(role.Key);
+        roles.At(0).Name.Is(role.Name);
+        roles.At(0).Claims.IsEmpty();
     }
 
     [Fact]
@@ -313,7 +307,10 @@ public class RoleControllerTest : IntegrationTestBase
         roles.Has(1);
         roles.At(0).Id.IsEqual(role.Id);
         var c = roles.At(0).Claims.At(0);
-        c.IsEqual(new ClaimValueResponse { Id = claim.Id, Key = claim.Key, Name = claim.Name, Value = claimValue });
+        c.RoleId.Is(role.Id);
+        c.ClaimId.Is(claim.Id);
+        c.Claim.IsEqual(new ClaimResponse { Id = claim.Id, AppId = claim.AppId, Key = claim.Key, Name = claim.Name });
+        c.Value.Is(claimValue);
     }
 
     [Fact]

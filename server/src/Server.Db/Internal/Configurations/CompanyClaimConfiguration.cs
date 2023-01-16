@@ -12,6 +12,7 @@ internal class CompanyClaimConfiguration : IdEntityConfiguration<CompanyClaim, G
         builder.HasSchemaName(Constants.Schema).HasTableName("company_claims");
         base.Configure(builder);
         builder.Association(x => x.App, x => x.AppId, x => x.Id, false);
+        builder.Property(x => x.Key).IsColumn();
         builder.Property(x => x.Name).IsColumn();
     }
 }

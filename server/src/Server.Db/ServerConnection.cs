@@ -32,6 +32,7 @@ public class ServerConnection : DataConnectionBase, ILogSubject<ServerConnection
         Logger = logger;
         Apps = this.GetTable<App>();
         Claims = this.GetTable<Claim>();
+        Companies = this.GetTable<Company>();
         CompanyClaims = this.GetTable<CompanyClaim>();
         CompanyRoles = this.GetTable<CompanyRole>();
         CompanyRoleClaims = this.GetTable<CompanyRoleClaim>();
