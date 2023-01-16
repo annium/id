@@ -14,5 +14,6 @@ internal class RoleConfiguration : IdEntityConfiguration<Role, Guid>
         builder.Association(x => x.App, x => x.AppId, x => x.Id, false);
         builder.Property(x => x.Key).IsColumn();
         builder.Property(x => x.Name).IsColumn();
+        builder.Association(x => x.Claims, x => x.Id, x => x.RoleId, false);
     }
 }
