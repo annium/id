@@ -22,7 +22,7 @@ public class LoginControllerTest : IntegrationTestBase
         var response = await Id().Login.LogIn(app.Id, request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
+        response.StatusCode.Is(HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -37,7 +37,7 @@ public class LoginControllerTest : IntegrationTestBase
         var response = await Id().Login.LogIn(app.Id, request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -52,7 +52,7 @@ public class LoginControllerTest : IntegrationTestBase
         var response = await Id().Login.LogIn(app.Id, request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
+        response.StatusCode.Is(HttpStatusCode.Forbidden);
     }
 
     [Fact]
@@ -67,7 +67,7 @@ public class LoginControllerTest : IntegrationTestBase
         var response = await Id().Login.LogIn(app.Id, request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.OK);
+        response.StatusCode.Is(HttpStatusCode.OK);
     }
 
     [Fact]
@@ -82,7 +82,7 @@ public class LoginControllerTest : IntegrationTestBase
         var response = await Id(token).Login.UpdateToken(app.Id, Guid.NewGuid());
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -116,6 +116,6 @@ public class LoginControllerTest : IntegrationTestBase
         var response = await Id(token).Login.LogOut(app.Id);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.OK);
+        response.StatusCode.Is(HttpStatusCode.OK);
     }
 }

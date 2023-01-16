@@ -58,7 +58,7 @@ public class UserControllerTest : IntegrationTestBase
         var response = await Id(token).User.AddRoleToUser(Guid.NewGuid(), Guid.NewGuid());
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -76,7 +76,7 @@ public class UserControllerTest : IntegrationTestBase
         var response = await Id(token).User.AddRoleToUser(role.Id, user.Id);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
+        response.StatusCode.Is(HttpStatusCode.Forbidden);
     }
 
     [Fact]
@@ -89,7 +89,7 @@ public class UserControllerTest : IntegrationTestBase
         var response = await Id(token).User.AddRoleToUser(Guid.NewGuid(), Guid.NewGuid());
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -103,7 +103,7 @@ public class UserControllerTest : IntegrationTestBase
         var response = await Id(token).User.AddRoleToUser(Guid.NewGuid(), other.Id);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -119,7 +119,7 @@ public class UserControllerTest : IntegrationTestBase
         var response = await Id(token).User.AddRoleToUser(role.Id, other.Id);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.OK);
+        response.StatusCode.Is(HttpStatusCode.OK);
     }
 
     [Fact]
@@ -132,7 +132,7 @@ public class UserControllerTest : IntegrationTestBase
         var response = await Id(token).User.DeleteRoleFromUser(Guid.NewGuid(), Guid.NewGuid());
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -149,7 +149,7 @@ public class UserControllerTest : IntegrationTestBase
         var response = await Id(token).User.DeleteRoleFromUser(role.Id, owner.Id);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
+        response.StatusCode.Is(HttpStatusCode.Forbidden);
     }
 
     [Fact]
@@ -162,7 +162,7 @@ public class UserControllerTest : IntegrationTestBase
         var response = await Id(token).User.DeleteRoleFromUser(Guid.NewGuid(), Guid.NewGuid());
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -176,7 +176,7 @@ public class UserControllerTest : IntegrationTestBase
         var response = await Id(token).User.DeleteRoleFromUser(Guid.NewGuid(), other.Id);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -192,7 +192,7 @@ public class UserControllerTest : IntegrationTestBase
         var response = await Id(token).User.DeleteRoleFromUser(role.Id, other.Id);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.OK);
+        response.StatusCode.Is(HttpStatusCode.OK);
     }
 
     [Fact]
@@ -208,7 +208,7 @@ public class UserControllerTest : IntegrationTestBase
         var response = await Id(token).User.AddUserClaim(other.Id, claim.Id, "S");
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
+        response.StatusCode.Is(HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -225,7 +225,7 @@ public class UserControllerTest : IntegrationTestBase
         var response = await Id(token).User.AddUserClaim(user.Id, claim.Id);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
+        response.StatusCode.Is(HttpStatusCode.Forbidden);
     }
 
     [Fact]
@@ -238,7 +238,7 @@ public class UserControllerTest : IntegrationTestBase
         var response = await Id(token).User.AddUserClaim(Guid.NewGuid(), Guid.NewGuid());
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -252,7 +252,7 @@ public class UserControllerTest : IntegrationTestBase
         var response = await Id(token).User.AddUserClaim(other.Id, Guid.NewGuid());
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -268,7 +268,7 @@ public class UserControllerTest : IntegrationTestBase
         var response = await Id(token).User.AddUserClaim(other.Id, claim.Id);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.OK);
+        response.StatusCode.Is(HttpStatusCode.OK);
     }
 
     [Fact]
@@ -281,7 +281,7 @@ public class UserControllerTest : IntegrationTestBase
         var response = await Id(token).User.DeleteClaimFromUser(Guid.NewGuid(), Guid.NewGuid());
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -298,7 +298,7 @@ public class UserControllerTest : IntegrationTestBase
         var response = await Id(token).User.DeleteClaimFromUser(claim.Id, owner.Id);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
+        response.StatusCode.Is(HttpStatusCode.Forbidden);
     }
 
     [Fact]
@@ -311,7 +311,7 @@ public class UserControllerTest : IntegrationTestBase
         var response = await Id(token).User.DeleteClaimFromUser(Guid.NewGuid(), Guid.NewGuid());
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -325,7 +325,7 @@ public class UserControllerTest : IntegrationTestBase
         var response = await Id(token).User.DeleteClaimFromUser(Guid.NewGuid(), other.Id);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -341,6 +341,6 @@ public class UserControllerTest : IntegrationTestBase
         var response = await Id(token).User.DeleteClaimFromUser(claim.Id, other.Id);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.OK);
+        response.StatusCode.Is(HttpStatusCode.OK);
     }
 }

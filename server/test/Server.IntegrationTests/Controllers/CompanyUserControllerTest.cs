@@ -19,7 +19,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var response = await Id(token).CompanyUser.AddUser(Guid.NewGuid(), Guid.NewGuid());
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -35,7 +35,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var response = await Id(token).CompanyUser.AddUser(company.Id, user.Id);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
+        response.StatusCode.Is(HttpStatusCode.Forbidden);
     }
 
     [Fact]
@@ -49,7 +49,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var response = await Id(otherToken).CompanyUser.AddUser(company.Id, Guid.NewGuid());
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -66,10 +66,10 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var members = await Id(token).Company.GetCompanyUsers(company.Id).GetData();
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.OK);
+        response.StatusCode.Is(HttpStatusCode.OK);
         members.Has(1);
         var member = members.At(0);
-        member.Id.IsEqual(user.Id);
+        member.Id.Is(user.Id);
     }
 
     [Fact]
@@ -82,7 +82,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var response = await Id(token).CompanyUser.AddUserRole(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -100,7 +100,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var response = await Id(token).CompanyUser.AddUserRole(company.Id, user.Id, role.Id);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
+        response.StatusCode.Is(HttpStatusCode.Forbidden);
     }
 
     [Fact]
@@ -114,7 +114,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var response = await Id(otherToken).CompanyUser.AddUserRole(company.Id, Guid.NewGuid(), Guid.NewGuid());
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -132,7 +132,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var response = await Id(otherToken).CompanyUser.AddUserRole(company.Id, user.Id, role.Id);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
+        response.StatusCode.Is(HttpStatusCode.Forbidden);
     }
 
     [Fact]
@@ -148,7 +148,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         // act
         var response = await Id(otherToken).CompanyUser.AddUserRole(company.Id, user.Id, Guid.NewGuid());
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -167,7 +167,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var response = await Id(otherToken).CompanyUser.AddUserRole(company.Id, user.Id, role.Id);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.OK);
+        response.StatusCode.Is(HttpStatusCode.OK);
     }
 
     [Fact]
@@ -180,7 +180,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var response = await Id(token).CompanyUser.DeleteCompanyRoleFromCompanyUser(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -198,7 +198,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var response = await Id(token).CompanyUser.DeleteCompanyRoleFromCompanyUser(company.Id, role.Id, user.Id);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
+        response.StatusCode.Is(HttpStatusCode.Forbidden);
     }
 
     [Fact]
@@ -212,7 +212,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var response = await Id(otherToken).CompanyUser.DeleteCompanyRoleFromCompanyUser(company.Id, Guid.NewGuid(), Guid.NewGuid());
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -230,7 +230,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var response = await Id(otherToken).CompanyUser.DeleteCompanyRoleFromCompanyUser(company.Id, role.Id, user.Id);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
+        response.StatusCode.Is(HttpStatusCode.Forbidden);
     }
 
     [Fact]
@@ -247,7 +247,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var response = await Id(otherToken).CompanyUser.DeleteCompanyRoleFromCompanyUser(company.Id, Guid.NewGuid(), user.Id);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -267,7 +267,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var response = await Id(otherToken).CompanyUser.DeleteCompanyRoleFromCompanyUser(company.Id, role.Id, user.Id);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.OK);
+        response.StatusCode.Is(HttpStatusCode.OK);
     }
 
     [Fact]
@@ -280,7 +280,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var response = await Id(token).CompanyUser.AddUserClaim(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), "x");
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
+        response.StatusCode.Is(HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -293,7 +293,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var response = await Id(token).CompanyUser.AddUserClaim(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -311,7 +311,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var response = await Id(token).CompanyUser.AddUserClaim(company.Id, user.Id, claim.Id);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
+        response.StatusCode.Is(HttpStatusCode.Forbidden);
     }
 
     [Fact]
@@ -325,7 +325,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var response = await Id(otherToken).CompanyUser.AddUserClaim(company.Id, Guid.NewGuid(), Guid.NewGuid());
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -343,7 +343,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var response = await Id(otherToken).CompanyUser.AddUserClaim(company.Id, user.Id, claim.Id);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
+        response.StatusCode.Is(HttpStatusCode.Forbidden);
     }
 
     [Fact]
@@ -360,7 +360,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var response = await Id(otherToken).CompanyUser.AddUserClaim(company.Id, user.Id, Guid.NewGuid());
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -379,7 +379,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var response = await Id(otherToken).CompanyUser.AddUserClaim(company.Id, user.Id, claim.Id);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.OK);
+        response.StatusCode.Is(HttpStatusCode.OK);
     }
 
     [Fact]
@@ -392,7 +392,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var response = await Id(token).CompanyUser.AddUserClaim(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -410,7 +410,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var response = await Id(otherToken).CompanyUser.DeleteCompanyClaimFromCompanyUser(claim.Id, company.Id, user.Id);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
+        response.StatusCode.Is(HttpStatusCode.Forbidden);
     }
 
     [Fact]
@@ -424,7 +424,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var response = await Id(otherToken).CompanyUser.DeleteCompanyClaimFromCompanyUser(Guid.NewGuid(), company.Id, Guid.NewGuid());
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -442,7 +442,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var response = await Id(otherToken).CompanyUser.DeleteCompanyClaimFromCompanyUser(claim.Id, company.Id, user.Id);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
+        response.StatusCode.Is(HttpStatusCode.Forbidden);
     }
 
     [Fact]
@@ -459,7 +459,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var response = await Id(otherToken).CompanyUser.DeleteCompanyClaimFromCompanyUser(Guid.NewGuid(), company.Id, user.Id);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -479,7 +479,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var response = await Id(otherToken).CompanyUser.DeleteCompanyClaimFromCompanyUser(claim.Id, company.Id, user.Id);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.OK);
+        response.StatusCode.Is(HttpStatusCode.OK);
     }
 
     [Fact]
@@ -492,7 +492,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var response = await Id(token).CompanyUser.DeleteUserFromCompany(Guid.NewGuid(), Guid.NewGuid());
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -508,7 +508,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var response = await Id(token).CompanyUser.DeleteUserFromCompany(company.Id, user.Id);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
+        response.StatusCode.Is(HttpStatusCode.Forbidden);
     }
 
     [Fact]
@@ -522,7 +522,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var response = await Id(otherToken).CompanyUser.DeleteUserFromCompany(company.Id, Guid.NewGuid());
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -538,7 +538,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var response = await Id(otherToken).CompanyUser.DeleteUserFromCompany(company.Id, user.Id);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
+        response.StatusCode.Is(HttpStatusCode.Forbidden);
     }
 
     [Fact]
@@ -555,6 +555,6 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var response = await Id(otherToken).CompanyUser.DeleteUserFromCompany(company.Id, user.Id);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.OK);
+        response.StatusCode.Is(HttpStatusCode.OK);
     }
 }

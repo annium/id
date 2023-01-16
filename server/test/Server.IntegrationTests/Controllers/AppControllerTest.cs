@@ -6,7 +6,6 @@ using Annium.Id.Core;
 using Annium.Testing;
 using Server.TestClient;
 using Server.ViewModels.Requests.Apps;
-using Server.ViewModels.Responses.Apps;
 using Xunit;
 
 namespace Server.IntegrationTests.Controllers;
@@ -24,7 +23,7 @@ public class AppControllerTest : IntegrationTestBase
         var response = await Id(token).App.CreateApp(request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
+        response.StatusCode.Is(HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -40,7 +39,7 @@ public class AppControllerTest : IntegrationTestBase
 
         // assert
         apps.Data.Data.Has(2);
-        app.Name.IsEqual(appName);
+        app.Name.Is(appName);
     }
 
     [Fact]
@@ -53,7 +52,7 @@ public class AppControllerTest : IntegrationTestBase
         var response = await Id(token).App.GetAppApiToken(Guid.NewGuid());
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -68,7 +67,7 @@ public class AppControllerTest : IntegrationTestBase
         var response = await Id(token).App.GetAppApiToken(app.Id);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
+        response.StatusCode.Is(HttpStatusCode.Forbidden);
     }
 
     [Fact]
@@ -95,7 +94,7 @@ public class AppControllerTest : IntegrationTestBase
         var response = await Id(token).App.UpdateAppApiToken(Guid.NewGuid());
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -110,7 +109,7 @@ public class AppControllerTest : IntegrationTestBase
         var response = await Id(token).App.UpdateAppApiToken(app.Id);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
+        response.StatusCode.Is(HttpStatusCode.Forbidden);
     }
 
     [Fact]
@@ -138,7 +137,7 @@ public class AppControllerTest : IntegrationTestBase
 
         // assert
         response.Has(1);
-        response.At(0).Id.IsEqual(Constants.IdAppId);
+        response.At(0).Id.Is(Constants.IdAppId);
     }
 
     [Fact]
@@ -195,7 +194,7 @@ public class AppControllerTest : IntegrationTestBase
         var response = await Id(token).App.UpdateApp(app.Id, request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
+        response.StatusCode.Is(HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -209,7 +208,7 @@ public class AppControllerTest : IntegrationTestBase
         var response = await Id(token).App.UpdateApp(Guid.NewGuid(), request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -225,7 +224,7 @@ public class AppControllerTest : IntegrationTestBase
         var response = await Id(token).App.UpdateApp(app.Id, request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
+        response.StatusCode.Is(HttpStatusCode.Forbidden);
     }
 
     [Fact]
@@ -241,8 +240,9 @@ public class AppControllerTest : IntegrationTestBase
         var result = await Id(token).App.GetApp(app.Id).GetData();
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.OK);
-        result.IsEqual(new AppResponse { Id = app.Id, Name = request.Name });
+        response.StatusCode.Is(HttpStatusCode.OK);
+        result.Id.Is(app.Id);
+        result.Name.Is(request.Name);
     }
 
     [Fact]
@@ -255,7 +255,7 @@ public class AppControllerTest : IntegrationTestBase
         var response = await Id(token).App.SetAppOwner(Guid.NewGuid(), Guid.NewGuid());
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -271,7 +271,7 @@ public class AppControllerTest : IntegrationTestBase
         var response = await Id(token).App.SetAppOwner(app.Id, me.Id);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
+        response.StatusCode.Is(HttpStatusCode.Forbidden);
     }
 
     [Fact]
@@ -285,7 +285,7 @@ public class AppControllerTest : IntegrationTestBase
         var response = await Id(token).App.SetAppOwner(app.Id, Guid.NewGuid());
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -302,7 +302,7 @@ public class AppControllerTest : IntegrationTestBase
         var appTokenResult = await Id(otherToken).App.GetAppApiToken(app.Id).GetResult();
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.OK);
+        response.StatusCode.Is(HttpStatusCode.OK);
         appTokenResult.HasErrors.IsFalse();
         appTokenResult.Data.IsNotDefault();
     }
@@ -317,7 +317,7 @@ public class AppControllerTest : IntegrationTestBase
         var response = await Id(token).App.DeleteApp(Guid.NewGuid());
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -332,7 +332,7 @@ public class AppControllerTest : IntegrationTestBase
         var response = await Id(token).App.DeleteApp(app.Id);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
+        response.StatusCode.Is(HttpStatusCode.Forbidden);
     }
 
     [Fact]
@@ -346,6 +346,6 @@ public class AppControllerTest : IntegrationTestBase
         var response = await Id(token).App.DeleteApp(app.Id);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.OK);
+        response.StatusCode.Is(HttpStatusCode.OK);
     }
 }

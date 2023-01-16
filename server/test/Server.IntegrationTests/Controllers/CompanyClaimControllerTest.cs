@@ -21,7 +21,7 @@ public class CompanyClaimControllerTest : IntegrationTestBase
         var response = await Id(token).CompanyClaim.CreateCompanyClaim(request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
+        response.StatusCode.Is(HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -35,7 +35,7 @@ public class CompanyClaimControllerTest : IntegrationTestBase
         var response = await Id(token).CompanyClaim.CreateCompanyClaim(request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -52,7 +52,7 @@ public class CompanyClaimControllerTest : IntegrationTestBase
         var response = await Id(token).CompanyClaim.CreateCompanyClaim(request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
+        response.StatusCode.Is(HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -68,7 +68,7 @@ public class CompanyClaimControllerTest : IntegrationTestBase
         var response = await Id(token).CompanyClaim.CreateCompanyClaim(request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
+        response.StatusCode.Is(HttpStatusCode.Forbidden);
     }
 
     [Fact]
@@ -98,7 +98,7 @@ public class CompanyClaimControllerTest : IntegrationTestBase
         var response = await Id(token).CompanyClaim.ListCompanyClaims(Guid.NewGuid());
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -114,7 +114,7 @@ public class CompanyClaimControllerTest : IntegrationTestBase
 
         // assert
         claims.Has(1);
-        claims.At(0).Id.IsEqual(claim.Id);
+        claims.At(0).Id.Is(claim.Id);
     }
 
     [Fact]
@@ -128,7 +128,7 @@ public class CompanyClaimControllerTest : IntegrationTestBase
         var response = await Id(token).CompanyClaim.UpdateCompanyClaim(Guid.NewGuid(), request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
+        response.StatusCode.Is(HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -142,7 +142,7 @@ public class CompanyClaimControllerTest : IntegrationTestBase
         var response = await Id(token).CompanyClaim.UpdateCompanyClaim(Guid.NewGuid(), request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -159,7 +159,7 @@ public class CompanyClaimControllerTest : IntegrationTestBase
         var response = await Id(token).CompanyClaim.UpdateCompanyClaim(claim.Id, request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
+        response.StatusCode.Is(HttpStatusCode.Forbidden);
     }
 
     [Fact]
@@ -176,7 +176,7 @@ public class CompanyClaimControllerTest : IntegrationTestBase
         var response = await Id(token).CompanyClaim.UpdateCompanyClaim(claim.Id, request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.Conflict);
+        response.StatusCode.Is(HttpStatusCode.Conflict);
     }
 
     [Fact]
@@ -192,7 +192,7 @@ public class CompanyClaimControllerTest : IntegrationTestBase
         var response = await Id(token).CompanyClaim.UpdateCompanyClaim(claim.Id, request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.OK);
+        response.StatusCode.Is(HttpStatusCode.OK);
     }
 
     [Fact]
@@ -205,7 +205,7 @@ public class CompanyClaimControllerTest : IntegrationTestBase
         var response = await Id(token).CompanyClaim.DeleteCompanyClaim(Guid.NewGuid());
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -221,7 +221,7 @@ public class CompanyClaimControllerTest : IntegrationTestBase
         var response = await Id(token).CompanyClaim.DeleteCompanyClaim(claim.Id);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
+        response.StatusCode.Is(HttpStatusCode.Forbidden);
     }
 
     [Fact]
@@ -236,6 +236,6 @@ public class CompanyClaimControllerTest : IntegrationTestBase
         var response = await Id(token).CompanyClaim.DeleteCompanyClaim(claim.Id);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.OK);
+        response.StatusCode.Is(HttpStatusCode.OK);
     }
 }

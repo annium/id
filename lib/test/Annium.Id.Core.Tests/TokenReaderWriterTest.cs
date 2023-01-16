@@ -24,7 +24,7 @@ public class TokenReaderWriterTest
         var (status, _) = ReadToken(token, Guid.NewGuid());
 
         // assert
-        status.IsEqual(TokenReadStatus.BadSource);
+        status.Is(TokenReadStatus.BadSource);
     }
 
     [Fact]
@@ -39,7 +39,7 @@ public class TokenReaderWriterTest
         var result = ReadToken(token, appId);
 
         // assert
-        result.Status.IsEqual(TokenReadStatus.Failed);
+        result.Status.Is(TokenReadStatus.Failed);
         result.PlainErrors.Any(x => x.Contains("expired")).IsTrue();
     }
 
@@ -55,7 +55,7 @@ public class TokenReaderWriterTest
         var result = ReadToken(token, Guid.NewGuid());
 
         // assert
-        result.Status.IsEqual(TokenReadStatus.Failed);
+        result.Status.Is(TokenReadStatus.Failed);
         result.PlainErrors.Any(x => x.Contains("audience")).IsTrue();
     }
 
@@ -71,8 +71,8 @@ public class TokenReaderWriterTest
         var (status, result) = ReadToken(token, appId);
 
         // assert
-        status.IsEqual(TokenReadStatus.Ok);
-        Serialize(result).IsEqual(Serialize(source));
+        status.Is(TokenReadStatus.Ok);
+        Serialize(result).Is(Serialize(source));
     }
 
     private string WriteToken(

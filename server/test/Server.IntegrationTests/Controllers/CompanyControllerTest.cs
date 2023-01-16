@@ -23,7 +23,7 @@ public class CompanyControllerTest : IntegrationTestBase
         var response = await Id(token).Company.RegisterCompany(request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
+        response.StatusCode.Is(HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -37,7 +37,7 @@ public class CompanyControllerTest : IntegrationTestBase
         var response = await Id(token).Company.RegisterCompany(request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -53,7 +53,7 @@ public class CompanyControllerTest : IntegrationTestBase
         var response = await Id(token).Company.RegisterCompany(request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
+        response.StatusCode.Is(HttpStatusCode.Forbidden);
     }
 
     [Fact]
@@ -68,7 +68,7 @@ public class CompanyControllerTest : IntegrationTestBase
 
         // assert
         company.Id.IsNotDefault();
-        company.Name.IsEqual(companyName);
+        company.Name.Is(companyName);
     }
 
     [Fact]
@@ -138,7 +138,7 @@ public class CompanyControllerTest : IntegrationTestBase
         var response = await Id(token).Company.GetCompany(Guid.NewGuid());
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -152,7 +152,8 @@ public class CompanyControllerTest : IntegrationTestBase
         var response = await Id(token).Company.GetCompany(company.Id).GetData();
 
         // assert
-        response.IsEqual(company);
+        response.Id.Is(company.Id);
+        response.Name.Is(company.Name);
     }
 
     [Fact]
@@ -165,7 +166,7 @@ public class CompanyControllerTest : IntegrationTestBase
         var response = await Id(token).Company.GetCompanyUsers(Guid.NewGuid());
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -182,7 +183,8 @@ public class CompanyControllerTest : IntegrationTestBase
 
         // assert
         response.Has(1);
-        response.At(0).IsEqual(new { user.Id, user.Login });
+        response.At(0).Id.Is(user.Id);
+        response.At(0).Login.Is(user.Login);
     }
 
     [Fact]
@@ -197,7 +199,7 @@ public class CompanyControllerTest : IntegrationTestBase
         var response = await Id(token).Company.UpdateCompany(company.Id, request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
+        response.StatusCode.Is(HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -211,7 +213,7 @@ public class CompanyControllerTest : IntegrationTestBase
         var response = await Id(token).Company.UpdateCompany(Guid.NewGuid(), request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -227,7 +229,7 @@ public class CompanyControllerTest : IntegrationTestBase
         var response = await Id(token).Company.UpdateCompany(company.Id, request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
+        response.StatusCode.Is(HttpStatusCode.Forbidden);
     }
 
     [Fact]
@@ -242,7 +244,7 @@ public class CompanyControllerTest : IntegrationTestBase
         var response = await Id(token).Company.UpdateCompany(company.Id, request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -259,7 +261,7 @@ public class CompanyControllerTest : IntegrationTestBase
         var response = await Id(token).Company.UpdateCompany(company.Id, request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
+        response.StatusCode.Is(HttpStatusCode.Forbidden);
     }
 
     [Fact]
@@ -274,7 +276,7 @@ public class CompanyControllerTest : IntegrationTestBase
         var response = await Id(token).Company.UpdateCompany(company.Id, request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.OK);
+        response.StatusCode.Is(HttpStatusCode.OK);
     }
 
     [Fact]
@@ -287,7 +289,7 @@ public class CompanyControllerTest : IntegrationTestBase
         var response = await Id(token).Company.SetCompanyOwner(Guid.NewGuid(), Guid.NewGuid());
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -303,7 +305,7 @@ public class CompanyControllerTest : IntegrationTestBase
         var response = await Id(token).Company.SetCompanyOwner(company.Id, user.Id);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
+        response.StatusCode.Is(HttpStatusCode.Forbidden);
     }
 
     [Fact]
@@ -317,7 +319,7 @@ public class CompanyControllerTest : IntegrationTestBase
         var response = await Id(otherToken).Company.SetCompanyOwner(company.Id, Guid.NewGuid());
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -333,7 +335,7 @@ public class CompanyControllerTest : IntegrationTestBase
         var response = await Id(otherToken).Company.SetCompanyOwner(company.Id, user.Id);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.OK);
+        response.StatusCode.Is(HttpStatusCode.OK);
     }
 
     [Fact]
@@ -346,7 +348,7 @@ public class CompanyControllerTest : IntegrationTestBase
         var response = await Id(token).Company.UnregisterCompany(Guid.NewGuid());
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -361,7 +363,7 @@ public class CompanyControllerTest : IntegrationTestBase
         var response = await Id(token).Company.UnregisterCompany(company.Id);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
+        response.StatusCode.Is(HttpStatusCode.Forbidden);
     }
 
     [Fact]
@@ -375,6 +377,6 @@ public class CompanyControllerTest : IntegrationTestBase
         var response = await Id(token).Company.UnregisterCompany(company.Id);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.OK);
+        response.StatusCode.Is(HttpStatusCode.OK);
     }
 }

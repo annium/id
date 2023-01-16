@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Annium.Testing;
 using Server.TestClient;
 using Server.ViewModels.Requests.Roles;
-using Server.ViewModels.Responses.Claims;
 using Xunit;
 
 namespace Server.IntegrationTests.Controllers;
@@ -22,7 +21,7 @@ public class RoleControllerTest : IntegrationTestBase
         var response = await Id(token).Role.CreateRole(request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
+        response.StatusCode.Is(HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -36,7 +35,7 @@ public class RoleControllerTest : IntegrationTestBase
         var response = await Id(token).Role.CreateRole(request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -52,7 +51,7 @@ public class RoleControllerTest : IntegrationTestBase
         var response = await Id(token).Role.CreateRole(request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
+        response.StatusCode.Is(HttpStatusCode.Forbidden);
     }
 
     [Fact]
@@ -70,7 +69,7 @@ public class RoleControllerTest : IntegrationTestBase
         var response = await Id(token).Role.CreateRole(request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
+        response.StatusCode.Is(HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -87,7 +86,9 @@ public class RoleControllerTest : IntegrationTestBase
 
         // assert
         role.Id.IsNotDefault();
-        role.IsEqual(new { AppId = app.Id, Key = roleKey, Name = roleName });
+        role.AppId.Is(app.Id);
+        role.Key.Is(roleKey);
+        role.Name.Is(roleName);
     }
 
     [Fact]
@@ -100,7 +101,7 @@ public class RoleControllerTest : IntegrationTestBase
         var response = await Id(token).Role.ListRoles(Guid.NewGuid());
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -138,7 +139,7 @@ public class RoleControllerTest : IntegrationTestBase
         var response = await Id(token).Role.UpdateRole(role.Id, request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
+        response.StatusCode.Is(HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -152,7 +153,7 @@ public class RoleControllerTest : IntegrationTestBase
         var response = await Id(token).Role.UpdateRole(Guid.NewGuid(), request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -169,7 +170,7 @@ public class RoleControllerTest : IntegrationTestBase
         var response = await Id(token).Role.UpdateRole(role.Id, request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.Conflict);
+        response.StatusCode.Is(HttpStatusCode.Conflict);
     }
 
     [Fact]
@@ -186,7 +187,7 @@ public class RoleControllerTest : IntegrationTestBase
         var response = await Id(token).Role.UpdateRole(role.Id, request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
+        response.StatusCode.Is(HttpStatusCode.Forbidden);
     }
 
     [Fact]
@@ -202,7 +203,7 @@ public class RoleControllerTest : IntegrationTestBase
         var response = await Id(token).Role.UpdateRole(role.Id, request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.OK);
+        response.StatusCode.Is(HttpStatusCode.OK);
     }
 
     [Fact]
@@ -219,7 +220,7 @@ public class RoleControllerTest : IntegrationTestBase
         var response = await Id(token).Role.AddClaimToRole(claim.Id, role.Id, request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
+        response.StatusCode.Is(HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -233,7 +234,7 @@ public class RoleControllerTest : IntegrationTestBase
         var response = await Id(token).Role.AddClaimToRole(Guid.NewGuid(), Guid.NewGuid(), request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -249,7 +250,7 @@ public class RoleControllerTest : IntegrationTestBase
         var response = await Id(token).Role.AddClaimToRole(Guid.NewGuid(), role.Id, request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -267,7 +268,7 @@ public class RoleControllerTest : IntegrationTestBase
         var response = await Id(token).Role.AddClaimToRole(claim.Id, role.Id, request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
+        response.StatusCode.Is(HttpStatusCode.Forbidden);
     }
 
     [Fact]
@@ -285,7 +286,7 @@ public class RoleControllerTest : IntegrationTestBase
         var response = await Id(token).Role.AddClaimToRole(claim.Id, role.Id, request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
+        response.StatusCode.Is(HttpStatusCode.Forbidden);
     }
 
     [Fact]
@@ -303,13 +304,16 @@ public class RoleControllerTest : IntegrationTestBase
         var roles = await Id(token).Role.ListRoles(app.Id).GetData();
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.OK);
+        response.StatusCode.Is(HttpStatusCode.OK);
         roles.Has(1);
-        roles.At(0).Id.IsEqual(role.Id);
+        roles.At(0).Id.Is(role.Id);
         var c = roles.At(0).Claims.At(0);
         c.RoleId.Is(role.Id);
         c.ClaimId.Is(claim.Id);
-        c.Claim.IsEqual(new ClaimResponse { Id = claim.Id, AppId = claim.AppId, Key = claim.Key, Name = claim.Name });
+        c.Claim.Id.Is(claim.Id);
+        c.Claim.AppId.Is(claim.AppId);
+        c.Claim.Key.Is(claim.Key);
+        c.Claim.Name.Is(claim.Name);
         c.Value.Is(claimValue);
     }
 
@@ -323,7 +327,7 @@ public class RoleControllerTest : IntegrationTestBase
         var response = await Id(token).Role.DeleteClaimFromRole(Guid.NewGuid(), Guid.NewGuid());
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -338,7 +342,7 @@ public class RoleControllerTest : IntegrationTestBase
         var response = await Id(token).Role.DeleteClaimFromRole(Guid.NewGuid(), role.Id);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -355,7 +359,7 @@ public class RoleControllerTest : IntegrationTestBase
         var response = await Id(token).Role.DeleteClaimFromRole(claim.Id, role.Id);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
+        response.StatusCode.Is(HttpStatusCode.Forbidden);
     }
 
     [Fact]
@@ -372,7 +376,7 @@ public class RoleControllerTest : IntegrationTestBase
         var response = await Id(token).Role.DeleteClaimFromRole(claim.Id, role.Id);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
+        response.StatusCode.Is(HttpStatusCode.Forbidden);
     }
 
     [Fact]
@@ -388,7 +392,7 @@ public class RoleControllerTest : IntegrationTestBase
         var response = await Id(token).Role.DeleteClaimFromRole(claim.Id, role.Id);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.OK);
+        response.StatusCode.Is(HttpStatusCode.OK);
     }
 
     [Fact]
@@ -401,7 +405,7 @@ public class RoleControllerTest : IntegrationTestBase
         var response = await Id(token).Role.DeleteRole(Guid.NewGuid());
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -417,7 +421,7 @@ public class RoleControllerTest : IntegrationTestBase
         var response = await Id(token).Role.DeleteRole(role.Id);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
+        response.StatusCode.Is(HttpStatusCode.Forbidden);
     }
 
     [Fact]
@@ -432,6 +436,6 @@ public class RoleControllerTest : IntegrationTestBase
         var response = await Id(token).Role.DeleteRole(role.Id);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.OK);
+        response.StatusCode.Is(HttpStatusCode.OK);
     }
 }

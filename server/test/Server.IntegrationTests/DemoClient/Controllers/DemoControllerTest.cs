@@ -16,7 +16,7 @@ public class DemoControllerTest : IntegrationTestBase
         var response = await Demo(Guid.NewGuid()).Index.Base();
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.Unauthorized);
+        response.StatusCode.Is(HttpStatusCode.Unauthorized);
     }
 
     [Fact]
@@ -31,13 +31,13 @@ public class DemoControllerTest : IntegrationTestBase
         var response = await Demo(app.Id, token).Index.Base();
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.OK);
+        response.StatusCode.Is(HttpStatusCode.OK);
         // FIXME: use, when System.Text.Json supports Deserialize with non-default constructor
         // var token = await Demo(app.Id).Get("/base").BearerAuthorization(appTokens.AccessToken).AsAsync<IdToken>();
 
         // // assert
         // token.IsNotDefault();
-        // token.UserId.IsEqual(user.Id);
+        // token.UserId.Is(user.Id);
         // token.LoginId.IsNotDefault();
     }
 
@@ -48,7 +48,7 @@ public class DemoControllerTest : IntegrationTestBase
         var response = await Demo(Guid.NewGuid()).Index.IsAdmin();
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.Unauthorized);
+        response.StatusCode.Is(HttpStatusCode.Unauthorized);
     }
 
     [Fact]
@@ -63,7 +63,7 @@ public class DemoControllerTest : IntegrationTestBase
         var response = await Demo(app.Id, token).Index.IsAdmin();
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
+        response.StatusCode.Is(HttpStatusCode.Forbidden);
     }
 
     [Fact]
@@ -81,7 +81,7 @@ public class DemoControllerTest : IntegrationTestBase
         var response = await Demo(app.Id, token).Index.IsAdmin();
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.OK);
+        response.StatusCode.Is(HttpStatusCode.OK);
     }
 
     [Fact]
@@ -101,7 +101,7 @@ public class DemoControllerTest : IntegrationTestBase
         var response = await Demo(app.Id, token).Index.HasPaymentsAccess();
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.OK);
+        response.StatusCode.Is(HttpStatusCode.OK);
     }
 
     [Fact]
@@ -119,7 +119,7 @@ public class DemoControllerTest : IntegrationTestBase
         var response = await Demo(app.Id, token).Index.HasPaymentsAccess();
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.OK);
+        response.StatusCode.Is(HttpStatusCode.OK);
     }
 
     [Fact]
@@ -139,6 +139,6 @@ public class DemoControllerTest : IntegrationTestBase
         var response = await Demo(app.Id, token).Index.HasPaymentsAccess();
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.OK);
+        response.StatusCode.Is(HttpStatusCode.OK);
     }
 }

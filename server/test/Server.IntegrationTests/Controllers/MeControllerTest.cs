@@ -23,7 +23,7 @@ public class MeControllerTest : IntegrationTestBase
         var response = await Id().Me.RegisterMe(request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
+        response.StatusCode.Is(HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -38,7 +38,7 @@ public class MeControllerTest : IntegrationTestBase
         var response = await Id().Me.RegisterMe(request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
+        response.StatusCode.Is(HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -53,7 +53,7 @@ public class MeControllerTest : IntegrationTestBase
         var response = await Id().Me.RegisterMe(request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
+        response.StatusCode.Is(HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -70,7 +70,7 @@ public class MeControllerTest : IntegrationTestBase
         var response = await Id().Me.RegisterMe(request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -87,9 +87,9 @@ public class MeControllerTest : IntegrationTestBase
 
         // assert
         response.Id.IsNotDefault();
-        response.Login.IsEqual(login);
-        response.Email.IsEqual(email);
-        response.ReferralId.IsEqual(referral.Id);
+        response.Login.Is(login);
+        response.Email.Is(email);
+        response.ReferralId.Is(referral.Id);
     }
 
     [Fact]
@@ -106,7 +106,7 @@ public class MeControllerTest : IntegrationTestBase
         var response = await Id(token).Me.GetMe().GetData();
 
         // assert
-        response.Id.IsEqual(user.Id);
+        response.Id.Is(user.Id);
     }
 
     [Fact]
@@ -136,10 +136,10 @@ public class MeControllerTest : IntegrationTestBase
         var idToken = response.Data.Data;
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.OK);
-        idToken.UserId.IsEqual(me.Id);
+        response.StatusCode.Is(HttpStatusCode.OK);
+        idToken.UserId.Is(me.Id);
         idToken.LoginId.IsNotDefault();
-        idToken.App.Id.IsEqual(app.Id);
+        idToken.App.Id.Is(app.Id);
     }
 
     [Fact]
@@ -153,7 +153,7 @@ public class MeControllerTest : IntegrationTestBase
         var response = await Id(token).Me.UpdateMyProfile(request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
+        response.StatusCode.Is(HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -168,7 +168,7 @@ public class MeControllerTest : IntegrationTestBase
         var response = await Id(token).Me.UpdateMyProfile(request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.Conflict);
+        response.StatusCode.Is(HttpStatusCode.Conflict);
     }
 
     [Fact]
@@ -183,7 +183,7 @@ public class MeControllerTest : IntegrationTestBase
         var response = await Id(token).Me.UpdateMyProfile(request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.Conflict);
+        response.StatusCode.Is(HttpStatusCode.Conflict);
     }
 
     [Fact]
@@ -197,7 +197,7 @@ public class MeControllerTest : IntegrationTestBase
         var response = await Id(token).Me.UpdateMyProfile(request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.OK);
+        response.StatusCode.Is(HttpStatusCode.OK);
     }
 
     [Fact]
@@ -211,7 +211,7 @@ public class MeControllerTest : IntegrationTestBase
         var response = await Id(token).Me.UpdateMyPassword(request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
+        response.StatusCode.Is(HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -225,7 +225,7 @@ public class MeControllerTest : IntegrationTestBase
         var response = await Id(token).Me.UpdateMyPassword(request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.OK);
+        response.StatusCode.Is(HttpStatusCode.OK);
     }
 
     [Fact]
@@ -238,6 +238,6 @@ public class MeControllerTest : IntegrationTestBase
         var response = await Id(token).Me.UnregisterMe();
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.OK);
+        response.StatusCode.Is(HttpStatusCode.OK);
     }
 }

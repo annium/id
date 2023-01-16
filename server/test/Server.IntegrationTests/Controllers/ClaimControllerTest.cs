@@ -21,7 +21,7 @@ public class ClaimControllerTest : IntegrationTestBase
         var response = await Id(token).Claim.CreateClaim(request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
+        response.StatusCode.Is(HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -35,7 +35,7 @@ public class ClaimControllerTest : IntegrationTestBase
         var response = await Id(token).Claim.CreateClaim(request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -51,7 +51,7 @@ public class ClaimControllerTest : IntegrationTestBase
         var response = await Id(token).Claim.CreateClaim(request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
+        response.StatusCode.Is(HttpStatusCode.Forbidden);
     }
 
     [Fact]
@@ -68,7 +68,7 @@ public class ClaimControllerTest : IntegrationTestBase
         var response = await Id(token).Claim.CreateClaim(request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
+        response.StatusCode.Is(HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -85,7 +85,9 @@ public class ClaimControllerTest : IntegrationTestBase
 
         // assert
         claim.Id.IsNotDefault();
-        claim.IsEqual(new { AppId = app.Id, Key = claimKey, Name = claimName });
+        claim.AppId.Is(app.Id);
+        claim.Key.Is(claimKey);
+        claim.Name.Is(claimName);
     }
 
     [Fact]
@@ -98,7 +100,7 @@ public class ClaimControllerTest : IntegrationTestBase
         var response = await Id(token).Claim.ListClaims(Guid.NewGuid());
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -114,7 +116,7 @@ public class ClaimControllerTest : IntegrationTestBase
 
         // assert
         claims.Has(1);
-        claims.At(0).Id.IsEqual(claim.Id);
+        claims.At(0).Id.Is(claim.Id);
     }
 
     [Fact]
@@ -130,7 +132,7 @@ public class ClaimControllerTest : IntegrationTestBase
         var response = await Id(token).Claim.UpdateClaim(claim.Id, request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.BadRequest);
+        response.StatusCode.Is(HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -147,7 +149,7 @@ public class ClaimControllerTest : IntegrationTestBase
         var response = await Id(token).Claim.UpdateClaim(claim.Id, request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
+        response.StatusCode.Is(HttpStatusCode.Forbidden);
     }
 
     [Fact]
@@ -161,7 +163,7 @@ public class ClaimControllerTest : IntegrationTestBase
         var response = await Id(token).Claim.UpdateClaim(Guid.NewGuid(), request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -178,7 +180,7 @@ public class ClaimControllerTest : IntegrationTestBase
         var response = await Id(token).Claim.UpdateClaim(claim.Id, request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.Conflict);
+        response.StatusCode.Is(HttpStatusCode.Conflict);
     }
 
     [Fact]
@@ -194,7 +196,7 @@ public class ClaimControllerTest : IntegrationTestBase
         var response = await Id(token).Claim.UpdateClaim(claim.Id, request);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.OK);
+        response.StatusCode.Is(HttpStatusCode.OK);
     }
 
     [Fact]
@@ -210,7 +212,7 @@ public class ClaimControllerTest : IntegrationTestBase
         var response = await Id(token).Claim.DeleteClaim(claim.Id);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.Forbidden);
+        response.StatusCode.Is(HttpStatusCode.Forbidden);
     }
 
     [Fact]
@@ -223,7 +225,7 @@ public class ClaimControllerTest : IntegrationTestBase
         var response = await Id(token).Claim.DeleteClaim(Guid.NewGuid());
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.NotFound);
+        response.StatusCode.Is(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -238,6 +240,6 @@ public class ClaimControllerTest : IntegrationTestBase
         var response = await Id(token).Claim.DeleteClaim(claim.Id);
 
         // assert
-        response.StatusCode.IsEqual(HttpStatusCode.OK);
+        response.StatusCode.Is(HttpStatusCode.OK);
     }
 }
