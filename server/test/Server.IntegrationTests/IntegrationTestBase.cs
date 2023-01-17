@@ -3,17 +3,15 @@ using System.IO;
 using System.Threading.Tasks;
 using Annium.AspNetCore.IntegrationTesting;
 using Annium.Core.DependencyInjection;
+using Annium.Core.Primitives;
 using Annium.Id.AspNetCore;
-using Annium.linq2db.PostgreSql;
 using Annium.Net.Http;
 using Annium.Net.Mail;
-using DotNet.Testcontainers.Builders;
-using DotNet.Testcontainers.Configurations;
-using DotNet.Testcontainers.Containers;
 using NodaTime;
 using Server.DemoHost;
 using Server.DemoHost.TestClient;
 using Server.Host;
+using Server.IntegrationTests.Fixtures;
 using Server.TestClient;
 using Xunit;
 using ServicePack = Server.DemoHost.ServicePack;
@@ -22,42 +20,14 @@ namespace Server.IntegrationTests;
 
 public class IntegrationTestBase : IntegrationTest, IAsyncLifetime
 {
-    #region infra
-
-    private readonly PostgreSqlConfiguration _dbConfig = new()
-    {
-        Database = "db",
-        User = "postgres",
-        Password = "postgres",
-    };
-
-    private readonly TestcontainerDatabase _db;
-
-    #endregion
-
-    protected IntegrationTestBase()
-    {
-        _db = new TestcontainersBuilder<PostgreSqlTestcontainer>()
-            .WithDatabase(new PostgreSqlTestcontainerConfiguration("registry.annium.com/postgres:15")
-            {
-                Database = _dbConfig.Database,
-                Username = _dbConfig.User,
-                Password = _dbConfig.Password,
-            })
-            .Build();
-    }
-
     public async Task InitializeAsync()
     {
-        await _db.StartAsync();
-        _dbConfig.Host = _db.Hostname;
-        _dbConfig.Port = _db.Port;
+        await Database.AcquireAsync();
     }
 
     public new async Task DisposeAsync()
     {
         await base.DisposeAsync();
-        await _db.DisposeAsync();
     }
 
     #region id
@@ -76,7 +46,7 @@ public class IntegrationTestBase : IntegrationTest, IAsyncLifetime
     private void ConfigureContainer(IServiceContainer container)
     {
         container.Add(EmailService).AsSelf().AsInterfaces().Singleton();
-        container.AddConfiguration(_dbConfig);
+        container.AddConfiguration(Database.Config);
     }
 
     #endregion
