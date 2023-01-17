@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Annium.Testing;
 using Server.TestClient;
 using Server.ViewModels.Requests.CompanyRoles;
-using Server.ViewModels.Responses.CompanyClaims;
 using Xunit;
 
 namespace Server.IntegrationTests.Controllers;
