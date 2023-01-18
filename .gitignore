@@ -5,10 +5,13 @@
 
 # artifacts
 .DS_Store
+/build/
+/logs*/
 /run/
-*.blob
 configuration/
 keys/
+*.blob
+*.log
 
 # xs ignore patterns
 .xs.ignore
