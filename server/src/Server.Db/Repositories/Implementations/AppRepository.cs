@@ -8,23 +8,20 @@ using Server.Domain.Models;
 
 namespace Server.Db.Repositories.Implementations;
 
-internal class AppRepository : IAppRepository
+internal class AppRepository : RepositoryBase, IAppRepository
 {
-    private readonly ServerConnection _db;
-
-    public AppRepository(ServerConnection db)
+    public AppRepository(ServerConnection db) : base(db)
     {
-        _db = db;
     }
 
     public async Task CreateAsync(App app)
     {
-        await _db.Apps.InsertAsync(app);
+        await Db.Apps.InsertAsync(app);
     }
 
     public async Task<IReadOnlyCollection<App>> FindAllAsync(string name)
     {
-        IQueryable<App> query = _db.Apps;
+        IQueryable<App> query = Db.Apps;
 
         if (!string.IsNullOrWhiteSpace(name))
             query = query.Where(x => x.Name.StartsWith(name));
@@ -36,7 +33,7 @@ internal class AppRepository : IAppRepository
 
     public async Task<IReadOnlyCollection<App>> FindMyAsync(Guid ownerId)
     {
-        var entities = await _db.Apps
+        var entities = await Db.Apps
             .Where(x => x.OwnerId == ownerId)
             .ToArrayAsync();
 
@@ -45,7 +42,7 @@ internal class AppRepository : IAppRepository
 
     public async Task<App?> TryGetByIdAsync(Guid id)
     {
-        var entity = await _db.Apps
+        var entity = await Db.Apps
             .FirstOrDefaultAsync(x => x.Id == id);
 
         return entity;
@@ -53,7 +50,7 @@ internal class AppRepository : IAppRepository
 
     public async Task<App> GetByIdAsync(Guid id)
     {
-        var entity = await _db.Apps
+        var entity = await Db.Apps
             .FirstOrDefaultAsync(x => x.Id == id);
 
         if (entity is null)
@@ -64,18 +61,18 @@ internal class AppRepository : IAppRepository
 
     public async Task UpdateAsync(App app)
     {
-        await _db.Apps.UpdateAsync(app);
+        await Db.Apps.UpdateAsync(app);
     }
 
     public async Task UpdateApiTokenAsync(Guid id, Guid apiToken)
     {
-        var entity = await _db.Apps.SingleAsync(x => x.Id == id);
+        var entity = await Db.Apps.SingleAsync(x => x.Id == id);
         entity.SetApiToken(apiToken);
-        await _db.Apps.UpdateAsync(entity);
+        await Db.Apps.UpdateAsync(entity);
     }
 
     public async Task DeleteByIdAsync(Guid id)
     {
-        await _db.Apps.DeleteAsync(x => x.Id == id);
+        await Db.Apps.DeleteAsync(x => x.Id == id);
     }
 }

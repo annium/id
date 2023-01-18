@@ -6,22 +6,19 @@ using Server.Domain.Models;
 
 namespace Server.Db.Repositories.Implementations;
 
-internal class CompanyRoleClaimRepository : ICompanyRoleClaimRepository
+internal class CompanyRoleClaimRepository : RepositoryBase, ICompanyRoleClaimRepository
 {
-    private readonly ServerConnection _db;
-
-    public CompanyRoleClaimRepository(ServerConnection db)
+    public CompanyRoleClaimRepository(ServerConnection db) : base(db)
     {
-        _db = db;
     }
 
     public async Task SaveAsync(CompanyRoleClaim claim)
     {
-        await _db.CompanyRoleClaims.InsertOrUpdateAsync(claim);
+        await Db.CompanyRoleClaims.InsertOrUpdateAsync(claim);
     }
 
     public async Task DeleteByIdAsync(Guid roleId, Guid claimId)
     {
-        await _db.CompanyRoleClaims.DeleteAsync(x => x.RoleId == roleId && x.ClaimId == claimId);
+        await Db.CompanyRoleClaims.DeleteAsync(x => x.RoleId == roleId && x.ClaimId == claimId);
     }
 }

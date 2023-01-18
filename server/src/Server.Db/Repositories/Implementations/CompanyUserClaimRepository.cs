@@ -8,23 +8,20 @@ using Server.Domain.Models;
 
 namespace Server.Db.Repositories.Implementations;
 
-internal class CompanyUserClaimRepository : ICompanyUserClaimRepository
+internal class CompanyUserClaimRepository : RepositoryBase, ICompanyUserClaimRepository
 {
-    private readonly ServerConnection _db;
-
-    public CompanyUserClaimRepository(ServerConnection db)
+    public CompanyUserClaimRepository(ServerConnection db) : base(db)
     {
-        _db = db;
     }
 
     public async Task SaveAsync(CompanyUserClaim claim)
     {
-        await _db.CompanyUserClaims.InsertOrUpdateAsync(claim);
+        await Db.CompanyUserClaims.InsertOrUpdateAsync(claim);
     }
 
     public async Task<IReadOnlyDictionary<Guid, IReadOnlyCollection<CompanyUserClaim>>> GetCompaniesUserClaimsAsync(Guid appId, Guid userId)
     {
-        var entities = await _db.CompanyUserClaims
+        var entities = await Db.CompanyUserClaims
             .LoadWith(x => x.Claim)
             .Where(x => x.Claim.AppId == appId && x.UserId == userId)
             .ToArrayAsync();
@@ -38,6 +35,6 @@ internal class CompanyUserClaimRepository : ICompanyUserClaimRepository
 
     public async Task DeleteByIdAsync(Guid companyId, Guid userId, Guid claimId)
     {
-        await _db.CompanyUserClaims.DeleteAsync(x => x.CompanyId == companyId && x.UserId == userId && x.ClaimId == claimId);
+        await Db.CompanyUserClaims.DeleteAsync(x => x.CompanyId == companyId && x.UserId == userId && x.ClaimId == claimId);
     }
 }

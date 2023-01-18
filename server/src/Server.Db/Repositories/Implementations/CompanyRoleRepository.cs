@@ -7,23 +7,20 @@ using Server.Domain.Models;
 
 namespace Server.Db.Repositories.Implementations;
 
-internal class CompanyRoleRepository : ICompanyRoleRepository
+internal class CompanyRoleRepository : RepositoryBase, ICompanyRoleRepository
 {
-    private readonly ServerConnection _db;
-
-    public CompanyRoleRepository(ServerConnection db)
+    public CompanyRoleRepository(ServerConnection db) : base(db)
     {
-        _db = db;
     }
 
     public async Task CreateAsync(CompanyRole role)
     {
-        await _db.CompanyRoles.InsertAsync(role);
+        await Db.CompanyRoles.InsertAsync(role);
     }
 
     public async Task<IReadOnlyCollection<CompanyRole>> GetAllAsync(Guid appId)
     {
-        var entities = await _db.CompanyRoles
+        var entities = await Db.CompanyRoles
             .LoadWith(x => x.Claims).ThenLoad(x => x.Claim)
             .ToArrayAsync();
 
@@ -32,7 +29,7 @@ internal class CompanyRoleRepository : ICompanyRoleRepository
 
     public async Task<CompanyRole?> TryGetByIdAsync(Guid id)
     {
-        var entity = await _db.CompanyRoles
+        var entity = await Db.CompanyRoles
             .FirstOrDefaultAsync(c => c.Id == id);
 
         return entity;
@@ -40,7 +37,7 @@ internal class CompanyRoleRepository : ICompanyRoleRepository
 
     public async Task<CompanyRole> GetByIdAsync(Guid id)
     {
-        var entity = await _db.CompanyRoles
+        var entity = await Db.CompanyRoles
             .FirstOrDefaultAsync(c => c.Id == id);
 
         if (entity is null)
@@ -51,7 +48,7 @@ internal class CompanyRoleRepository : ICompanyRoleRepository
 
     public async Task<CompanyRole?> TryFindByKeyAsync(Guid appId, string key)
     {
-        var entity = await _db.CompanyRoles
+        var entity = await Db.CompanyRoles
             .FirstOrDefaultAsync(c => c.AppId == appId && c.Key == key);
 
         return entity;
@@ -59,11 +56,11 @@ internal class CompanyRoleRepository : ICompanyRoleRepository
 
     public async Task UpdateAsync(CompanyRole role)
     {
-        await _db.CompanyRoles.UpdateAsync(role);
+        await Db.CompanyRoles.UpdateAsync(role);
     }
 
     public async Task DeleteByIdAsync(Guid id)
     {
-        await _db.CompanyRoles.DeleteAsync(x => x.Id == id);
+        await Db.CompanyRoles.DeleteAsync(x => x.Id == id);
     }
 }

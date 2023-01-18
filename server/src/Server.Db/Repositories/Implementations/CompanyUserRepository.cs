@@ -8,23 +8,20 @@ using Server.Domain.Models;
 
 namespace Server.Db.Repositories.Implementations;
 
-internal class CompanyUserRepository : ICompanyUserRepository
+internal class CompanyUserRepository : RepositoryBase, ICompanyUserRepository
 {
-    private readonly ServerConnection _db;
-
-    public CompanyUserRepository(ServerConnection db)
+    public CompanyUserRepository(ServerConnection db) : base(db)
     {
-        _db = db;
     }
 
     public async Task SaveAsync(CompanyUser companyUser)
     {
-        await _db.CompanyUsers.InsertOrUpdateAsync(companyUser);
+        await Db.CompanyUsers.InsertOrUpdateAsync(companyUser);
     }
 
     public async Task<CompanyUser?> TryGetByIdAsync(Guid companyId, Guid userId)
     {
-        var entity = await _db.CompanyUsers
+        var entity = await Db.CompanyUsers
             .FirstOrDefaultAsync(x => x.CompanyId == companyId && x.UserId == userId);
 
         return entity;
@@ -32,7 +29,7 @@ internal class CompanyUserRepository : ICompanyUserRepository
 
     public async Task<IReadOnlyCollection<User>> GetAllAsync(Guid companyId)
     {
-        var entities = await _db.CompanyUsers
+        var entities = await Db.CompanyUsers
             .LoadWith(x => x.User)
             .Where(x => x.CompanyId == companyId)
             .Select(x => x.User)
@@ -43,6 +40,6 @@ internal class CompanyUserRepository : ICompanyUserRepository
 
     public async Task DeleteByIdAsync(Guid companyId, Guid userId)
     {
-        await _db.CompanyUsers.DeleteAsync(x => x.CompanyId == companyId && x.UserId == userId);
+        await Db.CompanyUsers.DeleteAsync(x => x.CompanyId == companyId && x.UserId == userId);
     }
 }

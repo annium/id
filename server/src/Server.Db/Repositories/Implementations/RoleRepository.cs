@@ -7,23 +7,20 @@ using Server.Domain.Models;
 
 namespace Server.Db.Repositories.Implementations;
 
-internal class RoleRepository : IRoleRepository
+internal class RoleRepository : RepositoryBase, IRoleRepository
 {
-    private readonly ServerConnection _db;
-
-    public RoleRepository(ServerConnection db)
+    public RoleRepository(ServerConnection db) : base(db)
     {
-        _db = db;
     }
 
     public async Task CreateAsync(Role role)
     {
-        await _db.Roles.InsertAsync(role);
+        await Db.Roles.InsertAsync(role);
     }
 
     public async Task<IReadOnlyCollection<Role>> GetAllAsync(Guid appId)
     {
-        var entities = await _db.Roles
+        var entities = await Db.Roles
             .LoadWith(x => x.Claims).ThenLoad(x => x.Claim)
             .ToArrayAsync();
 
@@ -32,7 +29,7 @@ internal class RoleRepository : IRoleRepository
 
     public async Task<Role?> TryGetByIdAsync(Guid id)
     {
-        var entity = await _db.Roles
+        var entity = await Db.Roles
             .FirstOrDefaultAsync(c => c.Id == id);
 
         return entity;
@@ -40,7 +37,7 @@ internal class RoleRepository : IRoleRepository
 
     public async Task<Role> GetByIdAsync(Guid id)
     {
-        var entity = await _db.Roles
+        var entity = await Db.Roles
             .FirstOrDefaultAsync(c => c.Id == id);
 
         if (entity is null)
@@ -51,7 +48,7 @@ internal class RoleRepository : IRoleRepository
 
     public async Task<Role?> TryFindByKeyAsync(Guid appId, string key)
     {
-        var entity = await _db.Roles
+        var entity = await Db.Roles
             .FirstOrDefaultAsync(c => c.AppId == appId && c.Key == key);
 
         return entity;
@@ -59,11 +56,11 @@ internal class RoleRepository : IRoleRepository
 
     public async Task UpdateAsync(Role role)
     {
-        await _db.Roles.UpdateAsync(role);
+        await Db.Roles.UpdateAsync(role);
     }
 
     public async Task DeleteByIdAsync(Guid id)
     {
-        await _db.Roles.DeleteAsync(x => x.Id == id);
+        await Db.Roles.DeleteAsync(x => x.Id == id);
     }
 }
