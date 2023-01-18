@@ -23,9 +23,12 @@ public class DemoControllerTest : IntegrationTestBase
     public async Task IdAuthorization_Authorized_Works()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
+        var login = Faker.Internet.UserName();
+        var email = Faker.Internet.Email();
+        var password = Faker.Internet.Password();
+        var token = await Id().RegisterLogUserIn(login, email, password);
         var app = await Id(token).App.Register();
-        token = await Id().LogUserIn(app.Id);
+        token = await Id().LogUserIn(app.Id, login, password);
 
         // act
         var response = await Demo(app.Id, token).Index.Base();
@@ -55,9 +58,12 @@ public class DemoControllerTest : IntegrationTestBase
     public async Task IdAuthorization_CheckRole_HasNoAccess_ReturnsForbidden()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
+        var login = Faker.Internet.UserName();
+        var email = Faker.Internet.Email();
+        var password = Faker.Internet.Password();
+        var token = await Id().RegisterLogUserIn(login, email, password);
         var app = await Id(token).App.Register();
-        token = await Id().LogUserIn(app.Id);
+        token = await Id().LogUserIn(app.Id, login, password);
 
         // act
         var response = await Demo(app.Id, token).Index.IsAdmin();
@@ -70,12 +76,15 @@ public class DemoControllerTest : IntegrationTestBase
     public async Task IdAuthorization_CheckRole_HasAccess_Works()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
+        var login = Faker.Internet.UserName();
+        var email = Faker.Internet.Email();
+        var password = Faker.Internet.Password();
+        var token = await Id().RegisterLogUserIn(login, email, password);
         var user = await Id(token).Me.GetMe().GetData();
         var app = await Id(token).App.Register();
         var role = await Id(token).Role.Register(app.Id, "admin", "Administrator");
         await Id(token).User.AddRoleToUser(role.Id, user.Id);
-        token = await Id().LogUserIn(app.Id);
+        token = await Id().LogUserIn(app.Id, login, password);
 
         // act
         var response = await Demo(app.Id, token).Index.IsAdmin();
@@ -88,14 +97,17 @@ public class DemoControllerTest : IntegrationTestBase
     public async Task IdAuthorization_CheckClaim_HasRoleAccess_Works()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
+        var login = Faker.Internet.UserName();
+        var email = Faker.Internet.Email();
+        var password = Faker.Internet.Password();
+        var token = await Id().RegisterLogUserIn(login, email, password);
         var user = await Id(token).Me.GetMe().GetData();
         var app = await Id(token).App.Register();
         var role = await Id(token).Role.Register(app.Id, "coo", "Chief Operations Officer");
         await Id(token).User.AddRoleToUser(role.Id, user.Id);
         var claim = await Id(token).Claim.Register(app.Id, "paymentsAccess", "Payments Access");
         await Id(token).Role.AddClaimToRole(claim.Id, role.Id, "full");
-        token = await Id().LogUserIn(app.Id);
+        token = await Id().LogUserIn(app.Id, login, password);
 
         // act
         var response = await Demo(app.Id, token).Index.HasPaymentsAccess();
@@ -108,12 +120,15 @@ public class DemoControllerTest : IntegrationTestBase
     public async Task IdAuthorization_CheckClaim_HasClaimAccess_Works()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
+        var login = Faker.Internet.UserName();
+        var email = Faker.Internet.Email();
+        var password = Faker.Internet.Password();
+        var token = await Id().RegisterLogUserIn(login, email, password);
         var user = await Id(token).Me.GetMe().GetData();
         var app = await Id(token).App.Register();
         var claim = await Id(token).Claim.Register(app.Id, "paymentsAccess", "Payments Access");
         await Id(token).User.AddUserClaim(user.Id, claim.Id, "full");
-        token = await Id().LogUserIn(app.Id);
+        token = await Id().LogUserIn(app.Id, login, password);
 
         // act
         var response = await Demo(app.Id, token).Index.HasPaymentsAccess();
@@ -126,14 +141,17 @@ public class DemoControllerTest : IntegrationTestBase
     public async Task IdAuthorization_CheckClaim_HasRoleClaimAccess_Works()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
+        var login = Faker.Internet.UserName();
+        var email = Faker.Internet.Email();
+        var password = Faker.Internet.Password();
+        var token = await Id().RegisterLogUserIn(login, email, password);
         var user = await Id(token).Me.GetMe().GetData();
         var app = await Id(token).App.Register();
         var role = await Id(token).Role.Register(app.Id, "coo", "Chief Operations Officer");
         var claim = await Id(token).Claim.Register(app.Id, "paymentsAccess", "Payments Access");
         await Id(token).Role.AddClaimToRole(claim.Id, role.Id, "limited");
         await Id(token).User.AddUserClaim(user.Id, claim.Id, "full");
-        token = await Id().LogUserIn(app.Id);
+        token = await Id().LogUserIn(app.Id, login, password);
 
         // act
         var response = await Demo(app.Id, token).Index.HasPaymentsAccess();

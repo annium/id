@@ -17,7 +17,7 @@ public class AppControllerTest : IntegrationTestBase
     {
         // arrange
         var token = await Id().RegisterLogUserIn();
-        var request = new CreateAppRequest { Name = "x" };
+        var request = new CreateAppRequest { Name = Faker.Random.String(1, 1) };
 
         // act
         var response = await Id(token).App.CreateApp(request);
@@ -31,7 +31,7 @@ public class AppControllerTest : IntegrationTestBase
     {
         // arrange
         var token = await Id().RegisterLogUserIn();
-        var appName = "Demo App";
+        var appName = Faker.Random.String(10);
 
         // act
         var app = await Id(token).App.Register(appName);
@@ -59,7 +59,7 @@ public class AppControllerTest : IntegrationTestBase
     public async Task GetApiToken_NotOwner_Forbidden()
     {
         // arrange
-        var otherToken = await Id().RegisterLogOtherUserIn();
+        var otherToken = await Id().RegisterLogUserIn();
         var app = await Id(otherToken).App.Register();
         var token = await Id().RegisterLogUserIn();
 
@@ -101,7 +101,7 @@ public class AppControllerTest : IntegrationTestBase
     public async Task UpdateApiToken_NotOwner_Forbidden()
     {
         // arrange
-        var otherToken = await Id().RegisterLogOtherUserIn();
+        var otherToken = await Id().RegisterLogUserIn();
         var app = await Id(otherToken).App.Register();
         var token = await Id().RegisterLogUserIn();
 
@@ -188,7 +188,7 @@ public class AppControllerTest : IntegrationTestBase
         // arrange
         var token = await Id().RegisterLogUserIn();
         var app = await Id(token).App.Register();
-        var request = new UpdateAppRequestBody { Name = "d" };
+        var request = new UpdateAppRequestBody { Name = Faker.Random.String(1, 1) };
 
         // act
         var response = await Id(token).App.UpdateApp(app.Id, request);
@@ -202,7 +202,7 @@ public class AppControllerTest : IntegrationTestBase
     {
         // arrange
         var token = await Id().RegisterLogUserIn();
-        var request = new UpdateAppRequestBody { Name = "Demo App" };
+        var request = new UpdateAppRequestBody { Name = Faker.Random.String(10) };
 
         // act
         var response = await Id(token).App.UpdateApp(Guid.NewGuid(), request);
@@ -215,10 +215,10 @@ public class AppControllerTest : IntegrationTestBase
     public async Task Update_NotOwner_Forbidden()
     {
         // arrange
-        var otherToken = await Id().RegisterLogOtherUserIn();
+        var otherToken = await Id().RegisterLogUserIn();
         var app = await Id(otherToken).App.Register();
         var token = await Id().RegisterLogUserIn();
-        var request = new UpdateAppRequestBody { Name = "Demo App" };
+        var request = new UpdateAppRequestBody { Name = Faker.Random.String(10) };
 
         // act
         var response = await Id(token).App.UpdateApp(app.Id, request);
@@ -233,7 +233,7 @@ public class AppControllerTest : IntegrationTestBase
         // arrange
         var token = await Id().RegisterLogUserIn();
         var app = await Id(token).App.Register();
-        var request = new UpdateAppRequestBody { Name = "Demo App Updated" };
+        var request = new UpdateAppRequestBody { Name = Faker.Random.String(10) };
 
         // act
         var response = await Id(token).App.UpdateApp(app.Id, request);
@@ -262,7 +262,7 @@ public class AppControllerTest : IntegrationTestBase
     public async Task SetOwner_NotOwner_Forbidden()
     {
         // arrange
-        var otherToken = await Id().RegisterLogOtherUserIn();
+        var otherToken = await Id().RegisterLogUserIn();
         var app = await Id(otherToken).App.Register();
         var token = await Id().RegisterLogUserIn();
         var me = await Id(token).Me.GetMe().GetData();
@@ -294,7 +294,7 @@ public class AppControllerTest : IntegrationTestBase
         // arrange
         var token = await Id().RegisterLogUserIn();
         var app = await Id(token).App.Register();
-        var otherToken = await Id().RegisterLogOtherUserIn();
+        var otherToken = await Id().RegisterLogUserIn();
         var user = await Id(otherToken).Me.GetMe().GetData();
 
         // act
@@ -324,7 +324,7 @@ public class AppControllerTest : IntegrationTestBase
     public async Task Delete_NotOwner_Forbidden()
     {
         // arrange
-        var otherToken = await Id().RegisterLogOtherUserIn();
+        var otherToken = await Id().RegisterLogUserIn();
         var app = await Id(otherToken).App.Register();
         var token = await Id().RegisterLogUserIn();
 

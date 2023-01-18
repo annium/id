@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Annium.Data.Operations;
 using Annium.Net.Http;
 using Server.ViewModels.Requests.CompanyUsers;
+using static Server.TestClient.Helper;
 
 namespace Server.TestClient;
 
@@ -36,10 +37,10 @@ public static class CompanyUserClientExtensions
         Guid companyId,
         Guid userId,
         Guid claimId,
-        string value = "Some"
+        string? value = null
     )
     {
-        var response = await client.AddCompanyClaimToCompanyUser(claimId, companyId, userId, new AddCompanyClaimToCompanyUserRequestBody { Value = value });
+        var response = await client.AddCompanyClaimToCompanyUser(claimId, companyId, userId, new AddCompanyClaimToCompanyUserRequestBody { Value = value ?? Faker.Random.String(10) });
 
         return response;
     }

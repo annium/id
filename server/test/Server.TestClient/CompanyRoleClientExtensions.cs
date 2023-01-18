@@ -5,6 +5,7 @@ using Annium.Data.Operations;
 using Annium.Net.Http;
 using Server.ViewModels.Requests.CompanyRoles;
 using Server.ViewModels.Responses.CompanyRoles;
+using static Server.TestClient.Helper;
 
 namespace Server.TestClient;
 
@@ -13,25 +14,15 @@ public static class CompanyRoleClientExtensions
     public static async Task<CompanyRoleResponse> Register(
         this CompanyRoleClient client,
         Guid appId,
-        string key = "one",
-        string name = "First role"
+        string? key = null,
+        string? name = null
     )
     {
-        var request = new CreateCompanyRoleRequest { AppId = appId, Key = key, Name = name };
+        var request = new CreateCompanyRoleRequest { AppId = appId, Key = key ?? Faker.Random.String(5), Name = name ?? Faker.Random.String(10) };
         var roleId = await client.CreateRole(request).GetData();
         var roles = await client.ListRoles(appId).GetData();
 
         return roles.Single(x => x.Id == roleId);
-    }
-
-    public static Task<CompanyRoleResponse> RegisterOther(
-        this CompanyRoleClient client,
-        Guid appId,
-        string key = "two",
-        string name = "Second role"
-    )
-    {
-        return client.Register(appId, key, name);
     }
 
     public static Task<IHttpResponse<IResult>> AddClaimToRole(

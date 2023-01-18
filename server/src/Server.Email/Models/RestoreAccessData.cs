@@ -2,8 +2,4 @@ using Server.Domain.Models;
 
 namespace Server.Email.Models;
 
-public class RestoreAccessData
-{
-    public string Server { get; set; } = string.Empty;
-    public Tokens Tokens { get; set; } = null!;
-}
+public sealed record RestoreAccessData(string Server, string Login, Tokens Tokens);

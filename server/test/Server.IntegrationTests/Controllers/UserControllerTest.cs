@@ -65,7 +65,7 @@ public class UserControllerTest : IntegrationTestBase
     public async Task AddRole_NotOwner_Forbidden()
     {
         // arrange
-        var otherToken = await Id().RegisterLogOtherUserIn();
+        var otherToken = await Id().RegisterLogUserIn();
         var app = await Id(otherToken).App.Register();
         var role = await Id(otherToken).Role.Register(app.Id);
 
@@ -97,7 +97,7 @@ public class UserControllerTest : IntegrationTestBase
     {
         // arrange
         var token = await Id().RegisterLogUserIn();
-        var other = await Id().RegisterLogInGetOtherUser();
+        var other = await Id().RegisterLogInGetUser();
 
         // act
         var response = await Id(token).User.AddRoleToUser(Guid.NewGuid(), other.Id);
@@ -113,7 +113,7 @@ public class UserControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
         var app = await Id(token).App.Register();
         var role = await Id(token).Role.Register(app.Id);
-        var other = await Id().RegisterLogInGetOtherUser();
+        var other = await Id().RegisterLogInGetUser();
 
         // act
         var response = await Id(token).User.AddRoleToUser(role.Id, other.Id);
@@ -139,7 +139,7 @@ public class UserControllerTest : IntegrationTestBase
     public async Task DeleteRole_NotOwner_Forbidden()
     {
         // arrange
-        var otherToken = await Id().RegisterLogOtherUserIn();
+        var otherToken = await Id().RegisterLogUserIn();
         var owner = await Id(otherToken).Me.GetMe().GetData();
         var app = await Id(otherToken).App.Register();
         var role = await Id(otherToken).Role.Register(app.Id);
@@ -170,7 +170,7 @@ public class UserControllerTest : IntegrationTestBase
     {
         // arrange
         var token = await Id().RegisterLogUserIn();
-        var other = await Id().RegisterLogInGetOtherUser();
+        var other = await Id().RegisterLogInGetUser();
 
         // act
         var response = await Id(token).User.DeleteRoleFromUser(Guid.NewGuid(), other.Id);
@@ -186,7 +186,7 @@ public class UserControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
         var app = await Id(token).App.Register();
         var role = await Id(token).Role.Register(app.Id);
-        var other = await Id().RegisterLogInGetOtherUser();
+        var other = await Id().RegisterLogInGetUser();
 
         // act
         var response = await Id(token).User.DeleteRoleFromUser(role.Id, other.Id);
@@ -202,10 +202,10 @@ public class UserControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
         var app = await Id(token).App.Register();
         var claim = await Id(token).Claim.Register(app.Id);
-        var other = await Id().RegisterLogInGetOtherUser();
+        var other = await Id().RegisterLogInGetUser();
 
         // act
-        var response = await Id(token).User.AddUserClaim(other.Id, claim.Id, "S");
+        var response = await Id(token).User.AddUserClaim(other.Id, claim.Id, Faker.Random.String(1));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.BadRequest);
@@ -215,7 +215,7 @@ public class UserControllerTest : IntegrationTestBase
     public async Task AddClaim_NotOwner_Forbidden()
     {
         // arrange
-        var otherToken = await Id().RegisterLogOtherUserIn();
+        var otherToken = await Id().RegisterLogUserIn();
         var app = await Id(otherToken).App.Register();
         var claim = await Id(otherToken).Claim.Register(app.Id);
         var token = await Id().RegisterLogUserIn();
@@ -246,7 +246,7 @@ public class UserControllerTest : IntegrationTestBase
     {
         // arrange
         var token = await Id().RegisterLogUserIn();
-        var other = await Id().RegisterLogInGetOtherUser();
+        var other = await Id().RegisterLogInGetUser();
 
         // act
         var response = await Id(token).User.AddUserClaim(other.Id, Guid.NewGuid());
@@ -262,7 +262,7 @@ public class UserControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
         var app = await Id(token).App.Register();
         var claim = await Id(token).Claim.Register(app.Id);
-        var other = await Id().RegisterLogInGetOtherUser();
+        var other = await Id().RegisterLogInGetUser();
 
         // act
         var response = await Id(token).User.AddUserClaim(other.Id, claim.Id);
@@ -288,7 +288,7 @@ public class UserControllerTest : IntegrationTestBase
     public async Task DeleteClaim_NotOwner_Forbidden()
     {
         // arrange
-        var otherToken = await Id().RegisterLogOtherUserIn();
+        var otherToken = await Id().RegisterLogUserIn();
         var owner = await Id(otherToken).Me.GetMe().GetData();
         var app = await Id(otherToken).App.Register();
         var claim = await Id(otherToken).Claim.Register(app.Id);
@@ -319,7 +319,7 @@ public class UserControllerTest : IntegrationTestBase
     {
         // arrange
         var token = await Id().RegisterLogUserIn();
-        var other = await Id().RegisterLogInGetOtherUser();
+        var other = await Id().RegisterLogInGetUser();
 
         // act
         var response = await Id(token).User.DeleteClaimFromUser(Guid.NewGuid(), other.Id);
@@ -335,7 +335,7 @@ public class UserControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
         var app = await Id(token).App.Register();
         var claim = await Id(token).Claim.Register(app.Id);
-        var other = await Id().RegisterLogInGetOtherUser();
+        var other = await Id().RegisterLogInGetUser();
 
         // act
         var response = await Id(token).User.DeleteClaimFromUser(claim.Id, other.Id);

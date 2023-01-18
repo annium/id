@@ -3,23 +3,25 @@ using System.IO;
 using System.Threading.Tasks;
 using Annium.AspNetCore.IntegrationTesting;
 using Annium.Core.DependencyInjection;
-using Annium.Core.Primitives;
 using Annium.Id.AspNetCore;
 using Annium.Net.Http;
 using Annium.Net.Mail;
+using Bogus;
 using NodaTime;
 using Server.DemoHost;
 using Server.DemoHost.TestClient;
 using Server.Host;
-using Server.IntegrationTests.Fixtures;
 using Server.TestClient;
 using Xunit;
+using Database = Server.IntegrationTests.Fixtures.Database;
 using ServicePack = Server.DemoHost.ServicePack;
 
 namespace Server.IntegrationTests;
 
 public class IntegrationTestBase : IntegrationTest, IAsyncLifetime
 {
+    protected Faker Faker { get; } = new();
+
     public async Task InitializeAsync()
     {
         await Database.AcquireAsync();

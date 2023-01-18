@@ -15,7 +15,7 @@ public class CompanyClaimControllerTest : IntegrationTestBase
     {
         // arrange
         var token = await Id().RegisterLogUserIn();
-        var request = new CreateCompanyClaimRequest { AppId = Guid.NewGuid(), Key = "one" };
+        var request = new CreateCompanyClaimRequest { AppId = Guid.NewGuid(), Key = Faker.Random.String(5) };
 
         // act
         var response = await Id(token).CompanyClaim.CreateCompanyClaim(request);
@@ -29,7 +29,7 @@ public class CompanyClaimControllerTest : IntegrationTestBase
     {
         // arrange
         var token = await Id().RegisterLogUserIn();
-        var request = new CreateCompanyClaimRequest { AppId = Guid.NewGuid(), Key = "one", Name = "First Claim" };
+        var request = new CreateCompanyClaimRequest { AppId = Guid.NewGuid(), Key = Faker.Random.String(5), Name = Faker.Random.String(10) };
 
         // act
         var response = await Id(token).CompanyClaim.CreateCompanyClaim(request);
@@ -44,7 +44,7 @@ public class CompanyClaimControllerTest : IntegrationTestBase
         // arrange
         var token = await Id().RegisterLogUserIn();
         var app = await Id(token).App.Register();
-        var request = new CreateCompanyClaimRequest { AppId = app.Id, Key = "one", Name = "First Claim" };
+        var request = new CreateCompanyClaimRequest { AppId = app.Id, Key = Faker.Random.String(5), Name = Faker.Random.String(10) };
 
         await Id(token).CompanyClaim.CreateCompanyClaim(request);
 
@@ -59,10 +59,10 @@ public class CompanyClaimControllerTest : IntegrationTestBase
     public async Task Create_NotOwner_Forbidden()
     {
         // arrange
-        var otherToken = await Id().RegisterLogOtherUserIn();
+        var otherToken = await Id().RegisterLogUserIn();
         var app = await Id(otherToken).App.Register();
         var token = await Id().RegisterLogUserIn();
-        var request = new CreateCompanyClaimRequest { AppId = app.Id, Key = "one", Name = "First Claim" };
+        var request = new CreateCompanyClaimRequest { AppId = app.Id, Key = Faker.Random.String(5), Name = Faker.Random.String(10) };
 
         // act
         var response = await Id(token).CompanyClaim.CreateCompanyClaim(request);
@@ -77,8 +77,8 @@ public class CompanyClaimControllerTest : IntegrationTestBase
         // arrange
         var token = await Id().RegisterLogUserIn();
         var app = await Id(token).App.Register();
-        var claimKey = "first";
-        var claimName = "First claim";
+        var claimKey = Faker.Random.String(5);
+        var claimName = Faker.Random.String(10);
 
         // act
         var claim = await Id(token).CompanyClaim.Register(app.Id, claimKey, claimName);
@@ -122,7 +122,7 @@ public class CompanyClaimControllerTest : IntegrationTestBase
     {
         // arrange
         var token = await Id().RegisterLogUserIn();
-        var request = new UpdateCompanyClaimRequestBody { Key = "one" };
+        var request = new UpdateCompanyClaimRequestBody { Key = Faker.Random.String(5) };
 
         // act
         var response = await Id(token).CompanyClaim.UpdateCompanyClaim(Guid.NewGuid(), request);
@@ -136,7 +136,7 @@ public class CompanyClaimControllerTest : IntegrationTestBase
     {
         // arrange
         var token = await Id().RegisterLogUserIn();
-        var request = new UpdateCompanyClaimRequestBody { Key = "one", Name = "One Claim" };
+        var request = new UpdateCompanyClaimRequestBody { Key = Faker.Random.String(5), Name = Faker.Random.String(10) };
 
         // act
         var response = await Id(token).CompanyClaim.UpdateCompanyClaim(Guid.NewGuid(), request);
@@ -149,11 +149,11 @@ public class CompanyClaimControllerTest : IntegrationTestBase
     public async Task Update_NotOwner_Forbidden()
     {
         // arrange
-        var otherToken = await Id().RegisterLogOtherUserIn();
+        var otherToken = await Id().RegisterLogUserIn();
         var app = await Id(otherToken).App.Register();
         var claim = await Id(otherToken).CompanyClaim.Register(app.Id);
         var token = await Id().RegisterLogUserIn();
-        var request = new UpdateCompanyClaimRequestBody { Key = "one", Name = "One Claim" };
+        var request = new UpdateCompanyClaimRequestBody { Key = Faker.Random.String(5), Name = Faker.Random.String(10) };
 
         // act
         var response = await Id(token).CompanyClaim.UpdateCompanyClaim(claim.Id, request);
@@ -169,7 +169,7 @@ public class CompanyClaimControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
         var app = await Id(token).App.Register();
         var claim = await Id(token).CompanyClaim.Register(app.Id);
-        var request = new UpdateCompanyClaimRequestBody { Key = "other", Name = "One Claim" };
+        var request = new UpdateCompanyClaimRequestBody { Key = Faker.Random.String(5), Name = Faker.Random.String(10) };
         await Id(token).CompanyClaim.Register(app.Id, request.Key, request.Name);
 
         // act
@@ -186,7 +186,7 @@ public class CompanyClaimControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
         var app = await Id(token).App.Register();
         var claim = await Id(token).CompanyClaim.Register(app.Id);
-        var request = new UpdateCompanyClaimRequestBody { Key = "one", Name = "One Claim" };
+        var request = new UpdateCompanyClaimRequestBody { Key = Faker.Random.String(5), Name = Faker.Random.String(10) };
 
         // act
         var response = await Id(token).CompanyClaim.UpdateCompanyClaim(claim.Id, request);
@@ -212,7 +212,7 @@ public class CompanyClaimControllerTest : IntegrationTestBase
     public async Task Delete_NotOwner_Forbidden()
     {
         // arrange
-        var otherToken = await Id().RegisterLogOtherUserIn();
+        var otherToken = await Id().RegisterLogUserIn();
         var app = await Id(otherToken).App.Register();
         var claim = await Id(otherToken).CompanyClaim.Register(app.Id);
         var token = await Id().RegisterLogUserIn();

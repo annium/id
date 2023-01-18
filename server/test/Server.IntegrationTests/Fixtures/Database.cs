@@ -4,6 +4,8 @@ using Annium.linq2db.PostgreSql;
 using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Configurations;
 using DotNet.Testcontainers.Containers;
+using Server.Db.Internal;
+using Xdb.Core.Migrations;
 
 namespace Server.IntegrationTests.Fixtures;
 
@@ -17,6 +19,7 @@ public static class Database
     };
 
     private static readonly TestcontainerDatabase Db;
+    private static readonly TaskCompletionSource InitTcs = new();
     private static volatile int _refs;
 
     static Database()
@@ -34,10 +37,17 @@ public static class Database
     public static async Task AcquireAsync()
     {
         if (Interlocked.Increment(ref _refs) > 1)
+        {
+            await InitTcs.Task;
             return;
+        }
 
         await Db.StartAsync();
         Config.Host = Db.Hostname;
         Config.Port = Db.Port;
+        Migrator.ForPostgresql(Config.ConnectionString, Constants.Schema)
+            .WithScriptsFromAssembly(typeof(Db.TestServicePack).Assembly)
+            .Execute();
+        InitTcs.SetResult();
     }
 }

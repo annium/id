@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Server.ViewModels.Requests.Apps;
 using Server.ViewModels.Responses.Apps;
+using static Server.TestClient.Helper;
 
 namespace Server.TestClient;
 
@@ -8,21 +9,13 @@ public static class AppClientExtensions
 {
     public static async Task<AppResponse> Register(
         this AppClient client,
-        string name = "Demo App"
+        string? name = null
     )
     {
-        var createResponse = await client.CreateApp(new CreateAppRequest { Name = name });
+        var createResponse = await client.CreateApp(new CreateAppRequest { Name = name ?? Faker.Random.String(10) });
 
         var getResponse = await client.GetApp(createResponse.Data.Data);
 
         return getResponse.Data.Data;
-    }
-
-    public static Task<AppResponse> RegisterOther(
-        this AppClient client,
-        string name = "Other App"
-    )
-    {
-        return client.Register(name);
     }
 }

@@ -1,8 +1,5 @@
 using System;
 using Annium.Core.DependencyInjection;
-using Annium.linq2db.PostgreSql;
-using Server.Db.Internal;
-using Xdb.Core.Migrations;
 
 namespace Server.Db;
 
@@ -17,12 +14,5 @@ internal class BaseServicePack : ServicePackBase
             .Where(x => x.IsClass && x.Name.EndsWith("Repository"))
             .AsInterfaces()
             .Scoped();
-    }
-
-    public override void Setup(IServiceProvider provider)
-    {
-        Migrator.ForPostgresql(provider.Resolve<PostgreSqlConfiguration>().ConnectionString, Constants.Schema)
-            .WithScriptsFromAssembly(GetType().Assembly)
-            .Execute();
     }
 }

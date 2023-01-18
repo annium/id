@@ -16,7 +16,7 @@ public class LoginControllerTest : IntegrationTestBase
         // arrange
         var token = await Id().RegisterLogUserIn();
         var app = await Id(token).App.Register();
-        var request = new LogInRequest { Login = "uniqueLogin", Password = "Weak" };
+        var request = new LogInRequest { Login = Faker.Internet.UserName(), Password = Faker.Internet.Password(4) };
 
         // act
         var response = await Id().Login.LogIn(app.Id, request);
@@ -31,7 +31,7 @@ public class LoginControllerTest : IntegrationTestBase
         // arrange
         var token = await Id().RegisterLogUserIn();
         var app = await Id(token).App.Register();
-        var request = new LogInRequest { Login = "uniqueLogin", Password = "StrongPass!!" };
+        var request = new LogInRequest { Login = Faker.Internet.UserName(), Password = Faker.Internet.Password() };
 
         // act
         var response = await Id().Login.LogIn(app.Id, request);
@@ -46,7 +46,7 @@ public class LoginControllerTest : IntegrationTestBase
         // arrange
         var token = await Id().RegisterLogUserIn();
         var app = await Id(token).App.Register();
-        var request = new LogInRequest { Login = "demo", Password = "wrong_pass" };
+        var request = new LogInRequest { Login = Faker.Internet.UserName(), Password = Faker.Internet.Password() };
 
         // act
         var response = await Id().Login.LogIn(app.Id, request);
@@ -61,7 +61,7 @@ public class LoginControllerTest : IntegrationTestBase
         // arrange
         var token = await Id().RegisterLogUserIn();
         var app = await Id(token).App.Register();
-        var request = new LogInRequest { Login = "demo", Password = "test1test" };
+        var request = new LogInRequest { Login = Faker.Internet.UserName(), Password = Faker.Internet.Password() };
 
         // act
         var response = await Id().Login.LogIn(app.Id, request);
@@ -74,9 +74,12 @@ public class LoginControllerTest : IntegrationTestBase
     public async Task UpdateTokens_InvalidToken_NotFound()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
+        var login = Faker.Internet.UserName();
+        var email = Faker.Internet.Email();
+        var password = Faker.Internet.Password();
+        var token = await Id().RegisterLogUserIn(login, email, password);
         var app = await Id(token).App.Register();
-        token = await Id(token).LogUserIn(app.Id);
+        token = await Id(token).LogUserIn(app.Id, login, password);
 
         // act
         var response = await Id(token).Login.UpdateToken(app.Id, Guid.NewGuid());
@@ -89,9 +92,9 @@ public class LoginControllerTest : IntegrationTestBase
     public async Task UpdateTokens_ValidToken_Ok()
     {
         // arrange
-        var login = "demo";
-        var email = "demo@demo";
-        var password = "test1test";
+        var login = Faker.Internet.UserName();
+        var email = Faker.Internet.Email();
+        var password = Faker.Internet.Password();
         var token = await Id().RegisterLogUserIn(login, email, password);
         var app = await Id(token).App.Register();
         var tokens = await Id(token).Login.LogIn(app.Id, new LogInRequestBody { Login = login, Password = password }).GetData();
@@ -108,9 +111,12 @@ public class LoginControllerTest : IntegrationTestBase
     public async Task LogOut_Ok()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
+        var login = Faker.Internet.UserName();
+        var email = Faker.Internet.Email();
+        var password = Faker.Internet.Password();
+        var token = await Id().RegisterLogUserIn(login, email, password);
         var app = await Id(token).App.Register();
-        token = await Id(token).LogUserIn(app.Id);
+        token = await Id(token).LogUserIn(app.Id, login, password);
 
         // act
         var response = await Id(token).Login.LogOut(app.Id);

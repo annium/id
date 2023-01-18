@@ -17,7 +17,7 @@ public class CompanyControllerTest : IntegrationTestBase
     {
         // arrange
         var token = await Id().RegisterLogUserIn();
-        var request = new RegisterCompanyRequest { Name = "xx" };
+        var request = new RegisterCompanyRequest { Name = Faker.Random.String(2) };
 
         // act
         var response = await Id(token).Company.RegisterCompany(request);
@@ -31,7 +31,7 @@ public class CompanyControllerTest : IntegrationTestBase
     {
         // arrange
         var token = await Id().RegisterLogUserIn();
-        var request = new RegisterCompanyRequest { ParentId = Guid.NewGuid(), Name = "Demo Company" };
+        var request = new RegisterCompanyRequest { ParentId = Guid.NewGuid(), Name = Faker.Random.String(10) };
 
         // act
         var response = await Id(token).Company.RegisterCompany(request);
@@ -44,10 +44,10 @@ public class CompanyControllerTest : IntegrationTestBase
     public async Task Create_NonParentOwner_Forbidden()
     {
         // arrange
-        var otherToken = await Id().RegisterLogOtherUserIn();
-        var parent = await Id(otherToken).Company.RegisterOther();
+        var otherToken = await Id().RegisterLogUserIn();
+        var parent = await Id(otherToken).Company.Register();
         var token = await Id().RegisterLogUserIn();
-        var request = new RegisterCompanyRequest { ParentId = parent.Id, Name = "Demo Company" };
+        var request = new RegisterCompanyRequest { ParentId = parent.Id, Name = Faker.Random.String(10) };
 
         // act
         var response = await Id(token).Company.RegisterCompany(request);
@@ -61,7 +61,7 @@ public class CompanyControllerTest : IntegrationTestBase
     {
         // arrange
         var token = await Id().RegisterLogUserIn();
-        var companyName = "Demo Company";
+        var companyName = Faker.Random.String(10);
 
         // act
         var company = await Id(token).Company.Register(name: companyName);
@@ -193,7 +193,7 @@ public class CompanyControllerTest : IntegrationTestBase
         // arrange
         var token = await Id().RegisterLogUserIn();
         var company = await Id(token).Company.Register();
-        var request = new UpdateCompanyRequestBody { Name = "xx" };
+        var request = new UpdateCompanyRequestBody { Name = Faker.Random.String(2) };
 
         // act
         var response = await Id(token).Company.UpdateCompany(company.Id, request);
@@ -207,7 +207,7 @@ public class CompanyControllerTest : IntegrationTestBase
     {
         // arrange
         var token = await Id().RegisterLogUserIn();
-        var request = new UpdateCompanyRequestBody { Name = "Demo Company" };
+        var request = new UpdateCompanyRequestBody { Name = Faker.Random.String(10) };
 
         // act
         var response = await Id(token).Company.UpdateCompany(Guid.NewGuid(), request);
@@ -220,10 +220,10 @@ public class CompanyControllerTest : IntegrationTestBase
     public async Task Update_NotOwner_Forbidden()
     {
         // arrange
-        var otherToken = await Id().RegisterLogOtherUserIn();
+        var otherToken = await Id().RegisterLogUserIn();
         var company = await Id(otherToken).Company.Register();
         var token = await Id().RegisterLogUserIn();
-        var request = new UpdateCompanyRequestBody { Name = "Demo Company" };
+        var request = new UpdateCompanyRequestBody { Name = Faker.Random.String(10) };
 
         // act
         var response = await Id(token).Company.UpdateCompany(company.Id, request);
@@ -238,7 +238,7 @@ public class CompanyControllerTest : IntegrationTestBase
         // arrange
         var token = await Id().RegisterLogUserIn();
         var company = await Id(token).Company.Register();
-        var request = new UpdateCompanyRequestBody { ParentId = Guid.NewGuid(), Name = "Demo Company" };
+        var request = new UpdateCompanyRequestBody { ParentId = Guid.NewGuid(), Name = Faker.Random.String(10) };
 
         // act
         var response = await Id(token).Company.UpdateCompany(company.Id, request);
@@ -251,11 +251,11 @@ public class CompanyControllerTest : IntegrationTestBase
     public async Task Update_NonParentOwner_Forbidden()
     {
         // arrange
-        var otherToken = await Id().RegisterLogOtherUserIn();
-        var parent = await Id(otherToken).Company.RegisterOther();
+        var otherToken = await Id().RegisterLogUserIn();
+        var parent = await Id(otherToken).Company.Register();
         var token = await Id().RegisterLogUserIn();
         var company = await Id(token).Company.Register();
-        var request = new UpdateCompanyRequestBody { ParentId = parent.Id, Name = "Demo Company" };
+        var request = new UpdateCompanyRequestBody { ParentId = parent.Id, Name = Faker.Random.String(10) };
 
         // act
         var response = await Id(token).Company.UpdateCompany(company.Id, request);
@@ -270,7 +270,7 @@ public class CompanyControllerTest : IntegrationTestBase
         // arrange
         var token = await Id().RegisterLogUserIn();
         var company = await Id(token).Company.Register();
-        var request = new UpdateCompanyRequestBody { Name = "Some Company" };
+        var request = new UpdateCompanyRequestBody { Name = Faker.Random.String(10) };
 
         // act
         var response = await Id(token).Company.UpdateCompany(company.Id, request);
@@ -296,7 +296,7 @@ public class CompanyControllerTest : IntegrationTestBase
     public async Task SetOwner_NotOwner_Forbidden()
     {
         // arrange
-        var otherToken = await Id().RegisterLogOtherUserIn();
+        var otherToken = await Id().RegisterLogUserIn();
         var company = await Id(otherToken).Company.Register();
         var token = await Id().RegisterLogUserIn();
         var user = await Id(token).Me.GetMe().GetData();
@@ -312,7 +312,7 @@ public class CompanyControllerTest : IntegrationTestBase
     public async Task SetOwner_MissingSuccessor_NotFound()
     {
         // arrange
-        var otherToken = await Id().RegisterLogOtherUserIn();
+        var otherToken = await Id().RegisterLogUserIn();
         var company = await Id(otherToken).Company.Register();
 
         // act
@@ -326,7 +326,7 @@ public class CompanyControllerTest : IntegrationTestBase
     public async Task SetOwner_Valid_Ok()
     {
         // arrange
-        var otherToken = await Id().RegisterLogOtherUserIn();
+        var otherToken = await Id().RegisterLogUserIn();
         var company = await Id(otherToken).Company.Register();
         var token = await Id().RegisterLogUserIn();
         var user = await Id(token).Me.GetMe().GetData();
@@ -355,7 +355,7 @@ public class CompanyControllerTest : IntegrationTestBase
     public async Task Delete_NotOwner_Forbidden()
     {
         // arrange
-        var otherToken = await Id().RegisterLogOtherUserIn();
+        var otherToken = await Id().RegisterLogUserIn();
         var company = await Id(otherToken).Company.Register();
         var token = await Id().RegisterLogUserIn();
 

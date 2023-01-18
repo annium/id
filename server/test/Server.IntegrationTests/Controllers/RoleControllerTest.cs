@@ -15,7 +15,7 @@ public class RoleControllerTest : IntegrationTestBase
     {
         // arrange
         var token = await Id().RegisterLogUserIn();
-        var request = new CreateRoleRequest { Key = "one" };
+        var request = new CreateRoleRequest { Key = Faker.Random.String(5) };
 
         // act
         var response = await Id(token).Role.CreateRole(request);
@@ -29,7 +29,7 @@ public class RoleControllerTest : IntegrationTestBase
     {
         // arrange
         var token = await Id().RegisterLogUserIn();
-        var request = new CreateRoleRequest { AppId = Guid.NewGuid(), Key = "one", Name = "First Role" };
+        var request = new CreateRoleRequest { AppId = Guid.NewGuid(), Key = Faker.Random.String(5), Name = Faker.Random.String(10) };
 
         // act
         var response = await Id(token).Role.CreateRole(request);
@@ -42,10 +42,10 @@ public class RoleControllerTest : IntegrationTestBase
     public async Task Create_NotOwner_Forbidden()
     {
         // arrange
-        var otherToken = await Id().RegisterLogOtherUserIn();
+        var otherToken = await Id().RegisterLogUserIn();
         var app = await Id(otherToken).App.Register();
         var token = await Id().RegisterLogUserIn();
-        var request = new CreateRoleRequest { AppId = app.Id, Key = "one", Name = "First Role" };
+        var request = new CreateRoleRequest { AppId = app.Id, Key = Faker.Random.String(5), Name = Faker.Random.String(10) };
 
         // act
         var response = await Id(token).Role.CreateRole(request);
@@ -60,8 +60,8 @@ public class RoleControllerTest : IntegrationTestBase
         // arrange
         var token = await Id().RegisterLogUserIn();
         var app = await Id(token).App.Register();
-        var roleKey = "one";
-        var roleName = "First Role";
+        var roleKey = Faker.Random.String(5);
+        var roleName = Faker.Random.String(10);
         await Id(token).Role.Register(app.Id, roleKey, roleName);
         var request = new CreateRoleRequest { AppId = app.Id, Key = roleKey, Name = roleName };
 
@@ -78,8 +78,8 @@ public class RoleControllerTest : IntegrationTestBase
         // arrange
         var token = await Id().RegisterLogUserIn();
         var app = await Id(token).App.Register();
-        var roleKey = "one";
-        var roleName = "First Role";
+        var roleKey = Faker.Random.String(5);
+        var roleName = Faker.Random.String(10);
 
         // act
         var role = await Id(token).Role.Register(app.Id, roleKey, roleName);
@@ -110,8 +110,8 @@ public class RoleControllerTest : IntegrationTestBase
         // arrange
         var token = await Id().RegisterLogUserIn();
         var app = await Id(token).App.Register();
-        var roleKey = "one";
-        var roleName = "First Role";
+        var roleKey = Faker.Random.String(5);
+        var roleName = Faker.Random.String(10);
         var role = await Id(token).Role.Register(app.Id, roleKey, roleName);
 
         // act
@@ -133,7 +133,7 @@ public class RoleControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
         var app = await Id(token).App.Register();
         var role = await Id(token).Role.Register(app.Id);
-        var request = new UpdateRoleRequest { Key = "one" };
+        var request = new UpdateRoleRequest { Key = Faker.Random.String(5) };
 
         // act
         var response = await Id(token).Role.UpdateRole(role.Id, request);
@@ -147,7 +147,7 @@ public class RoleControllerTest : IntegrationTestBase
     {
         // arrange
         var token = await Id().RegisterLogUserIn();
-        var request = new UpdateRoleRequest { Key = "one", Name = "One Role" };
+        var request = new UpdateRoleRequest { Key = Faker.Random.String(5), Name = Faker.Random.String(10) };
 
         // act
         var response = await Id(token).Role.UpdateRole(Guid.NewGuid(), request);
@@ -162,9 +162,9 @@ public class RoleControllerTest : IntegrationTestBase
         // arrange
         var token = await Id().RegisterLogUserIn();
         var app = await Id(token).App.Register();
-        var otherRole = await Id(token).Role.RegisterOther(app.Id);
+        var otherRole = await Id(token).Role.Register(app.Id);
         var role = await Id(token).Role.Register(app.Id);
-        var request = new UpdateRoleRequest { Key = otherRole.Key, Name = "FirstRole" };
+        var request = new UpdateRoleRequest { Key = otherRole.Key, Name = Faker.Random.String(10) };
 
         // act
         var response = await Id(token).Role.UpdateRole(role.Id, request);
@@ -177,11 +177,11 @@ public class RoleControllerTest : IntegrationTestBase
     public async Task Update_NotOwner_Forbidden()
     {
         // arrange
-        var otherToken = await Id().RegisterLogOtherUserIn();
+        var otherToken = await Id().RegisterLogUserIn();
         var app = await Id(otherToken).App.Register();
         var role = await Id(otherToken).Role.Register(app.Id);
         var token = await Id().RegisterLogUserIn();
-        var request = new UpdateRoleRequest { Key = "one", Name = "One Role" };
+        var request = new UpdateRoleRequest { Key = Faker.Random.String(5), Name = Faker.Random.String(10) };
 
         // act
         var response = await Id(token).Role.UpdateRole(role.Id, request);
@@ -197,7 +197,7 @@ public class RoleControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
         var app = await Id(token).App.Register();
         var role = await Id(token).Role.Register(app.Id);
-        var request = new UpdateRoleRequest { Key = "one", Name = "One Role" };
+        var request = new UpdateRoleRequest { Key = Faker.Random.String(5), Name = Faker.Random.String(10) };
 
         // act
         var response = await Id(token).Role.UpdateRole(role.Id, request);
@@ -214,7 +214,7 @@ public class RoleControllerTest : IntegrationTestBase
         var app = await Id(token).App.Register();
         var role = await Id(token).Role.Register(app.Id);
         var claim = await Id(token).Claim.Register(app.Id);
-        var request = new AddClaimToRoleRequest { Value = "S" };
+        var request = new AddClaimToRoleRequest { Value = Faker.Random.String(1) };
 
         // act
         var response = await Id(token).Role.AddClaimToRole(claim.Id, role.Id, request);
@@ -228,7 +228,7 @@ public class RoleControllerTest : IntegrationTestBase
     {
         // arrange
         var token = await Id().RegisterLogUserIn();
-        var request = new AddClaimToRoleRequest { Value = "Some" };
+        var request = new AddClaimToRoleRequest { Value = Faker.Random.String(5) };
 
         // act
         var response = await Id(token).Role.AddClaimToRole(Guid.NewGuid(), Guid.NewGuid(), request);
@@ -244,7 +244,7 @@ public class RoleControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
         var app = await Id(token).App.Register();
         var role = await Id(token).Role.Register(app.Id);
-        var request = new AddClaimToRoleRequest { Value = "Some" };
+        var request = new AddClaimToRoleRequest { Value = Faker.Random.String(5) };
 
         // act
         var response = await Id(token).Role.AddClaimToRole(Guid.NewGuid(), role.Id, request);
@@ -257,12 +257,12 @@ public class RoleControllerTest : IntegrationTestBase
     public async Task AddClaimToRole_NotOwner_Forbidden()
     {
         // arrange
-        var otherToken = await Id().RegisterLogOtherUserIn();
+        var otherToken = await Id().RegisterLogUserIn();
         var app = await Id(otherToken).App.Register();
         var role = await Id(otherToken).Role.Register(app.Id);
         var claim = await Id(otherToken).Claim.Register(app.Id);
         var token = await Id().RegisterLogUserIn();
-        var request = new AddClaimToRoleRequest { Value = "Some" };
+        var request = new AddClaimToRoleRequest { Value = Faker.Random.String(5) };
 
         // act
         var response = await Id(token).Role.AddClaimToRole(claim.Id, role.Id, request);
@@ -277,10 +277,10 @@ public class RoleControllerTest : IntegrationTestBase
         // arrange
         var token = await Id().RegisterLogUserIn();
         var app1 = await Id(token).App.Register();
-        var app2 = await Id(token).App.RegisterOther();
+        var app2 = await Id(token).App.Register();
         var role = await Id(token).Role.Register(app2.Id);
         var claim = await Id(token).Claim.Register(app1.Id);
-        var request = new AddClaimToRoleRequest { Value = "Some" };
+        var request = new AddClaimToRoleRequest { Value = Faker.Random.String(5) };
 
         // act
         var response = await Id(token).Role.AddClaimToRole(claim.Id, role.Id, request);
@@ -297,7 +297,7 @@ public class RoleControllerTest : IntegrationTestBase
         var app = await Id(token).App.Register();
         var role = await Id(token).Role.Register(app.Id);
         var claim = await Id(token).Claim.Register(app.Id);
-        var claimValue = "Some";
+        var claimValue = Faker.Random.String(5);
 
         // act
         var response = await Id(token).Role.AddClaimToRole(claim.Id, role.Id, claimValue);
@@ -349,7 +349,7 @@ public class RoleControllerTest : IntegrationTestBase
     public async Task DeleteClaimFromRole_NotOwner_Forbidden()
     {
         // arrange
-        var otherToken = await Id().RegisterLogOtherUserIn();
+        var otherToken = await Id().RegisterLogUserIn();
         var app = await Id(otherToken).App.Register();
         var role = await Id(otherToken).Role.Register(app.Id);
         var claim = await Id(otherToken).Claim.Register(app.Id);
@@ -368,7 +368,7 @@ public class RoleControllerTest : IntegrationTestBase
         // arrange
         var token = await Id().RegisterLogUserIn();
         var app1 = await Id(token).App.Register();
-        var app2 = await Id(token).App.RegisterOther();
+        var app2 = await Id(token).App.Register();
         var role = await Id(token).Role.Register(app2.Id);
         var claim = await Id(token).Claim.Register(app1.Id);
 
@@ -412,7 +412,7 @@ public class RoleControllerTest : IntegrationTestBase
     public async Task Delete_NotOwner_Forbidden()
     {
         // arrange
-        var otherToken = await Id().RegisterLogOtherUserIn();
+        var otherToken = await Id().RegisterLogUserIn();
         var app = await Id(otherToken).App.Register();
         var token = await Id().RegisterLogUserIn();
         var role = await Id(otherToken).Role.Register(app.Id);

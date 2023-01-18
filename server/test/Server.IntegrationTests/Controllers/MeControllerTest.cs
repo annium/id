@@ -17,7 +17,7 @@ public class MeControllerTest : IntegrationTestBase
     public async Task RegisterMe_IncorrectPayload_BadRequest()
     {
         // arrange
-        var request = new RegisterMeRequest { Login = "demo" };
+        var request = new RegisterMeRequest { Login = Faker.Internet.Email() };
 
         // act
         var response = await Id().Me.RegisterMe(request);
@@ -32,7 +32,11 @@ public class MeControllerTest : IntegrationTestBase
         // arrange
         var user = await Id().RegisterLogInGetUser();
         var request = new RegisterMeRequest
-            { Server = "http://localhost/", Login = user.Login, Email = "asd1@demo.com" };
+        {
+            Server = Faker.Internet.Url(),
+            Login = user.Login,
+            Email = Faker.Internet.Email()
+        };
 
         // act
         var response = await Id().Me.RegisterMe(request);
@@ -47,7 +51,11 @@ public class MeControllerTest : IntegrationTestBase
         // arrange
         var user = await Id().RegisterLogInGetUser();
         var request = new RegisterMeRequest
-            { Server = "http://localhost/", Login = "uniqueLogin", Email = user.Email };
+        {
+            Server = Faker.Internet.Url(),
+            Login = Faker.Internet.UserName(),
+            Email = user.Email
+        };
 
         // act
         var response = await Id().Me.RegisterMe(request);
@@ -62,7 +70,7 @@ public class MeControllerTest : IntegrationTestBase
         // arrange
         var request = new RegisterMeRequest
         {
-            Server = "http://localhost/", Login = "uniqueLogin", Email = "demo@demo.com",
+            Server = Faker.Internet.Url(), Login = Faker.Internet.UserName(), Email = Faker.Internet.Email(),
             ReferralId = Guid.NewGuid()
         };
 
@@ -77,10 +85,10 @@ public class MeControllerTest : IntegrationTestBase
     public async Task RegisterMe_ValidData_Ok()
     {
         // arrange
-        var referral = await Id().RegisterLogInGetOtherUser();
-        var login = "demo";
-        var email = "demo@demo.com";
-        var password = "test1test";
+        var referral = await Id().RegisterLogInGetUser();
+        var login = Faker.Internet.UserName();
+        var email = Faker.Internet.Email();
+        var password = Faker.Internet.Password();
 
         // act
         var response = await Id().RegisterLogInGetUser(login, email, password, referral.Id);
@@ -98,7 +106,7 @@ public class MeControllerTest : IntegrationTestBase
         // arrange
         var token = await Id().RegisterLogUserIn();
         var user = await Id(token).Me.GetMe().GetData();
-        var request = new RestoreMyAccessRequestBody { Server = "http://localhost/", Email = user.Email };
+        var request = new RestoreMyAccessRequestBody { Server = Faker.Internet.Url(), Email = user.Email };
 
         // act
         await Id(token).Me.RestoreMyAccess(Constants.IdAppId, request);
@@ -126,10 +134,13 @@ public class MeControllerTest : IntegrationTestBase
     public async Task GetMyToken_AuthenticatedUser_Ok()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
+        var login = Faker.Internet.UserName();
+        var email = Faker.Internet.Email();
+        var password = Faker.Internet.Password();
+        var token = await Id().RegisterLogUserIn(login, email, password);
         var me = await Id(token).Me.GetMe().GetData();
         var app = await Id(token).App.Register();
-        token = await Id().LogUserIn(app.Id);
+        token = await Id().LogUserIn(app.Id, login, password);
 
         // act
         var response = await Id(token).Me.GetMyToken();
@@ -147,7 +158,7 @@ public class MeControllerTest : IntegrationTestBase
     {
         // arrange
         var token = await Id().RegisterLogUserIn();
-        var request = new UpdateMyProfileRequest { Login = "demo" };
+        var request = new UpdateMyProfileRequest { Login = Faker.Internet.UserName() };
 
         // act
         var response = await Id(token).Me.UpdateMyProfile(request);
@@ -161,8 +172,8 @@ public class MeControllerTest : IntegrationTestBase
     {
         // arrange
         var token = await Id().RegisterLogUserIn();
-        var other = await Id().RegisterLogInGetOtherUser();
-        var request = new UpdateMyProfileRequest { Login = other.Login, Email = "asd2@demo.com" };
+        var other = await Id().RegisterLogInGetUser();
+        var request = new UpdateMyProfileRequest { Login = other.Login, Email = Faker.Internet.Email() };
 
         // act
         var response = await Id(token).Me.UpdateMyProfile(request);
@@ -176,8 +187,8 @@ public class MeControllerTest : IntegrationTestBase
     {
         // arrange
         var token = await Id().RegisterLogUserIn();
-        var other = await Id().RegisterLogInGetOtherUser();
-        var request = new UpdateMyProfileRequest { Login = "otherLogin", Email = other.Email };
+        var other = await Id().RegisterLogInGetUser();
+        var request = new UpdateMyProfileRequest { Login = Faker.Internet.UserName(), Email = other.Email };
 
         // act
         var response = await Id(token).Me.UpdateMyProfile(request);
@@ -191,7 +202,7 @@ public class MeControllerTest : IntegrationTestBase
     {
         // arrange
         var token = await Id().RegisterLogUserIn();
-        var request = new UpdateMyProfileRequest { Login = "other", Email = "other@other.com" };
+        var request = new UpdateMyProfileRequest { Login = Faker.Internet.UserName(), Email = Faker.Internet.Email() };
 
         // act
         var response = await Id(token).Me.UpdateMyProfile(request);
@@ -205,7 +216,7 @@ public class MeControllerTest : IntegrationTestBase
     {
         // arrange
         var token = await Id().RegisterLogUserIn();
-        var request = new UpdateMyPasswordRequest { Password = "demo" };
+        var request = new UpdateMyPasswordRequest { Password = Faker.Internet.Password(4) };
 
         // act
         var response = await Id(token).Me.UpdateMyPassword(request);
@@ -219,7 +230,7 @@ public class MeControllerTest : IntegrationTestBase
     {
         // arrange
         var token = await Id().RegisterLogUserIn();
-        var request = new UpdateMyPasswordRequest { Password = "MoreSecurePass###" };
+        var request = new UpdateMyPasswordRequest { Password = Faker.Internet.Password() };
 
         // act
         var response = await Id(token).Me.UpdateMyPassword(request);

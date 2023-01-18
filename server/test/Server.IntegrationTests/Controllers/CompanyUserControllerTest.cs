@@ -26,7 +26,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
     public async Task AddUser_NotOwner_Forbidden()
     {
         // arrange
-        var otherToken = await Id().RegisterLogOtherUserIn();
+        var otherToken = await Id().RegisterLogUserIn();
         var company = await Id(otherToken).Company.Register();
         var token = await Id().RegisterLogUserIn();
         var user = await Id(token).Me.GetMe().GetData();
@@ -42,7 +42,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
     public async Task AddUser_MissingUser_NotFound()
     {
         // arrange
-        var otherToken = await Id().RegisterLogOtherUserIn();
+        var otherToken = await Id().RegisterLogUserIn();
         var company = await Id(otherToken).Company.Register();
 
         // act
@@ -56,7 +56,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
     public async Task AddUser_Valid_Ok()
     {
         // arrange
-        var otherToken = await Id().RegisterLogOtherUserIn();
+        var otherToken = await Id().RegisterLogUserIn();
         var company = await Id(otherToken).Company.Register();
         var token = await Id().RegisterLogUserIn();
         var user = await Id(token).Me.GetMe().GetData();
@@ -89,7 +89,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
     public async Task AddUserRole_NotOwner_Forbidden()
     {
         // arrange
-        var otherToken = await Id().RegisterLogOtherUserIn();
+        var otherToken = await Id().RegisterLogUserIn();
         var app = await Id(otherToken).App.Register();
         var role = await Id(otherToken).CompanyRole.Register(app.Id);
         var company = await Id(otherToken).Company.Register();
@@ -107,7 +107,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
     public async Task AddUserRole_MissingUser_NotFound()
     {
         // arrange
-        var otherToken = await Id().RegisterLogOtherUserIn();
+        var otherToken = await Id().RegisterLogUserIn();
         var company = await Id(otherToken).Company.Register();
 
         // act
@@ -121,7 +121,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
     public async Task AddUserRole_NotMember_Forbidden()
     {
         // arrange
-        var otherToken = await Id().RegisterLogOtherUserIn();
+        var otherToken = await Id().RegisterLogUserIn();
         var app = await Id(otherToken).App.Register();
         var role = await Id(otherToken).CompanyRole.Register(app.Id);
         var company = await Id(otherToken).Company.Register();
@@ -139,7 +139,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
     public async Task AddUserRole_MissingRole_NotFound()
     {
         // arrange
-        var otherToken = await Id().RegisterLogOtherUserIn();
+        var otherToken = await Id().RegisterLogUserIn();
         var company = await Id(otherToken).Company.Register();
         var token = await Id().RegisterLogUserIn();
         var user = await Id(token).Me.GetMe().GetData();
@@ -155,7 +155,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
     public async Task AddUserRole_Valid_Ok()
     {
         // arrange
-        var otherToken = await Id().RegisterLogOtherUserIn();
+        var otherToken = await Id().RegisterLogUserIn();
         var app = await Id(otherToken).App.Register();
         var role = await Id(otherToken).CompanyRole.Register(app.Id);
         var company = await Id(otherToken).Company.Register();
@@ -187,7 +187,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
     public async Task DeleteUserRole_NotOwner_Forbidden()
     {
         // arrange
-        var otherToken = await Id().RegisterLogOtherUserIn();
+        var otherToken = await Id().RegisterLogUserIn();
         var app = await Id(otherToken).App.Register();
         var role = await Id(otherToken).CompanyRole.Register(app.Id);
         var company = await Id(otherToken).Company.Register();
@@ -205,7 +205,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
     public async Task DeleteUserRole_MissingUser_NotFound()
     {
         // arrange
-        var otherToken = await Id().RegisterLogOtherUserIn();
+        var otherToken = await Id().RegisterLogUserIn();
         var company = await Id(otherToken).Company.Register();
 
         // act
@@ -219,7 +219,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
     public async Task DeleteUserRole_NotMember_Forbidden()
     {
         // arrange
-        var otherToken = await Id().RegisterLogOtherUserIn();
+        var otherToken = await Id().RegisterLogUserIn();
         var app = await Id(otherToken).App.Register();
         var role = await Id(otherToken).CompanyRole.Register(app.Id);
         var company = await Id(otherToken).Company.Register();
@@ -237,7 +237,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
     public async Task DeleteUserRole_MissingRole_NotFound()
     {
         // arrange
-        var otherToken = await Id().RegisterLogOtherUserIn();
+        var otherToken = await Id().RegisterLogUserIn();
         var company = await Id(otherToken).Company.Register();
         var token = await Id().RegisterLogUserIn();
         var user = await Id(token).Me.GetMe().GetData();
@@ -254,7 +254,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
     public async Task DeleteUserRole_Valid_Ok()
     {
         // arrange
-        var otherToken = await Id().RegisterLogOtherUserIn();
+        var otherToken = await Id().RegisterLogUserIn();
         var app = await Id(otherToken).App.Register();
         var role = await Id(otherToken).CompanyRole.Register(app.Id);
         var company = await Id(otherToken).Company.Register();
@@ -277,7 +277,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
 
         // act
-        var response = await Id(token).CompanyUser.AddUserClaim(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), "x");
+        var response = await Id(token).CompanyUser.AddUserClaim(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), Faker.Random.String(1));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.BadRequest);
@@ -300,7 +300,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
     public async Task AddUserClaim_NotOwner_Forbidden()
     {
         // arrange
-        var otherToken = await Id().RegisterLogOtherUserIn();
+        var otherToken = await Id().RegisterLogUserIn();
         var app = await Id(otherToken).App.Register();
         var claim = await Id(otherToken).CompanyClaim.Register(app.Id);
         var company = await Id(otherToken).Company.Register();
@@ -318,7 +318,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
     public async Task AddUserClaim_MissingUser_NotFound()
     {
         // arrange
-        var otherToken = await Id().RegisterLogOtherUserIn();
+        var otherToken = await Id().RegisterLogUserIn();
         var company = await Id(otherToken).Company.Register();
 
         // act
@@ -332,7 +332,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
     public async Task AddUserClaim_NotMember_Forbidden()
     {
         // arrange
-        var otherToken = await Id().RegisterLogOtherUserIn();
+        var otherToken = await Id().RegisterLogUserIn();
         var app = await Id(otherToken).App.Register();
         var claim = await Id(otherToken).CompanyClaim.Register(app.Id);
         var company = await Id(otherToken).Company.Register();
@@ -350,7 +350,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
     public async Task AddUserClaim_MissingClaim_NotFound()
     {
         // arrange
-        var otherToken = await Id().RegisterLogOtherUserIn();
+        var otherToken = await Id().RegisterLogUserIn();
         var company = await Id(otherToken).Company.Register();
         var token = await Id().RegisterLogUserIn();
         var user = await Id(token).Me.GetMe().GetData();
@@ -367,7 +367,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
     public async Task AddUserClaim_Valid_Ok()
     {
         // arrange
-        var otherToken = await Id().RegisterLogOtherUserIn();
+        var otherToken = await Id().RegisterLogUserIn();
         var app = await Id(otherToken).App.Register();
         var claim = await Id(otherToken).CompanyClaim.Register(app.Id);
         var company = await Id(otherToken).Company.Register();
@@ -399,7 +399,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
     public async Task DeleteUserClaim_NotOwner_Forbidden()
     {
         // arrange
-        var otherToken = await Id().RegisterLogOtherUserIn();
+        var otherToken = await Id().RegisterLogUserIn();
         var app = await Id(otherToken).App.Register();
         var claim = await Id(otherToken).CompanyClaim.Register(app.Id);
         var company = await Id(otherToken).Company.Register();
@@ -417,7 +417,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
     public async Task DeleteUserClaim_MissingUser_NotFound()
     {
         // arrange
-        var otherToken = await Id().RegisterLogOtherUserIn();
+        var otherToken = await Id().RegisterLogUserIn();
         var company = await Id(otherToken).Company.Register();
 
         // act
@@ -431,7 +431,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
     public async Task DeleteUserClaim_NotMember_Forbidden()
     {
         // arrange
-        var otherToken = await Id().RegisterLogOtherUserIn();
+        var otherToken = await Id().RegisterLogUserIn();
         var app = await Id(otherToken).App.Register();
         var claim = await Id(otherToken).CompanyClaim.Register(app.Id);
         var company = await Id(otherToken).Company.Register();
@@ -449,7 +449,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
     public async Task DeleteUserClaim_MissingClaim_NotFound()
     {
         // arrange
-        var otherToken = await Id().RegisterLogOtherUserIn();
+        var otherToken = await Id().RegisterLogUserIn();
         var company = await Id(otherToken).Company.Register();
         var token = await Id().RegisterLogUserIn();
         var user = await Id(token).Me.GetMe().GetData();
@@ -466,7 +466,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
     public async Task DeleteUserClaim_Valid_Ok()
     {
         // arrange
-        var otherToken = await Id().RegisterLogOtherUserIn();
+        var otherToken = await Id().RegisterLogUserIn();
         var app = await Id(otherToken).App.Register();
         var claim = await Id(otherToken).CompanyClaim.Register(app.Id);
         var company = await Id(otherToken).Company.Register();
@@ -499,7 +499,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
     public async Task DeleteUser_NotOwner_Forbidden()
     {
         // arrange
-        var otherToken = await Id().RegisterLogOtherUserIn();
+        var otherToken = await Id().RegisterLogUserIn();
         var company = await Id(otherToken).Company.Register();
         var token = await Id().RegisterLogUserIn();
         var user = await Id(token).Me.GetMe().GetData();
@@ -515,7 +515,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
     public async Task DeleteUser_MissingUser_NotFound()
     {
         // arrange
-        var otherToken = await Id().RegisterLogOtherUserIn();
+        var otherToken = await Id().RegisterLogUserIn();
         var company = await Id(otherToken).Company.Register();
 
         // act
@@ -529,7 +529,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
     public async Task DeleteUser_NotMember_Forbidden()
     {
         // arrange
-        var otherToken = await Id().RegisterLogOtherUserIn();
+        var otherToken = await Id().RegisterLogUserIn();
         var company = await Id(otherToken).Company.Register();
         var token = await Id().RegisterLogUserIn();
         var user = await Id(token).Me.GetMe().GetData();
@@ -545,7 +545,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
     public async Task DeleteUser_Valid_Ok()
     {
         // arrange
-        var otherToken = await Id().RegisterLogOtherUserIn();
+        var otherToken = await Id().RegisterLogUserIn();
         var company = await Id(otherToken).Company.Register();
         var token = await Id().RegisterLogUserIn();
         var user = await Id(token).Me.GetMe().GetData();
