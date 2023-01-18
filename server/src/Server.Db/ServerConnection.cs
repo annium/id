@@ -1,11 +1,12 @@
 using Annium.linq2db.Extensions.Models;
 using Annium.Logging.Abstractions;
 using LinqToDB;
+using LinqToDB.Data;
 using Server.Domain.Models;
 
 namespace Server.Db;
 
-public class ServerConnection : DataConnectionBase, ILogSubject<ServerConnection>
+public class ServerConnection : DataConnection, ILogSubject<ServerConnection>
 {
     public ILogger<ServerConnection> Logger { get; }
     public ITable<App> Apps { get; set; } = null!;
