@@ -44,9 +44,10 @@ public class LoginControllerTest : IntegrationTestBase
     public async Task LogIn_InvalidPassword_Forbidden()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
+        var login = Faker.Internet.UserName();
+        var token = await Id().RegisterLogUserIn(login: login);
         var app = await Id(token).App.Register();
-        var request = new LogInRequest { Login = Faker.Internet.UserName(), Password = Faker.Internet.Password() };
+        var request = new LogInRequest { Login = login, Password = Faker.Internet.Password() };
 
         // act
         var response = await Id().Login.LogIn(app.Id, request);
@@ -59,9 +60,11 @@ public class LoginControllerTest : IntegrationTestBase
     public async Task LogIn_Valid_Ok()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
+        var login = Faker.Internet.UserName();
+        var password = Faker.Internet.Password();
+        var token = await Id().RegisterLogUserIn(login: login, password: password);
         var app = await Id(token).App.Register();
-        var request = new LogInRequest { Login = Faker.Internet.UserName(), Password = Faker.Internet.Password() };
+        var request = new LogInRequest { Login = login, Password = password };
 
         // act
         var response = await Id().Login.LogIn(app.Id, request);

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Annium.linq2db.Extensions.Extensions;
 using LinqToDB;
@@ -22,6 +23,7 @@ internal class RoleRepository : RepositoryBase, IRoleRepository
     {
         var entities = await Db.Roles
             .LoadWith(x => x.Claims).ThenLoad(x => x.Claim)
+            .Where(x => x.AppId == appId)
             .ToArrayAsync();
 
         return entities;

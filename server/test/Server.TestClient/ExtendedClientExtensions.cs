@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Net;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Annium.Id.Core;
 using Annium.Net.Http;
@@ -54,7 +53,7 @@ public static class ExtendedClientExtensions
         Guid? referralId = null
     )
     {
-        login ??= Faker.Internet.UserName();
+        login ??= Faker.Random.String2(30, 40);
         email ??= Faker.Internet.Email();
         password ??= Faker.Internet.Password();
         var token = await client.RegisterLogUserInInternal(Constants.IdAppId, login, email, password, referralId);
@@ -81,9 +80,8 @@ public static class ExtendedClientExtensions
             Email = email,
             ReferralId = referralId
         });
-        if (registerResponse.StatusCode != HttpStatusCode.OK)
-            Console.WriteLine($"Failure: {JsonSerializer.Serialize(registerResponse.Data)}");
-        // Console.WriteLine($"Failure: plain errors: {registerResponse.Data.PlainErrors.Join(", ")}; labeled errors: {registerResponse.Data.LabeledErrors}");
+        // if (registerResponse.StatusCode != HttpStatusCode.OK)
+        //     Console.WriteLine($"Failure: plain errors: {registerResponse.Data.PlainErrors.Join(", ")}; labeled errors: {registerResponse.Data.LabeledErrors.Select(x => $"{x.Key}={x.Value.Join(" + ")}").Join(", ")}");
         registerResponse.StatusCode.Is(HttpStatusCode.OK);
 
         // get id from email data

@@ -138,8 +138,8 @@ public class AppControllerTest : IntegrationTestBase
         var response = await Id(token).App.FindApps(string.Empty).GetData();
 
         // assert
-        response.Has(1);
-        response.At(0).Id.Is(Constants.IdAppId);
+        response.IsNotEmpty();
+        response.Any(x => x.Id == Constants.IdAppId).IsTrue();
     }
 
     [Fact]

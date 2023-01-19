@@ -63,7 +63,7 @@ public class CompanyRoleControllerTest : IntegrationTestBase
         var roleKey = Faker.Random.String2(5);
         var roleName = Faker.Random.String2(10);
         await Id(token).CompanyRole.Register(app.Id, roleKey, roleName);
-        var request = new CreateCompanyRoleRequest { AppId = app.Id, Key = Faker.Random.String2(5), Name = Faker.Random.String2(10) };
+        var request = new CreateCompanyRoleRequest { AppId = app.Id, Key = roleKey, Name = Faker.Random.String2(10) };
 
         // act
         var response = await Id(token).CompanyRole.CreateRole(request);
