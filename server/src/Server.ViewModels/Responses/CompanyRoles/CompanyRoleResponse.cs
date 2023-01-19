@@ -6,7 +6,7 @@ using Server.ViewModels.Responses.CompanyRoleClaims;
 
 namespace Server.ViewModels.Responses.CompanyRoles;
 
-public class CompanyRoleResponse : IResponse<CompanyRole>
+public record CompanyRoleResponse : IResponse<CompanyRole>
 {
     public Guid Id { get; set; }
     public Guid AppId { get; set; }

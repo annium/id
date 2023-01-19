@@ -4,12 +4,12 @@ using Server.Domain.Commands.Me;
 
 namespace Server.ViewModels.Requests.Me;
 
-public class ConfirmMyEmailRequest : ConfirmMyEmailRequestBody, IRequest<ConfirmMyEmailCommand>
+public record ConfirmMyEmailRequest : ConfirmMyEmailRequestBody, IRequest<ConfirmMyEmailCommand>
 {
     public Guid AppId { get; set; }
 }
 
-public class ConfirmMyEmailRequestBody
+public record ConfirmMyEmailRequestBody
 {
     public Guid Id { get; set; }
 }

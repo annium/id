@@ -5,7 +5,7 @@ using Annium.Id.Core;
 
 namespace Server.ViewModels.Responses.Me;
 
-public class IdTokenResponse : IResponse<IdToken>
+public record IdTokenResponse : IResponse<IdToken>
 {
     public Guid UserId { get; set; }
     public Guid LoginId { get; set; }
@@ -15,14 +15,14 @@ public class IdTokenResponse : IResponse<IdToken>
         Array.Empty<CompanyTokenResponse>();
 }
 
-public class AppTokenResponse
+public record AppTokenResponse
 {
     public Guid Id { get; set; }
     public IReadOnlyCollection<string> Roles { get; set; } = Array.Empty<string>();
     public IReadOnlyDictionary<string, string> Claims { get; set; } = new Dictionary<string, string>();
 }
 
-public class CompanyTokenResponse
+public record CompanyTokenResponse
 {
     public Guid Id { get; set; }
     public IReadOnlyCollection<string> Roles { get; set; } = Array.Empty<string>();

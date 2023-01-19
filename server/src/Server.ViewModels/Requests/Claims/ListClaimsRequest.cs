@@ -4,7 +4,7 @@ using Server.Domain.Queries.Claims;
 
 namespace Server.ViewModels.Requests.Claims;
 
-public class ListClaimsRequest : IRequest<ListClaimsQuery>
+public record ListClaimsRequest : IRequest<ListClaimsQuery>
 {
     public Guid AppId { get; set; }
 }

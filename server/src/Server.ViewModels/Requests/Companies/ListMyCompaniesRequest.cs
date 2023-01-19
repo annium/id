@@ -3,6 +3,6 @@ using Server.Domain.Queries.Companies;
 
 namespace Server.ViewModels.Requests.Companies;
 
-public class ListMyCompaniesRequest : IRequest<ListMyCompaniesQuery>
+public record ListMyCompaniesRequest : IRequest<ListMyCompaniesQuery>
 {
 }

@@ -3,7 +3,7 @@ using Server.Domain.Queries.Apps;
 
 namespace Server.ViewModels.Requests.Apps;
 
-public class FindAppsRequest : IRequest<FindAppsQuery>
+public record FindAppsRequest : IRequest<FindAppsQuery>
 {
     public string Query { get; set; } = string.Empty;
 }

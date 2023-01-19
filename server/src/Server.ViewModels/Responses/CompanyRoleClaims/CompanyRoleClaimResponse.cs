@@ -5,7 +5,7 @@ using Server.ViewModels.Responses.CompanyClaims;
 
 namespace Server.ViewModels.Responses.CompanyRoleClaims;
 
-public class CompanyRoleClaimResponse : IResponse<CompanyRoleClaim>
+public record CompanyRoleClaimResponse : IResponse<CompanyRoleClaim>
 {
     public Guid RoleId { get; set; }
     public Guid ClaimId { get; set; }

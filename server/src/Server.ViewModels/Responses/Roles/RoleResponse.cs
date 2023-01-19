@@ -6,7 +6,7 @@ using Server.ViewModels.Responses.RoleClaims;
 
 namespace Server.ViewModels.Responses.Roles;
 
-public class RoleResponse : IResponse<Role>
+public record RoleResponse : IResponse<Role>
 {
     public Guid Id { get; set; }
     public Guid AppId { get; set; }

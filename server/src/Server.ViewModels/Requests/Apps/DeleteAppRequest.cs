@@ -4,7 +4,7 @@ using Server.Domain.Commands.Apps;
 
 namespace Server.ViewModels.Requests.Apps;
 
-public class DeleteAppRequest : IRequest<DeleteAppCommand>
+public record DeleteAppRequest : IRequest<DeleteAppCommand>
 {
     public Guid AppId { get; set; }
 }

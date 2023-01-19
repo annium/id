@@ -4,7 +4,7 @@ using Server.Domain.Commands.Roles;
 
 namespace Server.ViewModels.Requests.Roles;
 
-public class DeleteRoleRequest : IRequest<DeleteRoleCommand>
+public record DeleteRoleRequest : IRequest<DeleteRoleCommand>
 {
     public Guid RoleId { get; set; }
 }

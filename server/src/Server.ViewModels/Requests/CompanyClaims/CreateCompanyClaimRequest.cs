@@ -4,7 +4,7 @@ using Server.Domain.Commands.CompanyClaims;
 
 namespace Server.ViewModels.Requests.CompanyClaims;
 
-public class CreateCompanyClaimRequest : IRequest<CreateCompanyClaimCommand>
+public record CreateCompanyClaimRequest : IRequest<CreateCompanyClaimCommand>
 {
     public Guid AppId { get; set; }
     public string Key { get; set; } = string.Empty;

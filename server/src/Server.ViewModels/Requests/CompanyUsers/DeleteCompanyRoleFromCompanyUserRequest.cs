@@ -4,7 +4,7 @@ using Server.Domain.Commands.CompanyUsers;
 
 namespace Server.ViewModels.Requests.CompanyUsers;
 
-public class DeleteCompanyRoleFromCompanyUserRequest : IRequest<DeleteCompanyRoleFromCompanyUserCommand>
+public record DeleteCompanyRoleFromCompanyUserRequest : IRequest<DeleteCompanyRoleFromCompanyUserCommand>
 {
     public Guid CompanyId { get; set; }
     public Guid UserId { get; set; }

@@ -4,7 +4,7 @@ using Server.Domain.Commands.CompanyRoles;
 
 namespace Server.ViewModels.Requests.CompanyRoles;
 
-public class CreateCompanyRoleRequest : IRequest<CreateCompanyRoleCommand>
+public record CreateCompanyRoleRequest : IRequest<CreateCompanyRoleCommand>
 {
     public Guid AppId { get; set; }
     public string Key { get; set; } = string.Empty;

@@ -4,7 +4,7 @@ using Server.Domain.Models;
 
 namespace Server.ViewModels.Responses.Me;
 
-public class MeResponse : IResponse<User>
+public record MeResponse : IResponse<User>
 {
     public Guid Id { get; set; }
     public string Login { get; set; } = string.Empty;

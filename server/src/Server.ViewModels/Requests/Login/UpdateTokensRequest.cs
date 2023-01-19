@@ -4,12 +4,12 @@ using Server.Domain.Commands.Login;
 
 namespace Server.ViewModels.Requests.Login;
 
-public class UpdateTokensRequest : UpdateTokensRequestBody, IRequest<UpdateTokensCommand>
+public record UpdateTokensRequest : UpdateTokensRequestBody, IRequest<UpdateTokensCommand>
 {
     public Guid AppId { get; set; }
 }
 
-public class UpdateTokensRequestBody
+public record UpdateTokensRequestBody
 {
     public Guid RefreshToken { get; set; }
 }

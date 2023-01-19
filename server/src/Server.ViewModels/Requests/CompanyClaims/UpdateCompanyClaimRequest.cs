@@ -4,12 +4,12 @@ using Server.Domain.Commands.CompanyClaims;
 
 namespace Server.ViewModels.Requests.CompanyClaims;
 
-public class UpdateCompanyClaimRequest : UpdateCompanyClaimRequestBody, IRequest<UpdateCompanyClaimCommand>
+public record UpdateCompanyClaimRequest : UpdateCompanyClaimRequestBody, IRequest<UpdateCompanyClaimCommand>
 {
     public Guid ClaimId { get; set; }
 }
 
-public class UpdateCompanyClaimRequestBody
+public record UpdateCompanyClaimRequestBody
 {
     public string Key { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;

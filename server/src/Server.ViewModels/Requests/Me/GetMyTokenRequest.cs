@@ -3,6 +3,6 @@ using Server.Domain.Queries.Me;
 
 namespace Server.ViewModels.Requests.Me;
 
-public class GetMyTokenRequest : IRequest<GetMyTokenQuery>
+public record GetMyTokenRequest : IRequest<GetMyTokenQuery>
 {
 }

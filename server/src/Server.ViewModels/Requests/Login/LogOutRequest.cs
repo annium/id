@@ -4,7 +4,7 @@ using Server.Domain.Commands.Login;
 
 namespace Server.ViewModels.Requests.Login;
 
-public class LogOutRequest : IRequest<LogOutCommand>
+public record LogOutRequest : IRequest<LogOutCommand>
 {
     public Guid AppId { get; set; }
 }

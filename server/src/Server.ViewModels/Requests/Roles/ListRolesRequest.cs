@@ -4,7 +4,7 @@ using Server.Domain.Queries.Roles;
 
 namespace Server.ViewModels.Requests.Roles;
 
-public class ListRolesRequest : IRequest<ListRolesQuery>
+public record ListRolesRequest : IRequest<ListRolesQuery>
 {
     public Guid AppId { get; set; }
 }

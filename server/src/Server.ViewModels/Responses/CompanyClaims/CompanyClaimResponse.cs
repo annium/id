@@ -4,7 +4,7 @@ using Server.Domain.Models;
 
 namespace Server.ViewModels.Responses.CompanyClaims;
 
-public class CompanyClaimResponse : IResponse<CompanyClaim>
+public record CompanyClaimResponse : IResponse<CompanyClaim>
 {
     public Guid Id { get; set; }
     public Guid AppId { get; set; }

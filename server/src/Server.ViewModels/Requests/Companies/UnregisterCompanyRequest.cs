@@ -4,7 +4,7 @@ using Server.Domain.Commands.Companies;
 
 namespace Server.ViewModels.Requests.Companies;
 
-public class UnregisterCompanyRequest : IRequest<UnregisterCompanyCommand>
+public record UnregisterCompanyRequest : IRequest<UnregisterCompanyCommand>
 {
     public Guid CompanyId { get; set; }
 }

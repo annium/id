@@ -3,7 +3,7 @@ using Server.Domain.Queries.Companies;
 
 namespace Server.ViewModels.Requests.Companies;
 
-public class FindCompaniesRequest : IRequest<FindCompaniesQuery>
+public record FindCompaniesRequest : IRequest<FindCompaniesQuery>
 {
     public string Query { get; set; } = string.Empty;
 }
