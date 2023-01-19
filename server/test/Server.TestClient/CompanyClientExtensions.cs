@@ -14,7 +14,7 @@ public static class CompanyClientExtensions
         string? name = null
     )
     {
-        var request = new RegisterCompanyRequest { ParentId = parentId, Name = name ?? Faker.Random.String(10) };
+        var request = new RegisterCompanyRequest { ParentId = parentId, Name = name ?? Faker.Random.String2(10) };
         var companyId = await client.RegisterCompany(request).GetData();
         var company = await client.GetCompany(companyId).GetData();
 

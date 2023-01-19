@@ -18,7 +18,7 @@ public static class CompanyRoleClientExtensions
         string? name = null
     )
     {
-        var request = new CreateCompanyRoleRequest { AppId = appId, Key = key ?? Faker.Random.String(5), Name = name ?? Faker.Random.String(10) };
+        var request = new CreateCompanyRoleRequest { AppId = appId, Key = key ?? Faker.Random.String2(5), Name = name ?? Faker.Random.String2(10) };
         var roleId = await client.CreateRole(request).GetData();
         var roles = await client.ListRoles(appId).GetData();
 

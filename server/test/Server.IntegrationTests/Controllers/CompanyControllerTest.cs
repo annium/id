@@ -17,7 +17,7 @@ public class CompanyControllerTest : IntegrationTestBase
     {
         // arrange
         var token = await Id().RegisterLogUserIn();
-        var request = new RegisterCompanyRequest { Name = Faker.Random.String(2) };
+        var request = new RegisterCompanyRequest { Name = Faker.Random.String2(2) };
 
         // act
         var response = await Id(token).Company.RegisterCompany(request);
@@ -31,7 +31,7 @@ public class CompanyControllerTest : IntegrationTestBase
     {
         // arrange
         var token = await Id().RegisterLogUserIn();
-        var request = new RegisterCompanyRequest { ParentId = Guid.NewGuid(), Name = Faker.Random.String(10) };
+        var request = new RegisterCompanyRequest { ParentId = Guid.NewGuid(), Name = Faker.Random.String2(10) };
 
         // act
         var response = await Id(token).Company.RegisterCompany(request);
@@ -47,7 +47,7 @@ public class CompanyControllerTest : IntegrationTestBase
         var otherToken = await Id().RegisterLogUserIn();
         var parent = await Id(otherToken).Company.Register();
         var token = await Id().RegisterLogUserIn();
-        var request = new RegisterCompanyRequest { ParentId = parent.Id, Name = Faker.Random.String(10) };
+        var request = new RegisterCompanyRequest { ParentId = parent.Id, Name = Faker.Random.String2(10) };
 
         // act
         var response = await Id(token).Company.RegisterCompany(request);
@@ -61,7 +61,7 @@ public class CompanyControllerTest : IntegrationTestBase
     {
         // arrange
         var token = await Id().RegisterLogUserIn();
-        var companyName = Faker.Random.String(10);
+        var companyName = Faker.Random.String2(10);
 
         // act
         var company = await Id(token).Company.Register(name: companyName);
@@ -193,7 +193,7 @@ public class CompanyControllerTest : IntegrationTestBase
         // arrange
         var token = await Id().RegisterLogUserIn();
         var company = await Id(token).Company.Register();
-        var request = new UpdateCompanyRequestBody { Name = Faker.Random.String(2) };
+        var request = new UpdateCompanyRequestBody { Name = Faker.Random.String2(2) };
 
         // act
         var response = await Id(token).Company.UpdateCompany(company.Id, request);
@@ -207,7 +207,7 @@ public class CompanyControllerTest : IntegrationTestBase
     {
         // arrange
         var token = await Id().RegisterLogUserIn();
-        var request = new UpdateCompanyRequestBody { Name = Faker.Random.String(10) };
+        var request = new UpdateCompanyRequestBody { Name = Faker.Random.String2(10) };
 
         // act
         var response = await Id(token).Company.UpdateCompany(Guid.NewGuid(), request);
@@ -223,7 +223,7 @@ public class CompanyControllerTest : IntegrationTestBase
         var otherToken = await Id().RegisterLogUserIn();
         var company = await Id(otherToken).Company.Register();
         var token = await Id().RegisterLogUserIn();
-        var request = new UpdateCompanyRequestBody { Name = Faker.Random.String(10) };
+        var request = new UpdateCompanyRequestBody { Name = Faker.Random.String2(10) };
 
         // act
         var response = await Id(token).Company.UpdateCompany(company.Id, request);
@@ -238,7 +238,7 @@ public class CompanyControllerTest : IntegrationTestBase
         // arrange
         var token = await Id().RegisterLogUserIn();
         var company = await Id(token).Company.Register();
-        var request = new UpdateCompanyRequestBody { ParentId = Guid.NewGuid(), Name = Faker.Random.String(10) };
+        var request = new UpdateCompanyRequestBody { ParentId = Guid.NewGuid(), Name = Faker.Random.String2(10) };
 
         // act
         var response = await Id(token).Company.UpdateCompany(company.Id, request);
@@ -255,7 +255,7 @@ public class CompanyControllerTest : IntegrationTestBase
         var parent = await Id(otherToken).Company.Register();
         var token = await Id().RegisterLogUserIn();
         var company = await Id(token).Company.Register();
-        var request = new UpdateCompanyRequestBody { ParentId = parent.Id, Name = Faker.Random.String(10) };
+        var request = new UpdateCompanyRequestBody { ParentId = parent.Id, Name = Faker.Random.String2(10) };
 
         // act
         var response = await Id(token).Company.UpdateCompany(company.Id, request);
@@ -270,7 +270,7 @@ public class CompanyControllerTest : IntegrationTestBase
         // arrange
         var token = await Id().RegisterLogUserIn();
         var company = await Id(token).Company.Register();
-        var request = new UpdateCompanyRequestBody { Name = Faker.Random.String(10) };
+        var request = new UpdateCompanyRequestBody { Name = Faker.Random.String2(10) };
 
         // act
         var response = await Id(token).Company.UpdateCompany(company.Id, request);

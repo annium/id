@@ -12,7 +12,7 @@ public static class AppClientExtensions
         string? name = null
     )
     {
-        var createResponse = await client.CreateApp(new CreateAppRequest { Name = name ?? Faker.Random.String(10) });
+        var createResponse = await client.CreateApp(new CreateAppRequest { Name = name ?? Faker.Random.String2(10) });
 
         var getResponse = await client.GetApp(createResponse.Data.Data);
 

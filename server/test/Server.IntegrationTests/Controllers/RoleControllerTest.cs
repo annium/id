@@ -15,7 +15,7 @@ public class RoleControllerTest : IntegrationTestBase
     {
         // arrange
         var token = await Id().RegisterLogUserIn();
-        var request = new CreateRoleRequest { Key = Faker.Random.String(5) };
+        var request = new CreateRoleRequest { Key = Faker.Random.String2(5) };
 
         // act
         var response = await Id(token).Role.CreateRole(request);
@@ -29,7 +29,7 @@ public class RoleControllerTest : IntegrationTestBase
     {
         // arrange
         var token = await Id().RegisterLogUserIn();
-        var request = new CreateRoleRequest { AppId = Guid.NewGuid(), Key = Faker.Random.String(5), Name = Faker.Random.String(10) };
+        var request = new CreateRoleRequest { AppId = Guid.NewGuid(), Key = Faker.Random.String2(5), Name = Faker.Random.String2(10) };
 
         // act
         var response = await Id(token).Role.CreateRole(request);
@@ -45,7 +45,7 @@ public class RoleControllerTest : IntegrationTestBase
         var otherToken = await Id().RegisterLogUserIn();
         var app = await Id(otherToken).App.Register();
         var token = await Id().RegisterLogUserIn();
-        var request = new CreateRoleRequest { AppId = app.Id, Key = Faker.Random.String(5), Name = Faker.Random.String(10) };
+        var request = new CreateRoleRequest { AppId = app.Id, Key = Faker.Random.String2(5), Name = Faker.Random.String2(10) };
 
         // act
         var response = await Id(token).Role.CreateRole(request);
@@ -60,8 +60,8 @@ public class RoleControllerTest : IntegrationTestBase
         // arrange
         var token = await Id().RegisterLogUserIn();
         var app = await Id(token).App.Register();
-        var roleKey = Faker.Random.String(5);
-        var roleName = Faker.Random.String(10);
+        var roleKey = Faker.Random.String2(5);
+        var roleName = Faker.Random.String2(10);
         await Id(token).Role.Register(app.Id, roleKey, roleName);
         var request = new CreateRoleRequest { AppId = app.Id, Key = roleKey, Name = roleName };
 
@@ -78,8 +78,8 @@ public class RoleControllerTest : IntegrationTestBase
         // arrange
         var token = await Id().RegisterLogUserIn();
         var app = await Id(token).App.Register();
-        var roleKey = Faker.Random.String(5);
-        var roleName = Faker.Random.String(10);
+        var roleKey = Faker.Random.String2(5);
+        var roleName = Faker.Random.String2(10);
 
         // act
         var role = await Id(token).Role.Register(app.Id, roleKey, roleName);
@@ -110,8 +110,8 @@ public class RoleControllerTest : IntegrationTestBase
         // arrange
         var token = await Id().RegisterLogUserIn();
         var app = await Id(token).App.Register();
-        var roleKey = Faker.Random.String(5);
-        var roleName = Faker.Random.String(10);
+        var roleKey = Faker.Random.String2(5);
+        var roleName = Faker.Random.String2(10);
         var role = await Id(token).Role.Register(app.Id, roleKey, roleName);
 
         // act
@@ -133,7 +133,7 @@ public class RoleControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
         var app = await Id(token).App.Register();
         var role = await Id(token).Role.Register(app.Id);
-        var request = new UpdateRoleRequest { Key = Faker.Random.String(5) };
+        var request = new UpdateRoleRequest { Key = Faker.Random.String2(5) };
 
         // act
         var response = await Id(token).Role.UpdateRole(role.Id, request);
@@ -147,7 +147,7 @@ public class RoleControllerTest : IntegrationTestBase
     {
         // arrange
         var token = await Id().RegisterLogUserIn();
-        var request = new UpdateRoleRequest { Key = Faker.Random.String(5), Name = Faker.Random.String(10) };
+        var request = new UpdateRoleRequest { Key = Faker.Random.String2(5), Name = Faker.Random.String2(10) };
 
         // act
         var response = await Id(token).Role.UpdateRole(Guid.NewGuid(), request);
@@ -164,7 +164,7 @@ public class RoleControllerTest : IntegrationTestBase
         var app = await Id(token).App.Register();
         var otherRole = await Id(token).Role.Register(app.Id);
         var role = await Id(token).Role.Register(app.Id);
-        var request = new UpdateRoleRequest { Key = otherRole.Key, Name = Faker.Random.String(10) };
+        var request = new UpdateRoleRequest { Key = otherRole.Key, Name = Faker.Random.String2(10) };
 
         // act
         var response = await Id(token).Role.UpdateRole(role.Id, request);
@@ -181,7 +181,7 @@ public class RoleControllerTest : IntegrationTestBase
         var app = await Id(otherToken).App.Register();
         var role = await Id(otherToken).Role.Register(app.Id);
         var token = await Id().RegisterLogUserIn();
-        var request = new UpdateRoleRequest { Key = Faker.Random.String(5), Name = Faker.Random.String(10) };
+        var request = new UpdateRoleRequest { Key = Faker.Random.String2(5), Name = Faker.Random.String2(10) };
 
         // act
         var response = await Id(token).Role.UpdateRole(role.Id, request);
@@ -197,7 +197,7 @@ public class RoleControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
         var app = await Id(token).App.Register();
         var role = await Id(token).Role.Register(app.Id);
-        var request = new UpdateRoleRequest { Key = Faker.Random.String(5), Name = Faker.Random.String(10) };
+        var request = new UpdateRoleRequest { Key = Faker.Random.String2(5), Name = Faker.Random.String2(10) };
 
         // act
         var response = await Id(token).Role.UpdateRole(role.Id, request);
@@ -214,7 +214,7 @@ public class RoleControllerTest : IntegrationTestBase
         var app = await Id(token).App.Register();
         var role = await Id(token).Role.Register(app.Id);
         var claim = await Id(token).Claim.Register(app.Id);
-        var request = new AddClaimToRoleRequest { Value = Faker.Random.String(1) };
+        var request = new AddClaimToRoleRequest { Value = Faker.Random.String2(1) };
 
         // act
         var response = await Id(token).Role.AddClaimToRole(claim.Id, role.Id, request);
@@ -228,7 +228,7 @@ public class RoleControllerTest : IntegrationTestBase
     {
         // arrange
         var token = await Id().RegisterLogUserIn();
-        var request = new AddClaimToRoleRequest { Value = Faker.Random.String(5) };
+        var request = new AddClaimToRoleRequest { Value = Faker.Random.String2(5) };
 
         // act
         var response = await Id(token).Role.AddClaimToRole(Guid.NewGuid(), Guid.NewGuid(), request);
@@ -244,7 +244,7 @@ public class RoleControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
         var app = await Id(token).App.Register();
         var role = await Id(token).Role.Register(app.Id);
-        var request = new AddClaimToRoleRequest { Value = Faker.Random.String(5) };
+        var request = new AddClaimToRoleRequest { Value = Faker.Random.String2(5) };
 
         // act
         var response = await Id(token).Role.AddClaimToRole(Guid.NewGuid(), role.Id, request);
@@ -262,7 +262,7 @@ public class RoleControllerTest : IntegrationTestBase
         var role = await Id(otherToken).Role.Register(app.Id);
         var claim = await Id(otherToken).Claim.Register(app.Id);
         var token = await Id().RegisterLogUserIn();
-        var request = new AddClaimToRoleRequest { Value = Faker.Random.String(5) };
+        var request = new AddClaimToRoleRequest { Value = Faker.Random.String2(5) };
 
         // act
         var response = await Id(token).Role.AddClaimToRole(claim.Id, role.Id, request);
@@ -280,7 +280,7 @@ public class RoleControllerTest : IntegrationTestBase
         var app2 = await Id(token).App.Register();
         var role = await Id(token).Role.Register(app2.Id);
         var claim = await Id(token).Claim.Register(app1.Id);
-        var request = new AddClaimToRoleRequest { Value = Faker.Random.String(5) };
+        var request = new AddClaimToRoleRequest { Value = Faker.Random.String2(5) };
 
         // act
         var response = await Id(token).Role.AddClaimToRole(claim.Id, role.Id, request);
@@ -297,7 +297,7 @@ public class RoleControllerTest : IntegrationTestBase
         var app = await Id(token).App.Register();
         var role = await Id(token).Role.Register(app.Id);
         var claim = await Id(token).Claim.Register(app.Id);
-        var claimValue = Faker.Random.String(5);
+        var claimValue = Faker.Random.String2(5);
 
         // act
         var response = await Id(token).Role.AddClaimToRole(claim.Id, role.Id, claimValue);

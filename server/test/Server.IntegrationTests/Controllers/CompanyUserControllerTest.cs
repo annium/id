@@ -277,7 +277,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
 
         // act
-        var response = await Id(token).CompanyUser.AddUserClaim(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), Faker.Random.String(1));
+        var response = await Id(token).CompanyUser.AddUserClaim(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), Faker.Random.String2(1));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.BadRequest);

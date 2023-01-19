@@ -18,7 +18,7 @@ public static class RoleClientExtensions
         string? name = null
     )
     {
-        var request = new CreateRoleRequest { AppId = appId, Key = key ?? Faker.Random.String(5), Name = name ?? Faker.Random.String(10) };
+        var request = new CreateRoleRequest { AppId = appId, Key = key ?? Faker.Random.String2(5), Name = name ?? Faker.Random.String2(10) };
         var roleId = await client.CreateRole(request).GetData();
         var roles = await client.ListRoles(appId).GetData();
 
@@ -32,6 +32,6 @@ public static class RoleClientExtensions
         string? value = null
     )
     {
-        return client.AddClaimToRole(claimId, roleId, new AddClaimToRoleRequestBody { Value = value ?? Faker.Random.String(10) });
+        return client.AddClaimToRole(claimId, roleId, new AddClaimToRoleRequestBody { Value = value ?? Faker.Random.String2(10) });
     }
 }

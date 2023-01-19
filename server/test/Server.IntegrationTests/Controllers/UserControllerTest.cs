@@ -205,7 +205,7 @@ public class UserControllerTest : IntegrationTestBase
         var other = await Id().RegisterLogInGetUser();
 
         // act
-        var response = await Id(token).User.AddUserClaim(other.Id, claim.Id, Faker.Random.String(1));
+        var response = await Id(token).User.AddUserClaim(other.Id, claim.Id, Faker.Random.String2(1));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.BadRequest);

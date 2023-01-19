@@ -16,10 +16,10 @@ public static class CompanyClaimClientExtensions
         string? name = null
     )
     {
-        var request = new CreateCompanyClaimRequest { AppId = appId, Key = key ?? Faker.Random.String(5), Name = name ?? Faker.Random.String(10) };
-        var roleId = await client.CreateCompanyClaim(request).GetData();
-        var roles = await client.ListCompanyClaims(appId).GetData();
+        var request = new CreateCompanyClaimRequest { AppId = appId, Key = key ?? Faker.Random.String2(5), Name = name ?? Faker.Random.String2(10) };
+        var claimId = await client.CreateCompanyClaim(request).GetData();
+        var claims = await client.ListCompanyClaims(appId).GetData();
 
-        return roles.Single(x => x.Id == roleId);
+        return claims.Single(x => x.Id == claimId);
     }
 }

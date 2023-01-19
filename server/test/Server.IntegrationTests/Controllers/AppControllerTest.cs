@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Annium.Data.Models.Extensions;
@@ -17,7 +18,7 @@ public class AppControllerTest : IntegrationTestBase
     {
         // arrange
         var token = await Id().RegisterLogUserIn();
-        var request = new CreateAppRequest { Name = Faker.Random.String(1, 1) };
+        var request = new CreateAppRequest { Name = Faker.Random.String2(1, 1) };
 
         // act
         var response = await Id(token).App.CreateApp(request);
@@ -31,14 +32,15 @@ public class AppControllerTest : IntegrationTestBase
     {
         // arrange
         var token = await Id().RegisterLogUserIn();
-        var appName = Faker.Random.String(10);
+        var appName = Faker.Random.String2(10);
 
         // act
         var app = await Id(token).App.Register(appName);
-        var apps = await Id(token).App.FindApps(string.Empty);
+        var apps = await Id(token).App.FindApps(appName).GetData();
 
         // assert
-        apps.Data.Data.Has(2);
+        apps.Has(1);
+        apps.ElementAt(0).Is(app);
         app.Name.Is(appName);
     }
 
@@ -188,7 +190,7 @@ public class AppControllerTest : IntegrationTestBase
         // arrange
         var token = await Id().RegisterLogUserIn();
         var app = await Id(token).App.Register();
-        var request = new UpdateAppRequestBody { Name = Faker.Random.String(1, 1) };
+        var request = new UpdateAppRequestBody { Name = Faker.Random.String2(1, 1) };
 
         // act
         var response = await Id(token).App.UpdateApp(app.Id, request);
@@ -202,7 +204,7 @@ public class AppControllerTest : IntegrationTestBase
     {
         // arrange
         var token = await Id().RegisterLogUserIn();
-        var request = new UpdateAppRequestBody { Name = Faker.Random.String(10) };
+        var request = new UpdateAppRequestBody { Name = Faker.Random.String2(10) };
 
         // act
         var response = await Id(token).App.UpdateApp(Guid.NewGuid(), request);
@@ -218,7 +220,7 @@ public class AppControllerTest : IntegrationTestBase
         var otherToken = await Id().RegisterLogUserIn();
         var app = await Id(otherToken).App.Register();
         var token = await Id().RegisterLogUserIn();
-        var request = new UpdateAppRequestBody { Name = Faker.Random.String(10) };
+        var request = new UpdateAppRequestBody { Name = Faker.Random.String2(10) };
 
         // act
         var response = await Id(token).App.UpdateApp(app.Id, request);
@@ -233,7 +235,7 @@ public class AppControllerTest : IntegrationTestBase
         // arrange
         var token = await Id().RegisterLogUserIn();
         var app = await Id(token).App.Register();
-        var request = new UpdateAppRequestBody { Name = Faker.Random.String(10) };
+        var request = new UpdateAppRequestBody { Name = Faker.Random.String2(10) };
 
         // act
         var response = await Id(token).App.UpdateApp(app.Id, request);

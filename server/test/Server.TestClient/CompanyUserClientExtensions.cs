@@ -40,7 +40,7 @@ public static class CompanyUserClientExtensions
         string? value = null
     )
     {
-        var response = await client.AddCompanyClaimToCompanyUser(claimId, companyId, userId, new AddCompanyClaimToCompanyUserRequestBody { Value = value ?? Faker.Random.String(10) });
+        var response = await client.AddCompanyClaimToCompanyUser(claimId, companyId, userId, new AddCompanyClaimToCompanyUserRequestBody { Value = value ?? Faker.Random.String2(10) });
 
         return response;
     }

@@ -15,7 +15,7 @@ public class CompanyRoleControllerTest : IntegrationTestBase
     {
         // arrange
         var token = await Id().RegisterLogUserIn();
-        var request = new CreateCompanyRoleRequest { AppId = Guid.NewGuid(), Key = Faker.Random.String(5) };
+        var request = new CreateCompanyRoleRequest { AppId = Guid.NewGuid(), Key = Faker.Random.String2(5) };
 
         // act
         var response = await Id(token).CompanyRole.CreateRole(request);
@@ -29,7 +29,7 @@ public class CompanyRoleControllerTest : IntegrationTestBase
     {
         // arrange
         var token = await Id().RegisterLogUserIn();
-        var request = new CreateCompanyRoleRequest { AppId = Guid.NewGuid(), Key = Faker.Random.String(5), Name = Faker.Random.String(10) };
+        var request = new CreateCompanyRoleRequest { AppId = Guid.NewGuid(), Key = Faker.Random.String2(5), Name = Faker.Random.String2(10) };
 
         // act
         var response = await Id(token).CompanyRole.CreateRole(request);
@@ -45,7 +45,7 @@ public class CompanyRoleControllerTest : IntegrationTestBase
         var otherToken = await Id().RegisterLogUserIn();
         var app = await Id(otherToken).App.Register();
         var token = await Id().RegisterLogUserIn();
-        var request = new CreateCompanyRoleRequest { AppId = app.Id, Key = Faker.Random.String(5), Name = Faker.Random.String(10) };
+        var request = new CreateCompanyRoleRequest { AppId = app.Id, Key = Faker.Random.String2(5), Name = Faker.Random.String2(10) };
 
         // act
         var response = await Id(token).CompanyRole.CreateRole(request);
@@ -60,10 +60,10 @@ public class CompanyRoleControllerTest : IntegrationTestBase
         // arrange
         var token = await Id().RegisterLogUserIn();
         var app = await Id(token).App.Register();
-        var roleKey = Faker.Random.String(5);
-        var roleName = Faker.Random.String(10);
+        var roleKey = Faker.Random.String2(5);
+        var roleName = Faker.Random.String2(10);
         await Id(token).CompanyRole.Register(app.Id, roleKey, roleName);
-        var request = new CreateCompanyRoleRequest { AppId = app.Id, Key = Faker.Random.String(5), Name = Faker.Random.String(10) };
+        var request = new CreateCompanyRoleRequest { AppId = app.Id, Key = Faker.Random.String2(5), Name = Faker.Random.String2(10) };
 
         // act
         var response = await Id(token).CompanyRole.CreateRole(request);
@@ -78,8 +78,8 @@ public class CompanyRoleControllerTest : IntegrationTestBase
         // arrange
         var token = await Id().RegisterLogUserIn();
         var app = await Id(token).App.Register();
-        var roleKey = Faker.Random.String(5);
-        var roleName = Faker.Random.String(10);
+        var roleKey = Faker.Random.String2(5);
+        var roleName = Faker.Random.String2(10);
 
         // act
         var role = await Id(token).CompanyRole.Register(app.Id, roleKey, roleName);
@@ -110,8 +110,8 @@ public class CompanyRoleControllerTest : IntegrationTestBase
         // arrange
         var token = await Id().RegisterLogUserIn();
         var app = await Id(token).App.Register();
-        var roleKey = Faker.Random.String(5);
-        var roleName = Faker.Random.String(10);
+        var roleKey = Faker.Random.String2(5);
+        var roleName = Faker.Random.String2(10);
         var role = await Id(token).CompanyRole.Register(app.Id, roleKey, roleName);
 
         // act
@@ -128,7 +128,7 @@ public class CompanyRoleControllerTest : IntegrationTestBase
     {
         // arrange
         var token = await Id().RegisterLogUserIn();
-        var request = new UpdateCompanyRoleRequestBody { Key = Faker.Random.String(5) };
+        var request = new UpdateCompanyRoleRequestBody { Key = Faker.Random.String2(5) };
 
         // act
         var response = await Id(token).CompanyRole.UpdateRole(Guid.NewGuid(), request);
@@ -142,7 +142,7 @@ public class CompanyRoleControllerTest : IntegrationTestBase
     {
         // arrange
         var token = await Id().RegisterLogUserIn();
-        var request = new UpdateCompanyRoleRequestBody { Key = Faker.Random.String(5), Name = Faker.Random.String(10) };
+        var request = new UpdateCompanyRoleRequestBody { Key = Faker.Random.String2(5), Name = Faker.Random.String2(10) };
 
         // act
         var response = await Id(token).CompanyRole.UpdateRole(Guid.NewGuid(), request);
@@ -159,7 +159,7 @@ public class CompanyRoleControllerTest : IntegrationTestBase
         var app = await Id(otherToken).App.Register();
         var role = await Id(otherToken).CompanyRole.Register(app.Id);
         var token = await Id().RegisterLogUserIn();
-        var request = new UpdateCompanyRoleRequestBody { Key = Faker.Random.String(5), Name = Faker.Random.String(10) };
+        var request = new UpdateCompanyRoleRequestBody { Key = Faker.Random.String2(5), Name = Faker.Random.String2(10) };
 
         // act
         var response = await Id(token).CompanyRole.UpdateRole(role.Id, request);
@@ -192,7 +192,7 @@ public class CompanyRoleControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
         var app = await Id(token).App.Register();
         var role = await Id(token).CompanyRole.Register(app.Id);
-        var request = new UpdateCompanyRoleRequestBody { Key = Faker.Random.String(5), Name = Faker.Random.String(10) };
+        var request = new UpdateCompanyRoleRequestBody { Key = Faker.Random.String2(5), Name = Faker.Random.String2(10) };
 
         // act
         var response = await Id(token).CompanyRole.UpdateRole(role.Id, request);
@@ -208,7 +208,7 @@ public class CompanyRoleControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
 
         // act
-        var response = await Id(token).CompanyRole.AddClaimToRole(Guid.NewGuid(), Guid.NewGuid(), Faker.Random.String(1));
+        var response = await Id(token).CompanyRole.AddClaimToRole(Guid.NewGuid(), Guid.NewGuid(), Faker.Random.String2(1));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.BadRequest);
@@ -284,7 +284,7 @@ public class CompanyRoleControllerTest : IntegrationTestBase
         var app = await Id(token).App.Register();
         var role = await Id(token).CompanyRole.Register(app.Id);
         var claim = await Id(token).CompanyClaim.Register(app.Id);
-        var claimValue = Faker.Random.String(5);
+        var claimValue = Faker.Random.String2(5);
 
         // act
         var response = await Id(token).CompanyRole.AddClaimToRole(claim.Id, role.Id, claimValue);
