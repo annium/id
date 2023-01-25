@@ -103,8 +103,8 @@ define publish
 	@$(eval image := $(1))
 	@$(eval context := $(2))
 	@$(eval dockerfile := $(3))
-	@docker build -t $(TAG_PREFIX)/$(image) -f $(context)/$(dockerfile) $(context)
-	@docker push $(TAG_PREFIX)/$(image)
+	docker build -t $(TAG_PREFIX)/$(image) -f $(context)/$(dockerfile) $(context)
+	docker push $(TAG_PREFIX)/$(image)
 endef
 
 define copy

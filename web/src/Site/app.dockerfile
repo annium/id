@@ -1,6 +1,6 @@
 FROM mcr.microsoft.com/dotnet/sdk:5.0-alpine AS build
 COPY . /code
-RUN dotnet publish -c Release -o /dist /code/src/web/Annium.Id.Site
+RUN dotnet publish -c release -o /dist /code/src/web/Annium.Id.Site
 
 FROM nginx:alpine
 COPY --from=build /dist/wwwroot/ /usr/share/nginx/html/
