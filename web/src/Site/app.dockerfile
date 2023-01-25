@@ -1,7 +1,10 @@
-FROM mcr.microsoft.com/dotnet/sdk:5.0-alpine AS build
+FROM mcr.microsoft.com/dotnet/sdk:7.0-alpine as builder
 COPY . /code
-RUN dotnet publish -c release -o /dist /code/src/web/Annium.Id.Site
+WORKDIR /code
+RUN dotnet restore && \
+    find . -type f -name nuget.config | xargs rm && \
+    dotnet publish --no-restore -c release -o /app /code/web/src/Site
 
 FROM nginx:alpine
-COPY --from=build /dist/wwwroot/ /usr/share/nginx/html/
-COPY ./src/web/Annium.Id.Site/nginx.conf /etc/nginx/nginx.conf
+COPY --from=builder /app/wwwroot/ /usr/share/nginx/html/
+COPY ./web/src/Site/nginx.conf /etc/nginx/nginx.conf
