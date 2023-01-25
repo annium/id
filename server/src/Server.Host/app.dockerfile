@@ -1,6 +1,9 @@
 FROM mcr.microsoft.com/dotnet/sdk:7.0-alpine as builder
 COPY . /code
-RUN dotnet publish -c release -o /app /code/server/src/Server.Host
+WORKDIR /code
+RUN dotnet restore && \
+    find . -type f -name nuget.config | xargs rm && \
+    dotnet publish --no-restore -c release -o /app /code/server/src/Server.Host
 
 FROM mcr.microsoft.com/dotnet/aspnet:7.0-alpine
 WORKDIR /app

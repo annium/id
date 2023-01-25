@@ -2,9 +2,10 @@
 **
 
 # all sources & tests
-!/.config/
-!/src/
-!/test/
+!/lib/
+!/server/
+!/web/
+!/*.sln
 
 # ignore artifacts
 **/bin/
