@@ -1,6 +1,6 @@
 using Bogus;
 
-namespace Server.Host.TestClient;
+namespace Server.Host.TestClient.Clients;
 
 internal static class Helper
 {

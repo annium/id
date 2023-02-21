@@ -2,7 +2,7 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 using Annium.Testing;
-using Server.Host.TestClient;
+using Server.Host.TestClient.Clients;
 using Server.ViewModels.Requests.Roles;
 using Xunit;
 
@@ -217,7 +217,7 @@ public class RoleControllerTest : IntegrationTestBase
         var request = new AddClaimToRoleRequest { Value = Faker.Random.String2(1) };
 
         // act
-        var response = await Id(token).Role.AddClaimToRole(claim.Id, role.Id, request);
+        var response = await Id(token).Role.AddClaimToRole(role.Id, claim.Id, request);
 
         // assert
         response.StatusCode.Is(HttpStatusCode.BadRequest);
@@ -247,7 +247,7 @@ public class RoleControllerTest : IntegrationTestBase
         var request = new AddClaimToRoleRequest { Value = Faker.Random.String2(5) };
 
         // act
-        var response = await Id(token).Role.AddClaimToRole(Guid.NewGuid(), role.Id, request);
+        var response = await Id(token).Role.AddClaimToRole(role.Id, Guid.NewGuid(), request);
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -265,7 +265,7 @@ public class RoleControllerTest : IntegrationTestBase
         var request = new AddClaimToRoleRequest { Value = Faker.Random.String2(5) };
 
         // act
-        var response = await Id(token).Role.AddClaimToRole(claim.Id, role.Id, request);
+        var response = await Id(token).Role.AddClaimToRole(role.Id, claim.Id, request);
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -283,7 +283,7 @@ public class RoleControllerTest : IntegrationTestBase
         var request = new AddClaimToRoleRequest { Value = Faker.Random.String2(5) };
 
         // act
-        var response = await Id(token).Role.AddClaimToRole(claim.Id, role.Id, request);
+        var response = await Id(token).Role.AddClaimToRole(role.Id, claim.Id, request);
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -300,7 +300,7 @@ public class RoleControllerTest : IntegrationTestBase
         var claimValue = Faker.Random.String2(5);
 
         // act
-        var response = await Id(token).Role.AddClaimToRole(claim.Id, role.Id, claimValue);
+        var response = await Id(token).Role.AddClaimToRole(role.Id, claim.Id, claimValue);
         var roles = await Id(token).Role.ListRoles(app.Id).GetData();
 
         // assert
@@ -339,7 +339,7 @@ public class RoleControllerTest : IntegrationTestBase
         var role = await Id(token).Role.Register(app.Id);
 
         // act
-        var response = await Id(token).Role.DeleteClaimFromRole(Guid.NewGuid(), role.Id);
+        var response = await Id(token).Role.DeleteClaimFromRole(role.Id, Guid.NewGuid());
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -356,7 +356,7 @@ public class RoleControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
 
         // act
-        var response = await Id(token).Role.DeleteClaimFromRole(claim.Id, role.Id);
+        var response = await Id(token).Role.DeleteClaimFromRole(role.Id, claim.Id);
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -373,7 +373,7 @@ public class RoleControllerTest : IntegrationTestBase
         var claim = await Id(token).Claim.Register(app1.Id);
 
         // act
-        var response = await Id(token).Role.DeleteClaimFromRole(claim.Id, role.Id);
+        var response = await Id(token).Role.DeleteClaimFromRole(role.Id, claim.Id);
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -389,7 +389,7 @@ public class RoleControllerTest : IntegrationTestBase
         var claim = await Id(token).Claim.Register(app.Id);
 
         // act
-        var response = await Id(token).Role.DeleteClaimFromRole(claim.Id, role.Id);
+        var response = await Id(token).Role.DeleteClaimFromRole(role.Id, claim.Id);
 
         // assert
         response.StatusCode.Is(HttpStatusCode.OK);

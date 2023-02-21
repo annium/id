@@ -1,12 +1,11 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Annium.Data.Operations;
 using Annium.Net.Http;
 using Server.ViewModels.Requests.CompanyClaims;
 using Server.ViewModels.Responses.CompanyClaims;
 
-namespace Server.Host.TestClient;
+namespace Server.Host.TestClient.Clients;
 
 public class CompanyClaimClient : ClientBase
 {
@@ -24,14 +23,14 @@ public class CompanyClaimClient : ClientBase
             .AsResponseAsync<IResult<Guid>>();
     }
 
-    public async Task<IHttpResponse<IResult<IEnumerable<CompanyClaimResponse>>>> ListCompanyClaims(
+    public async Task<IHttpResponse<IResult<CompanyClaimResponse[]>>> ListCompanyClaims(
         Guid appId
     )
     {
         return await Request.Clone()
             .Get("companies/claims")
             .Param("appId", appId)
-            .AsResponseAsync<IResult<IEnumerable<CompanyClaimResponse>>>();
+            .AsResponseAsync<IResult<CompanyClaimResponse[]>>();
     }
 
     public async Task<IHttpResponse<IResult>> UpdateCompanyClaim(

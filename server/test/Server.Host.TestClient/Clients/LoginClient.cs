@@ -5,7 +5,7 @@ using Annium.Net.Http;
 using Server.ViewModels.Requests.Login;
 using Server.ViewModels.Responses.Login;
 
-namespace Server.Host.TestClient;
+namespace Server.Host.TestClient.Clients;
 
 public class LoginClient : ClientBase
 {

@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Annium.Data.Operations;
 using Annium.Net.Http;
@@ -7,7 +6,7 @@ using Server.ViewModels.Requests.Companies;
 using Server.ViewModels.Responses.Companies;
 using Server.ViewModels.Responses.Users;
 
-namespace Server.Host.TestClient;
+namespace Server.Host.TestClient.Clients;
 
 public class CompanyClient : ClientBase
 {
@@ -25,22 +24,22 @@ public class CompanyClient : ClientBase
             .AsResponseAsync<IResult<Guid>>();
     }
 
-    public async Task<IHttpResponse<IResult<IEnumerable<CompanyResponse>>>> FindCompanies(
+    public async Task<IHttpResponse<IResult<CompanyResponse[]>>> FindCompanies(
         string query
     )
     {
         return await Request.Clone()
             .Get("companies")
             .Param("query", query)
-            .AsResponseAsync<IResult<IEnumerable<CompanyResponse>>>();
+            .AsResponseAsync<IResult<CompanyResponse[]>>();
     }
 
-    public async Task<IHttpResponse<IResult<IEnumerable<CompanyResponse>>>> ListMyCompanies(
+    public async Task<IHttpResponse<IResult<CompanyResponse[]>>> ListMyCompanies(
     )
     {
         return await Request.Clone()
             .Get("companies/my")
-            .AsResponseAsync<IResult<IEnumerable<CompanyResponse>>>();
+            .AsResponseAsync<IResult<CompanyResponse[]>>();
     }
 
     public async Task<IHttpResponse<IResult<CompanyResponse>>> GetCompany(
@@ -52,13 +51,13 @@ public class CompanyClient : ClientBase
             .AsResponseAsync<IResult<CompanyResponse>>();
     }
 
-    public async Task<IHttpResponse<IResult<IEnumerable<UserResponse>>>> GetCompanyUsers(
+    public async Task<IHttpResponse<IResult<UserResponse[]>>> GetCompanyUsers(
         Guid companyId
     )
     {
         return await Request.Clone()
             .Get($"companies/{companyId}/users")
-            .AsResponseAsync<IResult<IEnumerable<UserResponse>>>();
+            .AsResponseAsync<IResult<UserResponse[]>>();
     }
 
     public async Task<IHttpResponse<IResult>> UpdateCompany(

@@ -1,12 +1,11 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Annium.Data.Operations;
 using Annium.Net.Http;
 using Server.ViewModels.Requests.CompanyRoles;
 using Server.ViewModels.Responses.CompanyRoles;
 
-namespace Server.Host.TestClient;
+namespace Server.Host.TestClient.Clients;
 
 public class CompanyRoleClient : ClientBase
 {
@@ -24,14 +23,14 @@ public class CompanyRoleClient : ClientBase
             .AsResponseAsync<IResult<Guid>>();
     }
 
-    public async Task<IHttpResponse<IResult<IEnumerable<CompanyRoleResponse>>>> ListRoles(
+    public async Task<IHttpResponse<IResult<CompanyRoleResponse[]>>> ListRoles(
         Guid appId
     )
     {
         return await Request.Clone()
             .Get("companies/roles")
             .Param("appId", appId)
-            .AsResponseAsync<IResult<IEnumerable<CompanyRoleResponse>>>();
+            .AsResponseAsync<IResult<CompanyRoleResponse[]>>();
     }
 
     public async Task<IHttpResponse<IResult>> UpdateRole(
@@ -46,8 +45,8 @@ public class CompanyRoleClient : ClientBase
     }
 
     public async Task<IHttpResponse<IResult>> AddClaimToRole(
-        Guid claimId,
         Guid roleId,
+        Guid claimId,
         AddCompanyClaimToCompanyRoleRequestBody body
     )
     {
@@ -58,8 +57,8 @@ public class CompanyRoleClient : ClientBase
     }
 
     public async Task<IHttpResponse<IResult>> DeleteClaimFromRole(
-        Guid claimId,
-        Guid roleId
+        Guid roleId,
+        Guid claimId
     )
     {
         return await Request.Clone()

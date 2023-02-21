@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 using Annium.Data.Operations;
 using Annium.Net.Http;
 using Server.ViewModels.Requests.CompanyUsers;
-using static Server.Host.TestClient.Helper;
+using static Server.Host.TestClient.Clients.Helper;
 
-namespace Server.Host.TestClient;
+namespace Server.Host.TestClient.Clients;
 
 public static class CompanyUserClientExtensions
 {
@@ -27,7 +27,7 @@ public static class CompanyUserClientExtensions
         Guid roleId
     )
     {
-        var response = await client.AddCompanyRoleToCompanyUser(companyId, roleId, userId);
+        var response = await client.AddCompanyRoleToCompanyUser(companyId, userId, roleId);
 
         return response;
     }
@@ -40,7 +40,7 @@ public static class CompanyUserClientExtensions
         string? value = null
     )
     {
-        var response = await client.AddCompanyClaimToCompanyUser(claimId, companyId, userId, new AddCompanyClaimToCompanyUserRequestBody { Value = value ?? Faker.Random.String2(10) });
+        var response = await client.AddCompanyClaimToCompanyUser(companyId, userId, claimId, new AddCompanyClaimToCompanyUserRequestBody { Value = value ?? Faker.Random.String2(10) });
 
         return response;
     }

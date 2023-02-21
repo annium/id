@@ -6,7 +6,7 @@ using Server.ViewModels.Requests.Me;
 using Server.ViewModels.Responses.Login;
 using Server.ViewModels.Responses.Me;
 
-namespace Server.Host.TestClient;
+namespace Server.Host.TestClient.Clients;
 
 public class MeClient : ClientBase
 {

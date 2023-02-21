@@ -3,7 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Annium.Data.Models.Extensions;
 using Annium.Testing;
-using Server.Host.TestClient;
+using Server.Host.TestClient.Clients;
 using Server.ViewModels.Responses.Users;
 using Xunit;
 
@@ -18,7 +18,7 @@ public class UserControllerTest : IntegrationTestBase
         var me = await Id().RegisterLogInGetUser();
 
         // act
-        var response = await Id().User.FindUsers(1, me.Login).GetData();
+        var response = await Id().User.FindUsers(me.Login, 1).GetData();
 
         // assert
         response.IsShallowEqual(new[]
@@ -73,7 +73,7 @@ public class UserControllerTest : IntegrationTestBase
         var user = await Id(token).Me.GetMe().GetData();
 
         // act
-        var response = await Id(token).User.AddRoleToUser(role.Id, user.Id);
+        var response = await Id(token).User.AddRoleToUser(user.Id, role.Id);
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -100,7 +100,7 @@ public class UserControllerTest : IntegrationTestBase
         var other = await Id().RegisterLogInGetUser();
 
         // act
-        var response = await Id(token).User.AddRoleToUser(Guid.NewGuid(), other.Id);
+        var response = await Id(token).User.AddRoleToUser(other.Id, Guid.NewGuid());
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -116,7 +116,7 @@ public class UserControllerTest : IntegrationTestBase
         var other = await Id().RegisterLogInGetUser();
 
         // act
-        var response = await Id(token).User.AddRoleToUser(role.Id, other.Id);
+        var response = await Id(token).User.AddRoleToUser(other.Id, role.Id);
 
         // assert
         response.StatusCode.Is(HttpStatusCode.OK);
@@ -146,7 +146,7 @@ public class UserControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
 
         // act
-        var response = await Id(token).User.DeleteRoleFromUser(role.Id, owner.Id);
+        var response = await Id(token).User.DeleteRoleFromUser(owner.Id, role.Id);
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -173,7 +173,7 @@ public class UserControllerTest : IntegrationTestBase
         var other = await Id().RegisterLogInGetUser();
 
         // act
-        var response = await Id(token).User.DeleteRoleFromUser(Guid.NewGuid(), other.Id);
+        var response = await Id(token).User.DeleteRoleFromUser(other.Id, Guid.NewGuid());
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -189,7 +189,7 @@ public class UserControllerTest : IntegrationTestBase
         var other = await Id().RegisterLogInGetUser();
 
         // act
-        var response = await Id(token).User.DeleteRoleFromUser(role.Id, other.Id);
+        var response = await Id(token).User.DeleteRoleFromUser(other.Id, role.Id);
 
         // assert
         response.StatusCode.Is(HttpStatusCode.OK);
@@ -295,7 +295,7 @@ public class UserControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
 
         // act
-        var response = await Id(token).User.DeleteClaimFromUser(claim.Id, owner.Id);
+        var response = await Id(token).User.DeleteClaimFromUser(owner.Id, claim.Id);
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -322,7 +322,7 @@ public class UserControllerTest : IntegrationTestBase
         var other = await Id().RegisterLogInGetUser();
 
         // act
-        var response = await Id(token).User.DeleteClaimFromUser(Guid.NewGuid(), other.Id);
+        var response = await Id(token).User.DeleteClaimFromUser(other.Id, Guid.NewGuid());
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -338,7 +338,7 @@ public class UserControllerTest : IntegrationTestBase
         var other = await Id().RegisterLogInGetUser();
 
         // act
-        var response = await Id(token).User.DeleteClaimFromUser(claim.Id, other.Id);
+        var response = await Id(token).User.DeleteClaimFromUser(other.Id, claim.Id);
 
         // assert
         response.StatusCode.Is(HttpStatusCode.OK);

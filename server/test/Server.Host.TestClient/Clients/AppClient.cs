@@ -1,12 +1,11 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Annium.Data.Operations;
 using Annium.Net.Http;
 using Server.ViewModels.Requests.Apps;
 using Server.ViewModels.Responses.Apps;
 
-namespace Server.Host.TestClient;
+namespace Server.Host.TestClient.Clients;
 
 public class AppClient : ClientBase
 {
@@ -24,22 +23,22 @@ public class AppClient : ClientBase
             .AsResponseAsync<IResult<Guid>>();
     }
 
-    public async Task<IHttpResponse<IResult<IEnumerable<AppResponse>>>> FindApps(
+    public async Task<IHttpResponse<IResult<AppResponse[]>>> FindApps(
         string query
     )
     {
         return await Request.Clone()
             .Get("apps")
             .Param("query", query)
-            .AsResponseAsync<IResult<IEnumerable<AppResponse>>>();
+            .AsResponseAsync<IResult<AppResponse[]>>();
     }
 
-    public async Task<IHttpResponse<IResult<IEnumerable<AppResponse>>>> ListMyApps(
+    public async Task<IHttpResponse<IResult<AppResponse[]>>> ListMyApps(
     )
     {
         return await Request.Clone()
             .Get("apps/my")
-            .AsResponseAsync<IResult<IEnumerable<AppResponse>>>();
+            .AsResponseAsync<IResult<AppResponse[]>>();
     }
 
     public async Task<IHttpResponse<IResult<AppResponse>>> GetApp(

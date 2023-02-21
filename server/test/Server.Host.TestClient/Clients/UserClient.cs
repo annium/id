@@ -1,12 +1,11 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Annium.Data.Operations;
 using Annium.Net.Http;
 using Server.ViewModels.Requests.Users;
 using Server.ViewModels.Responses.Users;
 
-namespace Server.Host.TestClient;
+namespace Server.Host.TestClient.Clients;
 
 public class UserClient : ClientBase
 {
@@ -14,16 +13,16 @@ public class UserClient : ClientBase
     {
     }
 
-    public async Task<IHttpResponse<IResult<IEnumerable<UserResponse>>>> FindUsers(
-        int limit,
-        string query
+    public async Task<IHttpResponse<IResult<UserResponse[]>>> FindUsers(
+        string query,
+        int limit
     )
     {
         return await Request.Clone()
             .Get("users")
-            .Param("limit", limit)
             .Param("query", query)
-            .AsResponseAsync<IResult<IEnumerable<UserResponse>>>();
+            .Param("limit", limit)
+            .AsResponseAsync<IResult<UserResponse[]>>();
     }
 
     public async Task<IHttpResponse<IResult<UserResponse>>> GetUser(
@@ -36,8 +35,8 @@ public class UserClient : ClientBase
     }
 
     public async Task<IHttpResponse<IResult>> AddRoleToUser(
-        Guid roleId,
-        Guid userId
+        Guid userId,
+        Guid roleId
     )
     {
         return await Request.Clone()
@@ -46,8 +45,8 @@ public class UserClient : ClientBase
     }
 
     public async Task<IHttpResponse<IResult>> DeleteRoleFromUser(
-        Guid roleId,
-        Guid userId
+        Guid userId,
+        Guid roleId
     )
     {
         return await Request.Clone()
@@ -56,8 +55,8 @@ public class UserClient : ClientBase
     }
 
     public async Task<IHttpResponse<IResult>> AddClaimToUser(
-        Guid claimId,
         Guid userId,
+        Guid claimId,
         AddClaimToUserRequestBody body
     )
     {
@@ -68,8 +67,8 @@ public class UserClient : ClientBase
     }
 
     public async Task<IHttpResponse<IResult>> DeleteClaimFromUser(
-        Guid claimId,
-        Guid userId
+        Guid userId,
+        Guid claimId
     )
     {
         return await Request.Clone()

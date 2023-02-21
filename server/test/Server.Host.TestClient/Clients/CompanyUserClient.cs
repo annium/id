@@ -4,7 +4,7 @@ using Annium.Data.Operations;
 using Annium.Net.Http;
 using Server.ViewModels.Requests.CompanyUsers;
 
-namespace Server.Host.TestClient;
+namespace Server.Host.TestClient.Clients;
 
 public class CompanyUserClient : ClientBase
 {
@@ -24,8 +24,8 @@ public class CompanyUserClient : ClientBase
 
     public async Task<IHttpResponse<IResult>> AddCompanyRoleToCompanyUser(
         Guid companyId,
-        Guid roleId,
-        Guid userId
+        Guid userId,
+        Guid roleId
     )
     {
         return await Request.Clone()
@@ -35,8 +35,8 @@ public class CompanyUserClient : ClientBase
 
     public async Task<IHttpResponse<IResult>> DeleteCompanyRoleFromCompanyUser(
         Guid companyId,
-        Guid roleId,
-        Guid userId
+        Guid userId,
+        Guid roleId
     )
     {
         return await Request.Clone()
@@ -45,9 +45,9 @@ public class CompanyUserClient : ClientBase
     }
 
     public async Task<IHttpResponse<IResult>> AddCompanyClaimToCompanyUser(
-        Guid claimId,
         Guid companyId,
         Guid userId,
+        Guid claimId,
         AddCompanyClaimToCompanyUserRequestBody body
     )
     {
@@ -58,9 +58,9 @@ public class CompanyUserClient : ClientBase
     }
 
     public async Task<IHttpResponse<IResult>> DeleteCompanyClaimFromCompanyUser(
-        Guid claimId,
         Guid companyId,
-        Guid userId
+        Guid userId,
+        Guid claimId
     )
     {
         return await Request.Clone()

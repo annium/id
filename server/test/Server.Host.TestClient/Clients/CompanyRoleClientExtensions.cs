@@ -5,9 +5,9 @@ using Annium.Data.Operations;
 using Annium.Net.Http;
 using Server.ViewModels.Requests.CompanyRoles;
 using Server.ViewModels.Responses.CompanyRoles;
-using static Server.Host.TestClient.Helper;
+using static Server.Host.TestClient.Clients.Helper;
 
-namespace Server.Host.TestClient;
+namespace Server.Host.TestClient.Clients;
 
 public static class CompanyRoleClientExtensions
 {
@@ -27,11 +27,11 @@ public static class CompanyRoleClientExtensions
 
     public static Task<IHttpResponse<IResult>> AddClaimToRole(
         this CompanyRoleClient client,
-        Guid claimId,
         Guid roleId,
+        Guid claimId,
         string value = "Some"
     )
     {
-        return client.AddClaimToRole(claimId, roleId, new AddCompanyClaimToCompanyRoleRequestBody { Value = value });
+        return client.AddClaimToRole(roleId, claimId, new AddCompanyClaimToCompanyRoleRequestBody { Value = value });
     }
 }

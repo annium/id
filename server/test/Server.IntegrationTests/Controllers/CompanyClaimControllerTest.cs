@@ -2,7 +2,7 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 using Annium.Testing;
-using Server.Host.TestClient;
+using Server.Host.TestClient.Clients;
 using Server.ViewModels.Requests.CompanyClaims;
 using Xunit;
 

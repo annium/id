@@ -3,9 +3,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Server.ViewModels.Requests.CompanyClaims;
 using Server.ViewModels.Responses.CompanyClaims;
-using static Server.Host.TestClient.Helper;
+using static Server.Host.TestClient.Clients.Helper;
 
-namespace Server.Host.TestClient;
+namespace Server.Host.TestClient.Clients;
 
 public static class CompanyClaimClientExtensions
 {

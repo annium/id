@@ -1,6 +1,6 @@
 using Annium.Net.Http;
 
-namespace Server.Host.TestClient;
+namespace Server.Host.TestClient.Clients;
 
 public class Root
 {

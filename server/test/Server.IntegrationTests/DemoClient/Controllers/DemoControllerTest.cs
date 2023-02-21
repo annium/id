@@ -2,7 +2,7 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 using Annium.Testing;
-using Server.Host.TestClient;
+using Server.Host.TestClient.Clients;
 using Xunit;
 
 namespace Server.IntegrationTests.DemoClient.Controllers;
@@ -83,7 +83,7 @@ public class DemoControllerTest : IntegrationTestBase
         var user = await Id(token).Me.GetMe().GetData();
         var app = await Id(token).App.Register();
         var role = await Id(token).Role.Register(app.Id, "admin", "Administrator");
-        await Id(token).User.AddRoleToUser(role.Id, user.Id);
+        await Id(token).User.AddRoleToUser(user.Id, role.Id);
         token = await Id().LogUserIn(app.Id, login, password);
 
         // act
@@ -104,9 +104,9 @@ public class DemoControllerTest : IntegrationTestBase
         var user = await Id(token).Me.GetMe().GetData();
         var app = await Id(token).App.Register();
         var role = await Id(token).Role.Register(app.Id, "coo", "Chief Operations Officer");
-        await Id(token).User.AddRoleToUser(role.Id, user.Id);
+        await Id(token).User.AddRoleToUser(user.Id, role.Id);
         var claim = await Id(token).Claim.Register(app.Id, "paymentsAccess", "Payments Access");
-        await Id(token).Role.AddClaimToRole(claim.Id, role.Id, "full");
+        await Id(token).Role.AddClaimToRole(role.Id, claim.Id, "full");
         token = await Id().LogUserIn(app.Id, login, password);
 
         // act
@@ -149,7 +149,7 @@ public class DemoControllerTest : IntegrationTestBase
         var app = await Id(token).App.Register();
         var role = await Id(token).Role.Register(app.Id, "coo", "Chief Operations Officer");
         var claim = await Id(token).Claim.Register(app.Id, "paymentsAccess", "Payments Access");
-        await Id(token).Role.AddClaimToRole(claim.Id, role.Id, "limited");
+        await Id(token).Role.AddClaimToRole(role.Id, claim.Id, "limited");
         await Id(token).User.AddUserClaim(user.Id, claim.Id, "full");
         token = await Id().LogUserIn(app.Id, login, password);
 

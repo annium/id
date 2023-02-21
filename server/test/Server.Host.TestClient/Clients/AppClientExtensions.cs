@@ -1,9 +1,9 @@
 using System.Threading.Tasks;
 using Server.ViewModels.Requests.Apps;
 using Server.ViewModels.Responses.Apps;
-using static Server.Host.TestClient.Helper;
+using static Server.Host.TestClient.Clients.Helper;
 
-namespace Server.Host.TestClient;
+namespace Server.Host.TestClient.Clients;
 
 public static class AppClientExtensions
 {
