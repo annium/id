@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Annium.Blazor.Net;
 using Annium.Core.DependencyInjection;
-using Annium.Core.Primitives;
+using Annium;
 using Annium.Data.Operations;
 using Annium.Net.Http;
 using Annium.Serialization.Abstractions;
