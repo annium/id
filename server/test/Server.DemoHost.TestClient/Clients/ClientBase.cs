@@ -1,6 +1,6 @@
 using Annium.Net.Http;
 
-namespace Server.DemoHost.TestClient;
+namespace Server.DemoHost.TestClient.Clients;
 
 public abstract class ClientBase
 {

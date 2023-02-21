@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using Annium.Core.DependencyInjection;
 using Annium.Id.AspNetCore;
+using Annium.Net.Types;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Server.DemoHost;
@@ -56,5 +57,11 @@ public class ServicePack : ServicePackBase
     public override void Setup(IServiceProvider provider)
     {
         provider.UseLogging(route => route.UseConsole());
+        SetupNetTypes(provider.Resolve<IMapperConfig>());
+    }
+
+    private void SetupNetTypes(IMapperConfig config)
+    {
+        config.Exclude(Match.NamespaceStartsWith("Server.DemoHost"));
     }
 }

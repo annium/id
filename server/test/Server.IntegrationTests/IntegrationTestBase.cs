@@ -9,7 +9,7 @@ using Annium.Net.Mail;
 using Bogus;
 using NodaTime;
 using Server.DemoHost;
-using Server.DemoHost.TestClient;
+using Server.DemoHost.TestClient.Clients;
 using Server.Host;
 using Server.Host.TestClient.Clients;
 using Xunit;
@@ -55,9 +55,9 @@ public class IntegrationTestBase : IntegrationTest, IAsyncLifetime
 
     #region demo
 
-    protected Client Demo(Guid appId) => DemoApi(appId).DemoClient();
+    protected DemoHost.TestClient.Clients.DemoClient Demo(Guid appId) => DemoApi(appId).DemoClient();
 
-    protected Client Demo(Guid appId, string token) => DemoApi(appId).BearerAuthorization(token).DemoClient();
+    protected DemoHost.TestClient.Clients.DemoClient Demo(Guid appId, string token) => DemoApi(appId).BearerAuthorization(token).DemoClient();
 
     private IHttpRequest DemoApi(Guid appId) => GetAppFactory<Demo>(
         builder => builder.UseServicePack<ServicePack>(),

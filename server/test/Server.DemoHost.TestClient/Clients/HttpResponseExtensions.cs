@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Annium.Data.Operations;
 using Annium.Net.Http;
 
-namespace Server.DemoHost.TestClient;
+namespace Server.DemoHost.TestClient.Clients;
 
 public static class HttpResponseExtensions
 {
