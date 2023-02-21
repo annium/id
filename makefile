@@ -50,28 +50,21 @@ stop-demo:
 	$(call stop-dotnet,Server.DemoHost)
 
 
-gwc: gwc-server
-
 gwc-server:
-	xrest dotnet gen \
-		-s http://localhost:9501 \
-		-a server/src/Server.Host/$(BIN_DEBUG)/Server.Host.dll \
+	xrest cs gen \
+		-s http://localhost:5000 \
 		-o web/src/Site/Shared/Api/Server \
 		-ns Site.Shared.Api.Server
 
-gtc: gtc-server gtc-demo
-
 gtc-server:
-	xrest dotnet gen \
-		-s http://localhost:9501 \
-		-a server/src/Server.Host/$(BIN_DEBUG)/Server.Host.dll \
+	xrest cs gen \
+		-s http://localhost:5000 \
 		-o server/test/Server.Host.TestClient \
 		-t
 
 gtc-demo:
-	xrest dotnet gen \
-		-s http://localhost:9502 \
-		-a server/test/Server.DemoHost/$(BIN_DEBUG)/Server.DemoHost.dll \
+	xrest cs gen \
+		-s http://localhost:5000 \
 		-o server/test/Server.DemoHost.TestClient \
 		-t
 
