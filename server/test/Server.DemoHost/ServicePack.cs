@@ -11,6 +11,7 @@ public class ServicePack : ServicePackBase
     public override void Configure(IServiceContainer container)
     {
         container.AddRuntime(GetType().Assembly);
+        container.AddConfiguration(new WebHostConfiguration());
     }
 
     public override void Register(IServiceContainer container, IServiceProvider provider)
