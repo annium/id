@@ -60,12 +60,14 @@ gtc-server:
 	xrest cs gen \
 		-s http://localhost:5000 \
 		-o server/test/Server.Host.TestClient \
+		-ns Server.Host.TestClient \
 		-t
 
 gtc-demo:
 	xrest cs gen \
 		-s http://localhost:5000 \
 		-o server/test/Server.DemoHost.TestClient \
+		-ns Server.Host.TestClient \
 		-t
 
 
