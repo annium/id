@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Annium.Data.Operations;
 using Annium.Net.Http;
@@ -21,25 +20,25 @@ public class AppClient : ClientBase
         return await Request.Clone()
             .Post("apps")
             .JsonContent(body)
-            .AsAsync(Result.New(default(Guid)).Error("Request failed"));
+            .AsAsync<IResult<Guid>>();
     }
 
-    public async Task<IResult<IEnumerable<AppResponse>>> FindApps(
+    public async Task<IResult<AppResponse[]>> FindApps(
         string query
     )
     {
         return await Request.Clone()
             .Get("apps")
             .Param("query", query)
-            .AsAsync(Result.New<IEnumerable<AppResponse>>(Array.Empty<AppResponse>()).Error("Request failed"));
+            .AsAsync<IResult<AppResponse[]>>();
     }
 
-    public async Task<IResult<IEnumerable<AppResponse>>> ListMyApps(
+    public async Task<IResult<AppResponse[]>> ListMyApps(
     )
     {
         return await Request.Clone()
             .Get("apps/my")
-            .AsAsync(Result.New<IEnumerable<AppResponse>>(Array.Empty<AppResponse>()).Error("Request failed"));
+            .AsAsync<IResult<AppResponse[]>>();
     }
 
     public async Task<IResult<AppResponse>> GetApp(
@@ -48,7 +47,7 @@ public class AppClient : ClientBase
     {
         return await Request.Clone()
             .Get($"apps/{appId}")
-            .AsAsync(Result.New(new AppResponse()).Error("Request failed"));
+            .AsAsync<IResult<AppResponse>>();
     }
 
     public async Task<IResult<Guid>> GetAppApiToken(
@@ -57,7 +56,7 @@ public class AppClient : ClientBase
     {
         return await Request.Clone()
             .Get($"apps/{appId}/token")
-            .AsAsync(Result.New(default(Guid)).Error("Request failed"));
+            .AsAsync<IResult<Guid>>();
     }
 
     public async Task<IResult> UpdateApp(
@@ -68,7 +67,7 @@ public class AppClient : ClientBase
         return await Request.Clone()
             .Put($"apps/{appId}")
             .JsonContent(body)
-            .AsAsync(Result.New().Error("Request failed"));
+            .AsAsync<IResult>();
     }
 
     public async Task<IResult> SetAppOwner(
@@ -78,7 +77,7 @@ public class AppClient : ClientBase
     {
         return await Request.Clone()
             .Put($"apps/{appId}/owner/{newOwnerId}")
-            .AsAsync(Result.New().Error("Request failed"));
+            .AsAsync<IResult>();
     }
 
     public async Task<IResult<Guid>> UpdateAppApiToken(
@@ -87,7 +86,7 @@ public class AppClient : ClientBase
     {
         return await Request.Clone()
             .Put($"apps/{appId}/token")
-            .AsAsync(Result.New(default(Guid)).Error("Request failed"));
+            .AsAsync<IResult<Guid>>();
     }
 
     public async Task<IResult> DeleteApp(
@@ -96,6 +95,6 @@ public class AppClient : ClientBase
     {
         return await Request.Clone()
             .Delete($"apps/{appId}")
-            .AsAsync(Result.New().Error("Request failed"));
+            .AsAsync<IResult>();
     }
 }

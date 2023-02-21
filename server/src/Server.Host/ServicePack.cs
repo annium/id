@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using Annium.Configuration.Abstractions;
 using Annium.Core.DependencyInjection;
+using Annium.Net.Types;
 
 namespace Server.Host;
 
@@ -31,5 +32,15 @@ public class ServicePack : ServicePackBase
         provider.UseLogging(route => route
             // .UseConsole());
             .For(m => !ignored.Any(m.Source.Contains)).UseConsole());
+        SetupNetTypes(provider.Resolve<IMapperConfig>());
+    }
+
+    private void SetupNetTypes(IMapperConfig config)
+    {
+        config.Exclude(Match.NamespaceStartsWith("Annium.Architecture"));
+        config.Exclude(Match.NamespaceStartsWith("Annium.Data"));
+        config.Exclude(Match.NamespaceStartsWith("Annium.Logging"));
+        config.Exclude(Match.NamespaceStartsWith("Server.Domain"));
+        config.Exclude(Match.NamespaceStartsWith("Server.ViewModels"));
     }
 }

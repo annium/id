@@ -1,9 +1,8 @@
 using Annium.Net.Http;
-using Site.Shared.Api.Server.Clients;
 
-namespace Site.Shared.Api.Server;
+namespace Site.Shared.Api.Server.Clients;
 
-public class Client
+public class Root
 {
     public AppClient App { get; }
     public ClaimClient Claim { get; }
@@ -16,7 +15,7 @@ public class Client
     public RoleClient Role { get; }
     public UserClient User { get; }
 
-    public Client(IHttpRequest request)
+    public Root(IHttpRequest request)
     {
         App = new AppClient(request);
         Claim = new ClaimClient(request);

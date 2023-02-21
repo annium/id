@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Annium.Data.Operations;
 using Annium.Net.Http;
@@ -21,17 +20,17 @@ public class CompanyClaimClient : ClientBase
         return await Request.Clone()
             .Post("companies/claims")
             .JsonContent(body)
-            .AsAsync(Result.New(default(Guid)).Error("Request failed"));
+            .AsAsync<IResult<Guid>>();
     }
 
-    public async Task<IResult<IEnumerable<CompanyClaimResponse>>> ListCompanyClaims(
+    public async Task<IResult<CompanyClaimResponse[]>> ListCompanyClaims(
         Guid appId
     )
     {
         return await Request.Clone()
             .Get("companies/claims")
             .Param("appId", appId)
-            .AsAsync(Result.New<IEnumerable<CompanyClaimResponse>>(Array.Empty<CompanyClaimResponse>()).Error("Request failed"));
+            .AsAsync<IResult<CompanyClaimResponse[]>>();
     }
 
     public async Task<IResult> UpdateCompanyClaim(
@@ -42,7 +41,7 @@ public class CompanyClaimClient : ClientBase
         return await Request.Clone()
             .Put($"companies/claims/{claimId}")
             .JsonContent(body)
-            .AsAsync(Result.New().Error("Request failed"));
+            .AsAsync<IResult>();
     }
 
     public async Task<IResult> DeleteCompanyClaim(
@@ -51,6 +50,6 @@ public class CompanyClaimClient : ClientBase
     {
         return await Request.Clone()
             .Delete($"companies/claims/{claimId}")
-            .AsAsync(Result.New().Error("Request failed"));
+            .AsAsync<IResult>();
     }
 }

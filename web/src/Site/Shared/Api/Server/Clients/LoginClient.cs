@@ -21,7 +21,7 @@ public class LoginClient : ClientBase
         return await Request.Clone()
             .Post($"me/{appId}/login")
             .JsonContent(body)
-            .AsAsync(Result.New(new TokensResponse()).Error("Request failed"));
+            .AsAsync<IResult<TokensResponse>>();
     }
 
     public async Task<IResult<TokensResponse>> UpdateToken(
@@ -32,7 +32,7 @@ public class LoginClient : ClientBase
         return await Request.Clone()
             .Put($"me/{appId}/token")
             .Param("refreshToken", refreshToken)
-            .AsAsync(Result.New(new TokensResponse()).Error("Request failed"));
+            .AsAsync<IResult<TokensResponse>>();
     }
 
     public async Task<IResult> LogOut(
@@ -41,6 +41,6 @@ public class LoginClient : ClientBase
     {
         return await Request.Clone()
             .Delete($"me/{appId}/logout")
-            .AsAsync(Result.New().Error("Request failed"));
+            .AsAsync<IResult>();
     }
 }

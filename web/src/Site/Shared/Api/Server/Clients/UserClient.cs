@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Annium.Data.Operations;
 using Annium.Net.Http;
@@ -14,16 +13,16 @@ public class UserClient : ClientBase
     {
     }
 
-    public async Task<IResult<IEnumerable<UserResponse>>> FindUsers(
-        int limit,
-        string query
+    public async Task<IResult<UserResponse[]>> FindUsers(
+        string query,
+        int limit
     )
     {
         return await Request.Clone()
             .Get("users")
-            .Param("limit", limit)
             .Param("query", query)
-            .AsAsync(Result.New<IEnumerable<UserResponse>>(Array.Empty<UserResponse>()).Error("Request failed"));
+            .Param("limit", limit)
+            .AsAsync<IResult<UserResponse[]>>();
     }
 
     public async Task<IResult<UserResponse>> GetUser(
@@ -32,48 +31,48 @@ public class UserClient : ClientBase
     {
         return await Request.Clone()
             .Get($"users/{userId}")
-            .AsAsync(Result.New(new UserResponse()).Error("Request failed"));
+            .AsAsync<IResult<UserResponse>>();
     }
 
     public async Task<IResult> AddRoleToUser(
-        Guid roleId,
-        Guid userId
+        Guid userId,
+        Guid roleId
     )
     {
         return await Request.Clone()
             .Post($"users/{userId}/roles/{roleId}")
-            .AsAsync(Result.New().Error("Request failed"));
+            .AsAsync<IResult>();
     }
 
     public async Task<IResult> DeleteRoleFromUser(
-        Guid roleId,
-        Guid userId
+        Guid userId,
+        Guid roleId
     )
     {
         return await Request.Clone()
             .Delete($"users/{userId}/roles/{roleId}")
-            .AsAsync(Result.New().Error("Request failed"));
+            .AsAsync<IResult>();
     }
 
     public async Task<IResult> AddClaimToUser(
-        Guid claimId,
         Guid userId,
+        Guid claimId,
         AddClaimToUserRequestBody body
     )
     {
         return await Request.Clone()
             .Post($"users/{userId}/claims/{claimId}")
             .JsonContent(body)
-            .AsAsync(Result.New().Error("Request failed"));
+            .AsAsync<IResult>();
     }
 
     public async Task<IResult> DeleteClaimFromUser(
-        Guid claimId,
-        Guid userId
+        Guid userId,
+        Guid claimId
     )
     {
         return await Request.Clone()
             .Delete($"users/{userId}/claims/{claimId}")
-            .AsAsync(Result.New().Error("Request failed"));
+            .AsAsync<IResult>();
     }
 }

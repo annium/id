@@ -1,6 +1,6 @@
 using Annium.Net.Http;
 
-namespace Site.Shared.Api.Server;
+namespace Site.Shared.Api.Server.Clients;
 
 public abstract class ClientBase
 {

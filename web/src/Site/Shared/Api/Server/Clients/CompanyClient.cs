@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Annium.Data.Operations;
 using Annium.Net.Http;
@@ -22,25 +21,25 @@ public class CompanyClient : ClientBase
         return await Request.Clone()
             .Post("companies")
             .JsonContent(body)
-            .AsAsync(Result.New(default(Guid)).Error("Request failed"));
+            .AsAsync<IResult<Guid>>();
     }
 
-    public async Task<IResult<IEnumerable<CompanyResponse>>> FindCompanies(
+    public async Task<IResult<CompanyResponse[]>> FindCompanies(
         string query
     )
     {
         return await Request.Clone()
             .Get("companies")
             .Param("query", query)
-            .AsAsync(Result.New<IEnumerable<CompanyResponse>>(Array.Empty<CompanyResponse>()).Error("Request failed"));
+            .AsAsync<IResult<CompanyResponse[]>>();
     }
 
-    public async Task<IResult<IEnumerable<CompanyResponse>>> ListMyCompanies(
+    public async Task<IResult<CompanyResponse[]>> ListMyCompanies(
     )
     {
         return await Request.Clone()
             .Get("companies/my")
-            .AsAsync(Result.New<IEnumerable<CompanyResponse>>(Array.Empty<CompanyResponse>()).Error("Request failed"));
+            .AsAsync<IResult<CompanyResponse[]>>();
     }
 
     public async Task<IResult<CompanyResponse>> GetCompany(
@@ -49,16 +48,16 @@ public class CompanyClient : ClientBase
     {
         return await Request.Clone()
             .Get($"companies/{companyId}")
-            .AsAsync(Result.New(new CompanyResponse()).Error("Request failed"));
+            .AsAsync<IResult<CompanyResponse>>();
     }
 
-    public async Task<IResult<IEnumerable<UserResponse>>> GetCompanyUsers(
+    public async Task<IResult<UserResponse[]>> GetCompanyUsers(
         Guid companyId
     )
     {
         return await Request.Clone()
             .Get($"companies/{companyId}/users")
-            .AsAsync(Result.New<IEnumerable<UserResponse>>(Array.Empty<UserResponse>()).Error("Request failed"));
+            .AsAsync<IResult<UserResponse[]>>();
     }
 
     public async Task<IResult> UpdateCompany(
@@ -69,7 +68,7 @@ public class CompanyClient : ClientBase
         return await Request.Clone()
             .Put($"companies/{companyId}")
             .JsonContent(body)
-            .AsAsync(Result.New().Error("Request failed"));
+            .AsAsync<IResult>();
     }
 
     public async Task<IResult> SetCompanyOwner(
@@ -79,7 +78,7 @@ public class CompanyClient : ClientBase
     {
         return await Request.Clone()
             .Put($"companies/{companyId}/owner/{userId}")
-            .AsAsync(Result.New().Error("Request failed"));
+            .AsAsync<IResult>();
     }
 
     public async Task<IResult> UnregisterCompany(
@@ -88,6 +87,6 @@ public class CompanyClient : ClientBase
     {
         return await Request.Clone()
             .Delete($"companies/{companyId}")
-            .AsAsync(Result.New().Error("Request failed"));
+            .AsAsync<IResult>();
     }
 }

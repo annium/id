@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Annium.Data.Operations;
 using Annium.Net.Http;
@@ -21,17 +20,17 @@ public class RoleClient : ClientBase
         return await Request.Clone()
             .Post("roles")
             .JsonContent(body)
-            .AsAsync(Result.New(default(Guid)).Error("Request failed"));
+            .AsAsync<IResult<Guid>>();
     }
 
-    public async Task<IResult<IEnumerable<RoleResponse>>> ListRoles(
+    public async Task<IResult<RoleResponse[]>> ListRoles(
         Guid appId
     )
     {
         return await Request.Clone()
             .Get("roles")
             .Param("appId", appId)
-            .AsAsync(Result.New<IEnumerable<RoleResponse>>(Array.Empty<RoleResponse>()).Error("Request failed"));
+            .AsAsync<IResult<RoleResponse[]>>();
     }
 
     public async Task<IResult> UpdateRole(
@@ -42,29 +41,29 @@ public class RoleClient : ClientBase
         return await Request.Clone()
             .Put($"roles/{roleId}")
             .JsonContent(body)
-            .AsAsync(Result.New().Error("Request failed"));
+            .AsAsync<IResult>();
     }
 
     public async Task<IResult> AddClaimToRole(
-        Guid claimId,
         Guid roleId,
+        Guid claimId,
         AddClaimToRoleRequestBody body
     )
     {
         return await Request.Clone()
             .Post($"roles/{roleId}/claims/{claimId}")
             .JsonContent(body)
-            .AsAsync(Result.New().Error("Request failed"));
+            .AsAsync<IResult>();
     }
 
     public async Task<IResult> DeleteClaimFromRole(
-        Guid claimId,
-        Guid roleId
+        Guid roleId,
+        Guid claimId
     )
     {
         return await Request.Clone()
             .Delete($"roles/{roleId}/claims/{claimId}")
-            .AsAsync(Result.New().Error("Request failed"));
+            .AsAsync<IResult>();
     }
 
     public async Task<IResult> DeleteRole(
@@ -73,6 +72,6 @@ public class RoleClient : ClientBase
     {
         return await Request.Clone()
             .Delete($"roles/{roleId}")
-            .AsAsync(Result.New().Error("Request failed"));
+            .AsAsync<IResult>();
     }
 }

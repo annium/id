@@ -21,7 +21,7 @@ public class MeClient : ClientBase
         return await Request.Clone()
             .Post("me")
             .JsonContent(body)
-            .AsAsync(Result.New().Error("Request failed"));
+            .AsAsync<IResult>();
     }
 
     public async Task<IResult<TokensResponse>> ConfirmMyEmail(
@@ -32,7 +32,7 @@ public class MeClient : ClientBase
         return await Request.Clone()
             .Post($"me/{appId}/confirm-email")
             .JsonContent(body)
-            .AsAsync(Result.New(new TokensResponse()).Error("Request failed"));
+            .AsAsync<IResult<TokensResponse>>();
     }
 
     public async Task<IResult> RestoreMyAccess(
@@ -43,7 +43,7 @@ public class MeClient : ClientBase
         return await Request.Clone()
             .Post($"me/{appId}/restore-access")
             .JsonContent(body)
-            .AsAsync(Result.New().Error("Request failed"));
+            .AsAsync<IResult>();
     }
 
     public async Task<IResult<MeResponse>> GetMe(
@@ -51,7 +51,7 @@ public class MeClient : ClientBase
     {
         return await Request.Clone()
             .Get("me")
-            .AsAsync(Result.New(new MeResponse()).Error("Request failed"));
+            .AsAsync<IResult<MeResponse>>();
     }
 
     public async Task<IResult<IdTokenResponse>> GetMyToken(
@@ -59,7 +59,7 @@ public class MeClient : ClientBase
     {
         return await Request.Clone()
             .Get("me/token")
-            .AsAsync(Result.New(new IdTokenResponse()).Error("Request failed"));
+            .AsAsync<IResult<IdTokenResponse>>();
     }
 
     public async Task<IResult> UpdateMyProfile(
@@ -69,7 +69,7 @@ public class MeClient : ClientBase
         return await Request.Clone()
             .Put("me/profile")
             .JsonContent(body)
-            .AsAsync(Result.New().Error("Request failed"));
+            .AsAsync<IResult>();
     }
 
     public async Task<IResult> UpdateMyPassword(
@@ -79,7 +79,7 @@ public class MeClient : ClientBase
         return await Request.Clone()
             .Put("me/password")
             .JsonContent(body)
-            .AsAsync(Result.New().Error("Request failed"));
+            .AsAsync<IResult>();
     }
 
     public async Task<IResult> UnregisterMe(
@@ -87,6 +87,6 @@ public class MeClient : ClientBase
     {
         return await Request.Clone()
             .Delete("me")
-            .AsAsync(Result.New().Error("Request failed"));
+            .AsAsync<IResult>();
     }
 }
