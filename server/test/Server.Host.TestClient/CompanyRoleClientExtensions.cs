@@ -5,9 +5,9 @@ using Annium.Data.Operations;
 using Annium.Net.Http;
 using Server.ViewModels.Requests.CompanyRoles;
 using Server.ViewModels.Responses.CompanyRoles;
-using static Server.TestClient.Helper;
+using static Server.Host.TestClient.Helper;
 
-namespace Server.TestClient;
+namespace Server.Host.TestClient;
 
 public static class CompanyRoleClientExtensions
 {

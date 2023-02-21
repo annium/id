@@ -7,7 +7,7 @@ using Server.ViewModels.Requests.Companies;
 using Server.ViewModels.Responses.Companies;
 using Server.ViewModels.Responses.Users;
 
-namespace Server.TestClient;
+namespace Server.Host.TestClient;
 
 public class CompanyClient : ClientBase
 {

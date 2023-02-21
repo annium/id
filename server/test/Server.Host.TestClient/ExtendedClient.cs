@@ -1,7 +1,7 @@
 using Annium.Net.Http;
 using Annium.Net.Mail;
 
-namespace Server.TestClient;
+namespace Server.Host.TestClient;
 
 public class ExtendedClient : Root
 {

@@ -11,7 +11,7 @@ using NodaTime;
 using Server.DemoHost;
 using Server.DemoHost.TestClient;
 using Server.Host;
-using Server.TestClient;
+using Server.Host.TestClient;
 using Xunit;
 using Database = Server.IntegrationTests.Fixtures.Database;
 using ServicePack = Server.DemoHost.ServicePack;

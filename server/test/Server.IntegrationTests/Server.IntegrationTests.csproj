@@ -14,7 +14,7 @@
     </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="../Server.DemoHost.TestClient/Server.DemoHost.TestClient.csproj" />
-        <ProjectReference Include="../Server.TestClient/Server.TestClient.csproj" />
+        <ProjectReference Include="../Server.Host.TestClient/Server.Host.TestClient.csproj" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Annium.AspNetCore.IntegrationTesting" Version="0.1.0" />

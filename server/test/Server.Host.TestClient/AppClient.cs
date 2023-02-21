@@ -6,7 +6,7 @@ using Annium.Net.Http;
 using Server.ViewModels.Requests.Apps;
 using Server.ViewModels.Responses.Apps;
 
-namespace Server.TestClient;
+namespace Server.Host.TestClient;
 
 public class AppClient : ClientBase
 {

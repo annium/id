@@ -9,9 +9,9 @@ using Server.Email.Models;
 using Server.ViewModels.Requests.Login;
 using Server.ViewModels.Requests.Me;
 using Server.ViewModels.Responses.Me;
-using static Server.TestClient.Helper;
+using static Server.Host.TestClient.Helper;
 
-namespace Server.TestClient;
+namespace Server.Host.TestClient;
 
 public static class ExtendedClientExtensions
 {

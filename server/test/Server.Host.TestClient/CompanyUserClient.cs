@@ -4,7 +4,7 @@ using Annium.Data.Operations;
 using Annium.Net.Http;
 using Server.ViewModels.Requests.CompanyUsers;
 
-namespace Server.TestClient;
+namespace Server.Host.TestClient;
 
 public class CompanyUserClient : ClientBase
 {

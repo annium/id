@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Annium.Data.Models.Extensions;
 using Annium.Id.Core;
 using Annium.Testing;
-using Server.TestClient;
+using Server.Host.TestClient;
 using Server.ViewModels.Requests.Apps;
 using Xunit;
 

@@ -3,44 +3,44 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Annium.Data.Operations;
 using Annium.Net.Http;
-using Server.ViewModels.Requests.CompanyRoles;
-using Server.ViewModels.Responses.CompanyRoles;
+using Server.ViewModels.Requests.Roles;
+using Server.ViewModels.Responses.Roles;
 
-namespace Server.TestClient;
+namespace Server.Host.TestClient;
 
-public class CompanyRoleClient : ClientBase
+public class RoleClient : ClientBase
 {
-    public CompanyRoleClient(IHttpRequest request) : base(request)
+    public RoleClient(IHttpRequest request) : base(request)
     {
     }
 
     public async Task<IHttpResponse<IResult<Guid>>> CreateRole(
-        CreateCompanyRoleRequest body
+        CreateRoleRequest body
     )
     {
         return await Request.Clone()
-            .Post("companies/roles")
+            .Post("roles")
             .JsonContent(body)
             .AsResponseAsync<IResult<Guid>>();
     }
 
-    public async Task<IHttpResponse<IResult<IEnumerable<CompanyRoleResponse>>>> ListRoles(
+    public async Task<IHttpResponse<IResult<IEnumerable<RoleResponse>>>> ListRoles(
         Guid appId
     )
     {
         return await Request.Clone()
-            .Get("companies/roles")
+            .Get("roles")
             .Param("appId", appId)
-            .AsResponseAsync<IResult<IEnumerable<CompanyRoleResponse>>>();
+            .AsResponseAsync<IResult<IEnumerable<RoleResponse>>>();
     }
 
     public async Task<IHttpResponse<IResult>> UpdateRole(
         Guid roleId,
-        UpdateCompanyRoleRequestBody body
+        UpdateRoleRequestBody body
     )
     {
         return await Request.Clone()
-            .Put($"companies/roles/{roleId}")
+            .Put($"roles/{roleId}")
             .JsonContent(body)
             .AsResponseAsync<IResult>();
     }
@@ -48,11 +48,11 @@ public class CompanyRoleClient : ClientBase
     public async Task<IHttpResponse<IResult>> AddClaimToRole(
         Guid claimId,
         Guid roleId,
-        AddCompanyClaimToCompanyRoleRequestBody body
+        AddClaimToRoleRequestBody body
     )
     {
         return await Request.Clone()
-            .Post($"companies/roles/{roleId}/claims/{claimId}")
+            .Post($"roles/{roleId}/claims/{claimId}")
             .JsonContent(body)
             .AsResponseAsync<IResult>();
     }
@@ -63,7 +63,7 @@ public class CompanyRoleClient : ClientBase
     )
     {
         return await Request.Clone()
-            .Delete($"companies/roles/{roleId}/claims/{claimId}")
+            .Delete($"roles/{roleId}/claims/{claimId}")
             .AsResponseAsync<IResult>();
     }
 
@@ -72,7 +72,7 @@ public class CompanyRoleClient : ClientBase
     )
     {
         return await Request.Clone()
-            .Delete($"companies/roles/{roleId}")
+            .Delete($"roles/{roleId}")
             .AsResponseAsync<IResult>();
     }
 }

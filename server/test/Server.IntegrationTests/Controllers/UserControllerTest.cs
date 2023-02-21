@@ -3,7 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Annium.Data.Models.Extensions;
 using Annium.Testing;
-using Server.TestClient;
+using Server.Host.TestClient;
 using Server.ViewModels.Responses.Users;
 using Xunit;
 

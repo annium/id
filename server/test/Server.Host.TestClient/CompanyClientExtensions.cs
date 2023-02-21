@@ -2,9 +2,9 @@ using System;
 using System.Threading.Tasks;
 using Server.ViewModels.Requests.Companies;
 using Server.ViewModels.Responses.Companies;
-using static Server.TestClient.Helper;
+using static Server.Host.TestClient.Helper;
 
-namespace Server.TestClient;
+namespace Server.Host.TestClient;
 
 public static class CompanyClientExtensions
 {
