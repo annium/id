@@ -1,4 +1,4 @@
-using Annium.Blazor.Core.Extensions;
+using System.Collections.Generic;
 using Annium.Components.State.Forms;
 using Annium.Components.State.Forms.Extensions;
 
@@ -10,22 +10,22 @@ public partial class DemoPage
 
     protected override void OnInitialized()
     {
-        _state = StateFactory.Create(new Blog
+        _state = StateFactory.CreateObject(new Blog
         {
             Name = "Demo",
             Author = new User
             {
                 Name = "",
             },
-            Messages = new[]
+            Messages = new List<Message>
             {
-                new Message
+                new()
                 {
                     Text = "Hi"
                 }
             }
         });
-        this.ObserveState();
+        ObserveStates();
         _state.UseValidator(Validator);
     }
 }

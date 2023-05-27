@@ -1,11 +1,10 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Annium.linq2db.PostgreSql;
-using DotNet.Testcontainers.Builders;
-using DotNet.Testcontainers.Configurations;
-using DotNet.Testcontainers.Containers;
+using Server.Db;
 using Server.Db.Internal;
+using Testcontainers.PostgreSql;
 using Xdb.Core.Migrations;
+using PostgreSqlConfiguration = Annium.linq2db.PostgreSql.PostgreSqlConfiguration;
 
 namespace Server.IntegrationTests.Fixtures;
 
@@ -18,20 +17,26 @@ public static class Database
         Password = "postgres",
     };
 
-    private static readonly TestcontainerDatabase Db;
+    private static readonly PostgreSqlContainer Db;
     private static readonly TaskCompletionSource InitTcs = new();
     private static volatile int _refs;
 
     static Database()
     {
-        Db = new TestcontainersBuilder<PostgreSqlTestcontainer>()
-            .WithDatabase(new PostgreSqlTestcontainerConfiguration("registry.annium.com/postgres:15")
-            {
-                Database = Config.Database,
-                Username = Config.User,
-                Password = Config.Password,
-            })
+        Db = new PostgreSqlBuilder()
+            .WithImage("registry.annium.com/postgres:15")
+            .WithDatabase(Config.Database)
+            .WithUsername(Config.User)
+            .WithPassword(Config.Password)
             .Build();
+        // Db = new ContainerBuilder<PostgreSqlTestcontainer>()
+        //     .WithDatabase(new PostgreSqlTestcontainerConfiguration("registry.annium.com/postgres:15")
+        //     {
+        //         Database = Config.Database,
+        //         Username = Config.User,
+        //         Password = Config.Password,
+        //     })
+        //     .Build();
     }
 
     public static async Task AcquireAsync()
@@ -44,9 +49,9 @@ public static class Database
 
         await Db.StartAsync();
         Config.Host = Db.Hostname;
-        Config.Port = Db.Port;
+        Config.Port = Db.GetMappedPublicPort(PostgreSqlBuilder.PostgreSqlPort);
         Migrator.ForPostgresql(Config.ConnectionString, Constants.Schema)
-            .WithScriptsFromAssembly(typeof(Db.TestServicePack).Assembly)
+            .WithScriptsFromAssembly(typeof(TestServicePack).Assembly)
             .Execute();
         InitTcs.SetResult();
     }

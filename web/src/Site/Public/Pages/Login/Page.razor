@@ -1,9 +1,12 @@
 ﻿@namespace Site.Public.Pages.Login
 
 @page "/login"
+@layout MinimalCentricLayout
+@using Annium.Blazor.Core
 @using Annium.Localization.Abstractions
 @using Site.Public.Layouts.MinimalCentric
-@layout MinimalCentricLayout
+@using Site.Shared.Components.PageTitle
+@inherits BaseComponent
 
 @inject IStore Store
 @inject Style Style

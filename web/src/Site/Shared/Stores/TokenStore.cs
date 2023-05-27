@@ -1,9 +1,9 @@
-using Annium.Blazor.Storage;
+using Annium.Blazor.State;
 using Server.ViewModels.Responses.Login;
 
 namespace Site.Shared.Stores;
 
-internal class TokenStore : ITokenStore
+internal class TokenStore : StateBase, ITokenStore
 {
     private const string Key = "tokens";
     private readonly ILocalStorage _storage;
@@ -27,7 +27,7 @@ internal class TokenStore : ITokenStore
     public void Clear() => _storage.Remove(Key);
 }
 
-public interface ITokenStore : IStore
+public interface ITokenStore
 {
     TokensResponse? Get();
     void Set(TokensResponse tokens);

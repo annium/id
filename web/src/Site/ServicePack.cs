@@ -1,4 +1,5 @@
 using System;
+using Annium.Blazor.State;
 using Annium.Core.DependencyInjection;
 
 namespace Site;
@@ -12,7 +13,6 @@ public class ServicePack : ServicePackBase
         container.AddRuntime(GetType().Assembly);
         container.AddMapper();
         container.AddHttpRequestFactory();
-        container.AddComponentFormStateFactory();
         container.AddValidation();
         container.AddLocalization(opts => opts.UseInMemoryStorage());
         container.AddCss();
@@ -24,7 +24,7 @@ public class ServicePack : ServicePackBase
         container.AddSerializers()
             .WithJson(opts => opts.ConfigureForOperations().ConfigureForNodaTime(), isDefault: true);
         container.Add<Theme>().AsSelf().Singleton();
-        container.AddStorages();
+        container.AddStates();
         container.AddApiServices();
     }
 }

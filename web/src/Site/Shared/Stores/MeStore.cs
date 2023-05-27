@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using Annium.Blazor.Storage;
+using Annium.Blazor.State;
 using Annium.Components.State.Forms;
 using Annium.Components.State.Operations;
 using Annium.Core.Mapper;
@@ -10,9 +10,9 @@ using Site.Shared.Models;
 
 namespace Site.Shared.Stores;
 
-internal class MeStore : IMeStore
+internal class MeStore : StateBase, IMeStore
 {
-    public IState<bool> HasLoadedOnce { get; }
+    public IValueTrackedState<bool> HasLoadedOnce { get; }
     public bool HasAccess => State.HasSucceed;
     public IOperationState<Me> State { get; } = OperationState.New<Me>();
     private readonly ITokenStore _tokenStore;
@@ -28,7 +28,7 @@ internal class MeStore : IMeStore
         IMapper mapper
     )
     {
-        HasLoadedOnce = stateFactory.Create(false);
+        HasLoadedOnce = stateFactory.CreateAtomic(false);
         _tokenStore = tokenStore;
         _loginService = loginService;
         _meService = meService;
@@ -111,9 +111,9 @@ internal class MeStore : IMeStore
     }
 }
 
-public interface IMeStore : IStore
+public interface IMeStore
 {
-    IState<bool> HasLoadedOnce { get; }
+    IValueTrackedState<bool> HasLoadedOnce { get; }
     bool HasAccess { get; }
     IOperationState<Me> State { get; }
     Task Load();

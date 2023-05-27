@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Annium.Extensions.Validation;
 
@@ -8,7 +7,7 @@ public class Blog
 {
     public string Name { get; set; } = string.Empty;
     public User Author { get; set; } = new User();
-    public IEnumerable<Message> Messages { get; set; } = Array.Empty<Message>();
+    public List<Message> Messages { get; set; } = new();
 }
 
 public class User

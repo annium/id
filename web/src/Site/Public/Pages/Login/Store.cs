@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Annium.Blazor.State;
 using Annium.Components.State.Forms;
 using Annium.Components.State.Forms.Extensions;
 using Annium.Components.State.Operations;
@@ -9,7 +10,7 @@ using Site.Shared.Stores;
 
 namespace Site.Public.Pages.Login;
 
-internal class Store : IStore
+internal class Store : StateBase, IStore
 {
     public IObjectContainer<LoginData> Form { get; }
     public bool CanLogin => !Form.HasStatus(Status.Error, Status.Loading, Status.Validating) && Form.HasBeenTouched;
@@ -26,7 +27,7 @@ internal class Store : IStore
     {
         _loginService = loginService;
         _meStore = meStore;
-        Form = stateFactory.Create(new LoginData());
+        Form = stateFactory.CreateObject(new LoginData());
         Form.UseValidator(validator);
     }
 
@@ -64,7 +65,7 @@ internal class Store : IStore
     }
 }
 
-public interface IStore : Annium.Blazor.Storage.IStore
+public interface IStore
 {
     IObjectContainer<LoginData> Form { get; }
     bool CanLogin { get; }
