@@ -1,4 +1,3 @@
-using Annium.linq2db.Extensions.Models;
 using Annium.Logging.Abstractions;
 using LinqToDB;
 using LinqToDB.Data;
@@ -9,24 +8,24 @@ namespace Server.Db;
 public class ServerConnection : DataConnection, ILogSubject<ServerConnection>
 {
     public ILogger<ServerConnection> Logger { get; }
-    public ITable<App> Apps { get; set; } = null!;
-    public ITable<Claim> Claims { get; set; } = null!;
-    public ITable<Company> Companies { get; set; } = null!;
-    public ITable<CompanyClaim> CompanyClaims { get; set; } = null!;
-    public ITable<CompanyRole> CompanyRoles { get; set; } = null!;
-    public ITable<CompanyRoleClaim> CompanyRoleClaims { get; set; } = null!;
-    public ITable<CompanyUser> CompanyUsers { get; set; } = null!;
-    public ITable<CompanyUserClaim> CompanyUserClaims { get; set; } = null!;
-    public ITable<CompanyUserRole> CompanyUserRoles { get; set; } = null!;
-    public ITable<Role> Roles { get; set; } = null!;
-    public ITable<RoleClaim> RoleClaims { get; set; } = null!;
-    public ITable<User> Users { get; set; } = null!;
-    public ITable<UserClaim> UserClaims { get; set; } = null!;
-    public ITable<UserLogin> UserLogins { get; set; } = null!;
-    public ITable<UserRole> UserRoles { get; set; } = null!;
+    public ITable<App> Apps { get; set; }
+    public ITable<Claim> Claims { get; set; }
+    public ITable<Company> Companies { get; set; }
+    public ITable<CompanyClaim> CompanyClaims { get; set; }
+    public ITable<CompanyRole> CompanyRoles { get; set; }
+    public ITable<CompanyRoleClaim> CompanyRoleClaims { get; set; }
+    public ITable<CompanyUser> CompanyUsers { get; set; }
+    public ITable<CompanyUserClaim> CompanyUserClaims { get; set; }
+    public ITable<CompanyUserRole> CompanyUserRoles { get; set; }
+    public ITable<Role> Roles { get; set; }
+    public ITable<RoleClaim> RoleClaims { get; set; }
+    public ITable<User> Users { get; set; }
+    public ITable<UserClaim> UserClaims { get; set; }
+    public ITable<UserLogin> UserLogins { get; set; }
+    public ITable<UserRole> UserRoles { get; set; }
 
     public ServerConnection(
-        Config<ServerConnection> config,
+        DataOptions<ServerConnection> config,
         ILogger<ServerConnection> logger
     ) : base(config.Options)
     {
