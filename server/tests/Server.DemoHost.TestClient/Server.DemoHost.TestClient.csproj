@@ -12,6 +12,6 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
     <ItemGroup>
-        <ProjectReference Include="../Server.DemoHost/Server.DemoHost.csproj" />
+        <ProjectReference Include="../../tests/Server.DemoHost/Server.DemoHost.csproj" />
     </ItemGroup>
 </Project>
