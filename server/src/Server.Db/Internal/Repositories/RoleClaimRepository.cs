@@ -2,9 +2,10 @@ using System;
 using System.Threading.Tasks;
 using Annium.linq2db.Extensions.Extensions;
 using LinqToDB;
+using Server.Db.Repositories;
 using Server.Domain.Models;
 
-namespace Server.Db.Repositories.Implementations;
+namespace Server.Db.Internal.Repositories;
 
 internal class RoleClaimRepository : RepositoryBase, IRoleClaimRepository
 {

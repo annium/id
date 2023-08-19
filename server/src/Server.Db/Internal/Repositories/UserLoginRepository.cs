@@ -3,9 +3,10 @@ using System.Threading.Tasks;
 using Annium.linq2db.Extensions.Extensions;
 using LinqToDB;
 using NodaTime;
+using Server.Db.Repositories;
 using Server.Domain.Models;
 
-namespace Server.Db.Repositories.Implementations;
+namespace Server.Db.Internal.Repositories;
 
 internal class UserLoginRepository : RepositoryBase, IUserLoginRepository
 {

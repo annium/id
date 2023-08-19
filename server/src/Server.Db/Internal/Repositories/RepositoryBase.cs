@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Server.Db.Repositories.Implementations;
+namespace Server.Db.Internal.Repositories;
 
 internal abstract class RepositoryBase : IAsyncDisposable
 {
