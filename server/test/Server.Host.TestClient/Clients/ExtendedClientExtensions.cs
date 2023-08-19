@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Annium.Id.Core;
+using Annium.Linq;
 using Annium.Net.Http;
 using Annium.Testing;
 using Server.Email.Models;
@@ -80,8 +81,8 @@ public static class ExtendedClientExtensions
             Email = email,
             ReferralId = referralId
         });
-        // if (registerResponse.StatusCode != HttpStatusCode.OK)
-        //     Console.WriteLine($"Failure: plain errors: {registerResponse.Data.PlainErrors.Join(", ")}; labeled errors: {registerResponse.Data.LabeledErrors.Select(x => $"{x.Key}={x.Value.Join(" + ")}").Join(", ")}");
+        if (registerResponse.StatusCode != HttpStatusCode.OK)
+            Console.WriteLine($"Failure: plain errors: {registerResponse.Data.PlainErrors.Join(", ")}; labeled errors: {registerResponse.Data.LabeledErrors.Select(x => $"{x.Key}={x.Value.Join(" + ")}").Join(", ")}");
         registerResponse.StatusCode.Is(HttpStatusCode.OK);
 
         // get id from email data
