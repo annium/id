@@ -9,20 +9,23 @@ using Server.Domain.Models;
 
 namespace Server.Db.Internal.Repositories;
 
-internal class CompanyClaimRepository : RepositoryBase, ICompanyClaimRepository
+internal class CompanyClaimRepository : ICompanyClaimRepository
 {
-    public CompanyClaimRepository(ServerConnection db) : base(db)
+    private readonly ServerConnection _db;
+
+    public CompanyClaimRepository(ServerConnection db)
     {
+        _db = db;
     }
 
     public async Task CreateAsync(CompanyClaim claim)
     {
-        await Db.CompanyClaims.InsertAsync(claim);
+        await _db.CompanyClaims.InsertAsync(claim);
     }
 
     public async Task<IReadOnlyCollection<CompanyClaim>> GetAllAsync(Guid appId)
     {
-        var entities = await Db.CompanyClaims
+        var entities = await _db.CompanyClaims
             .Where(x => x.AppId == appId)
             .ToArrayAsync();
 
@@ -31,7 +34,7 @@ internal class CompanyClaimRepository : RepositoryBase, ICompanyClaimRepository
 
     public async Task<CompanyClaim?> TryGetByIdAsync(Guid id)
     {
-        var entity = await Db.CompanyClaims
+        var entity = await _db.CompanyClaims
             .FirstOrDefaultAsync(x => x.Id == id);
 
         return entity;
@@ -39,7 +42,7 @@ internal class CompanyClaimRepository : RepositoryBase, ICompanyClaimRepository
 
     public async Task<CompanyClaim> GetByIdAsync(Guid id)
     {
-        var entity = await Db.CompanyClaims
+        var entity = await _db.CompanyClaims
             .FirstOrDefaultAsync(x => x.Id == id);
 
         if (entity is null)
@@ -50,7 +53,7 @@ internal class CompanyClaimRepository : RepositoryBase, ICompanyClaimRepository
 
     public async Task<CompanyClaim?> TryFindByKeyAsync(Guid appId, string key)
     {
-        var entity = await Db.CompanyClaims
+        var entity = await _db.CompanyClaims
             .FirstOrDefaultAsync(x => x.AppId == appId && x.Key == key);
 
         return entity;
@@ -58,11 +61,11 @@ internal class CompanyClaimRepository : RepositoryBase, ICompanyClaimRepository
 
     public async Task UpdateAsync(CompanyClaim claim)
     {
-        await Db.CompanyClaims.UpdateAsync(claim);
+        await _db.CompanyClaims.UpdateAsync(claim);
     }
 
     public async Task DeleteByIdAsync(Guid id)
     {
-        await Db.CompanyClaims.DeleteAsync(x => x.Id == id);
+        await _db.CompanyClaims.DeleteAsync(x => x.Id == id);
     }
 }

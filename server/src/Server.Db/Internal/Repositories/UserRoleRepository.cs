@@ -9,20 +9,23 @@ using Server.Domain.Models;
 
 namespace Server.Db.Internal.Repositories;
 
-internal class UserRoleRepository : RepositoryBase, IUserRoleRepository
+internal class UserRoleRepository : IUserRoleRepository
 {
-    public UserRoleRepository(ServerConnection db) : base(db)
+    private readonly ServerConnection _db;
+
+    public UserRoleRepository(ServerConnection db)
     {
+        _db = db;
     }
 
     public async Task SaveAsync(UserRole userRole)
     {
-        await Db.UserRoles.InsertOrUpdateAsync(userRole);
+        await _db.UserRoles.InsertOrUpdateAsync(userRole);
     }
 
     public async Task<IReadOnlyCollection<Role>> GetUserRolesAsync(Guid appId, Guid userId)
     {
-        var entities = await Db.UserRoles
+        var entities = await _db.UserRoles
             .LoadWith(x => x.Role).ThenLoad(x => x.Claims).ThenLoad(x => x.Claim)
             .Where(x => x.Role.AppId == appId && x.UserId == userId)
             .ToArrayAsync();
@@ -32,6 +35,6 @@ internal class UserRoleRepository : RepositoryBase, IUserRoleRepository
 
     public async Task DeleteByIdAsync(Guid userId, Guid roleId)
     {
-        await Db.UserRoles.DeleteAsync(x => x.UserId == userId && x.RoleId == roleId);
+        await _db.UserRoles.DeleteAsync(x => x.UserId == userId && x.RoleId == roleId);
     }
 }

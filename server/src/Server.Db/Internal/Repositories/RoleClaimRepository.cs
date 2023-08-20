@@ -7,19 +7,22 @@ using Server.Domain.Models;
 
 namespace Server.Db.Internal.Repositories;
 
-internal class RoleClaimRepository : RepositoryBase, IRoleClaimRepository
+internal class RoleClaimRepository : IRoleClaimRepository
 {
-    public RoleClaimRepository(ServerConnection db) : base(db)
+    private readonly ServerConnection _db;
+
+    public RoleClaimRepository(ServerConnection db)
     {
+        _db = db;
     }
 
     public async Task SaveAsync(RoleClaim claim)
     {
-        await Db.RoleClaims.InsertOrUpdateAsync(claim);
+        await _db.RoleClaims.InsertOrUpdateAsync(claim);
     }
 
     public async Task DeleteByIdAsync(Guid roleId, Guid claimId)
     {
-        await Db.RoleClaims.DeleteAsync(x => x.RoleId == roleId && x.ClaimId == claimId);
+        await _db.RoleClaims.DeleteAsync(x => x.RoleId == roleId && x.ClaimId == claimId);
     }
 }

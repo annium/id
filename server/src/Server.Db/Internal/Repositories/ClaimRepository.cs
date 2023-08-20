@@ -9,20 +9,23 @@ using Server.Domain.Models;
 
 namespace Server.Db.Internal.Repositories;
 
-internal class ClaimRepository : RepositoryBase, IClaimRepository
+internal class ClaimRepository : IClaimRepository
 {
-    public ClaimRepository(ServerConnection db) : base(db)
+    private readonly ServerConnection _db;
+
+    public ClaimRepository(ServerConnection db)
     {
+        _db = db;
     }
 
     public async Task CreateAsync(Claim claim)
     {
-        await Db.Claims.InsertAsync(claim);
+        await _db.Claims.InsertAsync(claim);
     }
 
     public async Task<IReadOnlyCollection<Claim>> GetAllAsync(Guid appId)
     {
-        var entities = await Db.Claims
+        var entities = await _db.Claims
             .Where(x => x.AppId == appId)
             .ToArrayAsync();
 
@@ -31,7 +34,7 @@ internal class ClaimRepository : RepositoryBase, IClaimRepository
 
     public async Task<Claim?> TryGetByIdAsync(Guid id)
     {
-        var entity = await Db.Claims
+        var entity = await _db.Claims
             .FirstOrDefaultAsync(x => x.Id == id);
 
         return entity;
@@ -39,7 +42,7 @@ internal class ClaimRepository : RepositoryBase, IClaimRepository
 
     public async Task<Claim> GetByIdAsync(Guid id)
     {
-        var entity = await Db.Claims
+        var entity = await _db.Claims
             .FirstOrDefaultAsync(x => x.Id == id);
 
         if (entity is null)
@@ -50,7 +53,7 @@ internal class ClaimRepository : RepositoryBase, IClaimRepository
 
     public async Task<Claim?> TryFindByKeyAsync(Guid appId, string key)
     {
-        var entity = await Db.Claims
+        var entity = await _db.Claims
             .FirstOrDefaultAsync(x => x.AppId == appId && x.Key == key);
 
         return entity;
@@ -58,11 +61,11 @@ internal class ClaimRepository : RepositoryBase, IClaimRepository
 
     public async Task UpdateAsync(Claim claim)
     {
-        await Db.Claims.UpdateAsync(claim);
+        await _db.Claims.UpdateAsync(claim);
     }
 
     public async Task DeleteByIdAsync(Guid id)
     {
-        await Db.Claims.DeleteAsync(x => x.Id == id);
+        await _db.Claims.DeleteAsync(x => x.Id == id);
     }
 }

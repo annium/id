@@ -9,20 +9,23 @@ using Server.Domain.Models;
 
 namespace Server.Db.Internal.Repositories;
 
-internal class RoleRepository : RepositoryBase, IRoleRepository
+internal class RoleRepository : IRoleRepository
 {
-    public RoleRepository(ServerConnection db) : base(db)
+    private readonly ServerConnection _db;
+
+    public RoleRepository(ServerConnection db)
     {
+        _db = db;
     }
 
     public async Task CreateAsync(Role role)
     {
-        await Db.Roles.InsertAsync(role);
+        await _db.Roles.InsertAsync(role);
     }
 
     public async Task<IReadOnlyCollection<Role>> GetAllAsync(Guid appId)
     {
-        var entities = await Db.Roles
+        var entities = await _db.Roles
             .LoadWith(x => x.Claims).ThenLoad(x => x.Claim)
             .Where(x => x.AppId == appId)
             .ToArrayAsync();
@@ -32,7 +35,7 @@ internal class RoleRepository : RepositoryBase, IRoleRepository
 
     public async Task<Role?> TryGetByIdAsync(Guid id)
     {
-        var entity = await Db.Roles
+        var entity = await _db.Roles
             .FirstOrDefaultAsync(c => c.Id == id);
 
         return entity;
@@ -40,7 +43,7 @@ internal class RoleRepository : RepositoryBase, IRoleRepository
 
     public async Task<Role> GetByIdAsync(Guid id)
     {
-        var entity = await Db.Roles
+        var entity = await _db.Roles
             .FirstOrDefaultAsync(c => c.Id == id);
 
         if (entity is null)
@@ -51,7 +54,7 @@ internal class RoleRepository : RepositoryBase, IRoleRepository
 
     public async Task<Role?> TryFindByKeyAsync(Guid appId, string key)
     {
-        var entity = await Db.Roles
+        var entity = await _db.Roles
             .FirstOrDefaultAsync(c => c.AppId == appId && c.Key == key);
 
         return entity;
@@ -59,11 +62,11 @@ internal class RoleRepository : RepositoryBase, IRoleRepository
 
     public async Task UpdateAsync(Role role)
     {
-        await Db.Roles.UpdateAsync(role);
+        await _db.Roles.UpdateAsync(role);
     }
 
     public async Task DeleteByIdAsync(Guid id)
     {
-        await Db.Roles.DeleteAsync(x => x.Id == id);
+        await _db.Roles.DeleteAsync(x => x.Id == id);
     }
 }

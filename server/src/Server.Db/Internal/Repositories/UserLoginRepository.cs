@@ -8,20 +8,23 @@ using Server.Domain.Models;
 
 namespace Server.Db.Internal.Repositories;
 
-internal class UserLoginRepository : RepositoryBase, IUserLoginRepository
+internal class UserLoginRepository : IUserLoginRepository
 {
-    public UserLoginRepository(ServerConnection db) : base(db)
+    private readonly ServerConnection _db;
+
+    public UserLoginRepository(ServerConnection db)
     {
+        _db = db;
     }
 
     public async Task CreateAsync(UserLogin login)
     {
-        await Db.UserLogins.InsertAsync(login);
+        await _db.UserLogins.InsertAsync(login);
     }
 
     public async Task<UserLogin?> TryGetByIdAsync(Guid id)
     {
-        var entity = await Db.UserLogins
+        var entity = await _db.UserLogins
             .FirstOrDefaultAsync(x => x.Id == id);
 
         return entity;
@@ -29,7 +32,7 @@ internal class UserLoginRepository : RepositoryBase, IUserLoginRepository
 
     public async Task<UserLogin> GetByIdAsync(Guid id)
     {
-        var entity = await Db.UserLogins
+        var entity = await _db.UserLogins
             .FirstOrDefaultAsync(x => x.Id == id);
 
         if (entity is null)
@@ -40,7 +43,7 @@ internal class UserLoginRepository : RepositoryBase, IUserLoginRepository
 
     public async Task<UserLogin?> TryFindByRefreshTokenAsync(Guid token)
     {
-        var entity = await Db.UserLogins
+        var entity = await _db.UserLogins
             .FirstOrDefaultAsync(x => x.RefreshToken == token);
 
         return entity;
@@ -48,7 +51,7 @@ internal class UserLoginRepository : RepositoryBase, IUserLoginRepository
 
     public async Task<UserLogin> FindByRefreshTokenAsync(Guid token)
     {
-        var entity = await Db.UserLogins
+        var entity = await _db.UserLogins
             .FirstOrDefaultAsync(x => x.RefreshToken == token);
 
         if (entity is null)
@@ -59,21 +62,21 @@ internal class UserLoginRepository : RepositoryBase, IUserLoginRepository
 
     public async Task UpdateRefreshTokenAsync(UserLogin login)
     {
-        await Db.UserLogins.UpdateAsync(login);
+        await _db.UserLogins.UpdateAsync(login);
     }
 
     public async Task DeleteByIdAsync(Guid id)
     {
-        await Db.UserLogins.DeleteAsync(x => x.Id == id);
+        await _db.UserLogins.DeleteAsync(x => x.Id == id);
     }
 
     public async Task DeleteExpiredByUserIdAsync(Guid userId, Instant instant)
     {
-        await Db.UserLogins.DeleteAsync(x => x.UserId == userId && x.RefreshTokenExpires <= instant);
+        await _db.UserLogins.DeleteAsync(x => x.UserId == userId && x.RefreshTokenExpires <= instant);
     }
 
     public async Task DeleteAllByUserIdAsync(Guid id)
     {
-        await Db.UserLogins.DeleteAsync(x => x.UserId == id);
+        await _db.UserLogins.DeleteAsync(x => x.UserId == id);
     }
 }

@@ -9,20 +9,23 @@ using Server.Domain.Models;
 
 namespace Server.Db.Internal.Repositories;
 
-internal class UserRepository : RepositoryBase, IUserRepository
+internal class UserRepository : IUserRepository
 {
-    public UserRepository(ServerConnection db) : base(db)
+    private readonly ServerConnection _db;
+
+    public UserRepository(ServerConnection db)
     {
+        _db = db;
     }
 
     public async Task CreateAsync(User user)
     {
-        await Db.Users.InsertAsync(user);
+        await _db.Users.InsertAsync(user);
     }
 
     public async Task<User?> TryGetByIdAsync(Guid id)
     {
-        var entity = await Db.Users
+        var entity = await _db.Users
             .FirstOrDefaultAsync(x => x.Id == id);
 
         return entity;
@@ -30,7 +33,7 @@ internal class UserRepository : RepositoryBase, IUserRepository
 
     public async Task<User> GetByIdAsync(Guid id)
     {
-        var entity = await Db.Users
+        var entity = await _db.Users
             .FirstOrDefaultAsync(x => x.Id == id);
 
         if (entity is null)
@@ -41,7 +44,7 @@ internal class UserRepository : RepositoryBase, IUserRepository
 
     public async Task<IReadOnlyCollection<User>> FindAllByQueryAsync(string query, int limit)
     {
-        var entities = await Db.Users
+        var entities = await _db.Users
             .Where(x => x.Login.StartsWith(query))
             .Take(limit)
             .ToArrayAsync();
@@ -51,7 +54,7 @@ internal class UserRepository : RepositoryBase, IUserRepository
 
     public async Task<User?> TryFindByLoginAsync(string login)
     {
-        var entity = await Db.Users
+        var entity = await _db.Users
             .FirstOrDefaultAsync(x => x.Login == login);
 
         return entity;
@@ -59,7 +62,7 @@ internal class UserRepository : RepositoryBase, IUserRepository
 
     public async Task<User> FindByLoginAsync(string login)
     {
-        var entity = await Db.Users
+        var entity = await _db.Users
             .FirstOrDefaultAsync(x => x.Login == login);
 
         if (entity is null)
@@ -70,7 +73,7 @@ internal class UserRepository : RepositoryBase, IUserRepository
 
     public async Task<User?> TryFindByEmailAsync(string email)
     {
-        var entity = await Db.Users
+        var entity = await _db.Users
             .FirstOrDefaultAsync(x => x.Email == email);
 
         return entity;
@@ -78,7 +81,7 @@ internal class UserRepository : RepositoryBase, IUserRepository
 
     public async Task<User> FindByEmailAsync(string email)
     {
-        var entity = await Db.Users
+        var entity = await _db.Users
             .FirstOrDefaultAsync(x => x.Email == email);
 
         if (entity is null)
@@ -89,11 +92,11 @@ internal class UserRepository : RepositoryBase, IUserRepository
 
     public async Task UpdateAsync(User user)
     {
-        await Db.Users.UpdateAsync(user);
+        await _db.Users.UpdateAsync(user);
     }
 
     public async Task DeleteByIdAsync(Guid id)
     {
-        await Db.Users.DeleteAsync(x => x.Id == id);
+        await _db.Users.DeleteAsync(x => x.Id == id);
     }
 }

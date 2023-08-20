@@ -9,20 +9,23 @@ using Server.Domain.Models;
 
 namespace Server.Db.Internal.Repositories;
 
-internal class CompanyRepository : RepositoryBase, ICompanyRepository
+internal class CompanyRepository : ICompanyRepository
 {
-    public CompanyRepository(ServerConnection db) : base(db)
+    private readonly ServerConnection _db;
+
+    public CompanyRepository(ServerConnection db)
     {
+        _db = db;
     }
 
     public async Task CreateAsync(Company company)
     {
-        await Db.Companies.InsertAsync(company);
+        await _db.Companies.InsertAsync(company);
     }
 
     public async Task<IReadOnlyCollection<Company>> FindAllAsync(string name)
     {
-        IQueryable<Company> query = Db.Companies;
+        IQueryable<Company> query = _db.Companies;
 
         if (!string.IsNullOrWhiteSpace(name))
             query = query.Where(x => x.Name.StartsWith(name));
@@ -34,7 +37,7 @@ internal class CompanyRepository : RepositoryBase, ICompanyRepository
 
     public async Task<IReadOnlyCollection<Company>> FindMyAsync(Guid ownerId)
     {
-        var entities = await Db.Companies
+        var entities = await _db.Companies
             .Where(x => x.OwnerId == ownerId)
             .ToArrayAsync();
 
@@ -43,7 +46,7 @@ internal class CompanyRepository : RepositoryBase, ICompanyRepository
 
     public async Task<IReadOnlyCollection<Company>> GetAllByIdsAsync(IReadOnlyCollection<Guid> ids)
     {
-        var entities = await Db.Companies
+        var entities = await _db.Companies
             .Where(x => ids.Contains(x.Id))
             .ToArrayAsync();
 
@@ -52,7 +55,7 @@ internal class CompanyRepository : RepositoryBase, ICompanyRepository
 
     public async Task<Company?> TryGetByIdAsync(Guid id)
     {
-        var entity = await Db.Companies
+        var entity = await _db.Companies
             .FirstOrDefaultAsync(x => x.Id == id);
 
         return entity;
@@ -60,7 +63,7 @@ internal class CompanyRepository : RepositoryBase, ICompanyRepository
 
     public async Task<Company> GetByIdAsync(Guid id)
     {
-        var entity = await Db.Companies
+        var entity = await _db.Companies
             .FirstOrDefaultAsync(x => x.Id == id);
 
         if (entity is null)
@@ -71,11 +74,11 @@ internal class CompanyRepository : RepositoryBase, ICompanyRepository
 
     public async Task UpdateAsync(Company company)
     {
-        await Db.Companies.UpdateAsync(company);
+        await _db.Companies.UpdateAsync(company);
     }
 
     public async Task DeleteByIdAsync(Guid id)
     {
-        await Db.Companies.DeleteAsync(x => x.Id == id);
+        await _db.Companies.DeleteAsync(x => x.Id == id);
     }
 }

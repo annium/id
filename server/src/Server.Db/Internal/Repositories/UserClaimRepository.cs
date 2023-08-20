@@ -9,20 +9,23 @@ using Server.Domain.Models;
 
 namespace Server.Db.Internal.Repositories;
 
-internal class UserClaimRepository : RepositoryBase, IUserClaimRepository
+internal class UserClaimRepository : IUserClaimRepository
 {
-    public UserClaimRepository(ServerConnection db) : base(db)
+    private readonly ServerConnection _db;
+
+    public UserClaimRepository(ServerConnection db)
     {
+        _db = db;
     }
 
     public async Task SaveAsync(UserClaim claim)
     {
-        await Db.UserClaims.InsertOrUpdateAsync(claim);
+        await _db.UserClaims.InsertOrUpdateAsync(claim);
     }
 
     public async Task<IReadOnlyCollection<UserClaim>> GetUserClaimsAsync(Guid appId, Guid userId)
     {
-        var entities = await Db.UserClaims
+        var entities = await _db.UserClaims
             .LoadWith(x => x.Claim)
             .Where(x => x.Claim.AppId == appId && x.UserId == userId)
             .ToArrayAsync();
@@ -32,6 +35,6 @@ internal class UserClaimRepository : RepositoryBase, IUserClaimRepository
 
     public async Task DeleteByIdAsync(Guid userId, Guid claimId)
     {
-        await Db.UserClaims.DeleteAsync(x => x.UserId == userId && x.ClaimId == claimId);
+        await _db.UserClaims.DeleteAsync(x => x.UserId == userId && x.ClaimId == claimId);
     }
 }

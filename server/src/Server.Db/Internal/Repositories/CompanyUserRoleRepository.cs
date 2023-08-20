@@ -9,20 +9,23 @@ using Server.Domain.Models;
 
 namespace Server.Db.Internal.Repositories;
 
-internal class CompanyUserRoleRepository : RepositoryBase, ICompanyUserRoleRepository
+internal class CompanyUserRoleRepository : ICompanyUserRoleRepository
 {
-    public CompanyUserRoleRepository(ServerConnection db) : base(db)
+    private readonly ServerConnection _db;
+
+    public CompanyUserRoleRepository(ServerConnection db)
     {
+        _db = db;
     }
 
     public async Task SaveAsync(CompanyUserRole userRole)
     {
-        await Db.CompanyUserRoles.InsertOrUpdateAsync(userRole);
+        await _db.CompanyUserRoles.InsertOrUpdateAsync(userRole);
     }
 
     public async Task<IReadOnlyDictionary<Guid, IReadOnlyCollection<CompanyRole>>> GetCompaniesUserRolesAsync(Guid appId, Guid userId)
     {
-        var entities = await Db.CompanyUserRoles
+        var entities = await _db.CompanyUserRoles
             .LoadWith(x => x.Role).ThenLoad(x => x.Claims).ThenLoad(x => x.Claim)
             .Where(x => x.Role.AppId == appId && x.UserId == userId)
             .ToArrayAsync();
@@ -30,12 +33,12 @@ internal class CompanyUserRoleRepository : RepositoryBase, ICompanyUserRoleRepos
         return entities.GroupBy(x => x.CompanyId)
             .ToDictionary(
                 x => x.Key,
-                x => (IReadOnlyCollection<CompanyRole>) x.Select(y => y.Role).ToArray()
+                x => (IReadOnlyCollection<CompanyRole>)x.Select(y => y.Role).ToArray()
             );
     }
 
     public async Task DeleteByIdAsync(Guid companyId, Guid userId, Guid roleId)
     {
-        await Db.CompanyUserRoles.DeleteAsync(x => x.CompanyId == companyId && x.UserId == userId && x.RoleId == roleId);
+        await _db.CompanyUserRoles.DeleteAsync(x => x.CompanyId == companyId && x.UserId == userId && x.RoleId == roleId);
     }
 }

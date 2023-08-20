@@ -9,20 +9,23 @@ using Server.Domain.Models;
 
 namespace Server.Db.Internal.Repositories;
 
-internal class CompanyRoleRepository : RepositoryBase, ICompanyRoleRepository
+internal class CompanyRoleRepository : ICompanyRoleRepository
 {
-    public CompanyRoleRepository(ServerConnection db) : base(db)
+    private readonly ServerConnection _db;
+
+    public CompanyRoleRepository(ServerConnection db)
     {
+        _db = db;
     }
 
     public async Task CreateAsync(CompanyRole role)
     {
-        await Db.CompanyRoles.InsertAsync(role);
+        await _db.CompanyRoles.InsertAsync(role);
     }
 
     public async Task<IReadOnlyCollection<CompanyRole>> GetAllAsync(Guid appId)
     {
-        var entities = await Db.CompanyRoles
+        var entities = await _db.CompanyRoles
             .LoadWith(x => x.Claims).ThenLoad(x => x.Claim)
             .Where(x => x.AppId == appId)
             .ToArrayAsync();
@@ -32,7 +35,7 @@ internal class CompanyRoleRepository : RepositoryBase, ICompanyRoleRepository
 
     public async Task<CompanyRole?> TryGetByIdAsync(Guid id)
     {
-        var entity = await Db.CompanyRoles
+        var entity = await _db.CompanyRoles
             .FirstOrDefaultAsync(c => c.Id == id);
 
         return entity;
@@ -40,7 +43,7 @@ internal class CompanyRoleRepository : RepositoryBase, ICompanyRoleRepository
 
     public async Task<CompanyRole> GetByIdAsync(Guid id)
     {
-        var entity = await Db.CompanyRoles
+        var entity = await _db.CompanyRoles
             .FirstOrDefaultAsync(c => c.Id == id);
 
         if (entity is null)
@@ -51,7 +54,7 @@ internal class CompanyRoleRepository : RepositoryBase, ICompanyRoleRepository
 
     public async Task<CompanyRole?> TryFindByKeyAsync(Guid appId, string key)
     {
-        var entity = await Db.CompanyRoles
+        var entity = await _db.CompanyRoles
             .FirstOrDefaultAsync(c => c.AppId == appId && c.Key == key);
 
         return entity;
@@ -59,11 +62,11 @@ internal class CompanyRoleRepository : RepositoryBase, ICompanyRoleRepository
 
     public async Task UpdateAsync(CompanyRole role)
     {
-        await Db.CompanyRoles.UpdateAsync(role);
+        await _db.CompanyRoles.UpdateAsync(role);
     }
 
     public async Task DeleteByIdAsync(Guid id)
     {
-        await Db.CompanyRoles.DeleteAsync(x => x.Id == id);
+        await _db.CompanyRoles.DeleteAsync(x => x.Id == id);
     }
 }
