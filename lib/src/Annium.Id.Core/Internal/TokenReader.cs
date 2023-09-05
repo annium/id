@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using Annium.Data.Operations;
-using Annium.Logging.Abstractions;
+using Annium.Logging;
 using Annium.Security.Cryptography;
 using MessagePack;
 using Microsoft.IdentityModel.Tokens;
@@ -12,9 +12,9 @@ using NodaTime;
 
 namespace Annium.Id.Core.Internal;
 
-internal class TokenReader : ITokenReader, ILogSubject<TokenReader>
+internal class TokenReader : ITokenReader, ILogSubject
 {
-    public ILogger<TokenReader> Logger { get; }
+    public ILogger Logger { get; }
     private readonly RsaSecurityKey _signingKey;
     private readonly AuthOptions _authOptions;
     private readonly ITimeProvider _timeProvider;
@@ -22,7 +22,7 @@ internal class TokenReader : ITokenReader, ILogSubject<TokenReader>
     public TokenReader(
         AuthOptions authOptions,
         ITimeProvider timeProvider,
-        ILogger<TokenReader> logger
+        ILogger logger
     )
     {
         using (var s = File.OpenRead(authOptions.PublicKeyFile))
@@ -134,7 +134,7 @@ internal class TokenReader : ITokenReader, ILogSubject<TokenReader>
 
     private ValueTuple<TokenReadStatus, string> Log(TokenReadStatus status, string error, string message)
     {
-        this.Log().Error(message);
+        this.Error(message);
 
         return (status, error);
     }

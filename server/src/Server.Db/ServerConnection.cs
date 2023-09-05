@@ -1,13 +1,13 @@
-using Annium.Logging.Abstractions;
+using Annium.Logging;
 using LinqToDB;
 using LinqToDB.Data;
 using Server.Domain.Models;
 
 namespace Server.Db;
 
-public class ServerConnection : DataConnection, ILogSubject<ServerConnection>
+public class ServerConnection : DataConnection, ILogSubject
 {
-    public ILogger<ServerConnection> Logger { get; }
+    public ILogger Logger { get; }
     public ITable<App> Apps { get; set; }
     public ITable<Claim> Claims { get; set; }
     public ITable<Company> Companies { get; set; }
@@ -26,7 +26,7 @@ public class ServerConnection : DataConnection, ILogSubject<ServerConnection>
 
     public ServerConnection(
         DataOptions<ServerConnection> config,
-        ILogger<ServerConnection> logger
+        ILogger logger
     ) : base(config.Options)
     {
         Logger = logger;

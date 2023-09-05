@@ -21,7 +21,7 @@ internal class BaseServicePack : ServicePackBase
     public override void Register(IServiceContainer container, IServiceProvider provider)
     {
         container.AddTime().WithRealTime().SetDefault();
-        container.AddHttpRequestFactory().SetDefault();
+        container.AddHttpRequestFactory(true);
         container.AddSerializers()
             .WithJson(opts => opts.ConfigureForOperations().ConfigureForNodaTime(), isDefault: true);
         container.AddXRest();

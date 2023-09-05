@@ -4,9 +4,9 @@ using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
+using Annium;
 using Annium.Blazor.Net;
 using Annium.Core.DependencyInjection;
-using Annium;
 using Annium.Data.Operations;
 using Annium.Net.Http;
 using Annium.Serialization.Abstractions;
@@ -75,7 +75,7 @@ internal class ServerApi : IServerApi
         var message = new HttpResponseMessage(HttpStatusCode.Unauthorized);
         message.Content = new StringContent(_serializer.Serialize(Result.New().Error(failure)), Encoding.UTF8);
 
-        return new HttpResponse(message);
+        return new HttpResponse(message.RequestMessage.NotNull().RequestUri.NotNull(), message);
     }
 }
 

@@ -8,11 +8,16 @@ using Server.Email.Models;
 using Server.Host.TestClient.Clients;
 using Server.ViewModels.Requests.Me;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Server.IntegrationTests.Controllers;
 
 public class MeControllerTest : IntegrationTestBase
 {
+    public MeControllerTest(ITestOutputHelper outputHelper) : base(outputHelper)
+    {
+    }
+
     [Fact]
     public async Task RegisterMe_IncorrectPayload_BadRequest()
     {

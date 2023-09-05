@@ -4,11 +4,16 @@ using System.Threading.Tasks;
 using Annium.Testing;
 using Server.Host.TestClient.Clients;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Server.IntegrationTests.Controllers;
 
 public class CompanyUserControllerTest : IntegrationTestBase
 {
+    public CompanyUserControllerTest(ITestOutputHelper outputHelper) : base(outputHelper)
+    {
+    }
+
     [Fact]
     public async Task AddUser_MissingCompany_NotFound()
     {

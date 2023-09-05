@@ -21,7 +21,7 @@ public class ServicePack : ServicePackBase
         container.AddMapper();
         container.AddSerializers()
             .WithJson(opts => opts.ConfigureForOperations().ConfigureForNodaTime(), isDefault: true);
-        container.AddHttpRequestFactory().SetDefault();
+        container.AddHttpRequestFactory(true);
         container.AddLogging();
         container.AddXRest();
 

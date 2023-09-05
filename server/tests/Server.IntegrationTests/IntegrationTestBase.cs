@@ -13,6 +13,7 @@ using Server.DemoHost.TestClient.Clients;
 using Server.Host;
 using Server.Host.TestClient.Clients;
 using Xunit;
+using Xunit.Abstractions;
 using Database = Server.IntegrationTests.Fixtures.Database;
 using ServicePack = Server.DemoHost.ServicePack;
 
@@ -21,6 +22,10 @@ namespace Server.IntegrationTests;
 public class IntegrationTestBase : IntegrationTest, IAsyncLifetime
 {
     protected Faker Faker { get; } = new();
+
+    public IntegrationTestBase(ITestOutputHelper outputHelper) : base(outputHelper)
+    {
+    }
 
     public async Task InitializeAsync()
     {

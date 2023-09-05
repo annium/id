@@ -4,11 +4,16 @@ using System.Threading.Tasks;
 using Annium.Testing;
 using Server.Host.TestClient.Clients;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Server.IntegrationTests.DemoClient.Controllers;
 
 public class DemoControllerTest : IntegrationTestBase
 {
+    public DemoControllerTest(ITestOutputHelper outputHelper) : base(outputHelper)
+    {
+    }
+
     [Fact]
     public async Task IdAuthorization_Unauthorized_ReturnsUnauthorized()
     {

@@ -31,7 +31,7 @@ public class ServicePack : ServicePackBase
         var ignored = new[] { "ChainBuilder", "PipeHandler" };
         provider.UseLogging(route => route
             // .UseConsole());
-            .For(m => !ignored.Any(m.Source.Contains)).UseConsole());
+            .For(m => !ignored.Any(m.SubjectType.Contains)).UseConsole());
         SetupNetTypes(provider.Resolve<IMapperConfig>());
     }
 

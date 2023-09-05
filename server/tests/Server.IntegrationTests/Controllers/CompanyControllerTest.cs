@@ -7,11 +7,16 @@ using Annium.Testing;
 using Server.Host.TestClient.Clients;
 using Server.ViewModels.Requests.Companies;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Server.IntegrationTests.Controllers;
 
 public class CompanyControllerTest : IntegrationTestBase
 {
+    public CompanyControllerTest(ITestOutputHelper outputHelper) : base(outputHelper)
+    {
+    }
+
     [Fact]
     public async Task Create_InvalidPayload_BadRequest()
     {

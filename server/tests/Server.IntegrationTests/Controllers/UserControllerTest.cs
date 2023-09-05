@@ -6,11 +6,16 @@ using Annium.Testing;
 using Server.Host.TestClient.Clients;
 using Server.ViewModels.Responses.Users;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Server.IntegrationTests.Controllers;
 
 public class UserControllerTest : IntegrationTestBase
 {
+    public UserControllerTest(ITestOutputHelper outputHelper) : base(outputHelper)
+    {
+    }
+
     [Fact]
     public async Task FindUsers_Ok()
     {

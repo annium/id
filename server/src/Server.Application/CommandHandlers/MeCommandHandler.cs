@@ -1,9 +1,9 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Annium;
 using Annium.Architecture.Base;
 using Annium.Architecture.CQRS.Commands;
-using Annium;
 using Annium.Data.Operations;
 using Server.Application.Services;
 using Server.Application.Tools;

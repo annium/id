@@ -5,11 +5,16 @@ using Annium.Testing;
 using Server.Host.TestClient.Clients;
 using Server.ViewModels.Requests.Login;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Server.IntegrationTests.Controllers;
 
 public class LoginControllerTest : IntegrationTestBase
 {
+    public LoginControllerTest(ITestOutputHelper outputHelper) : base(outputHelper)
+    {
+    }
+
     [Fact]
     public async Task LogIn_BadPayload_BadRequest()
     {
