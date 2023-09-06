@@ -17,7 +17,6 @@
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Annium.Architecture.Mediator" Version="0.1.0" />
-        <PackageReference Include="Annium.Extensions.Validation" Version="0.1.0" />
         <PackageReference Include="Annium.Localization.Yaml" Version="0.1.0" />
     </ItemGroup>
     <ItemGroup>
