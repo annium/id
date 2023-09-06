@@ -71,7 +71,7 @@ gtc-demo:
 		-t
 
 
-publish: publish-server publish-site
+publish: publish-server publish-site publish-libs
 
 publish-server:
 	$(call publish,server,.,server/src/Server.Host/app.dockerfile)
@@ -79,6 +79,9 @@ publish-server:
 publish-site:
 	$(call publish,site,.,web/src/Site/app.dockerfile)
 
+publish-libs:
+	xs publish Annium.Id.Core 0.1.0
+	xs publish Annium.Id.AspNetCore 0.1.0
 
 # control
 define start-dotnet
