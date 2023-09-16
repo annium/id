@@ -22,7 +22,8 @@ test:
 	dotnet test --nologo -v q
 
 publish:
-	xs publish all 0.1.0 -p 1
+	xs publish Annium.Id.Core 0.1.0
+	xs publish Annium.Id.AspNetCore 0.1.0
 
 configure:
 	@# host
@@ -92,17 +93,13 @@ gtc-demo:
 		-t
 
 
-publish: publish-server publish-site publish-libs
+publish-all: publish-server publish-site
 
 publish-server:
 	$(call publish,server,.,server/src/Server.Host/app.dockerfile)
 
 publish-site:
 	$(call publish,site,.,web/src/Site/app.dockerfile)
-
-publish-libs:
-	xs publish Annium.Id.Core 0.1.0
-	xs publish Annium.Id.AspNetCore 0.1.0
 
 # control
 define start-dotnet
