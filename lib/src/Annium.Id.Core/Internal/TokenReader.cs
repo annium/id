@@ -2,145 +2,98 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
 using Annium.Data.Operations;
+using Annium.Identity.Tokens;
+using Annium.Identity.Tokens.Jwt;
 using Annium.Logging;
-using Annium.Security.Cryptography;
-using MessagePack;
 using Microsoft.IdentityModel.Tokens;
 using NodaTime;
+using OneOf;
 
 namespace Annium.Id.Core.Internal;
 
 internal class TokenReader : ITokenReader, ILogSubject
 {
     public ILogger Logger { get; }
-    private readonly RsaSecurityKey _signingKey;
-    private readonly AuthOptions _authOptions;
+    private readonly RsaSecurityKey _securityKey;
+    private readonly AuthOptions _options;
     private readonly ITimeProvider _timeProvider;
 
     public TokenReader(
-        AuthOptions authOptions,
+        AuthOptions options,
         ITimeProvider timeProvider,
         ILogger logger
     )
     {
-        using (var s = File.OpenRead(authOptions.PublicKeyFile))
-        {
-            var provider = new RSACryptoServiceProvider();
-            provider.ImportParameters(new KeyReader().ReadRsaKey(s));
-            _signingKey = new RsaSecurityKey(provider);
-        }
-
-        _authOptions = authOptions;
+        _securityKey = KeyReader.ReadRsaKey(File.ReadAllText(options.PublicKeyFile));
+        _options = options;
         _timeProvider = timeProvider;
         Logger = logger;
     }
 
-    public IStatusResult<TokenReadStatus, IdToken> ReadToken(string tokenString, TokenReadOptions options)
+    public IStatusResult<JwtReadStatus, IdToken> ReadToken(string tokenString, TokenReadOptions options)
     {
-        var handler = new JwtSecurityTokenHandler();
-        if (!handler.CanReadToken(tokenString))
-            return Fail(TokenReadStatus.BadSource, "Token is not valid JWT");
+        var now = _timeProvider.Now;
+        var audience = options.ValidateAudience ? _options.Audience.ToString() : null;
+        var expirationWindow = options.ValidateExpiration ? Duration.FromSeconds(5) : default(Duration?);
 
-        var tvp = GetTokenValidationParameters(options);
+        var result = JwtReader.Read(
+            _securityKey,
+            tokenString,
+            Constants.Issuer,
+            audience,
+            now,
+            expirationWindow
+        );
 
-        try
-        {
-            handler.ValidateToken(tokenString, tvp, out var securityToken);
-            var jwt = (JwtSecurityToken) securityToken;
-            if (!options.ValidateExpiration)
+        return result.Data.Match(
+            jwt =>
             {
-                var now = _timeProvider.Now.ToDateTimeUtc();
-                if (jwt.ValidFrom > now)
-                    return Fail(TokenReadStatus.Failed, "Token is not yet valid");
+                var idClaim = jwt.Claims.FirstOrDefault(c => c.Type == Claims.Id);
+                if (idClaim is null)
+                    return Fail(JwtReadStatus.BadSource, "Token id is missing");
+
+                var token = Serializer.Deserialize<IdToken>(idClaim.Value);
+
+                return Result.Status(JwtReadStatus.Ok, token);
+            },
+            exception => exception switch
+            {
+                SecurityTokenDecompressionFailedException _   => FromFailure(result),
+                SecurityTokenEncryptionKeyNotFoundException _ => FromFailureWithLog(result, "Token encryption key not found"),
+                SecurityTokenDecryptionFailedException _      => FromFailure(result),
+                SecurityTokenNoExpirationException _          => FromFailure(result),
+                SecurityTokenExpiredException _               => FromFailure(result),
+                SecurityTokenNotYetValidException _           => FromFailure(result),
+                SecurityTokenInvalidLifetimeException _       => FromFailure(result),
+                SecurityTokenInvalidAudienceException _       => FromFailure(result),
+                SecurityTokenInvalidIssuerException _         => FromFailure(result),
+                SecurityTokenSignatureKeyNotFoundException _  => FromFailureWithLog(result, "Token signature key not found"),
+                SecurityTokenInvalidSignatureException _      => FromFailure(result),
+                _                                             => FromFailureWithLog(result, $"Token validation failed: {exception}")
             }
-
-            var idClaim = jwt.Claims.FirstOrDefault(c => c.Type == Claims.Id);
-            if (idClaim is null)
-                return Fail(TokenReadStatus.BadSource, "Token id is missing");
-
-            var rawToken = Convert.FromBase64String(idClaim.Value);
-            var token = MessagePackSerializer.Deserialize<IdToken>(
-                rawToken,
-                MessagePackSerializerOptions.Standard.WithCompression(MessagePackCompression.Lz4BlockArray)
-            );
-
-            return Result.Status(TokenReadStatus.Ok, token);
-        }
-        catch (Exception exception)
-        {
-            var (status, error) = HandleValidationFailure(exception);
-
-            return Fail(status, error);
-        }
+        );
     }
 
-    private TokenValidationParameters GetTokenValidationParameters(TokenReadOptions options)
-    {
-        var tvp = new TokenValidationParameters
-        {
-            IssuerSigningKey = _signingKey,
-            RequireSignedTokens = true,
-            ValidateIssuer = true,
-            ValidIssuer = Constants.Issuer,
-            ValidateIssuerSigningKey = true
-        };
-
-        if (options.ValidateAudience)
-        {
-            tvp.ValidateAudience = true;
-            tvp.ValidAudience = _authOptions.Audience.ToString();
-        }
-        else
-        {
-            tvp.ValidateAudience = false;
-        }
-
-        if (options.ValidateExpiration)
-        {
-            tvp.ClockSkew = Duration.FromSeconds(5).ToTimeSpan();
-            tvp.RequireExpirationTime = true;
-            tvp.ValidateLifetime = true;
-        }
-        else
-        {
-            tvp.RequireExpirationTime = false;
-            tvp.ValidateLifetime = false;
-        }
-
-        return tvp;
-    }
-
-    private ValueTuple<TokenReadStatus, string> HandleValidationFailure(Exception exception)
-    {
-        return exception switch
-        {
-            SecurityTokenDecompressionFailedException _   => (TokenReadStatus.Failed, "Token decompression failed"),
-            SecurityTokenEncryptionKeyNotFoundException _ => Log(TokenReadStatus.Failed, "Token decryption failed", "Token encryption key not found"),
-            SecurityTokenDecryptionFailedException _      => (TokenReadStatus.Failed, "Token decryption failed"),
-            SecurityTokenNoExpirationException _          => (TokenReadStatus.Failed, "Token has no expiration claim"),
-            SecurityTokenExpiredException _               => (TokenReadStatus.Failed, "Token is expired"),
-            SecurityTokenNotYetValidException _           => (TokenReadStatus.Failed, "Token is not yet valid"),
-            SecurityTokenInvalidLifetimeException _       => (TokenReadStatus.Failed, "Token has invalid lifetime"),
-            SecurityTokenInvalidAudienceException _       => (TokenReadStatus.Failed, "Token has invalid audience"),
-            SecurityTokenInvalidIssuerException _         => (TokenReadStatus.Failed, "Token has invalid issuer"),
-            SecurityTokenSignatureKeyNotFoundException _  => Log(TokenReadStatus.Failed, "Token has invalid signature", "Token signature key not found"),
-            SecurityTokenInvalidSignatureException _      => (TokenReadStatus.Failed, "Token has invalid signature"),
-            _                                             => Log(TokenReadStatus.BadSource, "Token is invalid", $"Token validation failed: {exception}")
-        };
-    }
-
-
-    private ValueTuple<TokenReadStatus, string> Log(TokenReadStatus status, string error, string message)
+    private IStatusResult<JwtReadStatus, IdToken> FromFailureWithLog(
+        IStatusResult<JwtReadStatus, OneOf<JwtSecurityToken, Exception>> result,
+        string message
+    )
     {
         this.Error(message);
 
-        return (status, error);
+        return Result.Status<JwtReadStatus, IdToken>(result.Status, null!).Join(result);
     }
 
-    private IStatusResult<TokenReadStatus, IdToken> Fail(TokenReadStatus status, string error)
+    private IStatusResult<JwtReadStatus, IdToken> FromFailure(
+        IStatusResult<JwtReadStatus, OneOf<JwtSecurityToken, Exception>> result
+    )
     {
-        return Result.Status<TokenReadStatus, IdToken>(status, null!).Error(error);
+        return Result.Status<JwtReadStatus, IdToken>(result.Status, null!).Join(result);
+    }
+
+    private IStatusResult<JwtReadStatus, IdToken> Fail(JwtReadStatus status, string error)
+    {
+        return Result.Status<JwtReadStatus, IdToken>(status, null!).Error(error);
     }
 }

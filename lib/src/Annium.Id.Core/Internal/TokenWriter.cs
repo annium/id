@@ -1,11 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IdentityModel.Tokens.Jwt;
 using System.IO;
-using System.Security.Cryptography;
-using Annium.Security.Cryptography;
-using MessagePack;
+using Annium.Identity.Tokens;
+using Annium.Identity.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using SystemClaim = System.Security.Claims.Claim;
 
@@ -13,7 +9,7 @@ namespace Annium.Id.Core.Internal;
 
 internal class TokenWriter : ITokenWriter
 {
-    private readonly RsaSecurityKey _signingKey;
+    private readonly RsaSecurityKey _securityKey;
     private readonly AuthOptions _options;
     private readonly ITimeProvider _timeProvider;
 
@@ -22,44 +18,28 @@ internal class TokenWriter : ITokenWriter
         ITimeProvider timeProvider
     )
     {
-        using (var s = File.OpenRead(options.PrivateKeyFile))
-        {
-            var provider = new RSACryptoServiceProvider();
-            provider.ImportParameters(new KeyReader().ReadRsaKey(s));
-            _signingKey = new RsaSecurityKey(provider);
-        }
-
+        _securityKey = KeyReader.ReadRsaKey(File.ReadAllText(options.PrivateKeyFile));
         _options = options;
         _timeProvider = timeProvider;
     }
 
     public string WriteToken(IdToken token)
     {
-        var packedToken = Convert.ToBase64String(MessagePackSerializer.Serialize(
-            token,
-            MessagePackSerializerOptions.Standard.WithCompression(MessagePackCompression.Lz4BlockArray)
-        ));
-
         var instant = _timeProvider.Now;
-        var now = instant.ToDateTimeUtc();
-        var expires = (instant + _options.AccessTokenLifeTime).ToDateTimeUtc();
+        var packedToken = Serializer.Serialize(token);
 
-        var claims = new List<SystemClaim>
-        {
-            new SystemClaim(Claims.Id, packedToken),
-            new SystemClaim(Claims.IssuedAt, now.ToString(CultureInfo.InvariantCulture)),
-            new SystemClaim(Claims.TokenId, Guid.NewGuid().ToString())
-        };
-
-        var jwt = new JwtSecurityToken(
+        var jwt = JwtWriter.Create(
+            _securityKey,
+            Guid.NewGuid().ToString(),
             Constants.Issuer,
             token.App.Id.ToString(),
-            claims,
-            expires: expires,
-            notBefore: now,
-            signingCredentials: new SigningCredentials(_signingKey, SecurityAlgorithms.RsaSha256)
+            instant,
+            _options.AccessTokenLifeTime,
+            (Claims.Id, packedToken)
         );
 
-        return new JwtSecurityTokenHandler().WriteToken(jwt);
+        var raw = jwt.GetString();
+
+        return raw;
     }
 }

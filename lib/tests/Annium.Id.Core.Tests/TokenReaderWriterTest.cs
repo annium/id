@@ -6,6 +6,7 @@ using System.Text.Json;
 using Annium.Core.DependencyInjection;
 using Annium.Core.Runtime.Time;
 using Annium.Data.Operations;
+using Annium.Identity.Tokens.Jwt;
 using Annium.Testing;
 using NodaTime;
 using Xunit;
@@ -24,7 +25,7 @@ public class TokenReaderWriterTest
         var (status, _) = ReadToken(token, Guid.NewGuid());
 
         // assert
-        status.Is(TokenReadStatus.BadSource);
+        status.Is(JwtReadStatus.BadSource);
     }
 
     [Fact]
@@ -39,7 +40,7 @@ public class TokenReaderWriterTest
         var result = ReadToken(token, appId);
 
         // assert
-        result.Status.Is(TokenReadStatus.Failed);
+        result.Status.Is(JwtReadStatus.Failed);
         result.PlainErrors.Any(x => x.Contains("expired")).IsTrue();
     }
 
@@ -55,7 +56,7 @@ public class TokenReaderWriterTest
         var result = ReadToken(token, Guid.NewGuid());
 
         // assert
-        result.Status.Is(TokenReadStatus.Failed);
+        result.Status.Is(JwtReadStatus.Failed);
         result.PlainErrors.Any(x => x.Contains("audience")).IsTrue();
     }
 
@@ -71,7 +72,7 @@ public class TokenReaderWriterTest
         var (status, result) = ReadToken(token, appId);
 
         // assert
-        status.Is(TokenReadStatus.Ok);
+        status.Is(JwtReadStatus.Ok);
         Serialize(result).Is(Serialize(source));
     }
 
@@ -97,7 +98,7 @@ public class TokenReaderWriterTest
         return writer.WriteToken(token);
     }
 
-    private IStatusResult<TokenReadStatus, IdToken> ReadToken(string token, Guid appId)
+    private IStatusResult<JwtReadStatus, IdToken> ReadToken(string token, Guid appId)
     {
         var container = new ServiceContainer();
         container.AddIdAuthorizationCoreServices(Configure(appId));

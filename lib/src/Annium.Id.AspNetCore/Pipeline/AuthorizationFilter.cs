@@ -1,5 +1,6 @@
 using Annium.Id.AspNetCore.Tools;
 using Annium.Id.Core;
+using Annium.Identity.Tokens.Jwt;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -41,9 +42,9 @@ internal class AuthorizationFilter : IAuthorizationFilter
             ValidateExpiration = _options.ValidateExpiration
         };
         var readResult = _tokenReader.ReadToken(tokenString, tokenReadOptions);
-        if (readResult.Status == TokenReadStatus.BadSource)
+        if (readResult.Status == JwtReadStatus.BadSource)
             return new BadRequestObjectResult(readResult);
-        if (readResult.Status == TokenReadStatus.Failed)
+        if (readResult.Status == JwtReadStatus.Failed)
             return new UnauthorizedObjectResult(readResult);
 
         context.HttpContext.Items[Constants.IdTokenProperty] = readResult.Data;
