@@ -6,10 +6,13 @@ using Server.ViewModels.Requests.CompanyUsers;
 
 namespace Site.Shared.Api.Server.Clients;
 
-public class CompanyUserClient : ClientBase
+public class CompanyUserClient
 {
-    public CompanyUserClient(IHttpRequest request) : base(request)
+    private readonly IHttpRequest _request;
+
+    internal CompanyUserClient(IHttpRequest request)
     {
+        _request = request;
     }
 
     public async Task<IResult> AddUserToCompany(
@@ -17,7 +20,7 @@ public class CompanyUserClient : ClientBase
         Guid userId
     )
     {
-        return await Request.Clone()
+        return await _request
             .Post($"companies/{companyId}/users/{userId}")
             .AsAsync<IResult>();
     }
@@ -28,7 +31,7 @@ public class CompanyUserClient : ClientBase
         Guid roleId
     )
     {
-        return await Request.Clone()
+        return await _request
             .Post($"companies/{companyId}/users/{userId}/roles/{roleId}")
             .AsAsync<IResult>();
     }
@@ -39,7 +42,7 @@ public class CompanyUserClient : ClientBase
         Guid roleId
     )
     {
-        return await Request.Clone()
+        return await _request
             .Delete($"companies/{companyId}/users/{userId}/roles/{roleId}")
             .AsAsync<IResult>();
     }
@@ -51,7 +54,7 @@ public class CompanyUserClient : ClientBase
         AddCompanyClaimToCompanyUserRequestBody body
     )
     {
-        return await Request.Clone()
+        return await _request
             .Post($"companies/{companyId}/users/{userId}/claims/{claimId}")
             .JsonContent(body)
             .AsAsync<IResult>();
@@ -63,7 +66,7 @@ public class CompanyUserClient : ClientBase
         Guid claimId
     )
     {
-        return await Request.Clone()
+        return await _request
             .Delete($"companies/{companyId}/users/{userId}/claims/{claimId}")
             .AsAsync<IResult>();
     }
@@ -73,7 +76,7 @@ public class CompanyUserClient : ClientBase
         Guid userId
     )
     {
-        return await Request.Clone()
+        return await _request
             .Delete($"companies/{companyId}/users/{userId}")
             .AsAsync<IResult>();
     }

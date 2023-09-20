@@ -7,17 +7,20 @@ using Server.ViewModels.Responses.Roles;
 
 namespace Server.Host.TestClient.Clients;
 
-public class RoleClient : ClientBase
+public class RoleClient
 {
-    public RoleClient(IHttpRequest request) : base(request)
+    private readonly IHttpRequest _request;
+
+    internal RoleClient(IHttpRequest request)
     {
+        _request = request;
     }
 
     public async Task<IHttpResponse<IResult<Guid>>> CreateRole(
         CreateRoleRequest body
     )
     {
-        return await Request.Clone()
+        return await _request
             .Post("roles")
             .JsonContent(body)
             .AsResponseAsync<IResult<Guid>>();
@@ -27,7 +30,7 @@ public class RoleClient : ClientBase
         Guid appId
     )
     {
-        return await Request.Clone()
+        return await _request
             .Get("roles")
             .Param("appId", appId)
             .AsResponseAsync<IResult<RoleResponse[]>>();
@@ -38,7 +41,7 @@ public class RoleClient : ClientBase
         UpdateRoleRequestBody body
     )
     {
-        return await Request.Clone()
+        return await _request
             .Put($"roles/{roleId}")
             .JsonContent(body)
             .AsResponseAsync<IResult>();
@@ -50,7 +53,7 @@ public class RoleClient : ClientBase
         AddClaimToRoleRequestBody body
     )
     {
-        return await Request.Clone()
+        return await _request
             .Post($"roles/{roleId}/claims/{claimId}")
             .JsonContent(body)
             .AsResponseAsync<IResult>();
@@ -61,7 +64,7 @@ public class RoleClient : ClientBase
         Guid claimId
     )
     {
-        return await Request.Clone()
+        return await _request
             .Delete($"roles/{roleId}/claims/{claimId}")
             .AsResponseAsync<IResult>();
     }
@@ -70,7 +73,7 @@ public class RoleClient : ClientBase
         Guid roleId
     )
     {
-        return await Request.Clone()
+        return await _request
             .Delete($"roles/{roleId}")
             .AsResponseAsync<IResult>();
     }

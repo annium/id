@@ -14,10 +14,10 @@
 @inject IValidator<Blog> Validator
 
 Name:
-<FormField TValue="string" state="@_state.At(x => x.Name)">
+<FormField TValue="string" State="@_state.At(x => x.Name)">
     <TextField TValue="string" />
 </FormField>
-<CheckboxField state="@_state.At(x => x.Messages).At(x => x[0]).At(x => x.IsRead)">
+<CheckboxField State="@_state.At(x => x.Messages).At(x => x[0]).At(x => x.IsRead)">
     is message read?
 </CheckboxField>
 

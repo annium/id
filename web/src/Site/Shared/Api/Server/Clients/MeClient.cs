@@ -8,17 +8,20 @@ using Server.ViewModels.Responses.Me;
 
 namespace Site.Shared.Api.Server.Clients;
 
-public class MeClient : ClientBase
+public class MeClient
 {
-    public MeClient(IHttpRequest request) : base(request)
+    private readonly IHttpRequest _request;
+
+    internal MeClient(IHttpRequest request)
     {
+        _request = request;
     }
 
     public async Task<IResult> RegisterMe(
         RegisterMeRequest body
     )
     {
-        return await Request.Clone()
+        return await _request
             .Post("me")
             .JsonContent(body)
             .AsAsync<IResult>();
@@ -29,7 +32,7 @@ public class MeClient : ClientBase
         ConfirmMyEmailRequestBody body
     )
     {
-        return await Request.Clone()
+        return await _request
             .Post($"me/{appId}/confirm-email")
             .JsonContent(body)
             .AsAsync<IResult<TokensResponse>>();
@@ -40,7 +43,7 @@ public class MeClient : ClientBase
         RestoreMyAccessRequestBody body
     )
     {
-        return await Request.Clone()
+        return await _request
             .Post($"me/{appId}/restore-access")
             .JsonContent(body)
             .AsAsync<IResult>();
@@ -49,7 +52,7 @@ public class MeClient : ClientBase
     public async Task<IResult<MeResponse>> GetMe(
     )
     {
-        return await Request.Clone()
+        return await _request
             .Get("me")
             .AsAsync<IResult<MeResponse>>();
     }
@@ -57,7 +60,7 @@ public class MeClient : ClientBase
     public async Task<IResult<IdTokenResponse>> GetMyToken(
     )
     {
-        return await Request.Clone()
+        return await _request
             .Get("me/token")
             .AsAsync<IResult<IdTokenResponse>>();
     }
@@ -66,7 +69,7 @@ public class MeClient : ClientBase
         UpdateMyProfileRequest body
     )
     {
-        return await Request.Clone()
+        return await _request
             .Put("me/profile")
             .JsonContent(body)
             .AsAsync<IResult>();
@@ -76,7 +79,7 @@ public class MeClient : ClientBase
         UpdateMyPasswordRequest body
     )
     {
-        return await Request.Clone()
+        return await _request
             .Put("me/password")
             .JsonContent(body)
             .AsAsync<IResult>();
@@ -85,7 +88,7 @@ public class MeClient : ClientBase
     public async Task<IResult> UnregisterMe(
     )
     {
-        return await Request.Clone()
+        return await _request
             .Delete("me")
             .AsAsync<IResult>();
     }

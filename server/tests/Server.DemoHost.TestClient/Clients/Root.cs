@@ -4,10 +4,11 @@ namespace Server.DemoHost.TestClient.Clients;
 
 public class Root
 {
-    public IndexClient Index { get; }
+    public IndexClient Index => new (_request);
+    private readonly IHttpRequest _request;
 
-    public Root(IHttpRequest request)
+    internal Root(IHttpRequest request)
     {
-        Index = new IndexClient(request);
+        _request = request;
     }
 }

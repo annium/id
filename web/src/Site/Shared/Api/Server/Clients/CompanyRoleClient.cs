@@ -7,17 +7,20 @@ using Server.ViewModels.Responses.CompanyRoles;
 
 namespace Site.Shared.Api.Server.Clients;
 
-public class CompanyRoleClient : ClientBase
+public class CompanyRoleClient
 {
-    public CompanyRoleClient(IHttpRequest request) : base(request)
+    private readonly IHttpRequest _request;
+
+    internal CompanyRoleClient(IHttpRequest request)
     {
+        _request = request;
     }
 
     public async Task<IResult<Guid>> CreateRole(
         CreateCompanyRoleRequest body
     )
     {
-        return await Request.Clone()
+        return await _request
             .Post("companies/roles")
             .JsonContent(body)
             .AsAsync<IResult<Guid>>();
@@ -27,7 +30,7 @@ public class CompanyRoleClient : ClientBase
         Guid appId
     )
     {
-        return await Request.Clone()
+        return await _request
             .Get("companies/roles")
             .Param("appId", appId)
             .AsAsync<IResult<CompanyRoleResponse[]>>();
@@ -38,7 +41,7 @@ public class CompanyRoleClient : ClientBase
         UpdateCompanyRoleRequestBody body
     )
     {
-        return await Request.Clone()
+        return await _request
             .Put($"companies/roles/{roleId}")
             .JsonContent(body)
             .AsAsync<IResult>();
@@ -50,7 +53,7 @@ public class CompanyRoleClient : ClientBase
         AddCompanyClaimToCompanyRoleRequestBody body
     )
     {
-        return await Request.Clone()
+        return await _request
             .Post($"companies/roles/{roleId}/claims/{claimId}")
             .JsonContent(body)
             .AsAsync<IResult>();
@@ -61,7 +64,7 @@ public class CompanyRoleClient : ClientBase
         Guid claimId
     )
     {
-        return await Request.Clone()
+        return await _request
             .Delete($"companies/roles/{roleId}/claims/{claimId}")
             .AsAsync<IResult>();
     }
@@ -70,7 +73,7 @@ public class CompanyRoleClient : ClientBase
         Guid roleId
     )
     {
-        return await Request.Clone()
+        return await _request
             .Delete($"companies/roles/{roleId}")
             .AsAsync<IResult>();
     }

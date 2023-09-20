@@ -5,16 +5,19 @@ using Server.DemoHost.ViewModels;
 
 namespace Server.DemoHost.TestClient.Clients;
 
-public class IndexClient : ClientBase
+public class IndexClient
 {
-    public IndexClient(IHttpRequest request) : base(request)
+    private readonly IHttpRequest _request;
+
+    internal IndexClient(IHttpRequest request)
     {
+        _request = request;
     }
 
     public async Task<IHttpResponse<IdTokenResponse>> Base(
     )
     {
-        return await Request.Clone()
+        return await _request
             .Get("base")
             .AsResponseAsync<IdTokenResponse>();
     }
@@ -22,7 +25,7 @@ public class IndexClient : ClientBase
     public async Task<IHttpResponse<IdTokenResponse>> IsAdmin(
     )
     {
-        return await Request.Clone()
+        return await _request
             .Get("isAdmin")
             .AsResponseAsync<IdTokenResponse>();
     }
@@ -30,7 +33,7 @@ public class IndexClient : ClientBase
     public async Task<IHttpResponse<IdTokenResponse>> HasPaymentsAccess(
     )
     {
-        return await Request.Clone()
+        return await _request
             .Get("hasPaymentsAccess")
             .AsResponseAsync<IdTokenResponse>();
     }
@@ -39,7 +42,7 @@ public class IndexClient : ClientBase
         Guid companyId
     )
     {
-        return await Request.Clone()
+        return await _request
             .Get($"hasCompanyPaymentsAccess/{companyId}")
             .AsResponseAsync<IdTokenResponse>();
     }

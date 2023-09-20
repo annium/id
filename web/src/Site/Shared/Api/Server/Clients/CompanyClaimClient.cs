@@ -7,17 +7,20 @@ using Server.ViewModels.Responses.CompanyClaims;
 
 namespace Site.Shared.Api.Server.Clients;
 
-public class CompanyClaimClient : ClientBase
+public class CompanyClaimClient
 {
-    public CompanyClaimClient(IHttpRequest request) : base(request)
+    private readonly IHttpRequest _request;
+
+    internal CompanyClaimClient(IHttpRequest request)
     {
+        _request = request;
     }
 
     public async Task<IResult<Guid>> CreateCompanyClaim(
         CreateCompanyClaimRequest body
     )
     {
-        return await Request.Clone()
+        return await _request
             .Post("companies/claims")
             .JsonContent(body)
             .AsAsync<IResult<Guid>>();
@@ -27,7 +30,7 @@ public class CompanyClaimClient : ClientBase
         Guid appId
     )
     {
-        return await Request.Clone()
+        return await _request
             .Get("companies/claims")
             .Param("appId", appId)
             .AsAsync<IResult<CompanyClaimResponse[]>>();
@@ -38,7 +41,7 @@ public class CompanyClaimClient : ClientBase
         UpdateCompanyClaimRequestBody body
     )
     {
-        return await Request.Clone()
+        return await _request
             .Put($"companies/claims/{claimId}")
             .JsonContent(body)
             .AsAsync<IResult>();
@@ -48,7 +51,7 @@ public class CompanyClaimClient : ClientBase
         Guid claimId
     )
     {
-        return await Request.Clone()
+        return await _request
             .Delete($"companies/claims/{claimId}")
             .AsAsync<IResult>();
     }

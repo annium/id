@@ -4,28 +4,20 @@ namespace Site.Shared.Api.Server.Clients;
 
 public class Root
 {
-    public AppClient App { get; }
-    public ClaimClient Claim { get; }
-    public CompanyClaimClient CompanyClaim { get; }
-    public CompanyClient Company { get; }
-    public CompanyRoleClient CompanyRole { get; }
-    public CompanyUserClient CompanyUser { get; }
-    public LoginClient Login { get; }
-    public MeClient Me { get; }
-    public RoleClient Role { get; }
-    public UserClient User { get; }
+    public AppClient App => new (_request);
+    public ClaimClient Claim => new (_request);
+    public CompanyClaimClient CompanyClaim => new (_request);
+    public CompanyClient Company => new (_request);
+    public CompanyRoleClient CompanyRole => new (_request);
+    public CompanyUserClient CompanyUser => new (_request);
+    public LoginClient Login => new (_request);
+    public MeClient Me => new (_request);
+    public RoleClient Role => new (_request);
+    public UserClient User => new (_request);
+    private readonly IHttpRequest _request;
 
-    public Root(IHttpRequest request)
+    internal Root(IHttpRequest request)
     {
-        App = new AppClient(request);
-        Claim = new ClaimClient(request);
-        CompanyClaim = new CompanyClaimClient(request);
-        Company = new CompanyClient(request);
-        CompanyRole = new CompanyRoleClient(request);
-        CompanyUser = new CompanyUserClient(request);
-        Login = new LoginClient(request);
-        Me = new MeClient(request);
-        Role = new RoleClient(request);
-        User = new UserClient(request);
+        _request = request;
     }
 }

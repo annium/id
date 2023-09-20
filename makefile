@@ -61,7 +61,7 @@ start-server:
 	$(call start-dotnet,server/src,Server.Host,9501)
 
 start-demo:
-	$(call start-dotnet,server/test,Server.DemoHost,9502)
+	$(call start-dotnet,server/tests,Server.DemoHost,9502)
 
 stop: stop-server stop-demo
 
@@ -81,14 +81,14 @@ gwc-server:
 gtc-server:
 	xrest cs gen \
 		-s http://localhost:5000 \
-		-o server/test/Server.Host.TestClient \
+		-o server/tests/Server.Host.TestClient \
 		-ns Server.Host.TestClient \
 		-t
 
 gtc-demo:
 	xrest cs gen \
 		-s http://localhost:5000 \
-		-o server/test/Server.DemoHost.TestClient \
+		-o server/tests/Server.DemoHost.TestClient \
 		-ns Server.DemoHost.TestClient \
 		-t
 

@@ -8,17 +8,20 @@ using Server.ViewModels.Responses.Users;
 
 namespace Site.Shared.Api.Server.Clients;
 
-public class CompanyClient : ClientBase
+public class CompanyClient
 {
-    public CompanyClient(IHttpRequest request) : base(request)
+    private readonly IHttpRequest _request;
+
+    internal CompanyClient(IHttpRequest request)
     {
+        _request = request;
     }
 
     public async Task<IResult<Guid>> RegisterCompany(
         RegisterCompanyRequest body
     )
     {
-        return await Request.Clone()
+        return await _request
             .Post("companies")
             .JsonContent(body)
             .AsAsync<IResult<Guid>>();
@@ -28,7 +31,7 @@ public class CompanyClient : ClientBase
         string query
     )
     {
-        return await Request.Clone()
+        return await _request
             .Get("companies")
             .Param("query", query)
             .AsAsync<IResult<CompanyResponse[]>>();
@@ -37,7 +40,7 @@ public class CompanyClient : ClientBase
     public async Task<IResult<CompanyResponse[]>> ListMyCompanies(
     )
     {
-        return await Request.Clone()
+        return await _request
             .Get("companies/my")
             .AsAsync<IResult<CompanyResponse[]>>();
     }
@@ -46,7 +49,7 @@ public class CompanyClient : ClientBase
         Guid companyId
     )
     {
-        return await Request.Clone()
+        return await _request
             .Get($"companies/{companyId}")
             .AsAsync<IResult<CompanyResponse>>();
     }
@@ -55,7 +58,7 @@ public class CompanyClient : ClientBase
         Guid companyId
     )
     {
-        return await Request.Clone()
+        return await _request
             .Get($"companies/{companyId}/users")
             .AsAsync<IResult<UserResponse[]>>();
     }
@@ -65,7 +68,7 @@ public class CompanyClient : ClientBase
         UpdateCompanyRequestBody body
     )
     {
-        return await Request.Clone()
+        return await _request
             .Put($"companies/{companyId}")
             .JsonContent(body)
             .AsAsync<IResult>();
@@ -76,7 +79,7 @@ public class CompanyClient : ClientBase
         Guid userId
     )
     {
-        return await Request.Clone()
+        return await _request
             .Put($"companies/{companyId}/owner/{userId}")
             .AsAsync<IResult>();
     }
@@ -85,7 +88,7 @@ public class CompanyClient : ClientBase
         Guid companyId
     )
     {
-        return await Request.Clone()
+        return await _request
             .Delete($"companies/{companyId}")
             .AsAsync<IResult>();
     }

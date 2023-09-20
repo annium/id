@@ -7,10 +7,13 @@ using Server.ViewModels.Responses.Login;
 
 namespace Server.Host.TestClient.Clients;
 
-public class LoginClient : ClientBase
+public class LoginClient
 {
-    public LoginClient(IHttpRequest request) : base(request)
+    private readonly IHttpRequest _request;
+
+    internal LoginClient(IHttpRequest request)
     {
+        _request = request;
     }
 
     public async Task<IHttpResponse<IResult<TokensResponse>>> LogIn(
@@ -18,7 +21,7 @@ public class LoginClient : ClientBase
         LogInRequestBody body
     )
     {
-        return await Request.Clone()
+        return await _request
             .Post($"me/{appId}/login")
             .JsonContent(body)
             .AsResponseAsync<IResult<TokensResponse>>();
@@ -29,7 +32,7 @@ public class LoginClient : ClientBase
         Guid refreshToken
     )
     {
-        return await Request.Clone()
+        return await _request
             .Put($"me/{appId}/token")
             .Param("refreshToken", refreshToken)
             .AsResponseAsync<IResult<TokensResponse>>();
@@ -39,7 +42,7 @@ public class LoginClient : ClientBase
         Guid appId
     )
     {
-        return await Request.Clone()
+        return await _request
             .Delete($"me/{appId}/logout")
             .AsResponseAsync<IResult>();
     }

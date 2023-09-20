@@ -7,10 +7,13 @@ using Server.ViewModels.Responses.Users;
 
 namespace Site.Shared.Api.Server.Clients;
 
-public class UserClient : ClientBase
+public class UserClient
 {
-    public UserClient(IHttpRequest request) : base(request)
+    private readonly IHttpRequest _request;
+
+    internal UserClient(IHttpRequest request)
     {
+        _request = request;
     }
 
     public async Task<IResult<UserResponse[]>> FindUsers(
@@ -18,7 +21,7 @@ public class UserClient : ClientBase
         int limit
     )
     {
-        return await Request.Clone()
+        return await _request
             .Get("users")
             .Param("query", query)
             .Param("limit", limit)
@@ -29,7 +32,7 @@ public class UserClient : ClientBase
         Guid userId
     )
     {
-        return await Request.Clone()
+        return await _request
             .Get($"users/{userId}")
             .AsAsync<IResult<UserResponse>>();
     }
@@ -39,7 +42,7 @@ public class UserClient : ClientBase
         Guid roleId
     )
     {
-        return await Request.Clone()
+        return await _request
             .Post($"users/{userId}/roles/{roleId}")
             .AsAsync<IResult>();
     }
@@ -49,7 +52,7 @@ public class UserClient : ClientBase
         Guid roleId
     )
     {
-        return await Request.Clone()
+        return await _request
             .Delete($"users/{userId}/roles/{roleId}")
             .AsAsync<IResult>();
     }
@@ -60,7 +63,7 @@ public class UserClient : ClientBase
         AddClaimToUserRequestBody body
     )
     {
-        return await Request.Clone()
+        return await _request
             .Post($"users/{userId}/claims/{claimId}")
             .JsonContent(body)
             .AsAsync<IResult>();
@@ -71,7 +74,7 @@ public class UserClient : ClientBase
         Guid claimId
     )
     {
-        return await Request.Clone()
+        return await _request
             .Delete($"users/{userId}/claims/{claimId}")
             .AsAsync<IResult>();
     }

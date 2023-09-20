@@ -7,10 +7,13 @@ using Server.ViewModels.Responses.Users;
 
 namespace Server.Host.TestClient.Clients;
 
-public class UserClient : ClientBase
+public class UserClient
 {
-    public UserClient(IHttpRequest request) : base(request)
+    private readonly IHttpRequest _request;
+
+    internal UserClient(IHttpRequest request)
     {
+        _request = request;
     }
 
     public async Task<IHttpResponse<IResult<UserResponse[]>>> FindUsers(
@@ -18,7 +21,7 @@ public class UserClient : ClientBase
         int limit
     )
     {
-        return await Request.Clone()
+        return await _request
             .Get("users")
             .Param("query", query)
             .Param("limit", limit)
@@ -29,7 +32,7 @@ public class UserClient : ClientBase
         Guid userId
     )
     {
-        return await Request.Clone()
+        return await _request
             .Get($"users/{userId}")
             .AsResponseAsync<IResult<UserResponse>>();
     }
@@ -39,7 +42,7 @@ public class UserClient : ClientBase
         Guid roleId
     )
     {
-        return await Request.Clone()
+        return await _request
             .Post($"users/{userId}/roles/{roleId}")
             .AsResponseAsync<IResult>();
     }
@@ -49,7 +52,7 @@ public class UserClient : ClientBase
         Guid roleId
     )
     {
-        return await Request.Clone()
+        return await _request
             .Delete($"users/{userId}/roles/{roleId}")
             .AsResponseAsync<IResult>();
     }
@@ -60,7 +63,7 @@ public class UserClient : ClientBase
         AddClaimToUserRequestBody body
     )
     {
-        return await Request.Clone()
+        return await _request
             .Post($"users/{userId}/claims/{claimId}")
             .JsonContent(body)
             .AsResponseAsync<IResult>();
@@ -71,7 +74,7 @@ public class UserClient : ClientBase
         Guid claimId
     )
     {
-        return await Request.Clone()
+        return await _request
             .Delete($"users/{userId}/claims/{claimId}")
             .AsResponseAsync<IResult>();
     }

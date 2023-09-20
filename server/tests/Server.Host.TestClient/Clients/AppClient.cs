@@ -7,17 +7,20 @@ using Server.ViewModels.Responses.Apps;
 
 namespace Server.Host.TestClient.Clients;
 
-public class AppClient : ClientBase
+public class AppClient
 {
-    public AppClient(IHttpRequest request) : base(request)
+    private readonly IHttpRequest _request;
+
+    internal AppClient(IHttpRequest request)
     {
+        _request = request;
     }
 
     public async Task<IHttpResponse<IResult<Guid>>> CreateApp(
         CreateAppRequest body
     )
     {
-        return await Request.Clone()
+        return await _request
             .Post("apps")
             .JsonContent(body)
             .AsResponseAsync<IResult<Guid>>();
@@ -27,7 +30,7 @@ public class AppClient : ClientBase
         string query
     )
     {
-        return await Request.Clone()
+        return await _request
             .Get("apps")
             .Param("query", query)
             .AsResponseAsync<IResult<AppResponse[]>>();
@@ -36,7 +39,7 @@ public class AppClient : ClientBase
     public async Task<IHttpResponse<IResult<AppResponse[]>>> ListMyApps(
     )
     {
-        return await Request.Clone()
+        return await _request
             .Get("apps/my")
             .AsResponseAsync<IResult<AppResponse[]>>();
     }
@@ -45,7 +48,7 @@ public class AppClient : ClientBase
         Guid appId
     )
     {
-        return await Request.Clone()
+        return await _request
             .Get($"apps/{appId}")
             .AsResponseAsync<IResult<AppResponse>>();
     }
@@ -54,7 +57,7 @@ public class AppClient : ClientBase
         Guid appId
     )
     {
-        return await Request.Clone()
+        return await _request
             .Get($"apps/{appId}/token")
             .AsResponseAsync<IResult<Guid>>();
     }
@@ -64,7 +67,7 @@ public class AppClient : ClientBase
         UpdateAppRequestBody body
     )
     {
-        return await Request.Clone()
+        return await _request
             .Put($"apps/{appId}")
             .JsonContent(body)
             .AsResponseAsync<IResult>();
@@ -75,7 +78,7 @@ public class AppClient : ClientBase
         Guid newOwnerId
     )
     {
-        return await Request.Clone()
+        return await _request
             .Put($"apps/{appId}/owner/{newOwnerId}")
             .AsResponseAsync<IResult>();
     }
@@ -84,7 +87,7 @@ public class AppClient : ClientBase
         Guid appId
     )
     {
-        return await Request.Clone()
+        return await _request
             .Put($"apps/{appId}/token")
             .AsResponseAsync<IResult<Guid>>();
     }
@@ -93,7 +96,7 @@ public class AppClient : ClientBase
         Guid appId
     )
     {
-        return await Request.Clone()
+        return await _request
             .Delete($"apps/{appId}")
             .AsResponseAsync<IResult>();
     }

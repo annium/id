@@ -7,17 +7,20 @@ using Server.ViewModels.Responses.Claims;
 
 namespace Server.Host.TestClient.Clients;
 
-public class ClaimClient : ClientBase
+public class ClaimClient
 {
-    public ClaimClient(IHttpRequest request) : base(request)
+    private readonly IHttpRequest _request;
+
+    internal ClaimClient(IHttpRequest request)
     {
+        _request = request;
     }
 
     public async Task<IHttpResponse<IResult<Guid>>> CreateClaim(
         CreateClaimRequest body
     )
     {
-        return await Request.Clone()
+        return await _request
             .Post("claims")
             .JsonContent(body)
             .AsResponseAsync<IResult<Guid>>();
@@ -27,7 +30,7 @@ public class ClaimClient : ClientBase
         Guid appId
     )
     {
-        return await Request.Clone()
+        return await _request
             .Get("claims")
             .Param("appId", appId)
             .AsResponseAsync<IResult<ClaimResponse[]>>();
@@ -38,7 +41,7 @@ public class ClaimClient : ClientBase
         UpdateClaimRequestBody body
     )
     {
-        return await Request.Clone()
+        return await _request
             .Put($"claims/{claimId}")
             .JsonContent(body)
             .AsResponseAsync<IResult>();
@@ -48,7 +51,7 @@ public class ClaimClient : ClientBase
         Guid claimId
     )
     {
-        return await Request.Clone()
+        return await _request
             .Delete($"claims/{claimId}")
             .AsResponseAsync<IResult>();
     }
