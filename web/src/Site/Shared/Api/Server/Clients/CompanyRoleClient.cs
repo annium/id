@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Annium.Data.Operations;
 using Annium.Net.Http;
@@ -17,64 +18,76 @@ public class CompanyRoleClient
     }
 
     public async Task<IResult<Guid>> CreateRole(
-        CreateCompanyRoleRequest body
+        CreateCompanyRoleRequest body,
+        IResult<Guid> defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Post("companies/roles")
             .JsonContent(body)
-            .AsAsync<IResult<Guid>>();
+            .AsAsync(defaultValue, ct);
     }
 
     public async Task<IResult<CompanyRoleResponse[]>> ListRoles(
-        Guid appId
+        Guid appId,
+        IResult<CompanyRoleResponse[]> defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Get("companies/roles")
             .Param("appId", appId)
-            .AsAsync<IResult<CompanyRoleResponse[]>>();
+            .AsAsync(defaultValue, ct);
     }
 
     public async Task<IResult> UpdateRole(
         Guid roleId,
-        UpdateCompanyRoleRequestBody body
+        UpdateCompanyRoleRequestBody body,
+        IResult defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Put($"companies/roles/{roleId}")
             .JsonContent(body)
-            .AsAsync<IResult>();
+            .AsAsync(defaultValue, ct);
     }
 
     public async Task<IResult> AddClaimToRole(
         Guid roleId,
         Guid claimId,
-        AddCompanyClaimToCompanyRoleRequestBody body
+        AddCompanyClaimToCompanyRoleRequestBody body,
+        IResult defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Post($"companies/roles/{roleId}/claims/{claimId}")
             .JsonContent(body)
-            .AsAsync<IResult>();
+            .AsAsync(defaultValue, ct);
     }
 
     public async Task<IResult> DeleteClaimFromRole(
         Guid roleId,
-        Guid claimId
+        Guid claimId,
+        IResult defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Delete($"companies/roles/{roleId}/claims/{claimId}")
-            .AsAsync<IResult>();
+            .AsAsync(defaultValue, ct);
     }
 
     public async Task<IResult> DeleteRole(
-        Guid roleId
+        Guid roleId,
+        IResult defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Delete($"companies/roles/{roleId}")
-            .AsAsync<IResult>();
+            .AsAsync(defaultValue, ct);
     }
 }

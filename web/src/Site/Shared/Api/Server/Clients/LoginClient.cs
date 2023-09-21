@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Annium.Data.Operations;
 using Annium.Net.Http;
@@ -18,32 +19,38 @@ public class LoginClient
 
     public async Task<IResult<TokensResponse>> LogIn(
         Guid appId,
-        LogInRequestBody body
+        LogInRequestBody body,
+        IResult<TokensResponse> defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Post($"me/{appId}/login")
             .JsonContent(body)
-            .AsAsync<IResult<TokensResponse>>();
+            .AsAsync(defaultValue, ct);
     }
 
     public async Task<IResult<TokensResponse>> UpdateToken(
         Guid appId,
-        Guid refreshToken
+        Guid refreshToken,
+        IResult<TokensResponse> defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Put($"me/{appId}/token")
             .Param("refreshToken", refreshToken)
-            .AsAsync<IResult<TokensResponse>>();
+            .AsAsync(defaultValue, ct);
     }
 
     public async Task<IResult> LogOut(
-        Guid appId
+        Guid appId,
+        IResult defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Delete($"me/{appId}/logout")
-            .AsAsync<IResult>();
+            .AsAsync(defaultValue, ct);
     }
 }

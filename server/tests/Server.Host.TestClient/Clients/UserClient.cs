@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Annium.Data.Operations;
 using Annium.Net.Http;
@@ -18,64 +19,76 @@ public class UserClient
 
     public async Task<IHttpResponse<IResult<UserResponse[]>>> FindUsers(
         string query,
-        int limit
+        int limit,
+        IResult<UserResponse[]> defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Get("users")
             .Param("query", query)
             .Param("limit", limit)
-            .AsResponseAsync<IResult<UserResponse[]>>();
+            .AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IResult<UserResponse>>> GetUser(
-        Guid userId
+        Guid userId,
+        IResult<UserResponse> defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Get($"users/{userId}")
-            .AsResponseAsync<IResult<UserResponse>>();
+            .AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IResult>> AddRoleToUser(
         Guid userId,
-        Guid roleId
+        Guid roleId,
+        IResult defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Post($"users/{userId}/roles/{roleId}")
-            .AsResponseAsync<IResult>();
+            .AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IResult>> DeleteRoleFromUser(
         Guid userId,
-        Guid roleId
+        Guid roleId,
+        IResult defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Delete($"users/{userId}/roles/{roleId}")
-            .AsResponseAsync<IResult>();
+            .AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IResult>> AddClaimToUser(
         Guid userId,
         Guid claimId,
-        AddClaimToUserRequestBody body
+        AddClaimToUserRequestBody body,
+        IResult defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Post($"users/{userId}/claims/{claimId}")
             .JsonContent(body)
-            .AsResponseAsync<IResult>();
+            .AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IResult>> DeleteClaimFromUser(
         Guid userId,
-        Guid claimId
+        Guid claimId,
+        IResult defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Delete($"users/{userId}/claims/{claimId}")
-            .AsResponseAsync<IResult>();
+            .AsResponseAsync(defaultValue, ct);
     }
 }

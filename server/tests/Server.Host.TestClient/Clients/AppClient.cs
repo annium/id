@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Annium.Data.Operations;
 using Annium.Net.Http;
@@ -17,87 +18,105 @@ public class AppClient
     }
 
     public async Task<IHttpResponse<IResult<Guid>>> CreateApp(
-        CreateAppRequest body
+        CreateAppRequest body,
+        IResult<Guid> defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Post("apps")
             .JsonContent(body)
-            .AsResponseAsync<IResult<Guid>>();
+            .AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IResult<AppResponse[]>>> FindApps(
-        string query
+        string query,
+        IResult<AppResponse[]> defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Get("apps")
             .Param("query", query)
-            .AsResponseAsync<IResult<AppResponse[]>>();
+            .AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IResult<AppResponse[]>>> ListMyApps(
+        IResult<AppResponse[]> defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Get("apps/my")
-            .AsResponseAsync<IResult<AppResponse[]>>();
+            .AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IResult<AppResponse>>> GetApp(
-        Guid appId
+        Guid appId,
+        IResult<AppResponse> defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Get($"apps/{appId}")
-            .AsResponseAsync<IResult<AppResponse>>();
+            .AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IResult<Guid>>> GetAppApiToken(
-        Guid appId
+        Guid appId,
+        IResult<Guid> defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Get($"apps/{appId}/token")
-            .AsResponseAsync<IResult<Guid>>();
+            .AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IResult>> UpdateApp(
         Guid appId,
-        UpdateAppRequestBody body
+        UpdateAppRequestBody body,
+        IResult defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Put($"apps/{appId}")
             .JsonContent(body)
-            .AsResponseAsync<IResult>();
+            .AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IResult>> SetAppOwner(
         Guid appId,
-        Guid newOwnerId
+        Guid newOwnerId,
+        IResult defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Put($"apps/{appId}/owner/{newOwnerId}")
-            .AsResponseAsync<IResult>();
+            .AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IResult<Guid>>> UpdateAppApiToken(
-        Guid appId
+        Guid appId,
+        IResult<Guid> defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Put($"apps/{appId}/token")
-            .AsResponseAsync<IResult<Guid>>();
+            .AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IResult>> DeleteApp(
-        Guid appId
+        Guid appId,
+        IResult defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Delete($"apps/{appId}")
-            .AsResponseAsync<IResult>();
+            .AsResponseAsync(defaultValue, ct);
     }
 }

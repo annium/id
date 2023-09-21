@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Annium.Data.Operations;
 using Annium.Net.Http;
@@ -17,42 +18,50 @@ public class ClaimClient
     }
 
     public async Task<IResult<Guid>> CreateClaim(
-        CreateClaimRequest body
+        CreateClaimRequest body,
+        IResult<Guid> defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Post("claims")
             .JsonContent(body)
-            .AsAsync<IResult<Guid>>();
+            .AsAsync(defaultValue, ct);
     }
 
     public async Task<IResult<ClaimResponse[]>> ListClaims(
-        Guid appId
+        Guid appId,
+        IResult<ClaimResponse[]> defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Get("claims")
             .Param("appId", appId)
-            .AsAsync<IResult<ClaimResponse[]>>();
+            .AsAsync(defaultValue, ct);
     }
 
     public async Task<IResult> UpdateClaim(
         Guid claimId,
-        UpdateClaimRequestBody body
+        UpdateClaimRequestBody body,
+        IResult defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Put($"claims/{claimId}")
             .JsonContent(body)
-            .AsAsync<IResult>();
+            .AsAsync(defaultValue, ct);
     }
 
     public async Task<IResult> DeleteClaim(
-        Guid claimId
+        Guid claimId,
+        IResult defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Delete($"claims/{claimId}")
-            .AsAsync<IResult>();
+            .AsAsync(defaultValue, ct);
     }
 }

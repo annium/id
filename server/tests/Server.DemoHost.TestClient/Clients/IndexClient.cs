@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Annium.Net.Http;
 using Server.DemoHost.ViewModels;
@@ -15,35 +16,43 @@ public class IndexClient
     }
 
     public async Task<IHttpResponse<IdTokenResponse>> Base(
+        IdTokenResponse defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Get("base")
-            .AsResponseAsync<IdTokenResponse>();
+            .AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IdTokenResponse>> IsAdmin(
+        IdTokenResponse defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Get("isAdmin")
-            .AsResponseAsync<IdTokenResponse>();
+            .AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IdTokenResponse>> HasPaymentsAccess(
+        IdTokenResponse defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Get("hasPaymentsAccess")
-            .AsResponseAsync<IdTokenResponse>();
+            .AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IdTokenResponse>> HasCompanyPaymentsAccess(
-        Guid companyId
+        Guid companyId,
+        IdTokenResponse defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Get($"hasCompanyPaymentsAccess/{companyId}")
-            .AsResponseAsync<IdTokenResponse>();
+            .AsResponseAsync(defaultValue, ct);
     }
 }

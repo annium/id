@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Annium.Data.Operations;
 using Annium.Net.Http;
@@ -17,64 +18,76 @@ public class CompanyRoleClient
     }
 
     public async Task<IHttpResponse<IResult<Guid>>> CreateRole(
-        CreateCompanyRoleRequest body
+        CreateCompanyRoleRequest body,
+        IResult<Guid> defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Post("companies/roles")
             .JsonContent(body)
-            .AsResponseAsync<IResult<Guid>>();
+            .AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IResult<CompanyRoleResponse[]>>> ListRoles(
-        Guid appId
+        Guid appId,
+        IResult<CompanyRoleResponse[]> defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Get("companies/roles")
             .Param("appId", appId)
-            .AsResponseAsync<IResult<CompanyRoleResponse[]>>();
+            .AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IResult>> UpdateRole(
         Guid roleId,
-        UpdateCompanyRoleRequestBody body
+        UpdateCompanyRoleRequestBody body,
+        IResult defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Put($"companies/roles/{roleId}")
             .JsonContent(body)
-            .AsResponseAsync<IResult>();
+            .AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IResult>> AddClaimToRole(
         Guid roleId,
         Guid claimId,
-        AddCompanyClaimToCompanyRoleRequestBody body
+        AddCompanyClaimToCompanyRoleRequestBody body,
+        IResult defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Post($"companies/roles/{roleId}/claims/{claimId}")
             .JsonContent(body)
-            .AsResponseAsync<IResult>();
+            .AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IResult>> DeleteClaimFromRole(
         Guid roleId,
-        Guid claimId
+        Guid claimId,
+        IResult defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Delete($"companies/roles/{roleId}/claims/{claimId}")
-            .AsResponseAsync<IResult>();
+            .AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IResult>> DeleteRole(
-        Guid roleId
+        Guid roleId,
+        IResult defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Delete($"companies/roles/{roleId}")
-            .AsResponseAsync<IResult>();
+            .AsResponseAsync(defaultValue, ct);
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Annium.Data.Operations;
 using Annium.Net.Http;
@@ -18,78 +19,94 @@ public class CompanyClient
     }
 
     public async Task<IResult<Guid>> RegisterCompany(
-        RegisterCompanyRequest body
+        RegisterCompanyRequest body,
+        IResult<Guid> defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Post("companies")
             .JsonContent(body)
-            .AsAsync<IResult<Guid>>();
+            .AsAsync(defaultValue, ct);
     }
 
     public async Task<IResult<CompanyResponse[]>> FindCompanies(
-        string query
+        string query,
+        IResult<CompanyResponse[]> defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Get("companies")
             .Param("query", query)
-            .AsAsync<IResult<CompanyResponse[]>>();
+            .AsAsync(defaultValue, ct);
     }
 
     public async Task<IResult<CompanyResponse[]>> ListMyCompanies(
+        IResult<CompanyResponse[]> defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Get("companies/my")
-            .AsAsync<IResult<CompanyResponse[]>>();
+            .AsAsync(defaultValue, ct);
     }
 
     public async Task<IResult<CompanyResponse>> GetCompany(
-        Guid companyId
+        Guid companyId,
+        IResult<CompanyResponse> defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Get($"companies/{companyId}")
-            .AsAsync<IResult<CompanyResponse>>();
+            .AsAsync(defaultValue, ct);
     }
 
     public async Task<IResult<UserResponse[]>> GetCompanyUsers(
-        Guid companyId
+        Guid companyId,
+        IResult<UserResponse[]> defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Get($"companies/{companyId}/users")
-            .AsAsync<IResult<UserResponse[]>>();
+            .AsAsync(defaultValue, ct);
     }
 
     public async Task<IResult> UpdateCompany(
         Guid companyId,
-        UpdateCompanyRequestBody body
+        UpdateCompanyRequestBody body,
+        IResult defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Put($"companies/{companyId}")
             .JsonContent(body)
-            .AsAsync<IResult>();
+            .AsAsync(defaultValue, ct);
     }
 
     public async Task<IResult> SetCompanyOwner(
         Guid companyId,
-        Guid userId
+        Guid userId,
+        IResult defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Put($"companies/{companyId}/owner/{userId}")
-            .AsAsync<IResult>();
+            .AsAsync(defaultValue, ct);
     }
 
     public async Task<IResult> UnregisterCompany(
-        Guid companyId
+        Guid companyId,
+        IResult defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Delete($"companies/{companyId}")
-            .AsAsync<IResult>();
+            .AsAsync(defaultValue, ct);
     }
 }

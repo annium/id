@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Annium.Data.Operations;
 using Annium.Net.Http;
@@ -17,42 +18,50 @@ public class CompanyClaimClient
     }
 
     public async Task<IResult<Guid>> CreateCompanyClaim(
-        CreateCompanyClaimRequest body
+        CreateCompanyClaimRequest body,
+        IResult<Guid> defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Post("companies/claims")
             .JsonContent(body)
-            .AsAsync<IResult<Guid>>();
+            .AsAsync(defaultValue, ct);
     }
 
     public async Task<IResult<CompanyClaimResponse[]>> ListCompanyClaims(
-        Guid appId
+        Guid appId,
+        IResult<CompanyClaimResponse[]> defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Get("companies/claims")
             .Param("appId", appId)
-            .AsAsync<IResult<CompanyClaimResponse[]>>();
+            .AsAsync(defaultValue, ct);
     }
 
     public async Task<IResult> UpdateCompanyClaim(
         Guid claimId,
-        UpdateCompanyClaimRequestBody body
+        UpdateCompanyClaimRequestBody body,
+        IResult defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Put($"companies/claims/{claimId}")
             .JsonContent(body)
-            .AsAsync<IResult>();
+            .AsAsync(defaultValue, ct);
     }
 
     public async Task<IResult> DeleteCompanyClaim(
-        Guid claimId
+        Guid claimId,
+        IResult defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Delete($"companies/claims/{claimId}")
-            .AsAsync<IResult>();
+            .AsAsync(defaultValue, ct);
     }
 }

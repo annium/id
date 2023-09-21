@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Annium.Data.Operations;
 using Annium.Net.Http;
@@ -17,67 +18,79 @@ public class CompanyUserClient
 
     public async Task<IHttpResponse<IResult>> AddUserToCompany(
         Guid companyId,
-        Guid userId
+        Guid userId,
+        IResult defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Post($"companies/{companyId}/users/{userId}")
-            .AsResponseAsync<IResult>();
+            .AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IResult>> AddCompanyRoleToCompanyUser(
         Guid companyId,
         Guid userId,
-        Guid roleId
+        Guid roleId,
+        IResult defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Post($"companies/{companyId}/users/{userId}/roles/{roleId}")
-            .AsResponseAsync<IResult>();
+            .AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IResult>> DeleteCompanyRoleFromCompanyUser(
         Guid companyId,
         Guid userId,
-        Guid roleId
+        Guid roleId,
+        IResult defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Delete($"companies/{companyId}/users/{userId}/roles/{roleId}")
-            .AsResponseAsync<IResult>();
+            .AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IResult>> AddCompanyClaimToCompanyUser(
         Guid companyId,
         Guid userId,
         Guid claimId,
-        AddCompanyClaimToCompanyUserRequestBody body
+        AddCompanyClaimToCompanyUserRequestBody body,
+        IResult defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Post($"companies/{companyId}/users/{userId}/claims/{claimId}")
             .JsonContent(body)
-            .AsResponseAsync<IResult>();
+            .AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IResult>> DeleteCompanyClaimFromCompanyUser(
         Guid companyId,
         Guid userId,
-        Guid claimId
+        Guid claimId,
+        IResult defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Delete($"companies/{companyId}/users/{userId}/claims/{claimId}")
-            .AsResponseAsync<IResult>();
+            .AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IResult>> DeleteUserFromCompany(
         Guid companyId,
-        Guid userId
+        Guid userId,
+        IResult defaultValue,
+        CancellationToken ct = default
     )
     {
         return await _request
             .Delete($"companies/{companyId}/users/{userId}")
-            .AsResponseAsync<IResult>();
+            .AsResponseAsync(defaultValue, ct);
     }
 }
