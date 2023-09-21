@@ -28,7 +28,11 @@ internal class LoginService : ILoginService
 
     public async Task<IResult<TokensResponse>> LogIn(string login, string password)
     {
-        var response = await _serverApi.Public.Client().Login.LogIn(_config.AppId, new LogInRequestBody { Login = login, Password = password });
+        var response = await _serverApi.Public.Client().Login.LogIn(
+            _config.AppId,
+            new LogInRequestBody { Login = login, Password = password },
+            Result.New(new TokensResponse()).Error("Failed to log in")
+        );
 
         if (response.IsOk)
             _tokenStore.Set(response.Data);
@@ -38,11 +42,16 @@ internal class LoginService : ILoginService
         return response;
     }
 
-    public Task<IResult> LogOut() => _serverApi.Private.Client().Login.LogOut(_config.AppId);
+    public Task<IResult> LogOut() =>
+        _serverApi.Private.Client().Login.LogOut(_config.AppId, Result.New().Error("Failed to log out"));
 
     public async Task<IResult<TokensResponse>> UpdateToken(Guid refreshToken)
     {
-        var response = await _serverApi.Private.Client().Login.UpdateToken(_config.AppId, refreshToken);
+        var response = await _serverApi.Private.Client().Login.UpdateToken(
+            _config.AppId,
+            refreshToken,
+            Result.New(new TokensResponse()).Error("Failed to update token")
+        );
 
         if (response.IsOk)
             _tokenStore.Set(response.Data);

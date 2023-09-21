@@ -15,7 +15,7 @@ public static class CompanyUserClientExtensions
         Guid userId
     )
     {
-        var response = await client.AddUserToCompany(companyId, userId);
+        var response = await client.AddUserToCompany(companyId, userId, Result.New().Error("Failed to add user to company"));
 
         return response;
     }
@@ -27,7 +27,7 @@ public static class CompanyUserClientExtensions
         Guid roleId
     )
     {
-        var response = await client.AddCompanyRoleToCompanyUser(companyId, userId, roleId);
+        var response = await client.AddCompanyRoleToCompanyUser(companyId, userId, roleId, Result.New().Error("Failed to add role to user"));
 
         return response;
     }
@@ -40,7 +40,13 @@ public static class CompanyUserClientExtensions
         string? value = null
     )
     {
-        var response = await client.AddCompanyClaimToCompanyUser(companyId, userId, claimId, new AddCompanyClaimToCompanyUserRequestBody { Value = value ?? Faker.Random.String2(10) });
+        var response = await client.AddCompanyClaimToCompanyUser(
+            companyId,
+            userId,
+            claimId,
+            new AddCompanyClaimToCompanyUserRequestBody { Value = value ?? Faker.Random.String2(10) },
+            Result.New().Error("Failed to add claim to user")
+        );
 
         return response;
     }

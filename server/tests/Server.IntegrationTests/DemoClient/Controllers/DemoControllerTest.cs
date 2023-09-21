@@ -1,10 +1,13 @@
 using System;
 using System.Net;
 using System.Threading.Tasks;
+using Annium.Data.Operations;
 using Annium.Testing;
 using Server.Host.TestClient.Clients;
+using Server.ViewModels.Responses.Me;
 using Xunit;
 using Xunit.Abstractions;
+using IdTokenResponse = Server.DemoHost.ViewModels.IdTokenResponse;
 
 namespace Server.IntegrationTests.DemoClient.Controllers;
 
@@ -18,7 +21,7 @@ public class DemoControllerTest : IntegrationTestBase
     public async Task IdAuthorization_Unauthorized_ReturnsUnauthorized()
     {
         // act
-        var response = await Demo(Guid.NewGuid()).Index.Base();
+        var response = await Demo(Guid.NewGuid()).Index.Base(new IdTokenResponse());
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Unauthorized);
@@ -36,7 +39,7 @@ public class DemoControllerTest : IntegrationTestBase
         token = await Id().LogUserIn(app.Id, login, password);
 
         // act
-        var response = await Demo(app.Id, token).Index.Base();
+        var response = await Demo(app.Id, token).Index.Base(new IdTokenResponse());
 
         // assert
         response.StatusCode.Is(HttpStatusCode.OK);
@@ -53,7 +56,7 @@ public class DemoControllerTest : IntegrationTestBase
     public async Task IdAuthorization_CheckRole_Unauthorized_ReturnsUnauthorized()
     {
         // act
-        var response = await Demo(Guid.NewGuid()).Index.IsAdmin();
+        var response = await Demo(Guid.NewGuid()).Index.IsAdmin(new IdTokenResponse());
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Unauthorized);
@@ -71,7 +74,7 @@ public class DemoControllerTest : IntegrationTestBase
         token = await Id().LogUserIn(app.Id, login, password);
 
         // act
-        var response = await Demo(app.Id, token).Index.IsAdmin();
+        var response = await Demo(app.Id, token).Index.IsAdmin(new IdTokenResponse());
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -85,14 +88,14 @@ public class DemoControllerTest : IntegrationTestBase
         var email = Faker.Internet.Email();
         var password = Faker.Internet.Password();
         var token = await Id().RegisterLogUserIn(login, email, password);
-        var user = await Id(token).Me.GetMe().GetData();
+        var user = await Id(token).Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal information")).GetData();
         var app = await Id(token).App.Register();
         var role = await Id(token).Role.Register(app.Id, "admin", "Administrator");
-        await Id(token).User.AddRoleToUser(user.Id, role.Id);
+        await Id(token).User.AddRoleToUser(user.Id, role.Id, Result.New().Error("Failed to add role to user"));
         token = await Id().LogUserIn(app.Id, login, password);
 
         // act
-        var response = await Demo(app.Id, token).Index.IsAdmin();
+        var response = await Demo(app.Id, token).Index.IsAdmin(new IdTokenResponse());
 
         // assert
         response.StatusCode.Is(HttpStatusCode.OK);
@@ -106,16 +109,16 @@ public class DemoControllerTest : IntegrationTestBase
         var email = Faker.Internet.Email();
         var password = Faker.Internet.Password();
         var token = await Id().RegisterLogUserIn(login, email, password);
-        var user = await Id(token).Me.GetMe().GetData();
+        var user = await Id(token).Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal information")).GetData();
         var app = await Id(token).App.Register();
         var role = await Id(token).Role.Register(app.Id, "coo", "Chief Operations Officer");
-        await Id(token).User.AddRoleToUser(user.Id, role.Id);
+        await Id(token).User.AddRoleToUser(user.Id, role.Id, Result.New().Error("Failed to add role to user"));
         var claim = await Id(token).Claim.Register(app.Id, "paymentsAccess", "Payments Access");
         await Id(token).Role.AddClaimToRole(role.Id, claim.Id, "full");
         token = await Id().LogUserIn(app.Id, login, password);
 
         // act
-        var response = await Demo(app.Id, token).Index.HasPaymentsAccess();
+        var response = await Demo(app.Id, token).Index.HasPaymentsAccess(new IdTokenResponse());
 
         // assert
         response.StatusCode.Is(HttpStatusCode.OK);
@@ -129,14 +132,14 @@ public class DemoControllerTest : IntegrationTestBase
         var email = Faker.Internet.Email();
         var password = Faker.Internet.Password();
         var token = await Id().RegisterLogUserIn(login, email, password);
-        var user = await Id(token).Me.GetMe().GetData();
+        var user = await Id(token).Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal information")).GetData();
         var app = await Id(token).App.Register();
         var claim = await Id(token).Claim.Register(app.Id, "paymentsAccess", "Payments Access");
         await Id(token).User.AddUserClaim(user.Id, claim.Id, "full");
         token = await Id().LogUserIn(app.Id, login, password);
 
         // act
-        var response = await Demo(app.Id, token).Index.HasPaymentsAccess();
+        var response = await Demo(app.Id, token).Index.HasPaymentsAccess(new IdTokenResponse());
 
         // assert
         response.StatusCode.Is(HttpStatusCode.OK);
@@ -150,7 +153,7 @@ public class DemoControllerTest : IntegrationTestBase
         var email = Faker.Internet.Email();
         var password = Faker.Internet.Password();
         var token = await Id().RegisterLogUserIn(login, email, password);
-        var user = await Id(token).Me.GetMe().GetData();
+        var user = await Id(token).Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal information")).GetData();
         var app = await Id(token).App.Register();
         var role = await Id(token).Role.Register(app.Id, "coo", "Chief Operations Officer");
         var claim = await Id(token).Claim.Register(app.Id, "paymentsAccess", "Payments Access");
@@ -159,7 +162,7 @@ public class DemoControllerTest : IntegrationTestBase
         token = await Id().LogUserIn(app.Id, login, password);
 
         // act
-        var response = await Demo(app.Id, token).Index.HasPaymentsAccess();
+        var response = await Demo(app.Id, token).Index.HasPaymentsAccess(new IdTokenResponse());
 
         // assert
         response.StatusCode.Is(HttpStatusCode.OK);

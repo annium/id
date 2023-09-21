@@ -16,7 +16,12 @@ public static class UserClientExtensions
         string? value = null
     )
     {
-        var response = await client.AddClaimToUser(userId, claimId, new AddClaimToUserRequestBody { Value = value ?? Faker.Random.String2(10) });
+        var response = await client.AddClaimToUser(
+            userId,
+            claimId,
+            new AddClaimToUserRequestBody { Value = value ?? Faker.Random.String2(10) },
+            Result.New().Error("Failed to add claim")
+        );
 
         return response;
     }

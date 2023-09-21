@@ -19,8 +19,8 @@ public static class CompanyRoleClientExtensions
     )
     {
         var request = new CreateCompanyRoleRequest { AppId = appId, Key = key ?? Faker.Random.String2(5), Name = name ?? Faker.Random.String2(10) };
-        var roleId = await client.CreateRole(request).GetData();
-        var roles = await client.ListRoles(appId).GetData();
+        var roleId = await client.CreateRole(request, Result.New(Guid.Empty).Error("Failed to create role")).GetData();
+        var roles = await client.ListRoles(appId, Result.New(Array.Empty<CompanyRoleResponse>()).Error("Failed to list roles")).GetData();
 
         return roles.Single(x => x.Id == roleId);
     }
@@ -32,6 +32,11 @@ public static class CompanyRoleClientExtensions
         string value = "Some"
     )
     {
-        return client.AddClaimToRole(roleId, claimId, new AddCompanyClaimToCompanyRoleRequestBody { Value = value });
+        return client.AddClaimToRole(
+            roleId,
+            claimId,
+            new AddCompanyClaimToCompanyRoleRequestBody { Value = value },
+            Result.New().Error("Failed to add claim to role")
+        );
     }
 }

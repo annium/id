@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Annium.Data.Operations;
 using Annium.Id.Core;
 using Annium.Linq;
 using Annium.Net.Http;
@@ -9,6 +10,7 @@ using Annium.Testing;
 using Server.Email.Models;
 using Server.ViewModels.Requests.Login;
 using Server.ViewModels.Requests.Me;
+using Server.ViewModels.Responses.Login;
 using Server.ViewModels.Responses.Me;
 using static Server.Host.TestClient.Clients.Helper;
 
@@ -41,7 +43,10 @@ public static class ExtendedClientExtensions
     )
     {
         // perform regular login
-        var tokens = await client.Login.LogIn(appId, new LogInRequestBody { Login = login, Password = password });
+        var tokens = await client.Login.LogIn(
+            appId,
+            new LogInRequestBody { Login = login, Password = password },
+            Result.New(new TokensResponse()).Error("Failed to load tokens"));
 
         return tokens.Data.Data.AccessToken;
     }
@@ -59,7 +64,7 @@ public static class ExtendedClientExtensions
         password ??= Faker.Internet.Password();
         var token = await client.RegisterLogUserInInternal(Constants.IdAppId, login, email, password, referralId);
 
-        var me = await client.WithToken(token).Me.GetMe();
+        var me = await client.WithToken(token).Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal info"));
 
         return me.Data.Data;
     }
@@ -74,31 +79,45 @@ public static class ExtendedClientExtensions
     )
     {
         // register
-        var registerResponse = await client.Me.RegisterMe(new RegisterMeRequest
-        {
-            Server = "http://localhost/",
-            Login = login,
-            Email = email,
-            ReferralId = referralId
-        });
+        var registerResponse = await client.Me.RegisterMe(
+            new RegisterMeRequest
+            {
+                Server = "http://localhost/",
+                Login = login,
+                Email = email,
+                ReferralId = referralId
+            },
+            Result.New().Error("Failed to register")
+        );
         if (registerResponse.StatusCode != HttpStatusCode.OK)
             Console.WriteLine($"Failure: plain errors: {registerResponse.Data.PlainErrors.Join(", ")}; labeled errors: {registerResponse.Data.LabeledErrors.Select(x => $"{x.Key}={x.Value.Join(" + ")}").Join(", ")}");
         registerResponse.StatusCode.Is(HttpStatusCode.OK);
 
         // get id from email data
-        var userId = ((ConfirmEmailData) client.EmailService.Emails.Last().Data).Id;
+        var userId = ((ConfirmEmailData)client.EmailService.Emails.Last().Data).Id;
 
         // confirm email
-        var tokensResponse = await client.Me.ConfirmMyEmail(appId, new ConfirmMyEmailRequestBody { Id = userId });
+        var tokensResponse = await client.Me.ConfirmMyEmail(
+            appId,
+            new ConfirmMyEmailRequestBody { Id = userId },
+            Result.New(new TokensResponse()).Error("Failed to confirm email")
+        );
         tokensResponse.StatusCode.Is(HttpStatusCode.OK);
 
         var token = tokensResponse.Data.Data.AccessToken;
 
         // set password
-        await client.WithToken(token).Me.UpdateMyPassword(new UpdateMyPasswordRequest { Password = password });
+        await client.WithToken(token).Me.UpdateMyPassword(
+            new UpdateMyPasswordRequest { Password = password },
+            Result.New().Error("Failed to update password")
+        );
 
         // perform regular login
-        var tokens = await client.Login.LogIn(appId, new LogInRequestBody { Login = login, Password = password });
+        var tokens = await client.Login.LogIn(
+            appId,
+            new LogInRequestBody { Login = login, Password = password },
+            Result.New(new TokensResponse()).Error("Failed to log in")
+        );
 
         return tokens.Data.Data.AccessToken;
     }

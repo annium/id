@@ -10,6 +10,7 @@ using Annium.Core.DependencyInjection;
 using Annium.Data.Operations;
 using Annium.Net.Http;
 using Annium.Serialization.Abstractions;
+using Server.ViewModels.Responses.Login;
 using Site.Shared.Api.Server.Clients;
 using Site.Shared.Stores;
 
@@ -63,7 +64,11 @@ internal class ServerApi : IServerApi
         if (tokens.RefreshTokenExpires < _timeProvider.Now)
             return GetAuthFailureResponse("Refresh token is expired. Need to login");
 
-        var updateTokenResult = await Private.Client().Login.UpdateToken(_config.AppId, tokens.RefreshToken);
+        var updateTokenResult = await Private.Client().Login.UpdateToken(
+            _config.AppId,
+            tokens.RefreshToken,
+            Result.New(new TokensResponse()).Error("Failed to update token")
+        );
         if (updateTokenResult.HasErrors)
             return response;
 
