@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using Annium.Core.DependencyInjection;
-using Annium.Id.AspNetCore;
 using Annium.Net.Types;
 using Microsoft.Extensions.DependencyInjection;
 

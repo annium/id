@@ -32,6 +32,6 @@ internal class PolicyMapper : IPolicyMapper
 
         var body = Expression.NewArrayInit(typeof(object), initializers);
 
-        return (Func<IdToken, IReadOnlyDictionary<string, object>, object[]>) Expression.Lambda(body, parameters).Compile();
+        return (Func<IdToken, IReadOnlyDictionary<string, object>, object[]>)Expression.Lambda(body, parameters).Compile();
     }
 }

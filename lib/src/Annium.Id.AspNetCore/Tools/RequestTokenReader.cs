@@ -27,7 +27,7 @@ internal class RequestTokenReader
 
         static (string, IActionResult) Fail(HttpStatusCode statusCode, string message)
         {
-            return (string.Empty, new ObjectResult(Result.Failure().Error(message)) { StatusCode = (int) statusCode });
+            return (string.Empty, new ObjectResult(Result.Failure().Error(message)) { StatusCode = (int)statusCode });
         }
     }
 }

@@ -42,7 +42,7 @@ internal class PolicyFilter : IActionFilter
 
         try
         {
-            var result = (bool) _policy.Handle.DynamicInvoke(arguments) !;
+            var result = (bool)_policy.Handle.DynamicInvoke(arguments)!;
             if (!result)
                 context.Result = GetFailure("Access policy violation");
         }
@@ -70,6 +70,6 @@ internal class PolicyFilter : IActionFilter
 
     private IActionResult GetFailure(string error)
     {
-        return new ObjectResult(Result.New(OperationStatus.Forbidden).Error(error)) { StatusCode = (int) HttpStatusCode.Forbidden };
+        return new ObjectResult(Result.New(OperationStatus.Forbidden).Error(error)) { StatusCode = (int)HttpStatusCode.Forbidden };
     }
 }

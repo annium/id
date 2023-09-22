@@ -3,7 +3,6 @@ using System.IO;
 using System.Threading.Tasks;
 using Annium.AspNetCore.IntegrationTesting;
 using Annium.Core.DependencyInjection;
-using Annium.Id.AspNetCore;
 using Annium.Net.Http;
 using Annium.Net.Mail;
 using Bogus;

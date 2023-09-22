@@ -19,6 +19,6 @@ internal class HttpContextTokenAccessor : ITokenAccessor
         if (!context.Items.TryGetValue(Constants.IdTokenProperty, out var raw))
             throw new InvalidOperationException("User is not authenticated.");
 
-        return (IdToken) raw!;
+        return (IdToken)raw!;
     }
 }

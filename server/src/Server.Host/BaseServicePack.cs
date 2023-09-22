@@ -2,7 +2,6 @@ using System;
 using Annium.Core.DependencyInjection;
 using Annium.Core.Mediator;
 using Annium.Core.Runtime.Types;
-using Annium.Id.AspNetCore;
 using Annium.Id.Core;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
