@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
-using Annium.Core.DependencyInjection;
 using Annium.Id.AspNetCore.Pipeline;
 using Annium.Id.AspNetCore.Tools;
 using Annium.Id.Core;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Annium.Id.AspNetCore;
+// ReSharper disable once CheckNamespace
+namespace Annium.Core.DependencyInjection;
 
 public static class ServiceContainerExtensions
 {
