@@ -35,7 +35,7 @@ internal class Store : StateBase, IStore
     {
         State.Start();
 
-        var result = await _loginService.LogIn(Form.At(x => x.Login).Value, Form.At(x => x.Password).Value);
+        var result = await _loginService.LogIn(Form.AtAtomic(x => x.Login).Value, Form.AtAtomic(x => x.Password).Value);
 
         if (result.HasErrors)
         {
