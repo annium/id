@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using Annium.linq2db.Extensions.Extensions;
+using Annium.linq2db.Extensions;
 using LinqToDB;
 using NodaTime;
 using Server.Db.Repositories;
