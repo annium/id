@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Security.Cryptography;
 using Annium.Identity.Tokens;
 using Annium.Identity.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
@@ -18,7 +19,7 @@ internal class TokenWriter : ITokenWriter
         ITimeProvider timeProvider
     )
     {
-        _securityKey = KeyReader.ReadRsaKey(File.ReadAllText(options.PrivateKeyFile));
+        _securityKey = RSA.Create().ImportPem(File.ReadAllText(options.PrivateKeyFile)).GetKey();
         _options = options;
         _timeProvider = timeProvider;
     }
@@ -30,6 +31,7 @@ internal class TokenWriter : ITokenWriter
 
         var jwt = JwtWriter.Create(
             _securityKey,
+            SecurityAlgorithms.RsaSha256,
             Guid.NewGuid().ToString(),
             Constants.Issuer,
             token.App.Id.ToString(),

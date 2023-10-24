@@ -2,6 +2,7 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using Annium.Data.Operations;
 using Annium.Identity.Tokens;
 using Annium.Identity.Tokens.Jwt;
@@ -25,7 +26,7 @@ internal class TokenReader : ITokenReader, ILogSubject
         ILogger logger
     )
     {
-        _securityKey = KeyReader.ReadRsaKey(File.ReadAllText(options.PublicKeyFile));
+        _securityKey = RSA.Create().ImportPem(File.ReadAllText(options.PublicKeyFile)).GetKey();
         _options = options;
         _timeProvider = timeProvider;
         Logger = logger;
@@ -36,15 +37,9 @@ internal class TokenReader : ITokenReader, ILogSubject
         var now = _timeProvider.Now;
         var audience = options.ValidateAudience ? _options.Audience.ToString() : null;
         var expirationWindow = options.ValidateExpiration ? Duration.FromSeconds(5) : default(Duration?);
+        var opts = JwtReader.GetValidationParameters(_securityKey, Constants.Issuer, audience, expirationWindow);
 
-        var result = JwtReader.Read(
-            _securityKey,
-            tokenString,
-            Constants.Issuer,
-            audience,
-            now,
-            expirationWindow
-        );
+        var result = JwtReader.Read(tokenString, opts, now);
 
         return result.Data.Match(
             jwt =>
