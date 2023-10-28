@@ -12,11 +12,7 @@ public class LogInCommand : ICommand
     public App App { get; private set; } = null!;
     public User User { get; private set; } = null!;
 
-    public LogInCommand(
-        Guid appId,
-        string login,
-        string password
-    )
+    public LogInCommand(Guid appId, string login, string password)
     {
         AppId = appId;
         Login = login;

@@ -11,10 +11,7 @@ public class UpdateTokensCommand : ICommand
     public App App { get; private set; } = null!;
     public UserLogin Login { get; private set; } = null!;
 
-    public UpdateTokensCommand(
-        Guid appId,
-        Guid refreshToken
-    )
+    public UpdateTokensCommand(Guid appId, Guid refreshToken)
     {
         AppId = appId;
         RefreshToken = refreshToken;

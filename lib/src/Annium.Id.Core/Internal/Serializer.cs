@@ -7,10 +7,12 @@ internal static class Serializer
 {
     public static string Serialize<T>(T data)
     {
-        var result = Convert.ToBase64String(MessagePackSerializer.Serialize(
-            data,
-            MessagePackSerializerOptions.Standard.WithCompression(MessagePackCompression.Lz4BlockArray)
-        ));
+        var result = Convert.ToBase64String(
+            MessagePackSerializer.Serialize(
+                data,
+                MessagePackSerializerOptions.Standard.WithCompression(MessagePackCompression.Lz4BlockArray)
+            )
+        );
 
         return result;
     }

@@ -10,12 +10,13 @@ namespace Server.IntegrationTests.Fixtures;
 
 public static class Database
 {
-    public static PostgreSqlConfiguration Config { get; } = new()
-    {
-        Database = "db",
-        User = "postgres",
-        Password = "postgres",
-    };
+    public static PostgreSqlConfiguration Config { get; } =
+        new()
+        {
+            Database = "db",
+            User = "postgres",
+            Password = "postgres",
+        };
 
     private static readonly PostgreSqlContainer Db;
     private static readonly TaskCompletionSource InitTcs = new();
@@ -50,7 +51,8 @@ public static class Database
         await Db.StartAsync();
         Config.Host = Db.Hostname;
         Config.Port = Db.GetMappedPublicPort(PostgreSqlBuilder.PostgreSqlPort);
-        Migrator.ForPostgresql(Config.ConnectionString, Constants.Schema)
+        Migrator
+            .ForPostgresql(Config.ConnectionString, Constants.Schema)
             .WithScriptsFromAssembly(typeof(TestServicePack).Assembly)
             .Execute();
         InitTcs.SetResult();

@@ -11,14 +11,11 @@ using Server.Domain.Queries.Claims;
 
 namespace Server.Application.QueryHandlers;
 
-public class ClaimQueryHandler :
-    IQueryHandler<ListClaimsQuery, IEnumerable<Claim>>
+public class ClaimQueryHandler : IQueryHandler<ListClaimsQuery, IEnumerable<Claim>>
 {
     private readonly IClaimRepository _claimRepository;
 
-    public ClaimQueryHandler(
-        IClaimRepository claimRepository
-    )
+    public ClaimQueryHandler(IClaimRepository claimRepository)
     {
         _claimRepository = claimRepository;
     }

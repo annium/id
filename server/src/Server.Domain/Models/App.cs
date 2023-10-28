@@ -11,11 +11,7 @@ public class App : IIdEntity<Guid>
     public string Name { get; private set; } = string.Empty;
     public Guid ApiToken { get; private set; }
 
-    public App(
-        User owner,
-        string name,
-        Guid apiToken
-    )
+    public App(User owner, string name, Guid apiToken)
     {
         Id = Guid.NewGuid();
         OwnerId = owner.Id;
@@ -24,11 +20,10 @@ public class App : IIdEntity<Guid>
         ApiToken = apiToken;
     }
 
-    internal App()
-    {
-    }
+    internal App() { }
 
     public void SetName(string name) => Name = name;
+
     public void SetApiToken(Guid apiToken) => ApiToken = apiToken;
 
     public void SetOwner(User owner)

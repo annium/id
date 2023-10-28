@@ -24,10 +24,7 @@ public class MeClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Post("me")
-            .JsonContent(body)
-            .AsResponseAsync(defaultValue, ct);
+        return await _request.Post("me").JsonContent(body).AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IResult<TokensResponse>>> ConfirmMyEmail(
@@ -37,10 +34,7 @@ public class MeClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Post($"me/{appId}/confirm-email")
-            .JsonContent(body)
-            .AsResponseAsync(defaultValue, ct);
+        return await _request.Post($"me/{appId}/confirm-email").JsonContent(body).AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IResult>> RestoreMyAccess(
@@ -50,10 +44,7 @@ public class MeClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Post($"me/{appId}/restore-access")
-            .JsonContent(body)
-            .AsResponseAsync(defaultValue, ct);
+        return await _request.Post($"me/{appId}/restore-access").JsonContent(body).AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IResult<MeResponse>>> GetMe(
@@ -61,9 +52,7 @@ public class MeClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Get("me")
-            .AsResponseAsync(defaultValue, ct);
+        return await _request.Get("me").AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IResult<IdTokenResponse>>> GetMyToken(
@@ -71,9 +60,7 @@ public class MeClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Get("me/token")
-            .AsResponseAsync(defaultValue, ct);
+        return await _request.Get("me/token").AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IResult>> UpdateMyProfile(
@@ -82,10 +69,7 @@ public class MeClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Put("me/profile")
-            .JsonContent(body)
-            .AsResponseAsync(defaultValue, ct);
+        return await _request.Put("me/profile").JsonContent(body).AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IResult>> UpdateMyPassword(
@@ -94,19 +78,11 @@ public class MeClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Put("me/password")
-            .JsonContent(body)
-            .AsResponseAsync(defaultValue, ct);
+        return await _request.Put("me/password").JsonContent(body).AsResponseAsync(defaultValue, ct);
     }
 
-    public async Task<IHttpResponse<IResult>> UnregisterMe(
-        IResult defaultValue,
-        CancellationToken ct = default
-    )
+    public async Task<IHttpResponse<IResult>> UnregisterMe(IResult defaultValue, CancellationToken ct = default)
     {
-        return await _request
-            .Delete("me")
-            .AsResponseAsync(defaultValue, ct);
+        return await _request.Delete("me").AsResponseAsync(defaultValue, ct);
     }
 }

@@ -12,10 +12,7 @@ public class DeleteClaimFromUserCommand : ICommand
     public User User { get; private set; } = null!;
     public Claim Claim { get; private set; } = null!;
 
-    public DeleteClaimFromUserCommand(
-        Guid userId,
-        Guid claimId
-    )
+    public DeleteClaimFromUserCommand(Guid userId, Guid claimId)
     {
         UserId = userId;
         ClaimId = claimId;

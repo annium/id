@@ -15,9 +15,7 @@ internal class ListCompanyClaimsQueryValidator : Validator<ListCompanyClaimsQuer
 
 internal class ListCompanyClaimsQueryComposer : Composer<ListCompanyClaimsQuery>
 {
-    public ListCompanyClaimsQueryComposer(
-        IAppRepository appRepository
-    )
+    public ListCompanyClaimsQueryComposer(IAppRepository appRepository)
     {
         Field(c => c.App).LoadWith(ctx => appRepository.TryGetByIdAsync(ctx.Root.AppId));
     }

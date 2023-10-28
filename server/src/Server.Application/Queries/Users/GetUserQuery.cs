@@ -7,8 +7,7 @@ namespace Server.Application.Queries.Users;
 
 internal class GetUserQueryValidator : Validator<GetUserQuery>
 {
-    public GetUserQueryValidator(
-    )
+    public GetUserQueryValidator()
     {
         Field(c => c.UserId).Required();
     }
@@ -16,9 +15,7 @@ internal class GetUserQueryValidator : Validator<GetUserQuery>
 
 internal class GetUserQueryComposer : Composer<GetUserQuery>
 {
-    public GetUserQueryComposer(
-        IUserRepository userRepository
-    )
+    public GetUserQueryComposer(IUserRepository userRepository)
     {
         Field(c => c.User).LoadWith(ctx => userRepository.TryGetByIdAsync(ctx.Root.UserId));
     }

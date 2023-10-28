@@ -25,25 +25,21 @@ internal class ClaimRepository : IClaimRepository
 
     public async Task<IReadOnlyCollection<Claim>> GetAllAsync(Guid appId)
     {
-        var entities = await _db.Claims
-            .Where(x => x.AppId == appId)
-            .ToArrayAsync();
+        var entities = await _db.Claims.Where(x => x.AppId == appId).ToArrayAsync();
 
         return entities;
     }
 
     public async Task<Claim?> TryGetByIdAsync(Guid id)
     {
-        var entity = await _db.Claims
-            .FirstOrDefaultAsync(x => x.Id == id);
+        var entity = await _db.Claims.FirstOrDefaultAsync(x => x.Id == id);
 
         return entity;
     }
 
     public async Task<Claim> GetByIdAsync(Guid id)
     {
-        var entity = await _db.Claims
-            .FirstOrDefaultAsync(x => x.Id == id);
+        var entity = await _db.Claims.FirstOrDefaultAsync(x => x.Id == id);
 
         if (entity is null)
             throw new InvalidOperationException($"Claim {id} not found");
@@ -53,8 +49,7 @@ internal class ClaimRepository : IClaimRepository
 
     public async Task<Claim?> TryFindByKeyAsync(Guid appId, string key)
     {
-        var entity = await _db.Claims
-            .FirstOrDefaultAsync(x => x.AppId == appId && x.Key == key);
+        var entity = await _db.Claims.FirstOrDefaultAsync(x => x.AppId == appId && x.Key == key);
 
         return entity;
     }

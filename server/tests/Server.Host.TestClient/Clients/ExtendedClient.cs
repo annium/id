@@ -8,10 +8,8 @@ public class ExtendedClient : Root
     public TestEmailService EmailService { get; }
     internal IHttpRequest Request { get; }
 
-    public ExtendedClient(
-        IHttpRequest request,
-        TestEmailService emailService
-    ) : base(request)
+    public ExtendedClient(IHttpRequest request, TestEmailService emailService)
+        : base(request)
     {
         Request = request;
         EmailService = emailService;

@@ -23,10 +23,7 @@ public class RoleClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Post("roles")
-            .JsonContent(body)
-            .AsResponseAsync(defaultValue, ct);
+        return await _request.Post("roles").JsonContent(body).AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IResult<RoleResponse[]>>> ListRoles(
@@ -35,10 +32,7 @@ public class RoleClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Get("roles")
-            .Param("appId", appId)
-            .AsResponseAsync(defaultValue, ct);
+        return await _request.Get("roles").Param("appId", appId).AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IResult>> UpdateRole(
@@ -48,10 +42,7 @@ public class RoleClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Put($"roles/{roleId}")
-            .JsonContent(body)
-            .AsResponseAsync(defaultValue, ct);
+        return await _request.Put($"roles/{roleId}").JsonContent(body).AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IResult>> AddClaimToRole(
@@ -75,9 +66,7 @@ public class RoleClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Delete($"roles/{roleId}/claims/{claimId}")
-            .AsResponseAsync(defaultValue, ct);
+        return await _request.Delete($"roles/{roleId}/claims/{claimId}").AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IResult>> DeleteRole(
@@ -86,8 +75,6 @@ public class RoleClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Delete($"roles/{roleId}")
-            .AsResponseAsync(defaultValue, ct);
+        return await _request.Delete($"roles/{roleId}").AsResponseAsync(defaultValue, ct);
     }
 }

@@ -12,12 +12,7 @@ public class CompanyUserClaim
     public CompanyClaim Claim { get; private init; } = default!;
     public string Value { get; private init; } = string.Empty;
 
-    public CompanyUserClaim(
-        Company company,
-        User user,
-        CompanyClaim claim,
-        string value
-    )
+    public CompanyUserClaim(Company company, User user, CompanyClaim claim, string value)
     {
         CompanyId = company.Id;
         Company = company;
@@ -28,7 +23,5 @@ public class CompanyUserClaim
         Value = value;
     }
 
-    internal CompanyUserClaim()
-    {
-    }
+    internal CompanyUserClaim() { }
 }

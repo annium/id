@@ -10,9 +10,7 @@ public class DeleteClaimCommand : ICommand
     public Guid MyId { get; private set; }
     public Claim Claim { get; private set; } = null!;
 
-    public DeleteClaimCommand(
-        Guid claimId
-    )
+    public DeleteClaimCommand(Guid claimId)
     {
         ClaimId = claimId;
     }

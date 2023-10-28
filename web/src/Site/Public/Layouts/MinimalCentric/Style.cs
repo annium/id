@@ -30,13 +30,8 @@ public class Style : RuleSet
             .BorderRadiusRem(1)
             .BackgroundColor(theme.Palette.Paper)
             .FontSizeRem(1);
-        Logo = Rule.Class()
-            .FontSizeRem(3);
-        Credentials = Rule.Class()
-            .MarginTopRem(1)
-            .Color(theme.Palette.Gray8)
-            .TextAlign(TextAlign.Center);
-        Link = Rule.Class()
-            .Color(theme.Palette.Gray8);
+        Logo = Rule.Class().FontSizeRem(3);
+        Credentials = Rule.Class().MarginTopRem(1).Color(theme.Palette.Gray8).TextAlign(TextAlign.Center);
+        Link = Rule.Class().Color(theme.Palette.Gray8);
     }
 }

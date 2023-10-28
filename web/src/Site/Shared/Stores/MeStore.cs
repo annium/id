@@ -62,7 +62,6 @@ internal class MeStore : StateBase, IMeStore
         Console.WriteLine("MeStore.LogOut: reset");
     }
 
-
     private async Task Load(bool force)
     {
         // fail immediately if no tokens

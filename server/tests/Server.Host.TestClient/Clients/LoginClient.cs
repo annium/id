@@ -24,10 +24,7 @@ public class LoginClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Post($"me/{appId}/login")
-            .JsonContent(body)
-            .AsResponseAsync(defaultValue, ct);
+        return await _request.Post($"me/{appId}/login").JsonContent(body).AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IResult<TokensResponse>>> UpdateToken(
@@ -43,14 +40,8 @@ public class LoginClient
             .AsResponseAsync(defaultValue, ct);
     }
 
-    public async Task<IHttpResponse<IResult>> LogOut(
-        Guid appId,
-        IResult defaultValue,
-        CancellationToken ct = default
-    )
+    public async Task<IHttpResponse<IResult>> LogOut(Guid appId, IResult defaultValue, CancellationToken ct = default)
     {
-        return await _request
-            .Delete($"me/{appId}/logout")
-            .AsResponseAsync(defaultValue, ct);
+        return await _request.Delete($"me/{appId}/logout").AsResponseAsync(defaultValue, ct);
     }
 }

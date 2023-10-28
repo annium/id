@@ -20,11 +20,7 @@ internal class TokenReader : ITokenReader, ILogSubject
     private readonly AuthOptions _options;
     private readonly ITimeProvider _timeProvider;
 
-    public TokenReader(
-        AuthOptions options,
-        ITimeProvider timeProvider,
-        ILogger logger
-    )
+    public TokenReader(AuthOptions options, ITimeProvider timeProvider, ILogger logger)
     {
         _securityKey = RSA.Create().ImportPem(File.ReadAllText(options.PublicKeyFile)).GetKey();
         _options = options;
@@ -52,21 +48,24 @@ internal class TokenReader : ITokenReader, ILogSubject
 
                 return Result.Status(JwtReadStatus.Ok, token);
             },
-            exception => exception switch
-            {
-                SecurityTokenDecompressionFailedException _   => FromFailure(result),
-                SecurityTokenEncryptionKeyNotFoundException _ => FromFailureWithLog(result, "Token encryption key not found"),
-                SecurityTokenDecryptionFailedException _      => FromFailure(result),
-                SecurityTokenNoExpirationException _          => FromFailure(result),
-                SecurityTokenExpiredException _               => FromFailure(result),
-                SecurityTokenNotYetValidException _           => FromFailure(result),
-                SecurityTokenInvalidLifetimeException _       => FromFailure(result),
-                SecurityTokenInvalidAudienceException _       => FromFailure(result),
-                SecurityTokenInvalidIssuerException _         => FromFailure(result),
-                SecurityTokenSignatureKeyNotFoundException _  => FromFailureWithLog(result, "Token signature key not found"),
-                SecurityTokenInvalidSignatureException _      => FromFailure(result),
-                _                                             => FromFailureWithLog(result, $"Token validation failed: {exception}")
-            }
+            exception =>
+                exception switch
+                {
+                    SecurityTokenDecompressionFailedException _ => FromFailure(result),
+                    SecurityTokenEncryptionKeyNotFoundException _
+                        => FromFailureWithLog(result, "Token encryption key not found"),
+                    SecurityTokenDecryptionFailedException _ => FromFailure(result),
+                    SecurityTokenNoExpirationException _ => FromFailure(result),
+                    SecurityTokenExpiredException _ => FromFailure(result),
+                    SecurityTokenNotYetValidException _ => FromFailure(result),
+                    SecurityTokenInvalidLifetimeException _ => FromFailure(result),
+                    SecurityTokenInvalidAudienceException _ => FromFailure(result),
+                    SecurityTokenInvalidIssuerException _ => FromFailure(result),
+                    SecurityTokenSignatureKeyNotFoundException _
+                        => FromFailureWithLog(result, "Token signature key not found"),
+                    SecurityTokenInvalidSignatureException _ => FromFailure(result),
+                    _ => FromFailureWithLog(result, $"Token validation failed: {exception}")
+                }
         );
     }
 

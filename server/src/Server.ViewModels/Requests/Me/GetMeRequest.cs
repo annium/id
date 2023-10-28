@@ -3,6 +3,4 @@ using Server.Domain.Queries.Me;
 
 namespace Server.ViewModels.Requests.Me;
 
-public record GetMeRequest : IRequest<GetMeQuery>
-{
-}
+public record GetMeRequest : IRequest<GetMeQuery> { }

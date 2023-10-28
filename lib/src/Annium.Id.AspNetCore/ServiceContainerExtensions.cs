@@ -28,56 +28,83 @@ public static class ServiceContainerExtensions
         container.Add<IApplicationModelProvider, AuthorizationApplicationModelProvider>().Singleton();
 
         // filters
-        container.Add<Func<AuthorizationFilterOptions, AuthorizationFilter>>(sp => options => new AuthorizationFilter(
-            options,
-            sp.Resolve<RequestTokenReader>(),
-            sp.Resolve<ITokenReader>()
-        )).AsSelf().Singleton();
-        container.Add<Func<Policy, PolicyFilter>>(sp => policy => new PolicyFilter(
-            sp.Resolve<ITokenAccessor>(),
-            policy,
-            sp.Resolve<IPolicyMapper>().CreateMapper(policy)
-        )).AsSelf().Singleton();
+        container
+            .Add<Func<AuthorizationFilterOptions, AuthorizationFilter>>(
+                sp =>
+                    options =>
+                        new AuthorizationFilter(options, sp.Resolve<RequestTokenReader>(), sp.Resolve<ITokenReader>())
+            )
+            .AsSelf()
+            .Singleton();
+        container
+            .Add<Func<Policy, PolicyFilter>>(
+                sp =>
+                    policy =>
+                        new PolicyFilter(
+                            sp.Resolve<ITokenAccessor>(),
+                            policy,
+                            sp.Resolve<IPolicyMapper>().CreateMapper(policy)
+                        )
+            )
+            .AsSelf()
+            .Singleton();
 
         // tools
         container.Collection.AddHttpContextAccessor();
         container.Add<ITokenAccessor, HttpContextTokenAccessor>().Singleton();
         container.Add<RequestTokenReader>().AsSelf().Singleton();
 
-
         return container;
     }
 
-    public static IServiceContainer AddIdPolicy(this IServiceContainer container, string name, Expression<Func<IdToken, bool>> expression)
+    public static IServiceContainer AddIdPolicy(
+        this IServiceContainer container,
+        string name,
+        Expression<Func<IdToken, bool>> expression
+    )
     {
         return AddPolicy(container, name, expression);
     }
 
-    public static IServiceContainer AddIdPolicy<T>(this IServiceContainer container, string name, Expression<Func<IdToken, T, bool>> expression)
+    public static IServiceContainer AddIdPolicy<T>(
+        this IServiceContainer container,
+        string name,
+        Expression<Func<IdToken, T, bool>> expression
+    )
     {
         return AddPolicy(container, name, expression);
     }
 
-    public static IServiceContainer AddIdPolicy<T1, T2>(this IServiceContainer container, string name, Expression<Func<IdToken, T1, T2, bool>> expression)
+    public static IServiceContainer AddIdPolicy<T1, T2>(
+        this IServiceContainer container,
+        string name,
+        Expression<Func<IdToken, T1, T2, bool>> expression
+    )
     {
         return AddPolicy(container, name, expression);
     }
 
-    public static IServiceContainer AddIdPolicy<T1, T2, T3>(this IServiceContainer container, string name,
+    public static IServiceContainer AddIdPolicy<T1, T2, T3>(
+        this IServiceContainer container,
+        string name,
         Expression<Func<IdToken, T1, T2, T3, bool>> expression
     )
     {
         return AddPolicy(container, name, expression);
     }
 
-    public static IServiceContainer AddIdPolicy<T1, T2, T3, T4>(this IServiceContainer container, string name,
+    public static IServiceContainer AddIdPolicy<T1, T2, T3, T4>(
+        this IServiceContainer container,
+        string name,
         Expression<Func<IdToken, T1, T2, T3, T4, bool>> expression
     )
     {
         return AddPolicy(container, name, expression);
     }
 
-    public static IServiceContainer AddIdPolicy<T1, T2, T3, T4, T5>(this IServiceContainer container, string name,
+    public static IServiceContainer AddIdPolicy<T1, T2, T3, T4, T5>(
+        this IServiceContainer container,
+        string name,
         Expression<Func<IdToken, T1, T2, T3, T4, T5, bool>> expression
     )
     {

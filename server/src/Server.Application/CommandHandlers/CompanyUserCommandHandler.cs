@@ -9,13 +9,13 @@ using Server.Domain.Models;
 
 namespace Server.Application.CommandHandlers;
 
-internal class CompanyUserCommandHandler :
-    ICommandHandler<AddUserToCompanyCommand>,
-    ICommandHandler<AddCompanyRoleToCompanyUserCommand>,
-    ICommandHandler<DeleteCompanyRoleFromCompanyUserCommand>,
-    ICommandHandler<AddCompanyClaimToCompanyUserCommand>,
-    ICommandHandler<DeleteCompanyClaimFromCompanyUserCommand>,
-    ICommandHandler<DeleteUserFromCompanyCommand>
+internal class CompanyUserCommandHandler
+    : ICommandHandler<AddUserToCompanyCommand>,
+        ICommandHandler<AddCompanyRoleToCompanyUserCommand>,
+        ICommandHandler<DeleteCompanyRoleFromCompanyUserCommand>,
+        ICommandHandler<AddCompanyClaimToCompanyUserCommand>,
+        ICommandHandler<DeleteCompanyClaimFromCompanyUserCommand>,
+        ICommandHandler<DeleteUserFromCompanyCommand>
 {
     private readonly ICompanyUserRepository _companyUserRepository;
     private readonly ICompanyUserRoleRepository _companyUserRoleRepository;
@@ -61,7 +61,9 @@ internal class CompanyUserCommandHandler :
         var role = request.Role;
 
         if (myId != company.OwnerId)
-            return Result.Status(OperationStatus.Forbidden).Error("Need to be company owner to add company role to company user");
+            return Result
+                .Status(OperationStatus.Forbidden)
+                .Error("Need to be company owner to add company role to company user");
 
         if (await _companyUserRepository.TryGetByIdAsync(company.Id, user.Id) is null)
             return Result.Status(OperationStatus.Forbidden).Error("User is not company member");
@@ -83,7 +85,9 @@ internal class CompanyUserCommandHandler :
         var role = request.Role;
 
         if (myId != company.OwnerId)
-            return Result.Status(OperationStatus.Forbidden).Error("Need to be company owner to delete company role from company user");
+            return Result
+                .Status(OperationStatus.Forbidden)
+                .Error("Need to be company owner to delete company role from company user");
 
         if (await _companyUserRepository.TryGetByIdAsync(company.Id, user.Id) is null)
             return Result.Status(OperationStatus.Forbidden).Error("User is not company member");
@@ -104,7 +108,9 @@ internal class CompanyUserCommandHandler :
         var claim = request.Claim;
 
         if (myId != company.OwnerId)
-            return Result.Status(OperationStatus.Forbidden).Error("Need to be company owner to add company claim to company user");
+            return Result
+                .Status(OperationStatus.Forbidden)
+                .Error("Need to be company owner to add company claim to company user");
 
         if (await _companyUserRepository.TryGetByIdAsync(company.Id, user.Id) is null)
             return Result.Status(OperationStatus.Forbidden).Error("User is not company member");
@@ -126,7 +132,9 @@ internal class CompanyUserCommandHandler :
         var claim = request.Claim;
 
         if (myId != company.OwnerId)
-            return Result.Status(OperationStatus.Forbidden).Error("Need to be company owner to delete company claim from company user");
+            return Result
+                .Status(OperationStatus.Forbidden)
+                .Error("Need to be company owner to delete company claim from company user");
 
         if (await _companyUserRepository.TryGetByIdAsync(company.Id, user.Id) is null)
             return Result.Status(OperationStatus.Forbidden).Error("User is not company member");
@@ -146,7 +154,9 @@ internal class CompanyUserCommandHandler :
         var user = request.User;
 
         if (myId != company.OwnerId)
-            return Result.Status(OperationStatus.Forbidden).Error("Need to be company owner to delete user from company");
+            return Result
+                .Status(OperationStatus.Forbidden)
+                .Error("Need to be company owner to delete user from company");
 
         if (await _companyUserRepository.TryGetByIdAsync(company.Id, user.Id) is null)
             return Result.Status(OperationStatus.Forbidden).Error("User is not company member");

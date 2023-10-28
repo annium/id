@@ -10,11 +10,7 @@ public class UserClaim
     public Claim Claim { get; private init; } = default!;
     public string Value { get; private init; } = string.Empty;
 
-    public UserClaim(
-        User user,
-        Claim claim,
-        string value
-    )
+    public UserClaim(User user, Claim claim, string value)
     {
         UserId = user.Id;
         User = user;
@@ -23,7 +19,5 @@ public class UserClaim
         Value = value;
     }
 
-    internal UserClaim()
-    {
-    }
+    internal UserClaim() { }
 }

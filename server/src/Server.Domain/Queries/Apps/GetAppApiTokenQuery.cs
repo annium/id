@@ -10,9 +10,7 @@ public class GetAppApiTokenQuery : IQuery
     public Guid MyId { get; private set; }
     public App App { get; private set; } = null!;
 
-    public GetAppApiTokenQuery(
-        Guid appId
-    )
+    public GetAppApiTokenQuery(Guid appId)
     {
         AppId = appId;
     }

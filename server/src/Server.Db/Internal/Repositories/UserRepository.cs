@@ -25,16 +25,14 @@ internal class UserRepository : IUserRepository
 
     public async Task<User?> TryGetByIdAsync(Guid id)
     {
-        var entity = await _db.Users
-            .FirstOrDefaultAsync(x => x.Id == id);
+        var entity = await _db.Users.FirstOrDefaultAsync(x => x.Id == id);
 
         return entity;
     }
 
     public async Task<User> GetByIdAsync(Guid id)
     {
-        var entity = await _db.Users
-            .FirstOrDefaultAsync(x => x.Id == id);
+        var entity = await _db.Users.FirstOrDefaultAsync(x => x.Id == id);
 
         if (entity is null)
             throw new InvalidOperationException($"User {id} not found");
@@ -44,26 +42,21 @@ internal class UserRepository : IUserRepository
 
     public async Task<IReadOnlyCollection<User>> FindAllByQueryAsync(string query, int limit)
     {
-        var entities = await _db.Users
-            .Where(x => x.Login.StartsWith(query))
-            .Take(limit)
-            .ToArrayAsync();
+        var entities = await _db.Users.Where(x => x.Login.StartsWith(query)).Take(limit).ToArrayAsync();
 
         return entities;
     }
 
     public async Task<User?> TryFindByLoginAsync(string login)
     {
-        var entity = await _db.Users
-            .FirstOrDefaultAsync(x => x.Login == login);
+        var entity = await _db.Users.FirstOrDefaultAsync(x => x.Login == login);
 
         return entity;
     }
 
     public async Task<User> FindByLoginAsync(string login)
     {
-        var entity = await _db.Users
-            .FirstOrDefaultAsync(x => x.Login == login);
+        var entity = await _db.Users.FirstOrDefaultAsync(x => x.Login == login);
 
         if (entity is null)
             throw new InvalidOperationException($"User with login {login} not found");
@@ -73,16 +66,14 @@ internal class UserRepository : IUserRepository
 
     public async Task<User?> TryFindByEmailAsync(string email)
     {
-        var entity = await _db.Users
-            .FirstOrDefaultAsync(x => x.Email == email);
+        var entity = await _db.Users.FirstOrDefaultAsync(x => x.Email == email);
 
         return entity;
     }
 
     public async Task<User> FindByEmailAsync(string email)
     {
-        var entity = await _db.Users
-            .FirstOrDefaultAsync(x => x.Email == email);
+        var entity = await _db.Users.FirstOrDefaultAsync(x => x.Email == email);
 
         if (entity is null)
             throw new InvalidOperationException($"User with email {email} not found");

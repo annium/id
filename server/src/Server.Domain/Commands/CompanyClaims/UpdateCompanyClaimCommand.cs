@@ -12,11 +12,7 @@ public class UpdateCompanyClaimCommand : ICommand
     public Guid MyId { get; private set; }
     public CompanyClaim Claim { get; private set; } = null!;
 
-    public UpdateCompanyClaimCommand(
-        Guid claimId,
-        string key,
-        string name
-    )
+    public UpdateCompanyClaimCommand(Guid claimId, string key, string name)
     {
         ClaimId = claimId;
         Key = key;

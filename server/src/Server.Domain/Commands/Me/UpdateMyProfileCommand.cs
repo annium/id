@@ -9,10 +9,7 @@ public class UpdateMyProfileCommand : ICommand
     public string Email { get; }
     public User User { get; private set; } = null!;
 
-    public UpdateMyProfileCommand(
-        string login,
-        string email
-    )
+    public UpdateMyProfileCommand(string login, string email)
     {
         Login = login;
         Email = email;

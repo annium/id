@@ -24,10 +24,7 @@ public class CompanyClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Post("companies")
-            .JsonContent(body)
-            .AsResponseAsync(defaultValue, ct);
+        return await _request.Post("companies").JsonContent(body).AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IResult<CompanyResponse[]>>> FindCompanies(
@@ -36,10 +33,7 @@ public class CompanyClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Get("companies")
-            .Param("query", query)
-            .AsResponseAsync(defaultValue, ct);
+        return await _request.Get("companies").Param("query", query).AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IResult<CompanyResponse[]>>> ListMyCompanies(
@@ -47,9 +41,7 @@ public class CompanyClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Get("companies/my")
-            .AsResponseAsync(defaultValue, ct);
+        return await _request.Get("companies/my").AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IResult<CompanyResponse>>> GetCompany(
@@ -58,9 +50,7 @@ public class CompanyClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Get($"companies/{companyId}")
-            .AsResponseAsync(defaultValue, ct);
+        return await _request.Get($"companies/{companyId}").AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IResult<UserResponse[]>>> GetCompanyUsers(
@@ -69,9 +59,7 @@ public class CompanyClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Get($"companies/{companyId}/users")
-            .AsResponseAsync(defaultValue, ct);
+        return await _request.Get($"companies/{companyId}/users").AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IResult>> UpdateCompany(
@@ -81,10 +69,7 @@ public class CompanyClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Put($"companies/{companyId}")
-            .JsonContent(body)
-            .AsResponseAsync(defaultValue, ct);
+        return await _request.Put($"companies/{companyId}").JsonContent(body).AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IResult>> SetCompanyOwner(
@@ -94,9 +79,7 @@ public class CompanyClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Put($"companies/{companyId}/owner/{userId}")
-            .AsResponseAsync(defaultValue, ct);
+        return await _request.Put($"companies/{companyId}/owner/{userId}").AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IResult>> UnregisterCompany(
@@ -105,8 +88,6 @@ public class CompanyClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Delete($"companies/{companyId}")
-            .AsResponseAsync(defaultValue, ct);
+        return await _request.Delete($"companies/{companyId}").AsResponseAsync(defaultValue, ct);
     }
 }

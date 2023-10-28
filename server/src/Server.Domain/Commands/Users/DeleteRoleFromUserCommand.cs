@@ -12,10 +12,7 @@ public class DeleteRoleFromUserCommand : ICommand
     public User User { get; private set; } = null!;
     public Role Role { get; private set; } = null!;
 
-    public DeleteRoleFromUserCommand(
-        Guid userId,
-        Guid roleId
-    )
+    public DeleteRoleFromUserCommand(Guid userId, Guid roleId)
     {
         UserId = userId;
         RoleId = roleId;

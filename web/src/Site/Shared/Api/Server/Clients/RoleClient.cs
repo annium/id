@@ -23,10 +23,7 @@ public class RoleClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Post("roles")
-            .JsonContent(body)
-            .AsAsync(defaultValue, ct);
+        return await _request.Post("roles").JsonContent(body).AsAsync(defaultValue, ct);
     }
 
     public async Task<IResult<RoleResponse[]>> ListRoles(
@@ -35,10 +32,7 @@ public class RoleClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Get("roles")
-            .Param("appId", appId)
-            .AsAsync(defaultValue, ct);
+        return await _request.Get("roles").Param("appId", appId).AsAsync(defaultValue, ct);
     }
 
     public async Task<IResult> UpdateRole(
@@ -48,10 +42,7 @@ public class RoleClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Put($"roles/{roleId}")
-            .JsonContent(body)
-            .AsAsync(defaultValue, ct);
+        return await _request.Put($"roles/{roleId}").JsonContent(body).AsAsync(defaultValue, ct);
     }
 
     public async Task<IResult> AddClaimToRole(
@@ -62,10 +53,7 @@ public class RoleClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Post($"roles/{roleId}/claims/{claimId}")
-            .JsonContent(body)
-            .AsAsync(defaultValue, ct);
+        return await _request.Post($"roles/{roleId}/claims/{claimId}").JsonContent(body).AsAsync(defaultValue, ct);
     }
 
     public async Task<IResult> DeleteClaimFromRole(
@@ -75,19 +63,11 @@ public class RoleClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Delete($"roles/{roleId}/claims/{claimId}")
-            .AsAsync(defaultValue, ct);
+        return await _request.Delete($"roles/{roleId}/claims/{claimId}").AsAsync(defaultValue, ct);
     }
 
-    public async Task<IResult> DeleteRole(
-        Guid roleId,
-        IResult defaultValue,
-        CancellationToken ct = default
-    )
+    public async Task<IResult> DeleteRole(Guid roleId, IResult defaultValue, CancellationToken ct = default)
     {
-        return await _request
-            .Delete($"roles/{roleId}")
-            .AsAsync(defaultValue, ct);
+        return await _request.Delete($"roles/{roleId}").AsAsync(defaultValue, ct);
     }
 }

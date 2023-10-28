@@ -13,9 +13,8 @@ namespace Server.IntegrationTests.Controllers;
 
 public class ClaimControllerTest : IntegrationTestBase
 {
-    public ClaimControllerTest(ITestOutputHelper outputHelper) : base(outputHelper)
-    {
-    }
+    public ClaimControllerTest(ITestOutputHelper outputHelper)
+        : base(outputHelper) { }
 
     [Fact]
     public async Task Create_InvalidPayload_BadRequest()
@@ -25,7 +24,10 @@ public class ClaimControllerTest : IntegrationTestBase
         var request = new CreateClaimRequest { AppId = Guid.Empty, Key = Faker.Random.String2(10) };
 
         // act
-        var response = await Id(token).Claim.CreateClaim(request, Result.New(Guid.Empty).Error("Failed to create claim"));
+        var response = await Id(token).Claim.CreateClaim(
+            request,
+            Result.New(Guid.Empty).Error("Failed to create claim")
+        );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.BadRequest);
@@ -36,10 +38,18 @@ public class ClaimControllerTest : IntegrationTestBase
     {
         // arrange
         var token = await Id().RegisterLogUserIn();
-        var request = new CreateClaimRequest { AppId = Guid.NewGuid(), Key = Faker.Random.String2(10), Name = Faker.Random.String2(10) };
+        var request = new CreateClaimRequest
+        {
+            AppId = Guid.NewGuid(),
+            Key = Faker.Random.String2(10),
+            Name = Faker.Random.String2(10)
+        };
 
         // act
-        var response = await Id(token).Claim.CreateClaim(request, Result.New(Guid.Empty).Error("Failed to create claim"));
+        var response = await Id(token).Claim.CreateClaim(
+            request,
+            Result.New(Guid.Empty).Error("Failed to create claim")
+        );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -52,10 +62,18 @@ public class ClaimControllerTest : IntegrationTestBase
         var otherToken = await Id().RegisterLogUserIn();
         var app = await Id(otherToken).App.Register();
         var token = await Id().RegisterLogUserIn();
-        var request = new CreateClaimRequest { AppId = app.Id, Key = Faker.Random.String2(10), Name = Faker.Random.String2(10) };
+        var request = new CreateClaimRequest
+        {
+            AppId = app.Id,
+            Key = Faker.Random.String2(10),
+            Name = Faker.Random.String2(10)
+        };
 
         // act
-        var response = await Id(token).Claim.CreateClaim(request, Result.New(Guid.Empty).Error("Failed to create claim"));
+        var response = await Id(token).Claim.CreateClaim(
+            request,
+            Result.New(Guid.Empty).Error("Failed to create claim")
+        );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -67,12 +85,20 @@ public class ClaimControllerTest : IntegrationTestBase
         // arrange
         var token = await Id().RegisterLogUserIn();
         var app = await Id(token).App.Register();
-        var request = new CreateClaimRequest { AppId = app.Id, Key = Faker.Random.String2(10), Name = Faker.Random.String2(10) };
+        var request = new CreateClaimRequest
+        {
+            AppId = app.Id,
+            Key = Faker.Random.String2(10),
+            Name = Faker.Random.String2(10)
+        };
 
         await Id(token).Claim.CreateClaim(request, Result.New(Guid.Empty).Error("Failed to create claim"));
 
         // act
-        var response = await Id(token).Claim.CreateClaim(request, Result.New(Guid.Empty).Error("Failed to create claim"));
+        var response = await Id(token).Claim.CreateClaim(
+            request,
+            Result.New(Guid.Empty).Error("Failed to create claim")
+        );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.BadRequest);
@@ -104,7 +130,10 @@ public class ClaimControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
 
         // act
-        var response = await Id(token).Claim.ListClaims(Guid.NewGuid(), Result.New(Array.Empty<ClaimResponse>()).Error("Failed to list claims"));
+        var response = await Id(token).Claim.ListClaims(
+            Guid.NewGuid(),
+            Result.New(Array.Empty<ClaimResponse>()).Error("Failed to list claims")
+        );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -119,7 +148,9 @@ public class ClaimControllerTest : IntegrationTestBase
         var claim = await Id(token).Claim.Register(app.Id);
 
         // act
-        var claims = await Id(token).Claim.ListClaims(app.Id, Result.New(Array.Empty<ClaimResponse>()).Error("Failed to list claims")).GetData();
+        var claims = await Id(token).Claim
+            .ListClaims(app.Id, Result.New(Array.Empty<ClaimResponse>()).Error("Failed to list claims"))
+            .GetData();
 
         // assert
         claims.Has(1);
@@ -136,7 +167,11 @@ public class ClaimControllerTest : IntegrationTestBase
         var request = new UpdateClaimRequestBody { Key = Faker.Random.String2(10) };
 
         // act
-        var response = await Id(token).Claim.UpdateClaim(claim.Id, request, Result.New().Error("Failed to update claim"));
+        var response = await Id(token).Claim.UpdateClaim(
+            claim.Id,
+            request,
+            Result.New().Error("Failed to update claim")
+        );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.BadRequest);
@@ -153,7 +188,11 @@ public class ClaimControllerTest : IntegrationTestBase
         var request = new UpdateClaimRequestBody { Key = Faker.Random.String2(10), Name = Faker.Random.String2(10) };
 
         // act
-        var response = await Id(token).Claim.UpdateClaim(claim.Id, request, Result.New().Error("Failed to update claim"));
+        var response = await Id(token).Claim.UpdateClaim(
+            claim.Id,
+            request,
+            Result.New().Error("Failed to update claim")
+        );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -167,7 +206,11 @@ public class ClaimControllerTest : IntegrationTestBase
         var request = new UpdateClaimRequestBody { Key = Faker.Random.String2(10), Name = Faker.Random.String2(10) };
 
         // act
-        var response = await Id(token).Claim.UpdateClaim(Guid.NewGuid(), request, Result.New().Error("Failed to update claim"));
+        var response = await Id(token).Claim.UpdateClaim(
+            Guid.NewGuid(),
+            request,
+            Result.New().Error("Failed to update claim")
+        );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -184,7 +227,11 @@ public class ClaimControllerTest : IntegrationTestBase
         await Id(token).Claim.Register(app.Id, request.Key, request.Name);
 
         // act
-        var response = await Id(token).Claim.UpdateClaim(claim.Id, request, Result.New().Error("Failed to update claim"));
+        var response = await Id(token).Claim.UpdateClaim(
+            claim.Id,
+            request,
+            Result.New().Error("Failed to update claim")
+        );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Conflict);
@@ -200,7 +247,11 @@ public class ClaimControllerTest : IntegrationTestBase
         var request = new UpdateClaimRequestBody { Key = Faker.Random.String2(10), Name = Faker.Random.String2(10) };
 
         // act
-        var response = await Id(token).Claim.UpdateClaim(claim.Id, request, Result.New().Error("Failed to update claim"));
+        var response = await Id(token).Claim.UpdateClaim(
+            claim.Id,
+            request,
+            Result.New().Error("Failed to update claim")
+        );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.OK);

@@ -16,10 +16,7 @@ internal class DeleteRoleCommandValidator : Validator<DeleteRoleCommand>
 
 internal class DeleteRoleCommandComposer : Composer<DeleteRoleCommand>
 {
-    public DeleteRoleCommandComposer(
-        ITokenAccessor tokenAccessor,
-        IRoleRepository roleRepository
-    )
+    public DeleteRoleCommandComposer(ITokenAccessor tokenAccessor, IRoleRepository roleRepository)
     {
         Field(c => c.MyId).LoadWith(_ => tokenAccessor.GetToken().UserId);
         Field(c => c.Role).LoadWith(ctx => roleRepository.TryGetByIdAsync(ctx.Root.RoleId));

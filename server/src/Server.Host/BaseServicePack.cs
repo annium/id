@@ -21,7 +21,8 @@ internal class BaseServicePack : ServicePackBase
     {
         container.AddTime().WithRealTime().SetDefault();
         container.AddHttpRequestFactory(true);
-        container.AddSerializers()
+        container
+            .AddSerializers()
             .WithJson(opts => opts.ConfigureForOperations().ConfigureForNodaTime(), isDefault: true);
         container.AddXRest();
         container.AddLocalization(opts => opts.UseYamlStorage());
@@ -32,15 +33,17 @@ internal class BaseServicePack : ServicePackBase
         container.AddMediator();
 
         // auth
-        container.AddIdAuthorization((sp, opts) =>
-        {
-            var cfg = sp.Resolve<Application.Configuration>();
-            opts.Audience = Constants.IdAppId;
-            opts.PublicKeyFile = cfg.PublicKeyFile;
-            opts.PrivateKeyFile = cfg.PrivateKeyFile;
-            opts.AccessTokenLifeTime = Duration.FromMinutes(30);
-            opts.RefreshTokenLifeTime = Duration.FromDays(1);
-        });
+        container.AddIdAuthorization(
+            (sp, opts) =>
+            {
+                var cfg = sp.Resolve<Application.Configuration>();
+                opts.Audience = Constants.IdAppId;
+                opts.PublicKeyFile = cfg.PublicKeyFile;
+                opts.PrivateKeyFile = cfg.PrivateKeyFile;
+                opts.AccessTokenLifeTime = Duration.FromMinutes(30);
+                opts.RefreshTokenLifeTime = Duration.FromDays(1);
+            }
+        );
         container.AddIdPolicy<Guid>(AuthPolicy.CanRefreshToken, (token, appId) => token.App.Id == appId);
         container.AddIdPolicy<Guid>(AuthPolicy.CanLogOut, (token, appId) => token.App.Id == appId);
 
@@ -49,8 +52,7 @@ internal class BaseServicePack : ServicePackBase
 
         // host
         container.Collection.AddCors();
-        container.Collection.AddControllers()
-            .AddDefaultJsonOptions();
+        container.Collection.AddControllers().AddDefaultJsonOptions();
     }
 
     private void ConfigureMediator(MediatorConfiguration cfg, ITypeManager typeManager)

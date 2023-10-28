@@ -12,10 +12,7 @@ public class AddRoleToUserCommand : ICommand
     public User User { get; private set; } = null!;
     public Role Role { get; private set; } = null!;
 
-    public AddRoleToUserCommand(
-        Guid userId,
-        Guid roleId
-    )
+    public AddRoleToUserCommand(Guid userId, Guid roleId)
     {
         UserId = userId;
         RoleId = roleId;

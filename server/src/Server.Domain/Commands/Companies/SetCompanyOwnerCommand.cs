@@ -12,10 +12,7 @@ public class SetCompanyOwnerCommand : ICommand
     public Company Company { get; private set; } = null!;
     public User User { get; private set; } = null!;
 
-    public SetCompanyOwnerCommand(
-        Guid companyId,
-        Guid userId
-    )
+    public SetCompanyOwnerCommand(Guid companyId, Guid userId)
     {
         CompanyId = companyId;
         UserId = userId;

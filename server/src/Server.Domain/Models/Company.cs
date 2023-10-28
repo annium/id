@@ -12,11 +12,7 @@ public class Company : IIdEntity<Guid>
     public Company? Parent { get; private set; }
     public string Name { get; private set; } = string.Empty;
 
-    public Company(
-        User owner,
-        Company? parent,
-        string name
-    )
+    public Company(User owner, Company? parent, string name)
     {
         Id = Guid.NewGuid();
         OwnerId = owner.Id;
@@ -26,9 +22,7 @@ public class Company : IIdEntity<Guid>
         Name = name;
     }
 
-    internal Company()
-    {
-    }
+    internal Company() { }
 
     public void Update(Company? parent, string name)
     {

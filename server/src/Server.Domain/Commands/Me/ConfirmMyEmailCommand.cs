@@ -11,10 +11,7 @@ public class ConfirmMyEmailCommand : ICommand
     public App App { get; private set; } = null!;
     public User User { get; private set; } = null!;
 
-    public ConfirmMyEmailCommand(
-        Guid appId,
-        Guid id
-    )
+    public ConfirmMyEmailCommand(Guid appId, Guid id)
     {
         AppId = appId;
         Id = id;

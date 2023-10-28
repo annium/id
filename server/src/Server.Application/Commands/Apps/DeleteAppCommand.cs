@@ -16,10 +16,7 @@ internal class DeleteAppCommandValidator : Validator<DeleteAppCommand>
 
 internal class DeleteAppCommandComposer : Composer<DeleteAppCommand>
 {
-    public DeleteAppCommandComposer(
-        ITokenAccessor tokenAccessor,
-        IAppRepository appRepository
-    )
+    public DeleteAppCommandComposer(ITokenAccessor tokenAccessor, IAppRepository appRepository)
     {
         Field(c => c.MyId).LoadWith(_ => tokenAccessor.GetToken().UserId);
         Field(c => c.App).LoadWith(ctx => appRepository.TryGetByIdAsync(ctx.Root.AppId));

@@ -20,7 +20,8 @@ public class ServicePack : ServicePackBase
 
         // app
         container.AddAntDesign();
-        container.AddSerializers()
+        container
+            .AddSerializers()
             .WithJson(opts => opts.ConfigureForOperations().ConfigureForNodaTime(), isDefault: true);
         container.Add<Theme>().AsSelf().Singleton();
         container.AddStates();

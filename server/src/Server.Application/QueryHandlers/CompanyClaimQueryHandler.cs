@@ -11,14 +11,11 @@ using Server.Domain.Queries.CompanyClaims;
 
 namespace Server.Application.QueryHandlers;
 
-public class CompanyClaimQueryHandler :
-    IQueryHandler<ListCompanyClaimsQuery, IEnumerable<CompanyClaim>>
+public class CompanyClaimQueryHandler : IQueryHandler<ListCompanyClaimsQuery, IEnumerable<CompanyClaim>>
 {
     private readonly ICompanyClaimRepository _companyClaimRepository;
 
-    public CompanyClaimQueryHandler(
-        ICompanyClaimRepository companyClaimRepository
-    )
+    public CompanyClaimQueryHandler(ICompanyClaimRepository companyClaimRepository)
     {
         _companyClaimRepository = companyClaimRepository;
     }

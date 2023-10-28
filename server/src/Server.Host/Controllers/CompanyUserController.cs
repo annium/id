@@ -12,12 +12,8 @@ namespace Server.Host.Controllers;
 [Route("companies/{companyId:guid}/users/{userId:guid}")]
 public class CompanyUserController : ServerController
 {
-    public CompanyUserController(
-        IMediator mediator,
-        IServiceProvider sp
-    ) : base(mediator, sp)
-    {
-    }
+    public CompanyUserController(IMediator mediator, IServiceProvider sp)
+        : base(mediator, sp) { }
 
     [HttpPost]
     [Authorize]
@@ -32,7 +28,12 @@ public class CompanyUserController : ServerController
     [Authorize]
     public Task<IResult> AddCompanyRoleToCompanyUser(Guid companyId, Guid userId, Guid roleId)
     {
-        var request = new AddCompanyRoleToCompanyUserRequest { CompanyId = companyId, UserId = userId, RoleId = roleId };
+        var request = new AddCompanyRoleToCompanyUserRequest
+        {
+            CompanyId = companyId,
+            UserId = userId,
+            RoleId = roleId
+        };
 
         return HandleAsync(request);
     }
@@ -41,14 +42,22 @@ public class CompanyUserController : ServerController
     [Authorize]
     public Task<IResult> DeleteCompanyRoleFromCompanyUser(Guid companyId, Guid userId, Guid roleId)
     {
-        var request = new DeleteCompanyRoleFromCompanyUserRequest { CompanyId = companyId, UserId = userId, RoleId = roleId };
+        var request = new DeleteCompanyRoleFromCompanyUserRequest
+        {
+            CompanyId = companyId,
+            UserId = userId,
+            RoleId = roleId
+        };
 
         return HandleAsync(request);
     }
 
     [HttpPost("claims/{claimId:guid}")]
     [Authorize]
-    public Task<IResult> AddCompanyClaimToCompanyUser(Guid companyId, Guid userId, Guid claimId,
+    public Task<IResult> AddCompanyClaimToCompanyUser(
+        Guid companyId,
+        Guid userId,
+        Guid claimId,
         [FromBody] AddCompanyClaimToCompanyUserRequestBody requestBody
     )
     {
@@ -67,7 +76,12 @@ public class CompanyUserController : ServerController
     [Authorize]
     public Task<IResult> DeleteCompanyClaimFromCompanyUser(Guid companyId, Guid userId, Guid claimId)
     {
-        var request = new DeleteCompanyClaimFromCompanyUserRequest { CompanyId = companyId, UserId = userId, ClaimId = claimId };
+        var request = new DeleteCompanyClaimFromCompanyUserRequest
+        {
+            CompanyId = companyId,
+            UserId = userId,
+            ClaimId = claimId
+        };
 
         return HandleAsync(request);
     }

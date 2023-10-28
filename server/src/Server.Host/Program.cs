@@ -17,10 +17,7 @@ app.MapControllers();
 
 await app.RunAsync();
 
-
 namespace Server.Host
 {
-    public partial class Api
-    {
-    }
+    public partial class Api { }
 }

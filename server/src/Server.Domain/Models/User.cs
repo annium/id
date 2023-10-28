@@ -12,12 +12,7 @@ public class User : IIdEntity<Guid>
     public Guid? ReferralId { get; private init; }
     public User? Referral { get; private init; }
 
-    public User(
-        string login,
-        string passwordHash,
-        string email,
-        User? referral
-    )
+    public User(string login, string passwordHash, string email, User? referral)
     {
         Id = Guid.NewGuid();
         Login = login;
@@ -27,9 +22,7 @@ public class User : IIdEntity<Guid>
         Referral = referral;
     }
 
-    internal User()
-    {
-    }
+    internal User() { }
 
     public void SetPasswordHash(string passwordHash)
     {

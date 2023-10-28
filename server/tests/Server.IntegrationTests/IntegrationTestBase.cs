@@ -22,9 +22,8 @@ public class IntegrationTestBase : IntegrationTest, IAsyncLifetime
 {
     protected Faker Faker { get; } = new();
 
-    public IntegrationTestBase(ITestOutputHelper outputHelper) : base(outputHelper)
-    {
-    }
+    public IntegrationTestBase(ITestOutputHelper outputHelper)
+        : base(outputHelper) { }
 
     public async Task InitializeAsync()
     {
@@ -44,10 +43,8 @@ public class IntegrationTestBase : IntegrationTest, IAsyncLifetime
 
     protected readonly TestEmailService EmailService = new();
 
-    private IHttpRequest IdApi => GetAppFactory<Api>(
-        builder => builder.UseServicePack<TestServicePack>(),
-        ConfigureContainer
-    ).GetHttpRequest();
+    private IHttpRequest IdApi =>
+        GetAppFactory<Api>(builder => builder.UseServicePack<TestServicePack>(), ConfigureContainer).GetHttpRequest();
 
     private void ConfigureContainer(IServiceContainer container)
     {
@@ -61,20 +58,26 @@ public class IntegrationTestBase : IntegrationTest, IAsyncLifetime
 
     protected DemoHost.TestClient.Clients.DemoClient Demo(Guid appId) => DemoApi(appId).DemoClient();
 
-    protected DemoHost.TestClient.Clients.DemoClient Demo(Guid appId, string token) => DemoApi(appId).BearerAuthorization(token).DemoClient();
+    protected DemoHost.TestClient.Clients.DemoClient Demo(Guid appId, string token) =>
+        DemoApi(appId).BearerAuthorization(token).DemoClient();
 
-    private IHttpRequest DemoApi(Guid appId) => GetAppFactory<Demo>(
-        builder => builder.UseServicePack<ServicePack>(),
-        services =>
-        {
-            services.AddIdAuthorization((_, options) =>
-            {
-                options.Audience = appId;
-                options.PublicKeyFile = Path.Combine("keys", "public.key");
-                options.AccessTokenLifeTime = Duration.FromMinutes(5);
-                options.RefreshTokenLifeTime = Duration.FromMinutes(5);
-            });
-        }).GetHttpRequest();
+    private IHttpRequest DemoApi(Guid appId) =>
+        GetAppFactory<Demo>(
+                builder => builder.UseServicePack<ServicePack>(),
+                services =>
+                {
+                    services.AddIdAuthorization(
+                        (_, options) =>
+                        {
+                            options.Audience = appId;
+                            options.PublicKeyFile = Path.Combine("keys", "public.key");
+                            options.AccessTokenLifeTime = Duration.FromMinutes(5);
+                            options.RefreshTokenLifeTime = Duration.FromMinutes(5);
+                        }
+                    );
+                }
+            )
+            .GetHttpRequest();
 
     #endregion
 }

@@ -12,10 +12,7 @@ public class DeleteUserFromCompanyCommand : ICommand
     public Company Company { get; private set; } = null!;
     public User User { get; private set; } = null!;
 
-    public DeleteUserFromCompanyCommand(
-        Guid companyId,
-        Guid userId
-    )
+    public DeleteUserFromCompanyCommand(Guid companyId, Guid userId)
     {
         CompanyId = companyId;
         UserId = userId;

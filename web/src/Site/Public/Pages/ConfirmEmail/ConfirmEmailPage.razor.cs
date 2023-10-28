@@ -1,5 +1,3 @@
 namespace Site.Public.Pages.ConfirmEmail;
 
-public partial class ConfirmEmailPage
-{
-}
+public partial class ConfirmEmailPage { }

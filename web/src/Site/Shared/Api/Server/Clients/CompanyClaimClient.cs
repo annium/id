@@ -23,10 +23,7 @@ public class CompanyClaimClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Post("companies/claims")
-            .JsonContent(body)
-            .AsAsync(defaultValue, ct);
+        return await _request.Post("companies/claims").JsonContent(body).AsAsync(defaultValue, ct);
     }
 
     public async Task<IResult<CompanyClaimResponse[]>> ListCompanyClaims(
@@ -35,10 +32,7 @@ public class CompanyClaimClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Get("companies/claims")
-            .Param("appId", appId)
-            .AsAsync(defaultValue, ct);
+        return await _request.Get("companies/claims").Param("appId", appId).AsAsync(defaultValue, ct);
     }
 
     public async Task<IResult> UpdateCompanyClaim(
@@ -48,20 +42,11 @@ public class CompanyClaimClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Put($"companies/claims/{claimId}")
-            .JsonContent(body)
-            .AsAsync(defaultValue, ct);
+        return await _request.Put($"companies/claims/{claimId}").JsonContent(body).AsAsync(defaultValue, ct);
     }
 
-    public async Task<IResult> DeleteCompanyClaim(
-        Guid claimId,
-        IResult defaultValue,
-        CancellationToken ct = default
-    )
+    public async Task<IResult> DeleteCompanyClaim(Guid claimId, IResult defaultValue, CancellationToken ct = default)
     {
-        return await _request
-            .Delete($"companies/claims/{claimId}")
-            .AsAsync(defaultValue, ct);
+        return await _request.Delete($"companies/claims/{claimId}").AsAsync(defaultValue, ct);
     }
 }

@@ -52,9 +52,7 @@ internal class PolicyFilter : IActionFilter
         }
     }
 
-    public void OnActionExecuted(ActionExecutedContext context)
-    {
-    }
+    public void OnActionExecuted(ActionExecutedContext context) { }
 
     private IdToken? GetToken()
     {
@@ -70,6 +68,9 @@ internal class PolicyFilter : IActionFilter
 
     private IActionResult GetFailure(string error)
     {
-        return new ObjectResult(Result.New(OperationStatus.Forbidden).Error(error)) { StatusCode = (int)HttpStatusCode.Forbidden };
+        return new ObjectResult(Result.New(OperationStatus.Forbidden).Error(error))
+        {
+            StatusCode = (int)HttpStatusCode.Forbidden
+        };
     }
 }

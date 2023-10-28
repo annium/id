@@ -7,10 +7,7 @@ namespace Server.Application.Queries.Me;
 
 internal class GetMeQueryComposer : Composer<GetMeQuery>
 {
-    public GetMeQueryComposer(
-        ITokenAccessor tokenAccessor,
-        IUserRepository userRepository
-    )
+    public GetMeQueryComposer(ITokenAccessor tokenAccessor, IUserRepository userRepository)
     {
         Field(e => e.User).LoadWith(_ => userRepository.TryGetByIdAsync(tokenAccessor.GetToken().UserId));
     }

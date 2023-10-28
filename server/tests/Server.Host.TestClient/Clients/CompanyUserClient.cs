@@ -23,9 +23,7 @@ public class CompanyUserClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Post($"companies/{companyId}/users/{userId}")
-            .AsResponseAsync(defaultValue, ct);
+        return await _request.Post($"companies/{companyId}/users/{userId}").AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IResult>> AddCompanyRoleToCompanyUser(
@@ -89,8 +87,6 @@ public class CompanyUserClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Delete($"companies/{companyId}/users/{userId}")
-            .AsResponseAsync(defaultValue, ct);
+        return await _request.Delete($"companies/{companyId}/users/{userId}").AsResponseAsync(defaultValue, ct);
     }
 }

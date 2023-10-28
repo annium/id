@@ -37,34 +37,28 @@ internal class CompanyRepository : ICompanyRepository
 
     public async Task<IReadOnlyCollection<Company>> FindMyAsync(Guid ownerId)
     {
-        var entities = await _db.Companies
-            .Where(x => x.OwnerId == ownerId)
-            .ToArrayAsync();
+        var entities = await _db.Companies.Where(x => x.OwnerId == ownerId).ToArrayAsync();
 
         return entities;
     }
 
     public async Task<IReadOnlyCollection<Company>> GetAllByIdsAsync(IReadOnlyCollection<Guid> ids)
     {
-        var entities = await _db.Companies
-            .Where(x => ids.Contains(x.Id))
-            .ToArrayAsync();
+        var entities = await _db.Companies.Where(x => ids.Contains(x.Id)).ToArrayAsync();
 
         return entities;
     }
 
     public async Task<Company?> TryGetByIdAsync(Guid id)
     {
-        var entity = await _db.Companies
-            .FirstOrDefaultAsync(x => x.Id == id);
+        var entity = await _db.Companies.FirstOrDefaultAsync(x => x.Id == id);
 
         return entity;
     }
 
     public async Task<Company> GetByIdAsync(Guid id)
     {
-        var entity = await _db.Companies
-            .FirstOrDefaultAsync(x => x.Id == id);
+        var entity = await _db.Companies.FirstOrDefaultAsync(x => x.Id == id);
 
         if (entity is null)
             throw new InvalidOperationException($"Company {id} not found");

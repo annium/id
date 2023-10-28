@@ -24,16 +24,14 @@ internal class UserLoginRepository : IUserLoginRepository
 
     public async Task<UserLogin?> TryGetByIdAsync(Guid id)
     {
-        var entity = await _db.UserLogins
-            .FirstOrDefaultAsync(x => x.Id == id);
+        var entity = await _db.UserLogins.FirstOrDefaultAsync(x => x.Id == id);
 
         return entity;
     }
 
     public async Task<UserLogin> GetByIdAsync(Guid id)
     {
-        var entity = await _db.UserLogins
-            .FirstOrDefaultAsync(x => x.Id == id);
+        var entity = await _db.UserLogins.FirstOrDefaultAsync(x => x.Id == id);
 
         if (entity is null)
             throw new InvalidOperationException($"Claim {id} not found");
@@ -43,16 +41,14 @@ internal class UserLoginRepository : IUserLoginRepository
 
     public async Task<UserLogin?> TryFindByRefreshTokenAsync(Guid token)
     {
-        var entity = await _db.UserLogins
-            .FirstOrDefaultAsync(x => x.RefreshToken == token);
+        var entity = await _db.UserLogins.FirstOrDefaultAsync(x => x.RefreshToken == token);
 
         return entity;
     }
 
     public async Task<UserLogin> FindByRefreshTokenAsync(Guid token)
     {
-        var entity = await _db.UserLogins
-            .FirstOrDefaultAsync(x => x.RefreshToken == token);
+        var entity = await _db.UserLogins.FirstOrDefaultAsync(x => x.RefreshToken == token);
 
         if (entity is null)
             throw new InvalidOperationException($"User login with refresh token {token} not found");

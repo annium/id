@@ -15,9 +15,7 @@ internal class GetAppQueryValidator : Validator<GetAppQuery>
 
 internal class GetAppQueryComposer : Composer<GetAppQuery>
 {
-    public GetAppQueryComposer(
-        IAppRepository appRepository
-    )
+    public GetAppQueryComposer(IAppRepository appRepository)
     {
         Field(c => c.App).LoadWith(ctx => appRepository.TryGetByIdAsync(ctx.Root.AppId));
     }

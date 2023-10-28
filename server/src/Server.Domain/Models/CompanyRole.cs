@@ -21,11 +21,7 @@ public class CompanyRole : IIdEntity<Guid>
 
     private readonly List<CompanyRoleClaim> _claims = new();
 
-    public CompanyRole(
-        App app,
-        string key,
-        string name
-    )
+    public CompanyRole(App app, string key, string name)
     {
         Id = Guid.NewGuid();
         AppId = app.Id;
@@ -34,9 +30,7 @@ public class CompanyRole : IIdEntity<Guid>
         Name = name;
     }
 
-    internal CompanyRole()
-    {
-    }
+    internal CompanyRole() { }
 
     public void Update(string key, string name)
     {

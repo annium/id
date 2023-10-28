@@ -8,7 +8,8 @@ public class IdTokenResponse
     public Guid UserId { get; private set; }
     public Guid LoginId { get; private set; }
     public AppTokenResponse App { get; private set; } = default!;
-    public IReadOnlyCollection<CompanyTokenResponse> Companies { get; private set; } = Array.Empty<CompanyTokenResponse>();
+    public IReadOnlyCollection<CompanyTokenResponse> Companies { get; private set; } =
+        Array.Empty<CompanyTokenResponse>();
 }
 
 public class AppTokenResponse

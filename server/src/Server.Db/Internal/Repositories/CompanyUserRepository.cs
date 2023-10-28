@@ -25,8 +25,7 @@ internal class CompanyUserRepository : ICompanyUserRepository
 
     public async Task<CompanyUser?> TryGetByIdAsync(Guid companyId, Guid userId)
     {
-        var entity = await _db.CompanyUsers
-            .FirstOrDefaultAsync(x => x.CompanyId == companyId && x.UserId == userId);
+        var entity = await _db.CompanyUsers.FirstOrDefaultAsync(x => x.CompanyId == companyId && x.UserId == userId);
 
         return entity;
     }

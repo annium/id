@@ -6,9 +6,7 @@ public class FindCompaniesQuery : IQuery
 {
     public string Query { get; }
 
-    public FindCompaniesQuery(
-        string query
-    )
+    public FindCompaniesQuery(string query)
     {
         Query = query;
     }

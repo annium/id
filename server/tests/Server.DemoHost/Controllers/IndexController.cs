@@ -13,10 +13,7 @@ public class IndexController : ControllerBase
     private readonly ITokenAccessor _tokenAccessor;
     private readonly IMapper _mapper;
 
-    public IndexController(
-        ITokenAccessor tokenAccessor,
-        IMapper mapper
-    )
+    public IndexController(ITokenAccessor tokenAccessor, IMapper mapper)
     {
         _tokenAccessor = tokenAccessor;
         _mapper = mapper;

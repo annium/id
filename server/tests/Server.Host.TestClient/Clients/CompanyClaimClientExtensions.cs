@@ -17,9 +17,18 @@ public static class CompanyClaimClientExtensions
         string? name = null
     )
     {
-        var request = new CreateCompanyClaimRequest { AppId = appId, Key = key ?? Faker.Random.String2(5), Name = name ?? Faker.Random.String2(10) };
-        var claimId = await client.CreateCompanyClaim(request, Result.New(Guid.Empty).Error("Failed to create claim")).GetData();
-        var claims = await client.ListCompanyClaims(appId, Result.New(Array.Empty<CompanyClaimResponse>()).Error("Failed to list claims")).GetData();
+        var request = new CreateCompanyClaimRequest
+        {
+            AppId = appId,
+            Key = key ?? Faker.Random.String2(5),
+            Name = name ?? Faker.Random.String2(10)
+        };
+        var claimId = await client
+            .CreateCompanyClaim(request, Result.New(Guid.Empty).Error("Failed to create claim"))
+            .GetData();
+        var claims = await client
+            .ListCompanyClaims(appId, Result.New(Array.Empty<CompanyClaimResponse>()).Error("Failed to list claims"))
+            .GetData();
 
         return claims.Single(x => x.Id == claimId);
     }

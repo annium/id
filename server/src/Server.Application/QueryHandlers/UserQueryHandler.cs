@@ -11,15 +11,11 @@ using Server.Domain.Queries.Users;
 
 namespace Server.Application.QueryHandlers;
 
-internal class UserQueryHandler :
-    IQueryHandler<FindUsersQuery, IEnumerable<User>>,
-    IQueryHandler<GetUserQuery, User>
+internal class UserQueryHandler : IQueryHandler<FindUsersQuery, IEnumerable<User>>, IQueryHandler<GetUserQuery, User>
 {
     private readonly IUserRepository _userRepository;
 
-    public UserQueryHandler(
-        IUserRepository userRepository
-    )
+    public UserQueryHandler(IUserRepository userRepository)
     {
         _userRepository = userRepository;
     }
@@ -34,10 +30,7 @@ internal class UserQueryHandler :
         return Result.Status(OperationStatus.Ok, users.AsEnumerable());
     }
 
-    public Task<IStatusResult<OperationStatus, User>> HandleAsync(
-        GetUserQuery request,
-        CancellationToken ct
-    )
+    public Task<IStatusResult<OperationStatus, User>> HandleAsync(GetUserQuery request, CancellationToken ct)
     {
         return Task.FromResult(Result.Status(OperationStatus.Ok, request.User));
     }

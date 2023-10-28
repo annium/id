@@ -14,10 +14,7 @@ internal class TokenWriter : ITokenWriter
     private readonly AuthOptions _options;
     private readonly ITimeProvider _timeProvider;
 
-    public TokenWriter(
-        AuthOptions options,
-        ITimeProvider timeProvider
-    )
+    public TokenWriter(AuthOptions options, ITimeProvider timeProvider)
     {
         _securityKey = RSA.Create().ImportPem(File.ReadAllText(options.PrivateKeyFile)).GetKey();
         _options = options;

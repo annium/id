@@ -11,19 +11,16 @@ using Server.Domain.Queries.Companies;
 
 namespace Server.Application.QueryHandlers;
 
-internal class CompanyQueryHandler :
-    IQueryHandler<FindCompaniesQuery, IEnumerable<Company>>,
-    IQueryHandler<ListMyCompaniesQuery, IEnumerable<Company>>,
-    IQueryHandler<GetCompanyQuery, Company>,
-    IQueryHandler<GetCompanyUsersQuery, IEnumerable<User>>
+internal class CompanyQueryHandler
+    : IQueryHandler<FindCompaniesQuery, IEnumerable<Company>>,
+        IQueryHandler<ListMyCompaniesQuery, IEnumerable<Company>>,
+        IQueryHandler<GetCompanyQuery, Company>,
+        IQueryHandler<GetCompanyUsersQuery, IEnumerable<User>>
 {
     private readonly ICompanyRepository _companyRepository;
     private readonly ICompanyUserRepository _companyUserRepository;
 
-    public CompanyQueryHandler(
-        ICompanyRepository companyRepository,
-        ICompanyUserRepository companyUserRepository
-    )
+    public CompanyQueryHandler(ICompanyRepository companyRepository, ICompanyUserRepository companyUserRepository)
     {
         _companyRepository = companyRepository;
         _companyUserRepository = companyUserRepository;

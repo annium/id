@@ -7,11 +7,7 @@ namespace Annium.Id.Core.Internal;
 
 internal class PolicyMapper : IPolicyMapper
 {
-    public void EnsureMappable(
-        Policy policy,
-        string endpoint,
-        IReadOnlyDictionary<string, Type> parameters
-    )
+    public void EnsureMappable(Policy policy, string endpoint, IReadOnlyDictionary<string, Type> parameters)
     {
         foreach (var (name, type) in policy.Parameters)
             if (!parameters.Any(p => p.Key == name && p.Value == type))
@@ -32,6 +28,7 @@ internal class PolicyMapper : IPolicyMapper
 
         var body = Expression.NewArrayInit(typeof(object), initializers);
 
-        return (Func<IdToken, IReadOnlyDictionary<string, object>, object[]>)Expression.Lambda(body, parameters).Compile();
+        return (Func<IdToken, IReadOnlyDictionary<string, object>, object[]>)
+            Expression.Lambda(body, parameters).Compile();
     }
 }

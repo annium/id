@@ -12,11 +12,7 @@ public class CreateRoleCommand : ICommand
     public Guid MyId { get; private set; }
     public App App { get; private set; } = null!;
 
-    public CreateRoleCommand(
-        Guid appId,
-        string key,
-        string name
-    )
+    public CreateRoleCommand(Guid appId, string key, string name)
     {
         AppId = appId;
         Key = key;

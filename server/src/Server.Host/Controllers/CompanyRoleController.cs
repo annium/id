@@ -14,12 +14,8 @@ namespace Server.Host.Controllers;
 [Route("companies/roles")]
 public class CompanyRoleController : ServerController
 {
-    public CompanyRoleController(
-        IMediator mediator,
-        IServiceProvider sp
-    ) : base(mediator, sp)
-    {
-    }
+    public CompanyRoleController(IMediator mediator, IServiceProvider sp)
+        : base(mediator, sp) { }
 
     [HttpPost]
     [Authorize]
@@ -53,7 +49,11 @@ public class CompanyRoleController : ServerController
 
     [HttpPost("{roleId:guid}/claims/{claimId:guid}")]
     [Authorize]
-    public Task<IResult> AddClaimToRole(Guid roleId, Guid claimId, [FromBody] AddCompanyClaimToCompanyRoleRequestBody requestBody)
+    public Task<IResult> AddClaimToRole(
+        Guid roleId,
+        Guid claimId,
+        [FromBody] AddCompanyClaimToCompanyRoleRequestBody requestBody
+    )
     {
         var request = new AddCompanyClaimToCompanyRoleRequest
         {

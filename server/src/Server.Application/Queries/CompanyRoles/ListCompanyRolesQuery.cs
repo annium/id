@@ -15,9 +15,7 @@ internal class ListCompanyRolesQueryValidator : Validator<ListCompanyRolesQuery>
 
 internal class ListCompanyRolesQueryComposer : Composer<ListCompanyRolesQuery>
 {
-    public ListCompanyRolesQueryComposer(
-        IAppRepository appRepository
-    )
+    public ListCompanyRolesQueryComposer(IAppRepository appRepository)
     {
         Field(c => c.App).LoadWith(ctx => appRepository.TryGetByIdAsync(ctx.Root.AppId));
     }

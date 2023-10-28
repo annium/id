@@ -14,12 +14,8 @@ namespace Server.Host.Controllers;
 [Route("roles")]
 public class RoleController : ServerController
 {
-    public RoleController(
-        IMediator mediator,
-        IServiceProvider sp
-    ) : base(mediator, sp)
-    {
-    }
+    public RoleController(IMediator mediator, IServiceProvider sp)
+        : base(mediator, sp) { }
 
     [HttpPost]
     [Authorize]
@@ -69,11 +65,7 @@ public class RoleController : ServerController
     [Authorize]
     public Task<IResult> DeleteClaimFromRole(Guid roleId, Guid claimId)
     {
-        var request = new DeleteClaimFromRoleRequest
-        {
-            RoleId = roleId,
-            ClaimId = claimId
-        };
+        var request = new DeleteClaimFromRoleRequest { RoleId = roleId, ClaimId = claimId };
 
         return HandleAsync(request);
     }
@@ -82,10 +74,7 @@ public class RoleController : ServerController
     [Authorize]
     public Task<IResult> DeleteRole(Guid roleId)
     {
-        var request = new DeleteRoleRequest
-        {
-            RoleId = roleId
-        };
+        var request = new DeleteRoleRequest { RoleId = roleId };
 
         return HandleAsync(request);
     }

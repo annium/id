@@ -37,9 +37,7 @@ public class UserClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Get($"users/{userId}")
-            .AsResponseAsync(defaultValue, ct);
+        return await _request.Get($"users/{userId}").AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IResult>> AddRoleToUser(
@@ -49,9 +47,7 @@ public class UserClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Post($"users/{userId}/roles/{roleId}")
-            .AsResponseAsync(defaultValue, ct);
+        return await _request.Post($"users/{userId}/roles/{roleId}").AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IResult>> DeleteRoleFromUser(
@@ -61,9 +57,7 @@ public class UserClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Delete($"users/{userId}/roles/{roleId}")
-            .AsResponseAsync(defaultValue, ct);
+        return await _request.Delete($"users/{userId}/roles/{roleId}").AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IResult>> AddClaimToUser(
@@ -87,8 +81,6 @@ public class UserClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Delete($"users/{userId}/claims/{claimId}")
-            .AsResponseAsync(defaultValue, ct);
+        return await _request.Delete($"users/{userId}/claims/{claimId}").AsResponseAsync(defaultValue, ct);
     }
 }

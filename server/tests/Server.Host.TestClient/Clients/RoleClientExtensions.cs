@@ -18,9 +18,16 @@ public static class RoleClientExtensions
         string? name = null
     )
     {
-        var request = new CreateRoleRequest { AppId = appId, Key = key ?? Faker.Random.String2(5), Name = name ?? Faker.Random.String2(10) };
+        var request = new CreateRoleRequest
+        {
+            AppId = appId,
+            Key = key ?? Faker.Random.String2(5),
+            Name = name ?? Faker.Random.String2(10)
+        };
         var roleId = await client.CreateRole(request, Result.New(Guid.Empty).Error("Failed to create role")).GetData();
-        var roles = await client.ListRoles(appId, Result.New(Array.Empty<RoleResponse>()).Error("Failed to list roles")).GetData();
+        var roles = await client
+            .ListRoles(appId, Result.New(Array.Empty<RoleResponse>()).Error("Failed to list roles"))
+            .GetData();
 
         return roles.Single(x => x.Id == roleId);
     }

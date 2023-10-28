@@ -27,9 +27,7 @@ internal class AuthorizationApplicationModelProvider : IApplicationModelProvider
         _mapper = mapper;
     }
 
-    public void OnProvidersExecuted(ApplicationModelProviderContext context)
-    {
-    }
+    public void OnProvidersExecuted(ApplicationModelProviderContext context) { }
 
     public void OnProvidersExecuting(ApplicationModelProviderContext context)
     {
@@ -58,7 +56,9 @@ internal class AuthorizationApplicationModelProvider : IApplicationModelProvider
 
         var policy = _policies.FirstOrDefault(p => p.Name == attribute.PolicyName);
         if (policy is null)
-            throw new ArgumentException($"Policy {attribute.PolicyName}, requested by {actionModel.DisplayName} is not registered");
+            throw new ArgumentException(
+                $"Policy {attribute.PolicyName}, requested by {actionModel.DisplayName} is not registered"
+            );
 
         _mapper.EnsureMappable(
             policy,

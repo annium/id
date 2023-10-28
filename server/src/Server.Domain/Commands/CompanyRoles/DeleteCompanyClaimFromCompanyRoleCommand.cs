@@ -12,10 +12,7 @@ public class DeleteCompanyClaimFromCompanyRoleCommand : ICommand
     public CompanyRole Role { get; private set; } = null!;
     public CompanyClaim Claim { get; private set; } = null!;
 
-    public DeleteCompanyClaimFromCompanyRoleCommand(
-        Guid roleId,
-        Guid claimId
-    )
+    public DeleteCompanyClaimFromCompanyRoleCommand(Guid roleId, Guid claimId)
     {
         RoleId = roleId;
         ClaimId = claimId;

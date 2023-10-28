@@ -7,10 +7,7 @@ namespace Server.Application.Queries.Companies;
 
 internal class ListMyCompaniesQueryComposer : Composer<ListMyCompaniesQuery>
 {
-    public ListMyCompaniesQueryComposer(
-        ITokenAccessor tokenAccessor,
-        IUserRepository userRepository
-    )
+    public ListMyCompaniesQueryComposer(ITokenAccessor tokenAccessor, IUserRepository userRepository)
     {
         Field(c => c.User).LoadWith(_ => userRepository.TryGetByIdAsync(tokenAccessor.GetToken().UserId));
     }

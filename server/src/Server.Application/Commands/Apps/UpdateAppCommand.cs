@@ -17,10 +17,7 @@ internal class UpdateAppCommandValidator : Validator<UpdateAppCommand>
 
 internal class UpdateAppCommandComposer : Composer<UpdateAppCommand>
 {
-    public UpdateAppCommandComposer(
-        ITokenAccessor tokenAccessor,
-        IAppRepository appRepository
-    )
+    public UpdateAppCommandComposer(ITokenAccessor tokenAccessor, IAppRepository appRepository)
     {
         Field(c => c.MyId).LoadWith(_ => tokenAccessor.GetToken().UserId);
         Field(c => c.App).LoadWith(ctx => appRepository.TryGetByIdAsync(ctx.Root.AppId));

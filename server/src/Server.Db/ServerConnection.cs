@@ -24,10 +24,8 @@ public class ServerConnection : DataConnection, ILogSubject
     public ITable<UserLogin> UserLogins { get; set; }
     public ITable<UserRole> UserRoles { get; set; }
 
-    public ServerConnection(
-        DataOptions<ServerConnection> config,
-        ILogger logger
-    ) : base(config.Options)
+    public ServerConnection(DataOptions<ServerConnection> config, ILogger logger)
+        : base(config.Options)
     {
         Logger = logger;
         Apps = this.GetTable<App>();

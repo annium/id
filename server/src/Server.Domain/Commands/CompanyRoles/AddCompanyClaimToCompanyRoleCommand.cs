@@ -13,11 +13,7 @@ public class AddCompanyClaimToCompanyRoleCommand : ICommand
     public CompanyRole Role { get; private set; } = null!;
     public CompanyClaim Claim { get; private set; } = null!;
 
-    public AddCompanyClaimToCompanyRoleCommand(
-        Guid roleId,
-        Guid claimId,
-        string value
-    )
+    public AddCompanyClaimToCompanyRoleCommand(Guid roleId, Guid claimId, string value)
     {
         RoleId = roleId;
         ClaimId = claimId;

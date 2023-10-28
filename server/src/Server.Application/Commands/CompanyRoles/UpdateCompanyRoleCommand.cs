@@ -18,10 +18,7 @@ internal class UpdateCompanyRoleCommandValidator : Validator<UpdateCompanyRoleCo
 
 internal class UpdateCompanyRoleCommandComposer : Composer<UpdateCompanyRoleCommand>
 {
-    public UpdateCompanyRoleCommandComposer(
-        ITokenAccessor tokenAccessor,
-        ICompanyRoleRepository companyRoleRepository
-    )
+    public UpdateCompanyRoleCommandComposer(ITokenAccessor tokenAccessor, ICompanyRoleRepository companyRoleRepository)
     {
         Field(c => c.MyId).LoadWith(_ => tokenAccessor.GetToken().UserId);
         Field(c => c.Role).LoadWith(ctx => companyRoleRepository.TryGetByIdAsync(ctx.Root.RoleId));

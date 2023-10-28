@@ -12,11 +12,7 @@ public class CreateCompanyClaimCommand : ICommand
     public Guid MyId { get; private set; }
     public App App { get; private set; } = null!;
 
-    public CreateCompanyClaimCommand(
-        Guid appId,
-        string key,
-        string name
-    )
+    public CreateCompanyClaimCommand(Guid appId, string key, string name)
     {
         AppId = appId;
         Key = key;

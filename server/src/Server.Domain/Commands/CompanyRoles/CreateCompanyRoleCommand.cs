@@ -12,11 +12,7 @@ public class CreateCompanyRoleCommand : ICommand
     public Guid MyId { get; private set; }
     public App App { get; private set; } = null!;
 
-    public CreateCompanyRoleCommand(
-        Guid appId,
-        string key,
-        string name
-    )
+    public CreateCompanyRoleCommand(Guid appId, string key, string name)
     {
         AppId = appId;
         Key = key;

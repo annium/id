@@ -14,12 +14,8 @@ namespace Server.Host.Controllers;
 [Route("me")]
 public class MeController : ServerController
 {
-    public MeController(
-        IMediator mediator,
-        IServiceProvider sp
-    ) : base(mediator, sp)
-    {
-    }
+    public MeController(IMediator mediator, IServiceProvider sp)
+        : base(mediator, sp) { }
 
     [HttpPost]
     public Task<IResult> RegisterMe([FromBody] RegisterMeRequest request)
@@ -28,15 +24,9 @@ public class MeController : ServerController
     }
 
     [HttpPost("{appId:guid}/confirm-email")]
-    public Task<IResult<TokensResponse>> ConfirmMyEmail(Guid appId,
-        [FromBody] ConfirmMyEmailRequestBody requestBody
-    )
+    public Task<IResult<TokensResponse>> ConfirmMyEmail(Guid appId, [FromBody] ConfirmMyEmailRequestBody requestBody)
     {
-        var request = new ConfirmMyEmailRequest
-        {
-            AppId = appId,
-            Id = requestBody.Id
-        };
+        var request = new ConfirmMyEmailRequest { AppId = appId, Id = requestBody.Id };
 
         return HandleAsync<ConfirmMyEmailRequest, TokensResponse>(request);
     }

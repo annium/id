@@ -10,18 +10,15 @@ using Server.Domain.Models;
 
 namespace Server.Application.CommandHandlers;
 
-internal class CompanyClaimCommandHandler :
-    ICommandHandler<CreateCompanyClaimCommand, Guid>,
-    ICommandHandler<UpdateCompanyClaimCommand>,
-    ICommandHandler<DeleteCompanyClaimCommand>
+internal class CompanyClaimCommandHandler
+    : ICommandHandler<CreateCompanyClaimCommand, Guid>,
+        ICommandHandler<UpdateCompanyClaimCommand>,
+        ICommandHandler<DeleteCompanyClaimCommand>
 {
     private readonly IAppRepository _appRepository;
     private readonly ICompanyClaimRepository _companyClaimRepository;
 
-    public CompanyClaimCommandHandler(
-        IAppRepository appRepository,
-        ICompanyClaimRepository companyClaimRepository
-    )
+    public CompanyClaimCommandHandler(IAppRepository appRepository, ICompanyClaimRepository companyClaimRepository)
     {
         _appRepository = appRepository;
         _companyClaimRepository = companyClaimRepository;
@@ -36,13 +33,11 @@ internal class CompanyClaimCommandHandler :
         var app = request.App;
 
         if (myId != app.OwnerId)
-            return Result.Status(OperationStatus.Forbidden, Guid.Empty).Error("Need to be application owner to create company claim");
+            return Result
+                .Status(OperationStatus.Forbidden, Guid.Empty)
+                .Error("Need to be application owner to create company claim");
 
-        var claim = new CompanyClaim(
-            app.Id,
-            request.Key,
-            request.Name
-        );
+        var claim = new CompanyClaim(app.Id, request.Key, request.Name);
 
         await _companyClaimRepository.CreateAsync(claim);
 
@@ -59,7 +54,9 @@ internal class CompanyClaimCommandHandler :
         var claim = request.Claim;
 
         if (myId != app.OwnerId)
-            return Result.Status(OperationStatus.Forbidden).Error("Need to be application owner to update company claim");
+            return Result
+                .Status(OperationStatus.Forbidden)
+                .Error("Need to be application owner to update company claim");
 
         if (request.Key != claim.Key && await _companyClaimRepository.TryFindByKeyAsync(app.Id, request.Key) != null)
             return Result.Status(OperationStatus.Conflict).Error($"Company claim key {request.Key} is already used");
@@ -81,7 +78,9 @@ internal class CompanyClaimCommandHandler :
         var claim = request.Claim;
 
         if (myId != app.OwnerId)
-            return Result.Status(OperationStatus.Forbidden).Error("Need to be application owner to delete company claim");
+            return Result
+                .Status(OperationStatus.Forbidden)
+                .Error("Need to be application owner to delete company claim");
 
         await _companyClaimRepository.DeleteByIdAsync(claim.Id);
 

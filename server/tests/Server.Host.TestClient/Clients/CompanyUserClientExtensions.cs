@@ -9,13 +9,13 @@ namespace Server.Host.TestClient.Clients;
 
 public static class CompanyUserClientExtensions
 {
-    public static async Task<IHttpResponse<IResult>> AddUser(
-        this CompanyUserClient client,
-        Guid companyId,
-        Guid userId
-    )
+    public static async Task<IHttpResponse<IResult>> AddUser(this CompanyUserClient client, Guid companyId, Guid userId)
     {
-        var response = await client.AddUserToCompany(companyId, userId, Result.New().Error("Failed to add user to company"));
+        var response = await client.AddUserToCompany(
+            companyId,
+            userId,
+            Result.New().Error("Failed to add user to company")
+        );
 
         return response;
     }
@@ -27,7 +27,12 @@ public static class CompanyUserClientExtensions
         Guid roleId
     )
     {
-        var response = await client.AddCompanyRoleToCompanyUser(companyId, userId, roleId, Result.New().Error("Failed to add role to user"));
+        var response = await client.AddCompanyRoleToCompanyUser(
+            companyId,
+            userId,
+            roleId,
+            Result.New().Error("Failed to add role to user")
+        );
 
         return response;
     }

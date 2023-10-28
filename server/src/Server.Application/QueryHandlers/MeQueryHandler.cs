@@ -10,15 +10,11 @@ using Server.Domain.Queries.Me;
 
 namespace Server.Application.QueryHandlers;
 
-internal class MeQueryHandler :
-    IQueryHandler<GetMeQuery, User>,
-    IQueryHandler<GetMyTokenQuery, IdToken>
+internal class MeQueryHandler : IQueryHandler<GetMeQuery, User>, IQueryHandler<GetMyTokenQuery, IdToken>
 {
     private readonly ITokenGenerator _tokenGenerator;
 
-    public MeQueryHandler(
-        ITokenGenerator tokenGenerator
-    )
+    public MeQueryHandler(ITokenGenerator tokenGenerator)
     {
         _tokenGenerator = tokenGenerator;
     }

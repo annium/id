@@ -14,10 +14,10 @@ using Server.Domain.Models;
 
 namespace Server.Application.CommandHandlers;
 
-internal class LoginCommandHandler :
-    ICommandHandler<LogInCommand, Tokens>,
-    ICommandHandler<LogOutCommand>,
-    ICommandHandler<UpdateTokensCommand, Tokens>
+internal class LoginCommandHandler
+    : ICommandHandler<LogInCommand, Tokens>,
+        ICommandHandler<LogOutCommand>,
+        ICommandHandler<UpdateTokensCommand, Tokens>
 {
     private readonly ITimeProvider _timeProvider;
     private readonly AuthOptions _options;

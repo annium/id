@@ -11,10 +11,7 @@ public class UpdateAppCommand : ICommand
     public Guid MyId { get; private set; }
     public App App { get; private set; } = null!;
 
-    public UpdateAppCommand(
-        Guid appId,
-        string name
-    )
+    public UpdateAppCommand(Guid appId, string name)
     {
         AppId = appId;
         Name = name;

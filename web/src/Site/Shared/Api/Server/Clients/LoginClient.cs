@@ -24,10 +24,7 @@ public class LoginClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Post($"me/{appId}/login")
-            .JsonContent(body)
-            .AsAsync(defaultValue, ct);
+        return await _request.Post($"me/{appId}/login").JsonContent(body).AsAsync(defaultValue, ct);
     }
 
     public async Task<IResult<TokensResponse>> UpdateToken(
@@ -37,20 +34,11 @@ public class LoginClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Put($"me/{appId}/token")
-            .Param("refreshToken", refreshToken)
-            .AsAsync(defaultValue, ct);
+        return await _request.Put($"me/{appId}/token").Param("refreshToken", refreshToken).AsAsync(defaultValue, ct);
     }
 
-    public async Task<IResult> LogOut(
-        Guid appId,
-        IResult defaultValue,
-        CancellationToken ct = default
-    )
+    public async Task<IResult> LogOut(Guid appId, IResult defaultValue, CancellationToken ct = default)
     {
-        return await _request
-            .Delete($"me/{appId}/logout")
-            .AsAsync(defaultValue, ct);
+        return await _request.Delete($"me/{appId}/logout").AsAsync(defaultValue, ct);
     }
 }

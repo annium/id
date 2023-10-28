@@ -26,7 +26,8 @@ internal class CompanyRoleRepository : ICompanyRoleRepository
     public async Task<IReadOnlyCollection<CompanyRole>> GetAllAsync(Guid appId)
     {
         var entities = await _db.CompanyRoles
-            .LoadWith(x => x.Claims).ThenLoad(x => x.Claim)
+            .LoadWith(x => x.Claims)
+            .ThenLoad(x => x.Claim)
             .Where(x => x.AppId == appId)
             .ToArrayAsync();
 
@@ -35,16 +36,14 @@ internal class CompanyRoleRepository : ICompanyRoleRepository
 
     public async Task<CompanyRole?> TryGetByIdAsync(Guid id)
     {
-        var entity = await _db.CompanyRoles
-            .FirstOrDefaultAsync(c => c.Id == id);
+        var entity = await _db.CompanyRoles.FirstOrDefaultAsync(c => c.Id == id);
 
         return entity;
     }
 
     public async Task<CompanyRole> GetByIdAsync(Guid id)
     {
-        var entity = await _db.CompanyRoles
-            .FirstOrDefaultAsync(c => c.Id == id);
+        var entity = await _db.CompanyRoles.FirstOrDefaultAsync(c => c.Id == id);
 
         if (entity is null)
             throw new InvalidOperationException($"Role {id} not found");
@@ -54,8 +53,7 @@ internal class CompanyRoleRepository : ICompanyRoleRepository
 
     public async Task<CompanyRole?> TryFindByKeyAsync(Guid appId, string key)
     {
-        var entity = await _db.CompanyRoles
-            .FirstOrDefaultAsync(c => c.AppId == appId && c.Key == key);
+        var entity = await _db.CompanyRoles.FirstOrDefaultAsync(c => c.AppId == appId && c.Key == key);
 
         return entity;
     }

@@ -15,14 +15,9 @@ public class IndexClient
         _request = request;
     }
 
-    public async Task<IHttpResponse<IdTokenResponse>> Base(
-        IdTokenResponse defaultValue,
-        CancellationToken ct = default
-    )
+    public async Task<IHttpResponse<IdTokenResponse>> Base(IdTokenResponse defaultValue, CancellationToken ct = default)
     {
-        return await _request
-            .Get("base")
-            .AsResponseAsync(defaultValue, ct);
+        return await _request.Get("base").AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IdTokenResponse>> IsAdmin(
@@ -30,9 +25,7 @@ public class IndexClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Get("isAdmin")
-            .AsResponseAsync(defaultValue, ct);
+        return await _request.Get("isAdmin").AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IdTokenResponse>> HasPaymentsAccess(
@@ -40,9 +33,7 @@ public class IndexClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Get("hasPaymentsAccess")
-            .AsResponseAsync(defaultValue, ct);
+        return await _request.Get("hasPaymentsAccess").AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IdTokenResponse>> HasCompanyPaymentsAccess(
@@ -51,8 +42,6 @@ public class IndexClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Get($"hasCompanyPaymentsAccess/{companyId}")
-            .AsResponseAsync(defaultValue, ct);
+        return await _request.Get($"hasCompanyPaymentsAccess/{companyId}").AsResponseAsync(defaultValue, ct);
     }
 }

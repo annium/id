@@ -11,11 +11,7 @@ public class CompanyUserRole
     public Guid RoleId { get; private init; }
     public CompanyRole Role { get; private init; } = default!;
 
-    public CompanyUserRole(
-        Company company,
-        User user,
-        CompanyRole role
-    )
+    public CompanyUserRole(Company company, User user, CompanyRole role)
     {
         CompanyId = company.Id;
         Company = company;
@@ -25,7 +21,5 @@ public class CompanyUserRole
         Role = role;
     }
 
-    internal CompanyUserRole()
-    {
-    }
+    internal CompanyUserRole() { }
 }

@@ -16,10 +16,7 @@ internal class DeleteClaimCommandValidator : Validator<DeleteClaimCommand>
 
 internal class DeleteClaimCommandComposer : Composer<DeleteClaimCommand>
 {
-    public DeleteClaimCommandComposer(
-        ITokenAccessor tokenAccessor,
-        IClaimRepository claimRepository
-    )
+    public DeleteClaimCommandComposer(ITokenAccessor tokenAccessor, IClaimRepository claimRepository)
     {
         Field(c => c.MyId).LoadWith(_ => tokenAccessor.GetToken().UserId);
         Field(c => c.Claim).LoadWith(ctx => claimRepository.TryGetByIdAsync(ctx.Root.ClaimId));

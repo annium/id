@@ -11,14 +11,11 @@ using Server.Domain.Queries.Roles;
 
 namespace Server.Application.QueryHandlers;
 
-internal class RoleQueryHandler :
-    IQueryHandler<ListRolesQuery, IEnumerable<Role>>
+internal class RoleQueryHandler : IQueryHandler<ListRolesQuery, IEnumerable<Role>>
 {
     private readonly IRoleRepository _roleRepository;
 
-    public RoleQueryHandler(
-        IRoleRepository roleRepository
-    )
+    public RoleQueryHandler(IRoleRepository roleRepository)
     {
         _roleRepository = roleRepository;
     }

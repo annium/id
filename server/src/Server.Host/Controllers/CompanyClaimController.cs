@@ -14,12 +14,8 @@ namespace Server.Host.Controllers;
 [Route("companies/claims")]
 public class CompanyClaimController : ServerController
 {
-    public CompanyClaimController(
-        IMediator mediator,
-        IServiceProvider sp
-    ) : base(mediator, sp)
-    {
-    }
+    public CompanyClaimController(IMediator mediator, IServiceProvider sp)
+        : base(mediator, sp) { }
 
     [HttpPost]
     [Authorize]

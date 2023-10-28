@@ -10,9 +10,7 @@ public class DeleteRoleCommand : ICommand
     public Guid MyId { get; private set; }
     public Role Role { get; private set; } = null!;
 
-    public DeleteRoleCommand(
-        Guid roleId
-    )
+    public DeleteRoleCommand(Guid roleId)
     {
         RoleId = roleId;
     }

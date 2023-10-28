@@ -19,7 +19,5 @@ await app.RunAsync();
 
 namespace Server.DemoHost
 {
-    public partial class Demo
-    {
-    }
+    public partial class Demo { }
 }

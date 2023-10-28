@@ -35,18 +35,14 @@ public static class ExtendedClientExtensions
         );
     }
 
-    public static async Task<string> LogUserIn(
-        this ExtendedClient client,
-        Guid appId,
-        string login,
-        string password
-    )
+    public static async Task<string> LogUserIn(this ExtendedClient client, Guid appId, string login, string password)
     {
         // perform regular login
         var tokens = await client.Login.LogIn(
             appId,
             new LogInRequestBody { Login = login, Password = password },
-            Result.New(new TokensResponse()).Error("Failed to load tokens"));
+            Result.New(new TokensResponse()).Error("Failed to load tokens")
+        );
 
         return tokens.Data.Data.AccessToken;
     }
@@ -64,7 +60,9 @@ public static class ExtendedClientExtensions
         password ??= Faker.Internet.Password();
         var token = await client.RegisterLogUserInInternal(Constants.IdAppId, login, email, password, referralId);
 
-        var me = await client.WithToken(token).Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal info"));
+        var me = await client
+            .WithToken(token)
+            .Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal info"));
 
         return me.Data.Data;
     }
@@ -90,7 +88,9 @@ public static class ExtendedClientExtensions
             Result.New().Error("Failed to register")
         );
         if (registerResponse.StatusCode != HttpStatusCode.OK)
-            Console.WriteLine($"Failure: plain errors: {registerResponse.Data.PlainErrors.Join(", ")}; labeled errors: {registerResponse.Data.LabeledErrors.Select(x => $"{x.Key}={x.Value.Join(" + ")}").Join(", ")}");
+            Console.WriteLine(
+                $"Failure: plain errors: {registerResponse.Data.PlainErrors.Join(", ")}; labeled errors: {registerResponse.Data.LabeledErrors.Select(x => $"{x.Key}={x.Value.Join(" + ")}").Join(", ")}"
+            );
         registerResponse.StatusCode.Is(HttpStatusCode.OK);
 
         // get id from email data
@@ -107,10 +107,12 @@ public static class ExtendedClientExtensions
         var token = tokensResponse.Data.Data.AccessToken;
 
         // set password
-        await client.WithToken(token).Me.UpdateMyPassword(
-            new UpdateMyPasswordRequest { Password = password },
-            Result.New().Error("Failed to update password")
-        );
+        await client
+            .WithToken(token)
+            .Me.UpdateMyPassword(
+                new UpdateMyPasswordRequest { Password = password },
+                Result.New().Error("Failed to update password")
+            );
 
         // perform regular login
         var tokens = await client.Login.LogIn(
@@ -122,10 +124,7 @@ public static class ExtendedClientExtensions
         return tokens.Data.Data.AccessToken;
     }
 
-    private static ExtendedClient WithToken(
-        this ExtendedClient client,
-        string accessToken
-    )
+    private static ExtendedClient WithToken(this ExtendedClient client, string accessToken)
     {
         return client.Request.BearerAuthorization(accessToken).ApiClient(client.EmailService);
     }

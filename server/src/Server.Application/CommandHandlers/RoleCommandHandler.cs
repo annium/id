@@ -10,12 +10,12 @@ using Server.Domain.Models;
 
 namespace Server.Application.CommandHandlers;
 
-internal class RoleCommandHandler :
-    ICommandHandler<CreateRoleCommand, Guid>,
-    ICommandHandler<UpdateRoleCommand>,
-    ICommandHandler<AddClaimToRoleCommand>,
-    ICommandHandler<DeleteClaimFromRoleCommand>,
-    ICommandHandler<DeleteRoleCommand>
+internal class RoleCommandHandler
+    : ICommandHandler<CreateRoleCommand, Guid>,
+        ICommandHandler<UpdateRoleCommand>,
+        ICommandHandler<AddClaimToRoleCommand>,
+        ICommandHandler<DeleteClaimFromRoleCommand>,
+        ICommandHandler<DeleteRoleCommand>
 {
     private readonly IAppRepository _appRepository;
     private readonly IRoleRepository _roleRepository;
@@ -41,7 +41,9 @@ internal class RoleCommandHandler :
         var app = request.App;
 
         if (myId != app.OwnerId)
-            return Result.Status(OperationStatus.Forbidden, Guid.Empty).Error("Need to be application owner to create role");
+            return Result
+                .Status(OperationStatus.Forbidden, Guid.Empty)
+                .Error("Need to be application owner to create role");
 
         var role = new Role(app, request.Key, request.Name);
 
@@ -106,7 +108,9 @@ internal class RoleCommandHandler :
         var claim = request.Claim;
 
         if (myId != app.OwnerId)
-            return Result.Status(OperationStatus.Forbidden).Error("Need to be application owner to delete claim from role");
+            return Result
+                .Status(OperationStatus.Forbidden)
+                .Error("Need to be application owner to delete claim from role");
 
         if (claim.AppId != app.Id)
             return Result.Status(OperationStatus.Forbidden).Error("Claim belongs to another application");

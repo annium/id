@@ -11,10 +11,7 @@ public class RegisterCompanyCommand : ICommand
     public Company? Parent { get; private set; } = default;
     public User Me { get; private set; } = default!;
 
-    public RegisterCompanyCommand(
-        Guid? parentId,
-        string name
-    )
+    public RegisterCompanyCommand(Guid? parentId, string name)
     {
         ParentId = parentId;
         Name = name;

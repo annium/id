@@ -16,10 +16,7 @@ internal class UnregisterCompanyCommandValidator : Validator<UnregisterCompanyCo
 
 internal class UnregisterCompanyCommandComposer : Composer<UnregisterCompanyCommand>
 {
-    public UnregisterCompanyCommandComposer(
-        ITokenAccessor tokenAccessor,
-        ICompanyRepository companyRepository
-    )
+    public UnregisterCompanyCommandComposer(ITokenAccessor tokenAccessor, ICompanyRepository companyRepository)
     {
         Field(c => c.MyId).LoadWith(_ => tokenAccessor.GetToken().UserId);
         Field(c => c.Company).LoadWith(ctx => companyRepository.TryGetByIdAsync(ctx.Root.CompanyId));

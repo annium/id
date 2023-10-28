@@ -16,10 +16,7 @@ internal class LogOutCommandValidator : Validator<LogOutCommand>
 
 internal class LogOutCommandComposer : Composer<LogOutCommand>
 {
-    public LogOutCommandComposer(
-        ITokenAccessor tokenAccessor,
-        IAppRepository appRepository
-    )
+    public LogOutCommandComposer(ITokenAccessor tokenAccessor, IAppRepository appRepository)
     {
         Field(c => c.LoginId).LoadWith(_ => tokenAccessor.GetToken().LoginId);
         Field(c => c.App).LoadWith(ctx => appRepository.TryGetByIdAsync(ctx.Root.AppId));

@@ -14,11 +14,7 @@ public class DeleteCompanyClaimFromCompanyUserCommand : ICommand
     public User User { get; private set; } = null!;
     public CompanyClaim Claim { get; private set; } = null!;
 
-    public DeleteCompanyClaimFromCompanyUserCommand(
-        Guid companyId,
-        Guid userId,
-        Guid claimId
-    )
+    public DeleteCompanyClaimFromCompanyUserCommand(Guid companyId, Guid userId, Guid claimId)
     {
         CompanyId = companyId;
         UserId = userId;

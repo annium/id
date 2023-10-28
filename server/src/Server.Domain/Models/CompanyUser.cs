@@ -9,10 +9,7 @@ public class CompanyUser
     public Guid UserId { get; private init; }
     public User User { get; private init; } = default!;
 
-    public CompanyUser(
-        Company company,
-        User user
-    )
+    public CompanyUser(Company company, User user)
     {
         CompanyId = company.Id;
         Company = company;
@@ -20,7 +17,5 @@ public class CompanyUser
         User = user;
     }
 
-    internal CompanyUser()
-    {
-    }
+    internal CompanyUser() { }
 }

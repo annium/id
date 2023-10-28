@@ -9,9 +9,7 @@ public class GetAppQuery : IQuery
     public Guid AppId { get; }
     public App App { get; private set; } = null!;
 
-    public GetAppQuery(
-        Guid appId
-    )
+    public GetAppQuery(Guid appId)
     {
         AppId = appId;
     }

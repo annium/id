@@ -10,7 +10,8 @@ internal class BaseServicePack : ServicePackBase
         container.AddPostgreSql<ServerConnection>();
 
         // repositories
-        container.AddAll(GetType().Assembly)
+        container
+            .AddAll(GetType().Assembly)
             .Where(x => x.IsClass && x.Name.EndsWith("Repository"))
             .AsInterfaces()
             .Scoped();

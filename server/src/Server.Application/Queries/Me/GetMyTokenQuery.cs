@@ -6,16 +6,11 @@ using Server.Domain.Queries.Me;
 
 namespace Server.Application.Queries.Me;
 
-internal class GetTokenQueryValidator : Validator<GetMyTokenQuery>
-{
-}
+internal class GetTokenQueryValidator : Validator<GetMyTokenQuery> { }
 
 internal class GetTokenQueryComposer : Composer<GetMyTokenQuery>
 {
-    public GetTokenQueryComposer(
-        ITokenAccessor tokenAccessor,
-        IUserLoginRepository userLoginRepository
-    )
+    public GetTokenQueryComposer(ITokenAccessor tokenAccessor, IUserLoginRepository userLoginRepository)
     {
         Field(e => e.Login).LoadWith(_ => userLoginRepository.TryGetByIdAsync(tokenAccessor.GetToken().LoginId));
     }

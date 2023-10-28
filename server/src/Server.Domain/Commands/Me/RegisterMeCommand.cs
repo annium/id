@@ -13,12 +13,7 @@ public class RegisterMeCommand : ICommand
     public Uri ServerUri { get; private set; } = default!;
     public User? Referral { get; private set; } = default!;
 
-    public RegisterMeCommand(
-        string server,
-        string email,
-        string login,
-        Guid? referralId
-    )
+    public RegisterMeCommand(string server, string email, string login, Guid? referralId)
     {
         Server = server;
         Email = email;

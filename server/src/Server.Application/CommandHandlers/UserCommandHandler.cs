@@ -9,11 +9,11 @@ using Server.Domain.Models;
 
 namespace Server.Application.CommandHandlers;
 
-internal class UserCommandHandler :
-    ICommandHandler<AddRoleToUserCommand>,
-    ICommandHandler<DeleteRoleFromUserCommand>,
-    ICommandHandler<AddClaimToUserCommand>,
-    ICommandHandler<DeleteClaimFromUserCommand>
+internal class UserCommandHandler
+    : ICommandHandler<AddRoleToUserCommand>,
+        ICommandHandler<DeleteRoleFromUserCommand>,
+        ICommandHandler<AddClaimToUserCommand>,
+        ICommandHandler<DeleteClaimFromUserCommand>
 {
     private readonly IAppRepository _appRepository;
     private readonly IUserRoleRepository _userRoleRepository;
@@ -60,7 +60,9 @@ internal class UserCommandHandler :
         var role = request.Role;
 
         if (myId != app.OwnerId)
-            return Result.Status(OperationStatus.Forbidden).Error("Need to be application owner to delete role from user");
+            return Result
+                .Status(OperationStatus.Forbidden)
+                .Error("Need to be application owner to delete role from user");
 
         await _userRoleRepository.DeleteByIdAsync(user.Id, role.Id);
 
@@ -97,7 +99,9 @@ internal class UserCommandHandler :
         var claim = request.Claim;
 
         if (myId != app.OwnerId)
-            return Result.Status(OperationStatus.Forbidden).Error("Need to be application owner to delete claim from user");
+            return Result
+                .Status(OperationStatus.Forbidden)
+                .Error("Need to be application owner to delete claim from user");
 
         await _userClaimRepository.DeleteByIdAsync(user.Id, claim.Id);
 

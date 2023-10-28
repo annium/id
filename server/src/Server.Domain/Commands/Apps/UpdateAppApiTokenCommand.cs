@@ -10,9 +10,7 @@ public class UpdateAppApiTokenCommand : ICommand
     public Guid MyId { get; private set; }
     public App App { get; private set; } = null!;
 
-    public UpdateAppApiTokenCommand(
-        Guid appId
-    )
+    public UpdateAppApiTokenCommand(Guid appId)
     {
         AppId = appId;
     }

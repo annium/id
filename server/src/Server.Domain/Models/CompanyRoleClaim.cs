@@ -10,11 +10,7 @@ public class CompanyRoleClaim
     public CompanyClaim Claim { get; private init; } = default!;
     public string Value { get; private init; } = string.Empty;
 
-    public CompanyRoleClaim(
-        CompanyRole role,
-        CompanyClaim claim,
-        string value
-    )
+    public CompanyRoleClaim(CompanyRole role, CompanyClaim claim, string value)
     {
         RoleId = role.Id;
         Role = role;
@@ -23,7 +19,5 @@ public class CompanyRoleClaim
         Value = value;
     }
 
-    internal CompanyRoleClaim()
-    {
-    }
+    internal CompanyRoleClaim() { }
 }

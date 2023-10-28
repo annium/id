@@ -76,10 +76,7 @@ public class TokenReaderWriterTest
         Serialize(result).Is(Serialize(source));
     }
 
-    private string WriteToken(
-        IdToken token,
-        bool expired = false
-    )
+    private string WriteToken(IdToken token, bool expired = false)
     {
         var container = new ServiceContainer();
         container.AddIdAuthorizationCoreServices(Configure(token.App.Id));

@@ -16,10 +16,7 @@ internal class UpdateAppApiTokenCommandValidator : Validator<UpdateAppApiTokenCo
 
 internal class UpdateAppApiTokenCommandComposer : Composer<UpdateAppApiTokenCommand>
 {
-    public UpdateAppApiTokenCommandComposer(
-        ITokenAccessor tokenAccessor,
-        IAppRepository appRepository
-    )
+    public UpdateAppApiTokenCommandComposer(ITokenAccessor tokenAccessor, IAppRepository appRepository)
     {
         Field(c => c.MyId).LoadWith(_ => tokenAccessor.GetToken().UserId);
         Field(c => c.App).LoadWith(ctx => appRepository.TryGetByIdAsync(ctx.Root.AppId));

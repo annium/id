@@ -18,10 +18,7 @@ internal class UpdateRoleCommandValidator : Validator<UpdateRoleCommand>
 
 internal class UpdateRoleCommandComposer : Composer<UpdateRoleCommand>
 {
-    public UpdateRoleCommandComposer(
-        ITokenAccessor tokenAccessor,
-        IRoleRepository roleRepository
-    )
+    public UpdateRoleCommandComposer(ITokenAccessor tokenAccessor, IRoleRepository roleRepository)
     {
         Field(c => c.MyId).LoadWith(_ => tokenAccessor.GetToken().UserId);
         Field(c => c.Role).LoadWith(ctx => roleRepository.TryGetByIdAsync(ctx.Root.RoleId));

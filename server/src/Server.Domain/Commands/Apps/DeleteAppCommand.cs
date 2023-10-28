@@ -10,9 +10,7 @@ public class DeleteAppCommand : ICommand
     public Guid MyId { get; private set; }
     public App App { get; private set; } = null!;
 
-    public DeleteAppCommand(
-        Guid appId
-    )
+    public DeleteAppCommand(Guid appId)
     {
         AppId = appId;
     }

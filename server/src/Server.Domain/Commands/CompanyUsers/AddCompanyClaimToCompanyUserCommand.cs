@@ -15,12 +15,7 @@ public class AddCompanyClaimToCompanyUserCommand : ICommand
     public User User { get; private set; } = null!;
     public CompanyClaim Claim { get; private set; } = null!;
 
-    public AddCompanyClaimToCompanyUserCommand(
-        Guid companyId,
-        Guid userId,
-        Guid claimId,
-        string value
-    )
+    public AddCompanyClaimToCompanyUserCommand(Guid companyId, Guid userId, Guid claimId, string value)
     {
         CompanyId = companyId;
         UserId = userId;

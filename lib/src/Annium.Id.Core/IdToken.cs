@@ -19,12 +19,7 @@ public class IdToken
     [Key(3)]
     public IReadOnlyCollection<CompanyToken> Companies { get; }
 
-    public IdToken(
-        Guid userId,
-        Guid loginId,
-        AppToken app,
-        IReadOnlyCollection<CompanyToken> companies
-    )
+    public IdToken(Guid userId, Guid loginId, AppToken app, IReadOnlyCollection<CompanyToken> companies)
     {
         UserId = userId;
         LoginId = loginId;
@@ -45,11 +40,7 @@ public class AppToken
     [Key(2)]
     public IReadOnlyDictionary<string, string> Claims { get; }
 
-    public AppToken(
-        Guid id,
-        IReadOnlyCollection<string> roles,
-        IReadOnlyDictionary<string, string> claims
-    )
+    public AppToken(Guid id, IReadOnlyCollection<string> roles, IReadOnlyDictionary<string, string> claims)
     {
         Id = id;
         Roles = roles;
@@ -69,11 +60,7 @@ public class CompanyToken
     [Key(2)]
     public IReadOnlyDictionary<string, string> Claims { get; }
 
-    public CompanyToken(
-        Guid id,
-        IReadOnlyCollection<string> roles,
-        IReadOnlyDictionary<string, string> claims
-    )
+    public CompanyToken(Guid id, IReadOnlyCollection<string> roles, IReadOnlyDictionary<string, string> claims)
     {
         Id = id;
         Roles = roles;

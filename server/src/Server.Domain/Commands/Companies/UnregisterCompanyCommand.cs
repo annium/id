@@ -10,9 +10,7 @@ public class UnregisterCompanyCommand : ICommand
     public Guid MyId { get; private set; }
     public Company Company { get; private set; } = null!;
 
-    public UnregisterCompanyCommand(
-        Guid companyId
-    )
+    public UnregisterCompanyCommand(Guid companyId)
     {
         CompanyId = companyId;
     }

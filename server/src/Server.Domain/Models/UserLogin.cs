@@ -39,9 +39,7 @@ public class UserLogin : IIdEntity<Guid>
         RefreshTokenExpires = refreshTokenExpires;
     }
 
-    internal UserLogin()
-    {
-    }
+    internal UserLogin() { }
 
     public void Update(Guid refreshToken, Instant refreshTokenExpires)
     {

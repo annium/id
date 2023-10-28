@@ -14,12 +14,8 @@ namespace Server.Host.Controllers;
 [Route("users")]
 public class UserController : ServerController
 {
-    public UserController(
-        IMediator mediator,
-        IServiceProvider sp
-    ) : base(mediator, sp)
-    {
-    }
+    public UserController(IMediator mediator, IServiceProvider sp)
+        : base(mediator, sp) { }
 
     [HttpGet]
     public Task<IResult<IEnumerable<UserResponse>>> FindUsers([FromQuery] FindUsersRequest request)

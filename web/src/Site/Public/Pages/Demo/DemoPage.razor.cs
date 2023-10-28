@@ -10,21 +10,14 @@ public partial class DemoPage
 
     protected override void OnInitialized()
     {
-        _state = StateFactory.CreateObject(new Blog
-        {
-            Name = "Demo",
-            Author = new User
+        _state = StateFactory.CreateObject(
+            new Blog
             {
-                Name = "",
-            },
-            Messages = new List<Message>
-            {
-                new()
-                {
-                    Text = "Hi"
-                }
+                Name = "Demo",
+                Author = new User { Name = "", },
+                Messages = new List<Message> { new() { Text = "Hi" } }
             }
-        });
+        );
         ObserveStates();
         _state.UseValidator(Validator);
     }

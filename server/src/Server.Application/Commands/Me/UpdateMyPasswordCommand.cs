@@ -8,8 +8,7 @@ namespace Server.Application.Commands.Me;
 
 internal class UpdateMyPasswordCommandValidator : Validator<UpdateMyPasswordCommand>
 {
-    public UpdateMyPasswordCommandValidator(
-    )
+    public UpdateMyPasswordCommandValidator()
     {
         Field(e => e.Password).Required().Length(8, 50);
     }
@@ -17,10 +16,7 @@ internal class UpdateMyPasswordCommandValidator : Validator<UpdateMyPasswordComm
 
 internal class UpdateMyPasswordCommandComposer : Composer<UpdateMyPasswordCommand>
 {
-    public UpdateMyPasswordCommandComposer(
-        ITokenAccessor tokenAccessor,
-        IUserRepository userRepository
-    )
+    public UpdateMyPasswordCommandComposer(ITokenAccessor tokenAccessor, IUserRepository userRepository)
     {
         Field(e => e.User).LoadWith(_ => userRepository.TryGetByIdAsync(tokenAccessor.GetToken().UserId));
     }

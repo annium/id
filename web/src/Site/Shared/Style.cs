@@ -8,8 +8,6 @@ public class Style : RuleSet
 
     public Style(Theme theme)
     {
-        _html = Rule.Tag("html")
-            .FontFamily(theme.FontFamily)
-            .FontWeightNormal();
+        _html = Rule.Tag("html").FontFamily(theme.FontFamily).FontWeightNormal();
     }
 }

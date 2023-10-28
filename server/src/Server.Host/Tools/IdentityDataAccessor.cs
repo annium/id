@@ -10,9 +10,7 @@ internal class IdentityDataAccessor : IIdentityDataAccessor
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public IdentityDataAccessor(
-        IHttpContextAccessor httpContextAccessor
-    )
+    public IdentityDataAccessor(IHttpContextAccessor httpContextAccessor)
     {
         _httpContextAccessor = httpContextAccessor;
     }
@@ -22,7 +20,9 @@ internal class IdentityDataAccessor : IIdentityDataAccessor
         var context = _httpContextAccessor.HttpContext ?? throw new InvalidOperationException("HttpContext is null");
 
         var ipAddress = context.Connection.RemoteIpAddress ?? IPAddress.Loopback;
-        var client = context.Request.Headers.TryGetValue("User-Agent", out var header) ? header.First() ?? string.Empty : string.Empty;
+        var client = context.Request.Headers.TryGetValue("User-Agent", out var header)
+            ? header.First() ?? string.Empty
+            : string.Empty;
 
         return new IdentityData(ipAddress, client);
     }

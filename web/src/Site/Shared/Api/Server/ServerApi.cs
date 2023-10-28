@@ -20,12 +20,14 @@ internal class ServerApi : IServerApi
 {
     public IHttpRequest Public => _requestFactory.New(_config.Server);
 
-    public IHttpRequest Private => _requestFactory.New(_config.Server)
-        .BearerAuthorization(_tokenStore.Get()?.AccessToken ?? string.Empty)
-        .Intercept(AuthMiddleware);
+    public IHttpRequest Private =>
+        _requestFactory
+            .New(_config.Server)
+            .BearerAuthorization(_tokenStore.Get()?.AccessToken ?? string.Empty)
+            .Intercept(AuthMiddleware);
 
-    public IHttpRequest PrivateBase => _requestFactory.New(_config.Server)
-        .BearerAuthorization(_tokenStore.Get()?.AccessToken ?? string.Empty);
+    public IHttpRequest PrivateBase =>
+        _requestFactory.New(_config.Server).BearerAuthorization(_tokenStore.Get()?.AccessToken ?? string.Empty);
 
     private readonly ITimeProvider _timeProvider;
     private readonly IHttpRequestFactory _requestFactory;
@@ -64,11 +66,13 @@ internal class ServerApi : IServerApi
         if (tokens.RefreshTokenExpires < _timeProvider.Now)
             return GetAuthFailureResponse("Refresh token is expired. Need to login");
 
-        var updateTokenResult = await Private.Client().Login.UpdateToken(
-            _config.AppId,
-            tokens.RefreshToken,
-            Result.New(new TokensResponse()).Error("Failed to update token")
-        );
+        var updateTokenResult = await Private
+            .Client()
+            .Login.UpdateToken(
+                _config.AppId,
+                tokens.RefreshToken,
+                Result.New(new TokensResponse()).Error("Failed to update token")
+            );
         if (updateTokenResult.HasErrors)
             return response;
 

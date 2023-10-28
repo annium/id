@@ -7,10 +7,7 @@ public class FindUsersQuery : IQuery
     public string Query { get; }
     public int Limit { get; }
 
-    public FindUsersQuery(
-        string query,
-        int limit
-    )
+    public FindUsersQuery(string query, int limit)
     {
         Query = query;
         Limit = limit;

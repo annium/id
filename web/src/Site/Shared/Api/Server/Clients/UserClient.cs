@@ -24,11 +24,7 @@ public class UserClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Get("users")
-            .Param("query", query)
-            .Param("limit", limit)
-            .AsAsync(defaultValue, ct);
+        return await _request.Get("users").Param("query", query).Param("limit", limit).AsAsync(defaultValue, ct);
     }
 
     public async Task<IResult<UserResponse>> GetUser(
@@ -37,9 +33,7 @@ public class UserClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Get($"users/{userId}")
-            .AsAsync(defaultValue, ct);
+        return await _request.Get($"users/{userId}").AsAsync(defaultValue, ct);
     }
 
     public async Task<IResult> AddRoleToUser(
@@ -49,9 +43,7 @@ public class UserClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Post($"users/{userId}/roles/{roleId}")
-            .AsAsync(defaultValue, ct);
+        return await _request.Post($"users/{userId}/roles/{roleId}").AsAsync(defaultValue, ct);
     }
 
     public async Task<IResult> DeleteRoleFromUser(
@@ -61,9 +53,7 @@ public class UserClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Delete($"users/{userId}/roles/{roleId}")
-            .AsAsync(defaultValue, ct);
+        return await _request.Delete($"users/{userId}/roles/{roleId}").AsAsync(defaultValue, ct);
     }
 
     public async Task<IResult> AddClaimToUser(
@@ -74,10 +64,7 @@ public class UserClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Post($"users/{userId}/claims/{claimId}")
-            .JsonContent(body)
-            .AsAsync(defaultValue, ct);
+        return await _request.Post($"users/{userId}/claims/{claimId}").JsonContent(body).AsAsync(defaultValue, ct);
     }
 
     public async Task<IResult> DeleteClaimFromUser(
@@ -87,8 +74,6 @@ public class UserClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Delete($"users/{userId}/claims/{claimId}")
-            .AsAsync(defaultValue, ct);
+        return await _request.Delete($"users/{userId}/claims/{claimId}").AsAsync(defaultValue, ct);
     }
 }

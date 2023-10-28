@@ -13,22 +13,23 @@ public static class ServiceContainerExtensions
         Action<IServiceProvider, AuthOptions> configure
     )
     {
-        container.Add(sp =>
-        {
-            var options = new AuthOptions();
+        container
+            .Add(sp =>
+            {
+                var options = new AuthOptions();
 
-            configure(sp, options);
-            Validate(options);
+                configure(sp, options);
+                Validate(options);
 
-            return options;
-        }).AsSelf().Singleton();
+                return options;
+            })
+            .AsSelf()
+            .Singleton();
 
         return container.AddIdAuthorizationCoreServicesBase();
     }
 
-    private static IServiceContainer AddIdAuthorizationCoreServicesBase(
-        this IServiceContainer container
-    )
+    private static IServiceContainer AddIdAuthorizationCoreServicesBase(this IServiceContainer container)
     {
         container.Add<IPolicyMapper, PolicyMapper>().Singleton();
         container.Add<ITokenReader, TokenReader>().Singleton();
@@ -46,9 +47,13 @@ public static class ServiceContainerExtensions
             throw new Exception($"{nameof(AuthOptions.PublicKeyFile)} is mandatory");
 
         if (!File.Exists(options.PublicKeyFile))
-            throw new Exception($"{nameof(AuthOptions.PublicKeyFile)} {Path.GetFullPath(options.PublicKeyFile)} missing in file system");
+            throw new Exception(
+                $"{nameof(AuthOptions.PublicKeyFile)} {Path.GetFullPath(options.PublicKeyFile)} missing in file system"
+            );
 
         if (!string.IsNullOrEmpty(options.PrivateKeyFile) && !File.Exists(options.PrivateKeyFile))
-            throw new Exception($"{nameof(AuthOptions.PrivateKeyFile)} {Path.GetFullPath(options.PrivateKeyFile)} missing in file system");
+            throw new Exception(
+                $"{nameof(AuthOptions.PrivateKeyFile)} {Path.GetFullPath(options.PrivateKeyFile)} missing in file system"
+            );
     }
 }

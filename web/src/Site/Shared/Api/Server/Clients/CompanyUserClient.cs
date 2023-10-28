@@ -23,9 +23,7 @@ public class CompanyUserClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Post($"companies/{companyId}/users/{userId}")
-            .AsAsync(defaultValue, ct);
+        return await _request.Post($"companies/{companyId}/users/{userId}").AsAsync(defaultValue, ct);
     }
 
     public async Task<IResult> AddCompanyRoleToCompanyUser(
@@ -36,9 +34,7 @@ public class CompanyUserClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Post($"companies/{companyId}/users/{userId}/roles/{roleId}")
-            .AsAsync(defaultValue, ct);
+        return await _request.Post($"companies/{companyId}/users/{userId}/roles/{roleId}").AsAsync(defaultValue, ct);
     }
 
     public async Task<IResult> DeleteCompanyRoleFromCompanyUser(
@@ -49,9 +45,7 @@ public class CompanyUserClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Delete($"companies/{companyId}/users/{userId}/roles/{roleId}")
-            .AsAsync(defaultValue, ct);
+        return await _request.Delete($"companies/{companyId}/users/{userId}/roles/{roleId}").AsAsync(defaultValue, ct);
     }
 
     public async Task<IResult> AddCompanyClaimToCompanyUser(
@@ -89,8 +83,6 @@ public class CompanyUserClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Delete($"companies/{companyId}/users/{userId}")
-            .AsAsync(defaultValue, ct);
+        return await _request.Delete($"companies/{companyId}/users/{userId}").AsAsync(defaultValue, ct);
     }
 }

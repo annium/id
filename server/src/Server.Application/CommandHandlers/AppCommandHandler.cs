@@ -10,18 +10,16 @@ using Server.Domain.Models;
 
 namespace Server.Application.CommandHandlers;
 
-internal class AppCommandHandler :
-    ICommandHandler<CreateAppCommand, Guid>,
-    ICommandHandler<UpdateAppCommand>,
-    ICommandHandler<SetAppOwnerCommand>,
-    ICommandHandler<UpdateAppApiTokenCommand, Guid>,
-    ICommandHandler<DeleteAppCommand>
+internal class AppCommandHandler
+    : ICommandHandler<CreateAppCommand, Guid>,
+        ICommandHandler<UpdateAppCommand>,
+        ICommandHandler<SetAppOwnerCommand>,
+        ICommandHandler<UpdateAppApiTokenCommand, Guid>,
+        ICommandHandler<DeleteAppCommand>
 {
     private readonly IAppRepository _appRepository;
 
-    public AppCommandHandler(
-        IAppRepository appRepository
-    )
+    public AppCommandHandler(IAppRepository appRepository)
     {
         _appRepository = appRepository;
     }
@@ -84,7 +82,9 @@ internal class AppCommandHandler :
         var app = request.App;
 
         if (myId != app.OwnerId)
-            return Result.Status(OperationStatus.Forbidden, Guid.Empty).Error("Need to be application owner to update app api token");
+            return Result
+                .Status(OperationStatus.Forbidden, Guid.Empty)
+                .Error("Need to be application owner to update app api token");
 
         var apiToken = Guid.NewGuid();
         await _appRepository.UpdateApiTokenAsync(app.Id, Guid.NewGuid());
@@ -101,7 +101,9 @@ internal class AppCommandHandler :
         var app = request.App;
 
         if (myId != app.OwnerId)
-            return Result.Status(OperationStatus.Forbidden).Error("Need to be application owner to update app api token");
+            return Result
+                .Status(OperationStatus.Forbidden)
+                .Error("Need to be application owner to update app api token");
 
         await _appRepository.DeleteByIdAsync(app.Id);
 

@@ -8,8 +8,7 @@ namespace Server.Application.Commands.Me;
 
 internal class UpdateMyProfileCommandValidator : Validator<UpdateMyProfileCommand>
 {
-    public UpdateMyProfileCommandValidator(
-    )
+    public UpdateMyProfileCommandValidator()
     {
         Field(e => e.Login).Required().Length(3, 50);
         Field(e => e.Email).Required().Length(3, 100).Email();
@@ -18,10 +17,7 @@ internal class UpdateMyProfileCommandValidator : Validator<UpdateMyProfileComman
 
 internal class UpdateMyProfileCommandComposer : Composer<UpdateMyProfileCommand>
 {
-    public UpdateMyProfileCommandComposer(
-        ITokenAccessor tokenAccessor,
-        IUserRepository userRepository
-    )
+    public UpdateMyProfileCommandComposer(ITokenAccessor tokenAccessor, IUserRepository userRepository)
     {
         Field(e => e.User).LoadWith(_ => userRepository.TryGetByIdAsync(tokenAccessor.GetToken().UserId));
     }

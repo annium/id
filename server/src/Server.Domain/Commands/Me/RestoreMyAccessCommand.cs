@@ -13,11 +13,7 @@ public class RestoreMyAccessCommand : ICommand
     public Uri ServerUri { get; private set; } = null!;
     public User User { get; private set; } = null!;
 
-    public RestoreMyAccessCommand(
-        Guid appId,
-        string server,
-        string email
-    )
+    public RestoreMyAccessCommand(Guid appId, string server, string email)
     {
         AppId = appId;
         Server = server;

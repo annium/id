@@ -11,11 +11,7 @@ public class TestServicePack : ServicePackBase
 
     public override void Configure(IServiceContainer container)
     {
-        var cfg = new Configuration
-        {
-            FromAddress = "support@annium.com",
-            FromDisplay = "Annium"
-        };
+        var cfg = new Configuration { FromAddress = "support@annium.com", FromDisplay = "Annium" };
         container.Add(cfg).AsSelf().Singleton();
     }
 }

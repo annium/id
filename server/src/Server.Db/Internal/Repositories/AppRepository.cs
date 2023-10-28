@@ -37,25 +37,21 @@ internal class AppRepository : IAppRepository
 
     public async Task<IReadOnlyCollection<App>> FindMyAsync(Guid ownerId)
     {
-        var entities = await _db.Apps
-            .Where(x => x.OwnerId == ownerId)
-            .ToArrayAsync();
+        var entities = await _db.Apps.Where(x => x.OwnerId == ownerId).ToArrayAsync();
 
         return entities;
     }
 
     public async Task<App?> TryGetByIdAsync(Guid id)
     {
-        var entity = await _db.Apps
-            .FirstOrDefaultAsync(x => x.Id == id);
+        var entity = await _db.Apps.FirstOrDefaultAsync(x => x.Id == id);
 
         return entity;
     }
 
     public async Task<App> GetByIdAsync(Guid id)
     {
-        var entity = await _db.Apps
-            .FirstOrDefaultAsync(x => x.Id == id);
+        var entity = await _db.Apps.FirstOrDefaultAsync(x => x.Id == id);
 
         if (entity is null)
             throw new InvalidOperationException($"App {id} not found");

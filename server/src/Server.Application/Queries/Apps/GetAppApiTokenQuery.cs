@@ -16,10 +16,7 @@ internal class GetAppApiTokenQueryValidator : Validator<GetAppApiTokenQuery>
 
 internal class GetAppApiTokenQueryComposer : Composer<GetAppApiTokenQuery>
 {
-    public GetAppApiTokenQueryComposer(
-        ITokenAccessor tokenAccessor,
-        IAppRepository appRepository
-    )
+    public GetAppApiTokenQueryComposer(ITokenAccessor tokenAccessor, IAppRepository appRepository)
     {
         Field(c => c.MyId).LoadWith(_ => tokenAccessor.GetToken().UserId);
         Field(c => c.App).LoadWith(ctx => appRepository.TryGetByIdAsync(ctx.Root.AppId));

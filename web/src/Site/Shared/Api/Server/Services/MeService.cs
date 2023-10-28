@@ -10,9 +10,7 @@ internal class MeService : IMeService
 {
     private readonly IServerApi _serverApi;
 
-    public MeService(
-        IServerApi serverApi
-    )
+    public MeService(IServerApi serverApi)
     {
         _serverApi = serverApi;
     }

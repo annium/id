@@ -17,10 +17,7 @@ internal class LogInCommandValidator : Validator<LogInCommand>
 
 internal class LogInCommandComposer : Composer<LogInCommand>
 {
-    public LogInCommandComposer(
-        IAppRepository appRepository,
-        IUserRepository userRepository
-    )
+    public LogInCommandComposer(IAppRepository appRepository, IUserRepository userRepository)
     {
         Field(c => c.App).LoadWith(ctx => appRepository.TryGetByIdAsync(ctx.Root.AppId));
         Field(c => c.User).LoadWith(ctx => userRepository.TryFindByLoginAsync(ctx.Root.Login));

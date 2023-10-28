@@ -25,25 +25,21 @@ internal class CompanyClaimRepository : ICompanyClaimRepository
 
     public async Task<IReadOnlyCollection<CompanyClaim>> GetAllAsync(Guid appId)
     {
-        var entities = await _db.CompanyClaims
-            .Where(x => x.AppId == appId)
-            .ToArrayAsync();
+        var entities = await _db.CompanyClaims.Where(x => x.AppId == appId).ToArrayAsync();
 
         return entities;
     }
 
     public async Task<CompanyClaim?> TryGetByIdAsync(Guid id)
     {
-        var entity = await _db.CompanyClaims
-            .FirstOrDefaultAsync(x => x.Id == id);
+        var entity = await _db.CompanyClaims.FirstOrDefaultAsync(x => x.Id == id);
 
         return entity;
     }
 
     public async Task<CompanyClaim> GetByIdAsync(Guid id)
     {
-        var entity = await _db.CompanyClaims
-            .FirstOrDefaultAsync(x => x.Id == id);
+        var entity = await _db.CompanyClaims.FirstOrDefaultAsync(x => x.Id == id);
 
         if (entity is null)
             throw new InvalidOperationException($"Claim {id} not found");
@@ -53,8 +49,7 @@ internal class CompanyClaimRepository : ICompanyClaimRepository
 
     public async Task<CompanyClaim?> TryFindByKeyAsync(Guid appId, string key)
     {
-        var entity = await _db.CompanyClaims
-            .FirstOrDefaultAsync(x => x.AppId == appId && x.Key == key);
+        var entity = await _db.CompanyClaims.FirstOrDefaultAsync(x => x.AppId == appId && x.Key == key);
 
         return entity;
     }

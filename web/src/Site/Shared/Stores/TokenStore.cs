@@ -23,7 +23,6 @@ internal class TokenStore : StateBase, ITokenStore
 
     public void Set(TokensResponse tokens) => _storage.Set(Key, tokens);
 
-
     public void Clear() => _storage.Remove(Key);
 }
 

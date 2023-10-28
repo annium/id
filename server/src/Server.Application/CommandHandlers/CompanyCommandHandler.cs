@@ -10,17 +10,15 @@ using Server.Domain.Models;
 
 namespace Server.Application.CommandHandlers;
 
-internal class CompanyCommandHandler :
-    ICommandHandler<RegisterCompanyCommand, Guid>,
-    ICommandHandler<UpdateCompanyCommand>,
-    ICommandHandler<SetCompanyOwnerCommand>,
-    ICommandHandler<UnregisterCompanyCommand>
+internal class CompanyCommandHandler
+    : ICommandHandler<RegisterCompanyCommand, Guid>,
+        ICommandHandler<UpdateCompanyCommand>,
+        ICommandHandler<SetCompanyOwnerCommand>,
+        ICommandHandler<UnregisterCompanyCommand>
 {
     private readonly ICompanyRepository _companyRepository;
 
-    public CompanyCommandHandler(
-        ICompanyRepository companyRepository
-    )
+    public CompanyCommandHandler(ICompanyRepository companyRepository)
     {
         _companyRepository = companyRepository;
     }
@@ -34,7 +32,9 @@ internal class CompanyCommandHandler :
         var parent = request.Parent;
 
         if (parent is not null && me.Id != parent.OwnerId)
-            return Result.Status(OperationStatus.Forbidden, Guid.Empty).Error("Need to be owner of parent company to create child company");
+            return Result
+                .Status(OperationStatus.Forbidden, Guid.Empty)
+                .Error("Need to be owner of parent company to create child company");
 
         var company = new Company(me, parent, request.Name);
 
@@ -56,7 +56,9 @@ internal class CompanyCommandHandler :
             return Result.Status(OperationStatus.Forbidden).Error("Need to be company owner to update company");
 
         if (parent is not null && myId != parent.OwnerId)
-            return Result.Status(OperationStatus.Forbidden).Error("Need to be owner of parent company to set child company parent");
+            return Result
+                .Status(OperationStatus.Forbidden)
+                .Error("Need to be owner of parent company to set child company parent");
 
         company.Update(parent, request.Name);
 

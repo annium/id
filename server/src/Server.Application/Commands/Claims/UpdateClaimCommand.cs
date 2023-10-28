@@ -18,10 +18,7 @@ internal class UpdateClaimCommandValidator : Validator<UpdateClaimCommand>
 
 internal class UpdateClaimCommandComposer : Composer<UpdateClaimCommand>
 {
-    public UpdateClaimCommandComposer(
-        ITokenAccessor tokenAccessor,
-        IClaimRepository claimRepository
-    )
+    public UpdateClaimCommandComposer(ITokenAccessor tokenAccessor, IClaimRepository claimRepository)
     {
         Field(c => c.MyId).LoadWith(_ => tokenAccessor.GetToken().UserId);
         Field(c => c.Claim).LoadWith(ctx => claimRepository.TryGetByIdAsync(ctx.Root.ClaimId));

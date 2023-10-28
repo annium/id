@@ -14,12 +14,8 @@ namespace Server.Host.Controllers;
 [Route("apps")]
 public class AppController : ServerController
 {
-    public AppController(
-        IMediator mediator,
-        IServiceProvider sp
-    ) : base(mediator, sp)
-    {
-    }
+    public AppController(IMediator mediator, IServiceProvider sp)
+        : base(mediator, sp) { }
 
     [HttpPost]
     [Authorize]
@@ -66,11 +62,7 @@ public class AppController : ServerController
     [Authorize]
     public Task<IResult> UpdateApp(Guid appId, [FromBody] UpdateAppRequestBody requestBody)
     {
-        var request = new UpdateAppRequest
-        {
-            AppId = appId,
-            Name = requestBody.Name
-        };
+        var request = new UpdateAppRequest { AppId = appId, Name = requestBody.Name };
 
         return HandleAsync(request);
     }

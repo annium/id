@@ -10,12 +10,12 @@ using Server.Domain.Models;
 
 namespace Server.Application.CommandHandlers;
 
-internal class CompanyRoleCommandHandler :
-    ICommandHandler<CreateCompanyRoleCommand, Guid>,
-    ICommandHandler<UpdateCompanyRoleCommand>,
-    ICommandHandler<AddCompanyClaimToCompanyRoleCommand>,
-    ICommandHandler<DeleteCompanyClaimFromCompanyRoleCommand>,
-    ICommandHandler<DeleteCompanyRoleCommand>
+internal class CompanyRoleCommandHandler
+    : ICommandHandler<CreateCompanyRoleCommand, Guid>,
+        ICommandHandler<UpdateCompanyRoleCommand>,
+        ICommandHandler<AddCompanyClaimToCompanyRoleCommand>,
+        ICommandHandler<DeleteCompanyClaimFromCompanyRoleCommand>,
+        ICommandHandler<DeleteCompanyRoleCommand>
 {
     private readonly IAppRepository _appRepository;
     private readonly ICompanyRoleRepository _companyRoleRepository;
@@ -41,7 +41,9 @@ internal class CompanyRoleCommandHandler :
         var app = request.App;
 
         if (myId != app.OwnerId)
-            return Result.Status(OperationStatus.Forbidden, Guid.Empty).Error("Need to be application owner to create company role");
+            return Result
+                .Status(OperationStatus.Forbidden, Guid.Empty)
+                .Error("Need to be application owner to create company role");
 
         var role = new CompanyRole(app, request.Key, request.Name);
 
@@ -60,7 +62,9 @@ internal class CompanyRoleCommandHandler :
         var role = request.Role;
 
         if (myId != app.OwnerId)
-            return Result.Status(OperationStatus.Forbidden).Error("Need to be application owner to create company role");
+            return Result
+                .Status(OperationStatus.Forbidden)
+                .Error("Need to be application owner to create company role");
 
         if (request.Key != role.Key && await _companyRoleRepository.TryFindByKeyAsync(app.Id, request.Key) != null)
             return Result.Status(OperationStatus.Conflict).Error($"Company role key {request.Key} is already used");
@@ -83,7 +87,9 @@ internal class CompanyRoleCommandHandler :
         var claim = request.Claim;
 
         if (myId != app.OwnerId)
-            return Result.Status(OperationStatus.Forbidden).Error("Need to be application owner to add company claim to company role");
+            return Result
+                .Status(OperationStatus.Forbidden)
+                .Error("Need to be application owner to add company claim to company role");
 
         if (claim.AppId != app.Id)
             return Result.Status(OperationStatus.Forbidden).Error("Company claim belongs to another application");
@@ -106,7 +112,9 @@ internal class CompanyRoleCommandHandler :
         var claim = request.Claim;
 
         if (myId != app.OwnerId)
-            return Result.Status(OperationStatus.Forbidden).Error("Need to be application owner to delete claim from role");
+            return Result
+                .Status(OperationStatus.Forbidden)
+                .Error("Need to be application owner to delete claim from role");
 
         if (claim.AppId != app.Id)
             return Result.Status(OperationStatus.Forbidden).Error("CompanyClaim belongs to another application");

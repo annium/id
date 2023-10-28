@@ -12,17 +12,15 @@ using Server.Domain.Queries.Apps;
 
 namespace Server.Application.QueryHandlers;
 
-internal class AppQueryHandler :
-    IQueryHandler<FindAppsQuery, IEnumerable<App>>,
-    IQueryHandler<ListMyAppsQuery, IEnumerable<App>>,
-    IQueryHandler<GetAppQuery, App>,
-    IQueryHandler<GetAppApiTokenQuery, Guid>
+internal class AppQueryHandler
+    : IQueryHandler<FindAppsQuery, IEnumerable<App>>,
+        IQueryHandler<ListMyAppsQuery, IEnumerable<App>>,
+        IQueryHandler<GetAppQuery, App>,
+        IQueryHandler<GetAppApiTokenQuery, Guid>
 {
     private readonly IAppRepository _appRepository;
 
-    public AppQueryHandler(
-        IAppRepository appRepository
-    )
+    public AppQueryHandler(IAppRepository appRepository)
     {
         _appRepository = appRepository;
     }
@@ -64,8 +62,11 @@ internal class AppQueryHandler :
         var app = request.App;
 
         if (myId != app.OwnerId)
-            return Task.FromResult(Result.Status(OperationStatus.Forbidden, Guid.Empty)
-                .Error("Need to be application owner to get app api token"));
+            return Task.FromResult(
+                Result
+                    .Status(OperationStatus.Forbidden, Guid.Empty)
+                    .Error("Need to be application owner to get app api token")
+            );
 
         return Task.FromResult(Result.Status(OperationStatus.Ok, app.ApiToken));
     }

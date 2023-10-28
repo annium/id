@@ -8,9 +8,7 @@ public class CreateAppCommand : ICommand
     public string Name { get; }
     public User Me { get; private set; } = default!;
 
-    public CreateAppCommand(
-        string name
-    )
+    public CreateAppCommand(string name)
     {
         Name = name;
     }

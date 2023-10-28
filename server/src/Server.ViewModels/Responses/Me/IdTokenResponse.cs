@@ -11,8 +11,7 @@ public record IdTokenResponse : IResponse<IdToken>
     public Guid LoginId { get; set; }
     public AppTokenResponse App { get; set; } = default!;
 
-    public IReadOnlyCollection<CompanyTokenResponse> Companies { get; set; } =
-        Array.Empty<CompanyTokenResponse>();
+    public IReadOnlyCollection<CompanyTokenResponse> Companies { get; set; } = Array.Empty<CompanyTokenResponse>();
 }
 
 public record AppTokenResponse

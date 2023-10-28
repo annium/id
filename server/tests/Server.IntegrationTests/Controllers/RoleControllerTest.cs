@@ -13,9 +13,8 @@ namespace Server.IntegrationTests.Controllers;
 
 public class RoleControllerTest : IntegrationTestBase
 {
-    public RoleControllerTest(ITestOutputHelper outputHelper) : base(outputHelper)
-    {
-    }
+    public RoleControllerTest(ITestOutputHelper outputHelper)
+        : base(outputHelper) { }
 
     [Fact]
     public async Task Create_InvalidPayload_BadRequest()
@@ -36,7 +35,12 @@ public class RoleControllerTest : IntegrationTestBase
     {
         // arrange
         var token = await Id().RegisterLogUserIn();
-        var request = new CreateRoleRequest { AppId = Guid.NewGuid(), Key = Faker.Random.String2(5), Name = Faker.Random.String2(10) };
+        var request = new CreateRoleRequest
+        {
+            AppId = Guid.NewGuid(),
+            Key = Faker.Random.String2(5),
+            Name = Faker.Random.String2(10)
+        };
 
         // act
         var response = await Id(token).Role.CreateRole(request, Result.New(Guid.Empty).Error("Failed to create role"));
@@ -52,7 +56,12 @@ public class RoleControllerTest : IntegrationTestBase
         var otherToken = await Id().RegisterLogUserIn();
         var app = await Id(otherToken).App.Register();
         var token = await Id().RegisterLogUserIn();
-        var request = new CreateRoleRequest { AppId = app.Id, Key = Faker.Random.String2(5), Name = Faker.Random.String2(10) };
+        var request = new CreateRoleRequest
+        {
+            AppId = app.Id,
+            Key = Faker.Random.String2(5),
+            Name = Faker.Random.String2(10)
+        };
 
         // act
         var response = await Id(token).Role.CreateRole(request, Result.New(Guid.Empty).Error("Failed to create role"));
@@ -70,7 +79,12 @@ public class RoleControllerTest : IntegrationTestBase
         var roleKey = Faker.Random.String2(5);
         var roleName = Faker.Random.String2(10);
         await Id(token).Role.Register(app.Id, roleKey, roleName);
-        var request = new CreateRoleRequest { AppId = app.Id, Key = roleKey, Name = roleName };
+        var request = new CreateRoleRequest
+        {
+            AppId = app.Id,
+            Key = roleKey,
+            Name = roleName
+        };
 
         // act
         var response = await Id(token).Role.CreateRole(request, Result.New(Guid.Empty).Error("Failed to create role"));
@@ -105,7 +119,10 @@ public class RoleControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
 
         // act
-        var response = await Id(token).Role.ListRoles(Guid.NewGuid(), Result.New(Array.Empty<RoleResponse>()).Error("Failed to list roles"));
+        var response = await Id(token).Role.ListRoles(
+            Guid.NewGuid(),
+            Result.New(Array.Empty<RoleResponse>()).Error("Failed to list roles")
+        );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -122,7 +139,9 @@ public class RoleControllerTest : IntegrationTestBase
         var role = await Id(token).Role.Register(app.Id, roleKey, roleName);
 
         // act
-        var roles = await Id(token).Role.ListRoles(app.Id, Result.New(Array.Empty<RoleResponse>()).Error("Failed to list roles")).GetData();
+        var roles = await Id(token).Role
+            .ListRoles(app.Id, Result.New(Array.Empty<RoleResponse>()).Error("Failed to list roles"))
+            .GetData();
 
         // assert
         roles.Has(1);
@@ -157,7 +176,11 @@ public class RoleControllerTest : IntegrationTestBase
         var request = new UpdateRoleRequest { Key = Faker.Random.String2(5), Name = Faker.Random.String2(10) };
 
         // act
-        var response = await Id(token).Role.UpdateRole(Guid.NewGuid(), request, Result.New().Error("Failed to update role"));
+        var response = await Id(token).Role.UpdateRole(
+            Guid.NewGuid(),
+            request,
+            Result.New().Error("Failed to update role")
+        );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -224,7 +247,12 @@ public class RoleControllerTest : IntegrationTestBase
         var request = new AddClaimToRoleRequest { Value = Faker.Random.String2(1) };
 
         // act
-        var response = await Id(token).Role.AddClaimToRole(role.Id, claim.Id, request, Result.New().Error("Failed to add claim to role"));
+        var response = await Id(token).Role.AddClaimToRole(
+            role.Id,
+            claim.Id,
+            request,
+            Result.New().Error("Failed to add claim to role")
+        );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.BadRequest);
@@ -238,7 +266,12 @@ public class RoleControllerTest : IntegrationTestBase
         var request = new AddClaimToRoleRequest { Value = Faker.Random.String2(5) };
 
         // act
-        var response = await Id(token).Role.AddClaimToRole(Guid.NewGuid(), Guid.NewGuid(), request, Result.New().Error("Failed to add claim to role"));
+        var response = await Id(token).Role.AddClaimToRole(
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            request,
+            Result.New().Error("Failed to add claim to role")
+        );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -254,7 +287,12 @@ public class RoleControllerTest : IntegrationTestBase
         var request = new AddClaimToRoleRequest { Value = Faker.Random.String2(5) };
 
         // act
-        var response = await Id(token).Role.AddClaimToRole(role.Id, Guid.NewGuid(), request, Result.New().Error("Failed to add claim to role"));
+        var response = await Id(token).Role.AddClaimToRole(
+            role.Id,
+            Guid.NewGuid(),
+            request,
+            Result.New().Error("Failed to add claim to role")
+        );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -272,7 +310,12 @@ public class RoleControllerTest : IntegrationTestBase
         var request = new AddClaimToRoleRequest { Value = Faker.Random.String2(5) };
 
         // act
-        var response = await Id(token).Role.AddClaimToRole(role.Id, claim.Id, request, Result.New().Error("Failed to add claim to role"));
+        var response = await Id(token).Role.AddClaimToRole(
+            role.Id,
+            claim.Id,
+            request,
+            Result.New().Error("Failed to add claim to role")
+        );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -290,7 +333,12 @@ public class RoleControllerTest : IntegrationTestBase
         var request = new AddClaimToRoleRequest { Value = Faker.Random.String2(5) };
 
         // act
-        var response = await Id(token).Role.AddClaimToRole(role.Id, claim.Id, request, Result.New().Error("Failed to add claim to role"));
+        var response = await Id(token).Role.AddClaimToRole(
+            role.Id,
+            claim.Id,
+            request,
+            Result.New().Error("Failed to add claim to role")
+        );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -308,7 +356,9 @@ public class RoleControllerTest : IntegrationTestBase
 
         // act
         var response = await Id(token).Role.AddClaimToRole(role.Id, claim.Id, claimValue);
-        var roles = await Id(token).Role.ListRoles(app.Id, Result.New(Array.Empty<RoleResponse>()).Error("Failed to list roles")).GetData();
+        var roles = await Id(token).Role
+            .ListRoles(app.Id, Result.New(Array.Empty<RoleResponse>()).Error("Failed to list roles"))
+            .GetData();
 
         // assert
         response.StatusCode.Is(HttpStatusCode.OK);
@@ -331,7 +381,11 @@ public class RoleControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
 
         // act
-        var response = await Id(token).Role.DeleteClaimFromRole(Guid.NewGuid(), Guid.NewGuid(), Result.New().Error("Failed to delete claim from role"));
+        var response = await Id(token).Role.DeleteClaimFromRole(
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            Result.New().Error("Failed to delete claim from role")
+        );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -346,7 +400,11 @@ public class RoleControllerTest : IntegrationTestBase
         var role = await Id(token).Role.Register(app.Id);
 
         // act
-        var response = await Id(token).Role.DeleteClaimFromRole(role.Id, Guid.NewGuid(), Result.New().Error("Failed to delete claim from role"));
+        var response = await Id(token).Role.DeleteClaimFromRole(
+            role.Id,
+            Guid.NewGuid(),
+            Result.New().Error("Failed to delete claim from role")
+        );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -363,7 +421,11 @@ public class RoleControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
 
         // act
-        var response = await Id(token).Role.DeleteClaimFromRole(role.Id, claim.Id, Result.New().Error("Failed to delete claim from role"));
+        var response = await Id(token).Role.DeleteClaimFromRole(
+            role.Id,
+            claim.Id,
+            Result.New().Error("Failed to delete claim from role")
+        );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -380,7 +442,11 @@ public class RoleControllerTest : IntegrationTestBase
         var claim = await Id(token).Claim.Register(app1.Id);
 
         // act
-        var response = await Id(token).Role.DeleteClaimFromRole(role.Id, claim.Id, Result.New().Error("Failed to delete claim from role"));
+        var response = await Id(token).Role.DeleteClaimFromRole(
+            role.Id,
+            claim.Id,
+            Result.New().Error("Failed to delete claim from role")
+        );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -396,7 +462,11 @@ public class RoleControllerTest : IntegrationTestBase
         var claim = await Id(token).Claim.Register(app.Id);
 
         // act
-        var response = await Id(token).Role.DeleteClaimFromRole(role.Id, claim.Id, Result.New().Error("Failed to delete claim from role"));
+        var response = await Id(token).Role.DeleteClaimFromRole(
+            role.Id,
+            claim.Id,
+            Result.New().Error("Failed to delete claim from role")
+        );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.OK);

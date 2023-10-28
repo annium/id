@@ -13,9 +13,8 @@ namespace Server.IntegrationTests.Controllers;
 
 public class CompanyUserControllerTest : IntegrationTestBase
 {
-    public CompanyUserControllerTest(ITestOutputHelper outputHelper) : base(outputHelper)
-    {
-    }
+    public CompanyUserControllerTest(ITestOutputHelper outputHelper)
+        : base(outputHelper) { }
 
     [Fact]
     public async Task AddUser_MissingCompany_NotFound()
@@ -37,7 +36,9 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var otherToken = await Id().RegisterLogUserIn();
         var company = await Id(otherToken).Company.Register();
         var token = await Id().RegisterLogUserIn();
-        var user = await Id(token).Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal information")).GetData();
+        var user = await Id(token).Me
+            .GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
+            .GetData();
 
         // act
         var response = await Id(token).CompanyUser.AddUser(company.Id, user.Id);
@@ -67,11 +68,15 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var otherToken = await Id().RegisterLogUserIn();
         var company = await Id(otherToken).Company.Register();
         var token = await Id().RegisterLogUserIn();
-        var user = await Id(token).Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal information")).GetData();
+        var user = await Id(token).Me
+            .GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
+            .GetData();
 
         // act
         var response = await Id(otherToken).CompanyUser.AddUser(company.Id, user.Id);
-        var members = await Id(token).Company.GetCompanyUsers(company.Id, Result.New(Array.Empty<UserResponse>()).Error("Failed to list company users")).GetData();
+        var members = await Id(token).Company
+            .GetCompanyUsers(company.Id, Result.New(Array.Empty<UserResponse>()).Error("Failed to list company users"))
+            .GetData();
 
         // assert
         response.StatusCode.Is(HttpStatusCode.OK);
@@ -102,7 +107,9 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var role = await Id(otherToken).CompanyRole.Register(app.Id);
         var company = await Id(otherToken).Company.Register();
         var token = await Id().RegisterLogUserIn();
-        var user = await Id(token).Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal information")).GetData();
+        var user = await Id(token).Me
+            .GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
+            .GetData();
 
         // act
         var response = await Id(token).CompanyUser.AddUserRole(company.Id, user.Id, role.Id);
@@ -134,7 +141,9 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var role = await Id(otherToken).CompanyRole.Register(app.Id);
         var company = await Id(otherToken).Company.Register();
         var token = await Id().RegisterLogUserIn();
-        var user = await Id(token).Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal information")).GetData();
+        var user = await Id(token).Me
+            .GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
+            .GetData();
 
         // act
         var response = await Id(otherToken).CompanyUser.AddUserRole(company.Id, user.Id, role.Id);
@@ -150,7 +159,9 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var otherToken = await Id().RegisterLogUserIn();
         var company = await Id(otherToken).Company.Register();
         var token = await Id().RegisterLogUserIn();
-        var user = await Id(token).Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal information")).GetData();
+        var user = await Id(token).Me
+            .GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
+            .GetData();
         await Id(otherToken).CompanyUser.AddUser(company.Id, user.Id);
 
         // act
@@ -168,7 +179,9 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var role = await Id(otherToken).CompanyRole.Register(app.Id);
         var company = await Id(otherToken).Company.Register();
         var token = await Id().RegisterLogUserIn();
-        var user = await Id(token).Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal information")).GetData();
+        var user = await Id(token).Me
+            .GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
+            .GetData();
         await Id(otherToken).CompanyUser.AddUser(company.Id, user.Id);
 
         // act
@@ -185,7 +198,12 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
 
         // act
-        var response = await Id(token).CompanyUser.DeleteCompanyRoleFromCompanyUser(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), Result.New().Error("Failed to delete role from user"));
+        var response = await Id(token).CompanyUser.DeleteCompanyRoleFromCompanyUser(
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            Result.New().Error("Failed to delete role from user")
+        );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -200,10 +218,17 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var role = await Id(otherToken).CompanyRole.Register(app.Id);
         var company = await Id(otherToken).Company.Register();
         var token = await Id().RegisterLogUserIn();
-        var user = await Id(token).Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal information")).GetData();
+        var user = await Id(token).Me
+            .GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
+            .GetData();
 
         // act
-        var response = await Id(token).CompanyUser.DeleteCompanyRoleFromCompanyUser(company.Id, user.Id, role.Id, Result.New().Error("Failed to delete role from user"));
+        var response = await Id(token).CompanyUser.DeleteCompanyRoleFromCompanyUser(
+            company.Id,
+            user.Id,
+            role.Id,
+            Result.New().Error("Failed to delete role from user")
+        );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -217,7 +242,12 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var company = await Id(otherToken).Company.Register();
 
         // act
-        var response = await Id(otherToken).CompanyUser.DeleteCompanyRoleFromCompanyUser(company.Id, Guid.NewGuid(), Guid.NewGuid(), Result.New().Error("Failed to delete role from user"));
+        var response = await Id(otherToken).CompanyUser.DeleteCompanyRoleFromCompanyUser(
+            company.Id,
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            Result.New().Error("Failed to delete role from user")
+        );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -232,10 +262,17 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var role = await Id(otherToken).CompanyRole.Register(app.Id);
         var company = await Id(otherToken).Company.Register();
         var token = await Id().RegisterLogUserIn();
-        var user = await Id(token).Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal information")).GetData();
+        var user = await Id(token).Me
+            .GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
+            .GetData();
 
         // act
-        var response = await Id(otherToken).CompanyUser.DeleteCompanyRoleFromCompanyUser(company.Id, user.Id, role.Id, Result.New().Error("Failed to delete role from user"));
+        var response = await Id(otherToken).CompanyUser.DeleteCompanyRoleFromCompanyUser(
+            company.Id,
+            user.Id,
+            role.Id,
+            Result.New().Error("Failed to delete role from user")
+        );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -248,11 +285,18 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var otherToken = await Id().RegisterLogUserIn();
         var company = await Id(otherToken).Company.Register();
         var token = await Id().RegisterLogUserIn();
-        var user = await Id(token).Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal information")).GetData();
+        var user = await Id(token).Me
+            .GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
+            .GetData();
         await Id(otherToken).CompanyUser.AddUser(company.Id, user.Id);
 
         // act
-        var response = await Id(otherToken).CompanyUser.DeleteCompanyRoleFromCompanyUser(company.Id, user.Id, Guid.NewGuid(), Result.New().Error("Failed to delete role from user"));
+        var response = await Id(otherToken).CompanyUser.DeleteCompanyRoleFromCompanyUser(
+            company.Id,
+            user.Id,
+            Guid.NewGuid(),
+            Result.New().Error("Failed to delete role from user")
+        );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -267,12 +311,19 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var role = await Id(otherToken).CompanyRole.Register(app.Id);
         var company = await Id(otherToken).Company.Register();
         var token = await Id().RegisterLogUserIn();
-        var user = await Id(token).Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal information")).GetData();
+        var user = await Id(token).Me
+            .GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
+            .GetData();
         await Id(otherToken).CompanyUser.AddUser(company.Id, user.Id);
         await Id(otherToken).CompanyUser.AddUserRole(company.Id, user.Id, role.Id);
 
         // act
-        var response = await Id(otherToken).CompanyUser.DeleteCompanyRoleFromCompanyUser(company.Id, user.Id, role.Id, Result.New().Error("Failed to delete role from user"));
+        var response = await Id(otherToken).CompanyUser.DeleteCompanyRoleFromCompanyUser(
+            company.Id,
+            user.Id,
+            role.Id,
+            Result.New().Error("Failed to delete role from user")
+        );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.OK);
@@ -285,7 +336,12 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
 
         // act
-        var response = await Id(token).CompanyUser.AddUserClaim(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), Faker.Random.String2(1));
+        var response = await Id(token).CompanyUser.AddUserClaim(
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            Faker.Random.String2(1)
+        );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.BadRequest);
@@ -313,7 +369,9 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var claim = await Id(otherToken).CompanyClaim.Register(app.Id);
         var company = await Id(otherToken).Company.Register();
         var token = await Id().RegisterLogUserIn();
-        var user = await Id(token).Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal information")).GetData();
+        var user = await Id(token).Me
+            .GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
+            .GetData();
 
         // act
         var response = await Id(token).CompanyUser.AddUserClaim(company.Id, user.Id, claim.Id);
@@ -345,7 +403,9 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var claim = await Id(otherToken).CompanyClaim.Register(app.Id);
         var company = await Id(otherToken).Company.Register();
         var token = await Id().RegisterLogUserIn();
-        var user = await Id(token).Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal information")).GetData();
+        var user = await Id(token).Me
+            .GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
+            .GetData();
 
         // act
         var response = await Id(otherToken).CompanyUser.AddUserClaim(company.Id, user.Id, claim.Id);
@@ -361,7 +421,9 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var otherToken = await Id().RegisterLogUserIn();
         var company = await Id(otherToken).Company.Register();
         var token = await Id().RegisterLogUserIn();
-        var user = await Id(token).Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal information")).GetData();
+        var user = await Id(token).Me
+            .GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
+            .GetData();
         await Id(otherToken).CompanyUser.AddUser(company.Id, user.Id);
 
         // act
@@ -380,7 +442,9 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var claim = await Id(otherToken).CompanyClaim.Register(app.Id);
         var company = await Id(otherToken).Company.Register();
         var token = await Id().RegisterLogUserIn();
-        var user = await Id(token).Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal information")).GetData();
+        var user = await Id(token).Me
+            .GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
+            .GetData();
         await Id(otherToken).CompanyUser.AddUser(company.Id, user.Id);
 
         // act
@@ -412,10 +476,17 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var claim = await Id(otherToken).CompanyClaim.Register(app.Id);
         var company = await Id(otherToken).Company.Register();
         var token = await Id().RegisterLogUserIn();
-        var user = await Id(token).Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal information")).GetData();
+        var user = await Id(token).Me
+            .GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
+            .GetData();
 
         // act
-        var response = await Id(otherToken).CompanyUser.DeleteCompanyClaimFromCompanyUser(company.Id, user.Id, claim.Id, Result.New().Error("Failed to delete claim from user"));
+        var response = await Id(otherToken).CompanyUser.DeleteCompanyClaimFromCompanyUser(
+            company.Id,
+            user.Id,
+            claim.Id,
+            Result.New().Error("Failed to delete claim from user")
+        );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -429,7 +500,12 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var company = await Id(otherToken).Company.Register();
 
         // act
-        var response = await Id(otherToken).CompanyUser.DeleteCompanyClaimFromCompanyUser(company.Id, Guid.NewGuid(), Guid.NewGuid(), Result.New().Error("Failed to delete claim from user"));
+        var response = await Id(otherToken).CompanyUser.DeleteCompanyClaimFromCompanyUser(
+            company.Id,
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            Result.New().Error("Failed to delete claim from user")
+        );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -444,10 +520,17 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var claim = await Id(otherToken).CompanyClaim.Register(app.Id);
         var company = await Id(otherToken).Company.Register();
         var token = await Id().RegisterLogUserIn();
-        var user = await Id(token).Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal information")).GetData();
+        var user = await Id(token).Me
+            .GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
+            .GetData();
 
         // act
-        var response = await Id(otherToken).CompanyUser.DeleteCompanyClaimFromCompanyUser(company.Id, user.Id, claim.Id, Result.New().Error("Failed to delete claim from user"));
+        var response = await Id(otherToken).CompanyUser.DeleteCompanyClaimFromCompanyUser(
+            company.Id,
+            user.Id,
+            claim.Id,
+            Result.New().Error("Failed to delete claim from user")
+        );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -460,11 +543,18 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var otherToken = await Id().RegisterLogUserIn();
         var company = await Id(otherToken).Company.Register();
         var token = await Id().RegisterLogUserIn();
-        var user = await Id(token).Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal information")).GetData();
+        var user = await Id(token).Me
+            .GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
+            .GetData();
         await Id(otherToken).CompanyUser.AddUser(company.Id, user.Id);
 
         // act
-        var response = await Id(otherToken).CompanyUser.DeleteCompanyClaimFromCompanyUser(company.Id, user.Id, Guid.NewGuid(), Result.New().Error("Failed to delete claim from user"));
+        var response = await Id(otherToken).CompanyUser.DeleteCompanyClaimFromCompanyUser(
+            company.Id,
+            user.Id,
+            Guid.NewGuid(),
+            Result.New().Error("Failed to delete claim from user")
+        );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -479,12 +569,19 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var claim = await Id(otherToken).CompanyClaim.Register(app.Id);
         var company = await Id(otherToken).Company.Register();
         var token = await Id().RegisterLogUserIn();
-        var user = await Id(token).Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal information")).GetData();
+        var user = await Id(token).Me
+            .GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
+            .GetData();
         await Id(otherToken).CompanyUser.AddUser(company.Id, user.Id);
         await Id(otherToken).CompanyUser.AddUserClaim(company.Id, user.Id, claim.Id);
 
         // act
-        var response = await Id(otherToken).CompanyUser.DeleteCompanyClaimFromCompanyUser(company.Id, user.Id, claim.Id, Result.New().Error("Failed to delete claim from user"));
+        var response = await Id(otherToken).CompanyUser.DeleteCompanyClaimFromCompanyUser(
+            company.Id,
+            user.Id,
+            claim.Id,
+            Result.New().Error("Failed to delete claim from user")
+        );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.OK);
@@ -497,7 +594,11 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
 
         // act
-        var response = await Id(token).CompanyUser.DeleteUserFromCompany(Guid.NewGuid(), Guid.NewGuid(), Result.New().Error("Failed to delete user from company"));
+        var response = await Id(token).CompanyUser.DeleteUserFromCompany(
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            Result.New().Error("Failed to delete user from company")
+        );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -510,10 +611,16 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var otherToken = await Id().RegisterLogUserIn();
         var company = await Id(otherToken).Company.Register();
         var token = await Id().RegisterLogUserIn();
-        var user = await Id(token).Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal information")).GetData();
+        var user = await Id(token).Me
+            .GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
+            .GetData();
 
         // act
-        var response = await Id(token).CompanyUser.DeleteUserFromCompany(company.Id, user.Id, Result.New().Error("Failed to delete user from company"));
+        var response = await Id(token).CompanyUser.DeleteUserFromCompany(
+            company.Id,
+            user.Id,
+            Result.New().Error("Failed to delete user from company")
+        );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -527,7 +634,11 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var company = await Id(otherToken).Company.Register();
 
         // act
-        var response = await Id(otherToken).CompanyUser.DeleteUserFromCompany(company.Id, Guid.NewGuid(), Result.New().Error("Failed to delete user from company"));
+        var response = await Id(otherToken).CompanyUser.DeleteUserFromCompany(
+            company.Id,
+            Guid.NewGuid(),
+            Result.New().Error("Failed to delete user from company")
+        );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -540,10 +651,16 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var otherToken = await Id().RegisterLogUserIn();
         var company = await Id(otherToken).Company.Register();
         var token = await Id().RegisterLogUserIn();
-        var user = await Id(token).Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal information")).GetData();
+        var user = await Id(token).Me
+            .GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
+            .GetData();
 
         // act
-        var response = await Id(otherToken).CompanyUser.DeleteUserFromCompany(company.Id, user.Id, Result.New().Error("Failed to delete user from company"));
+        var response = await Id(otherToken).CompanyUser.DeleteUserFromCompany(
+            company.Id,
+            user.Id,
+            Result.New().Error("Failed to delete user from company")
+        );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -556,11 +673,17 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var otherToken = await Id().RegisterLogUserIn();
         var company = await Id(otherToken).Company.Register();
         var token = await Id().RegisterLogUserIn();
-        var user = await Id(token).Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal information")).GetData();
+        var user = await Id(token).Me
+            .GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
+            .GetData();
         await Id(otherToken).CompanyUser.AddUser(company.Id, user.Id);
 
         // act
-        var response = await Id(otherToken).CompanyUser.DeleteUserFromCompany(company.Id, user.Id, Result.New().Error("Failed to delete user from company"));
+        var response = await Id(otherToken).CompanyUser.DeleteUserFromCompany(
+            company.Id,
+            user.Id,
+            Result.New().Error("Failed to delete user from company")
+        );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.OK);

@@ -13,7 +13,8 @@ internal class BaseServicePack : ServicePackBase
         container.Add<ITokenGenerator, TokenGenerator>().Scoped();
 
         // services
-        container.AddAll(GetType().Assembly)
+        container
+            .AddAll(GetType().Assembly)
             .Where(x => x.IsClass && x.Name.EndsWith("Service"))
             .AsInterfaces()
             .Scoped();

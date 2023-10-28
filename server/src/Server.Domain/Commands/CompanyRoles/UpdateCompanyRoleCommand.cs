@@ -12,11 +12,7 @@ public class UpdateCompanyRoleCommand : ICommand
     public Guid MyId { get; private set; }
     public CompanyRole Role { get; private set; } = null!;
 
-    public UpdateCompanyRoleCommand(
-        Guid roleId,
-        string key,
-        string name
-    )
+    public UpdateCompanyRoleCommand(Guid roleId, string key, string name)
     {
         RoleId = roleId;
         Key = key;

@@ -15,9 +15,7 @@ internal class GetCompanyUsersQueryValidator : Validator<GetCompanyUsersQuery>
 
 internal class GetCompanyUsersQueryComposer : Composer<GetCompanyUsersQuery>
 {
-    public GetCompanyUsersQueryComposer(
-        ICompanyRepository companyRepository
-    )
+    public GetCompanyUsersQueryComposer(ICompanyRepository companyRepository)
     {
         Field(c => c.Company).LoadWith(ctx => companyRepository.TryGetByIdAsync(ctx.Root.CompanyId));
     }

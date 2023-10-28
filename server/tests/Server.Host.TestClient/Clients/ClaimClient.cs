@@ -23,10 +23,7 @@ public class ClaimClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Post("claims")
-            .JsonContent(body)
-            .AsResponseAsync(defaultValue, ct);
+        return await _request.Post("claims").JsonContent(body).AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IResult<ClaimResponse[]>>> ListClaims(
@@ -35,10 +32,7 @@ public class ClaimClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Get("claims")
-            .Param("appId", appId)
-            .AsResponseAsync(defaultValue, ct);
+        return await _request.Get("claims").Param("appId", appId).AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IResult>> UpdateClaim(
@@ -48,10 +42,7 @@ public class ClaimClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Put($"claims/{claimId}")
-            .JsonContent(body)
-            .AsResponseAsync(defaultValue, ct);
+        return await _request.Put($"claims/{claimId}").JsonContent(body).AsResponseAsync(defaultValue, ct);
     }
 
     public async Task<IHttpResponse<IResult>> DeleteClaim(
@@ -60,8 +51,6 @@ public class ClaimClient
         CancellationToken ct = default
     )
     {
-        return await _request
-            .Delete($"claims/{claimId}")
-            .AsResponseAsync(defaultValue, ct);
+        return await _request.Delete($"claims/{claimId}").AsResponseAsync(defaultValue, ct);
     }
 }

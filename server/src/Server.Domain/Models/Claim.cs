@@ -11,11 +11,7 @@ public class Claim : IIdEntity<Guid>
     public string Key { get; private set; } = string.Empty;
     public string Name { get; private set; } = string.Empty;
 
-    public Claim(
-        App app,
-        string key,
-        string name
-    )
+    public Claim(App app, string key, string name)
     {
         Id = Guid.NewGuid();
         AppId = app.Id;
@@ -23,9 +19,7 @@ public class Claim : IIdEntity<Guid>
         Name = name;
     }
 
-    internal Claim()
-    {
-    }
+    internal Claim() { }
 
     public void Update(string key, string name)
     {

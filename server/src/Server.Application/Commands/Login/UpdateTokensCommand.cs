@@ -16,10 +16,7 @@ internal class UpdateTokensCommandValidator : Validator<UpdateTokensCommand>
 
 internal class UpdateTokensCommandComposer : Composer<UpdateTokensCommand>
 {
-    public UpdateTokensCommandComposer(
-        IAppRepository appRepository,
-        IUserLoginRepository userLoginRepository
-    )
+    public UpdateTokensCommandComposer(IAppRepository appRepository, IUserLoginRepository userLoginRepository)
     {
         Field(c => c.App).LoadWith(ctx => appRepository.TryGetByIdAsync(ctx.Root.AppId));
         Field(e => e.Login).LoadWith(ctx => userLoginRepository.TryFindByRefreshTokenAsync(ctx.Root.RefreshToken));

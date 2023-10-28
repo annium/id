@@ -13,11 +13,7 @@ public class AddClaimToUserCommand : ICommand
     public User User { get; private set; } = null!;
     public Claim Claim { get; private set; } = null!;
 
-    public AddClaimToUserCommand(
-        Guid userId,
-        Guid claimId,
-        string value
-    )
+    public AddClaimToUserCommand(Guid userId, Guid claimId, string value)
     {
         UserId = userId;
         ClaimId = claimId;

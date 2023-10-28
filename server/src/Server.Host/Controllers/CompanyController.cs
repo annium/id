@@ -15,12 +15,8 @@ namespace Server.Host.Controllers;
 [Route("companies")]
 public class CompanyController : ServerController
 {
-    public CompanyController(
-        IMediator mediator,
-        IServiceProvider sp
-    ) : base(mediator, sp)
-    {
-    }
+    public CompanyController(IMediator mediator, IServiceProvider sp)
+        : base(mediator, sp) { }
 
     [HttpPost]
     [Authorize]

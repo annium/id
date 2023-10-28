@@ -14,13 +14,13 @@ using Server.Email;
 
 namespace Server.Application.CommandHandlers;
 
-internal class MeCommandHandler :
-    ICommandHandler<RegisterMeCommand>,
-    ICommandHandler<ConfirmMyEmailCommand, Tokens>,
-    ICommandHandler<RestoreMyAccessCommand>,
-    ICommandHandler<UpdateMyPasswordCommand>,
-    ICommandHandler<UpdateMyProfileCommand>,
-    ICommandHandler<UnregisterMeCommand>
+internal class MeCommandHandler
+    : ICommandHandler<RegisterMeCommand>,
+        ICommandHandler<ConfirmMyEmailCommand, Tokens>,
+        ICommandHandler<RestoreMyAccessCommand>,
+        ICommandHandler<UpdateMyPasswordCommand>,
+        ICommandHandler<UpdateMyProfileCommand>,
+        ICommandHandler<UnregisterMeCommand>
 {
     private readonly IUserRepository _userRepository;
     private readonly IUserLoginRepository _userLoginRepository;
@@ -48,12 +48,7 @@ internal class MeCommandHandler :
         CancellationToken cancellationToken
     )
     {
-        var user = new User(
-            request.Login,
-            string.Empty,
-            request.Email,
-            request.Referral
-        );
+        var user = new User(request.Login, string.Empty, request.Email, request.Referral);
 
         await _userRepository.CreateAsync(user);
 
@@ -74,7 +69,9 @@ internal class MeCommandHandler :
 
         // if password is already set - user has already confirmed email
         if (!user.PasswordHash.IsNullOrWhiteSpace())
-            return Result.Status<OperationStatus, Tokens>(OperationStatus.Forbidden, default!).Error("Email already confirmed");
+            return Result
+                .Status<OperationStatus, Tokens>(OperationStatus.Forbidden, default!)
+                .Error("Email already confirmed");
 
         // set random password to allow check above be bypassed only once
         var passwordHash = _securityManager.Hash(Guid.NewGuid().ToString());

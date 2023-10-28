@@ -10,9 +10,7 @@ public class LogOutCommand : ICommand
     public Guid LoginId { get; private set; }
     public App App { get; private set; } = null!;
 
-    public LogOutCommand(
-        Guid appId
-    )
+    public LogOutCommand(Guid appId)
     {
         AppId = appId;
     }

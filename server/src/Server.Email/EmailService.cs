@@ -12,10 +12,7 @@ public class EmailService : IEmailService
     private readonly Configuration _cfg;
     private readonly Annium.Net.Mail.IEmailService _emailService;
 
-    public EmailService(
-        Configuration cfg,
-        Annium.Net.Mail.IEmailService emailService
-    )
+    public EmailService(Configuration cfg, Annium.Net.Mail.IEmailService emailService)
     {
         _cfg = cfg;
         _emailService = emailService;
@@ -26,11 +23,7 @@ public class EmailService : IEmailService
         using var message = GetMessage("Annium email confirmation");
         message.To.Add(user.Email);
 
-        var data = new ConfirmEmailData(
-            server.GetLeftPart(UriPartial.Authority),
-            user.Id,
-            user.Login
-        );
+        var data = new ConfirmEmailData(server.GetLeftPart(UriPartial.Authority), user.Id, user.Login);
 
         return await _emailService.SendAsync(message, "confirm-email", data);
     }
@@ -40,21 +33,13 @@ public class EmailService : IEmailService
         using var message = GetMessage("Annium access restore");
         message.To.Add(user.Email);
 
-        var data = new RestoreAccessData(
-            server.GetLeftPart(UriPartial.Authority),
-            user.Login,
-            tokens
-        );
+        var data = new RestoreAccessData(server.GetLeftPart(UriPartial.Authority), user.Login, tokens);
 
         return await _emailService.SendAsync(message, "restore-access", data);
     }
 
     private MailMessage GetMessage(string subject)
     {
-        return new MailMessage
-        {
-            From = new MailAddress(_cfg.FromAddress, _cfg.FromDisplay),
-            Subject = subject
-        };
+        return new MailMessage { From = new MailAddress(_cfg.FromAddress, _cfg.FromDisplay), Subject = subject };
     }
 }

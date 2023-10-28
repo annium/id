@@ -10,18 +10,15 @@ using Server.Domain.Models;
 
 namespace Server.Application.CommandHandlers;
 
-internal class ClaimCommandHandler :
-    ICommandHandler<CreateClaimCommand, Guid>,
-    ICommandHandler<UpdateClaimCommand>,
-    ICommandHandler<DeleteClaimCommand>
+internal class ClaimCommandHandler
+    : ICommandHandler<CreateClaimCommand, Guid>,
+        ICommandHandler<UpdateClaimCommand>,
+        ICommandHandler<DeleteClaimCommand>
 {
     private readonly IAppRepository _appRepository;
     private readonly IClaimRepository _claimRepository;
 
-    public ClaimCommandHandler(
-        IAppRepository appRepository,
-        IClaimRepository claimRepository
-    )
+    public ClaimCommandHandler(IAppRepository appRepository, IClaimRepository claimRepository)
     {
         _appRepository = appRepository;
         _claimRepository = claimRepository;
@@ -36,7 +33,9 @@ internal class ClaimCommandHandler :
         var app = request.App;
 
         if (myId != app.OwnerId)
-            return Result.Status(OperationStatus.Forbidden, Guid.Empty).Error("Need to be application owner to create claim");
+            return Result
+                .Status(OperationStatus.Forbidden, Guid.Empty)
+                .Error("Need to be application owner to create claim");
 
         var claim = new Claim(app, request.Key, request.Name);
 

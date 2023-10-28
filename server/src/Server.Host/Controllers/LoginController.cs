@@ -13,12 +13,8 @@ namespace Server.Host.Controllers;
 [Route("me/{appId:guid}")]
 public class LoginController : ServerController
 {
-    public LoginController(
-        IMediator mediator,
-        IServiceProvider sp
-    ) : base(mediator, sp)
-    {
-    }
+    public LoginController(IMediator mediator, IServiceProvider sp)
+        : base(mediator, sp) { }
 
     [HttpPost("login")]
     public Task<IResult<TokensResponse>> LogIn(Guid appId, [FromBody] LogInRequestBody requestBody)
@@ -37,11 +33,7 @@ public class LoginController : ServerController
     [Authorize(AuthPolicy.CanRefreshToken, false, false)]
     public Task<IResult<TokensResponse>> UpdateToken(Guid appId, [FromQuery] UpdateTokensRequestBody requestBody)
     {
-        var request = new UpdateTokensRequest
-        {
-            AppId = appId,
-            RefreshToken = requestBody.RefreshToken
-        };
+        var request = new UpdateTokensRequest { AppId = appId, RefreshToken = requestBody.RefreshToken };
 
         return HandleAsync<UpdateTokensRequest, TokensResponse>(request);
     }

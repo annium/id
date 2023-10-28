@@ -14,11 +14,7 @@ public class DeleteCompanyRoleFromCompanyUserCommand : ICommand
     public User User { get; private set; } = null!;
     public CompanyRole Role { get; private set; } = null!;
 
-    public DeleteCompanyRoleFromCompanyUserCommand(
-        Guid companyId,
-        Guid userId,
-        Guid roleId
-    )
+    public DeleteCompanyRoleFromCompanyUserCommand(Guid companyId, Guid userId, Guid roleId)
     {
         CompanyId = companyId;
         UserId = userId;

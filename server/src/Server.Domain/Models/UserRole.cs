@@ -9,10 +9,7 @@ public class UserRole
     public Guid RoleId { get; private init; }
     public Role Role { get; private init; } = default!;
 
-    public UserRole(
-        User user,
-        Role role
-    )
+    public UserRole(User user, Role role)
     {
         UserId = user.Id;
         User = user;
@@ -20,7 +17,5 @@ public class UserRole
         Role = role;
     }
 
-    internal UserRole()
-    {
-    }
+    internal UserRole() { }
 }

@@ -15,11 +15,7 @@ internal class LoginService : ILoginService
     private readonly IServerApi _serverApi;
     private readonly ITokenStore _tokenStore;
 
-    public LoginService(
-        Configuration config,
-        IServerApi serverApi,
-        ITokenStore tokenStore
-    )
+    public LoginService(Configuration config, IServerApi serverApi, ITokenStore tokenStore)
     {
         _config = config;
         _serverApi = serverApi;
@@ -28,11 +24,13 @@ internal class LoginService : ILoginService
 
     public async Task<IResult<TokensResponse>> LogIn(string login, string password)
     {
-        var response = await _serverApi.Public.Client().Login.LogIn(
-            _config.AppId,
-            new LogInRequestBody { Login = login, Password = password },
-            Result.New(new TokensResponse()).Error("Failed to log in")
-        );
+        var response = await _serverApi.Public
+            .Client()
+            .Login.LogIn(
+                _config.AppId,
+                new LogInRequestBody { Login = login, Password = password },
+                Result.New(new TokensResponse()).Error("Failed to log in")
+            );
 
         if (response.IsOk)
             _tokenStore.Set(response.Data);
@@ -47,11 +45,13 @@ internal class LoginService : ILoginService
 
     public async Task<IResult<TokensResponse>> UpdateToken(Guid refreshToken)
     {
-        var response = await _serverApi.Private.Client().Login.UpdateToken(
-            _config.AppId,
-            refreshToken,
-            Result.New(new TokensResponse()).Error("Failed to update token")
-        );
+        var response = await _serverApi.Private
+            .Client()
+            .Login.UpdateToken(
+                _config.AppId,
+                refreshToken,
+                Result.New(new TokensResponse()).Error("Failed to update token")
+            );
 
         if (response.IsOk)
             _tokenStore.Set(response.Data);

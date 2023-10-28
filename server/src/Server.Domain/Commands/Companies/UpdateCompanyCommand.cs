@@ -13,11 +13,7 @@ public class UpdateCompanyCommand : ICommand
     public Company Company { get; private set; } = null!;
     public Company? Parent { get; private set; } = default;
 
-    public UpdateCompanyCommand(
-        Guid companyId,
-        Guid? parentId,
-        string name
-    )
+    public UpdateCompanyCommand(Guid companyId, Guid? parentId, string name)
     {
         CompanyId = companyId;
         ParentId = parentId;

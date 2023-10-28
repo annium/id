@@ -18,7 +18,8 @@ public class ServicePack : ServicePackBase
     {
         container.AddTime().WithRealTime().SetDefault();
         container.AddMapper();
-        container.AddSerializers()
+        container
+            .AddSerializers()
             .WithJson(opts => opts.ConfigureForOperations().ConfigureForNodaTime(), isDefault: true);
         container.AddHttpRequestFactory(true);
         container.AddLogging();
@@ -31,26 +32,25 @@ public class ServicePack : ServicePackBase
         //     options.Audience = Constants.AppId;
         //     options.PublicKeyFile = Path.Combine("keys", "public.key");
         // });
-        container.AddIdPolicy(
-            "isAdmin",
-            token => Enumerable.Contains(token.App.Roles, "admin")
-        );
+        container.AddIdPolicy("isAdmin", token => Enumerable.Contains(token.App.Roles, "admin"));
         container.AddIdPolicy(
             "hasPaymentsAccess",
-            token => token.App.Claims.ContainsKey("paymentsAccess") &&
-                token.App.Claims["paymentsAccess"] == "full"
+            token => token.App.Claims.ContainsKey("paymentsAccess") && token.App.Claims["paymentsAccess"] == "full"
         );
         container.AddIdPolicy<Guid>(
             "hasCompanyPaymentsAccess",
-            (token, companyId) => token.Companies.Any(
-                c => c.Id == companyId && c.Claims.ContainsKey("paymentsAccess") && c.Claims["paymentsAccess"] == "full"
-            )
+            (token, companyId) =>
+                token.Companies.Any(
+                    c =>
+                        c.Id == companyId
+                        && c.Claims.ContainsKey("paymentsAccess")
+                        && c.Claims["paymentsAccess"] == "full"
+                )
         );
 
         // host
         container.Collection.AddCors();
-        container.Collection.AddControllers()
-            .AddDefaultJsonOptions();
+        container.Collection.AddControllers().AddDefaultJsonOptions();
     }
 
     public override void Setup(IServiceProvider provider)

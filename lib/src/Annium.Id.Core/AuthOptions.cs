@@ -11,7 +11,5 @@ public class AuthOptions
     public Duration AccessTokenLifeTime { get; set; }
     public Duration RefreshTokenLifeTime { get; set; }
 
-    internal AuthOptions()
-    {
-    }
+    internal AuthOptions() { }
 }

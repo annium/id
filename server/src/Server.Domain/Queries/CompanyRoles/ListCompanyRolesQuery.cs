@@ -9,9 +9,7 @@ public class ListCompanyRolesQuery : IQuery
     public Guid AppId { get; }
     public App App { get; private set; } = null!;
 
-    public ListCompanyRolesQuery(
-        Guid appId
-    )
+    public ListCompanyRolesQuery(Guid appId)
     {
         AppId = appId;
     }

@@ -4,7 +4,9 @@ using Server.Domain.Commands.CompanyRoles;
 
 namespace Server.ViewModels.Requests.CompanyRoles;
 
-public record AddCompanyClaimToCompanyRoleRequest : AddCompanyClaimToCompanyRoleRequestBody, IRequest<AddCompanyClaimToCompanyRoleCommand>
+public record AddCompanyClaimToCompanyRoleRequest
+    : AddCompanyClaimToCompanyRoleRequestBody,
+        IRequest<AddCompanyClaimToCompanyRoleCommand>
 {
     public Guid RoleId { get; set; }
     public Guid ClaimId { get; set; }

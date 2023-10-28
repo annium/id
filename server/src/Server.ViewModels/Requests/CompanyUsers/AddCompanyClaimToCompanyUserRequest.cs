@@ -4,7 +4,9 @@ using Server.Domain.Commands.CompanyUsers;
 
 namespace Server.ViewModels.Requests.CompanyUsers;
 
-public record AddCompanyClaimToCompanyUserRequest : AddCompanyClaimToCompanyUserRequestBody, IRequest<AddCompanyClaimToCompanyUserCommand>
+public record AddCompanyClaimToCompanyUserRequest
+    : AddCompanyClaimToCompanyUserRequestBody,
+        IRequest<AddCompanyClaimToCompanyUserCommand>
 {
     public Guid CompanyId { get; set; }
     public Guid UserId { get; set; }
