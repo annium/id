@@ -36,18 +36,19 @@ internal class ServerApi : IServerApi
     private readonly ISerializer<string> _serializer;
 
     public ServerApi(
+        IServiceProvider sp,
         ITimeProvider timeProvider,
         IHttpRequestFactory requestFactory,
         ITokenStore tokenStore,
-        Configuration config,
-        IIndex<string, ISerializer<string>> serializers
+        Configuration config
     )
     {
         _timeProvider = timeProvider;
+        var serializerKey = SerializerKey.CreateDefault(MediaTypeNames.Application.Json);
+        _serializer = sp.ResolveKeyed<ISerializer<string>>(serializerKey);
         _requestFactory = requestFactory;
         _tokenStore = tokenStore;
         _config = config;
-        _serializer = serializers[MediaTypeNames.Application.Json];
     }
 
     private async Task<IHttpResponse> AuthMiddleware(Func<Task<IHttpResponse>> next)
