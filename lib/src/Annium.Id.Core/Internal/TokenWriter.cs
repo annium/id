@@ -4,7 +4,6 @@ using System.Security.Cryptography;
 using Annium.Identity.Tokens;
 using Annium.Identity.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
-using SystemClaim = System.Security.Claims.Claim;
 
 namespace Annium.Id.Core.Internal;
 

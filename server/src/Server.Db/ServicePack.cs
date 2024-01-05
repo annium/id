@@ -4,7 +4,7 @@ using Annium.Configuration.Abstractions;
 using Annium.Core.DependencyInjection;
 using Annium.linq2db.PostgreSql;
 using Server.Db.Internal;
-using Xdb.Core.Migrations;
+using Xdb;
 
 namespace Server.Db;
 
@@ -24,7 +24,7 @@ public class ServicePack : ServicePackBase
 
     public override void Setup(IServiceProvider provider)
     {
-        Migrator
+        Migrator.Instance
             .ForPostgresql(provider.Resolve<PostgreSqlConfiguration>().ConnectionString, Constants.Schema)
             .WithScriptsFromAssembly(GetType().Assembly)
             .Execute();

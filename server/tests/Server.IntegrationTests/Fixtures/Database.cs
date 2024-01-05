@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Server.Db;
 using Server.Db.Internal;
 using Testcontainers.PostgreSql;
-using Xdb.Core.Migrations;
+using Xdb;
 using PostgreSqlConfiguration = Annium.linq2db.PostgreSql.PostgreSqlConfiguration;
 
 namespace Server.IntegrationTests.Fixtures;
@@ -51,7 +51,7 @@ public static class Database
         await Db.StartAsync();
         Config.Host = Db.Hostname;
         Config.Port = Db.GetMappedPublicPort(PostgreSqlBuilder.PostgreSqlPort);
-        Migrator
+        Migrator.Instance
             .ForPostgresql(Config.ConnectionString, Constants.Schema)
             .WithScriptsFromAssembly(typeof(TestServicePack).Assembly)
             .Execute();
