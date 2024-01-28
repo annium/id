@@ -15,6 +15,6 @@
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Annium.Testing" Version="0.1.0" />
-        <PackageReference Include="Bogus" Version="34.0.2" />
+        <PackageReference Include="Bogus" Version="35.4.0" />
     </ItemGroup>
 </Project>
