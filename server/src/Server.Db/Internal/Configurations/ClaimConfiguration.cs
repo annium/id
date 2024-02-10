@@ -5,12 +5,12 @@ using Server.Domain.Models;
 
 namespace Server.Db.Internal.Configurations;
 
-internal class ClaimConfiguration : IdEntityConfiguration<Claim, Guid>
+internal class ClaimConfiguration : IIdEntityConfiguration<Claim, Guid>
 {
-    public override void Configure(EntityMappingBuilder<Claim> builder)
+    public void Configure(EntityMappingBuilder<Claim> builder)
     {
+        this.ConfigureId(builder);
         builder.HasSchemaName(Constants.Schema).HasTableName("claims");
-        base.Configure(builder);
         builder.Association(x => x.App, x => x.AppId, x => x.Id, false);
         builder.Property(x => x.Key).IsColumn();
         builder.Property(x => x.Name).IsColumn();

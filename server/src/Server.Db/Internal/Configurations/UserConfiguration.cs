@@ -5,12 +5,12 @@ using Server.Domain.Models;
 
 namespace Server.Db.Internal.Configurations;
 
-internal class UserConfiguration : IdEntityConfiguration<User, Guid>
+internal class UserConfiguration : IIdEntityConfiguration<User, Guid>
 {
-    public override void Configure(EntityMappingBuilder<User> builder)
+    public void Configure(EntityMappingBuilder<User> builder)
     {
+        this.ConfigureId(builder);
         builder.HasSchemaName(Constants.Schema).HasTableName("users");
-        base.Configure(builder);
         builder.Property(x => x.Login).IsColumn();
         builder.Property(x => x.PasswordHash).IsColumn();
         builder.Property(x => x.Email).IsColumn();

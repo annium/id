@@ -5,12 +5,12 @@ using Server.Domain.Models;
 
 namespace Server.Db.Internal.Configurations;
 
-internal class AppConfiguration : IdEntityConfiguration<App, Guid>
+internal class AppConfiguration : IIdEntityConfiguration<App, Guid>
 {
-    public override void Configure(EntityMappingBuilder<App> builder)
+    public void Configure(EntityMappingBuilder<App> builder)
     {
+        this.ConfigureId(builder);
         builder.HasSchemaName(Constants.Schema).HasTableName("apps");
-        base.Configure(builder);
         builder.Association(x => x.Owner, x => x.OwnerId, x => x.Id, false);
         builder.Property(x => x.Name).IsColumn();
         builder.Property(x => x.ApiToken).IsColumn();
