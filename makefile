@@ -39,13 +39,13 @@ configure:
 	$(call copy,docker,db.env,run/db)
 
 	@# server tests
-	$(call copy,shared,private.key public.key,server/test/Server.IntegrationTests/keys)
+	$(call copy,shared,private.key public.key,server/tests/Server.IntegrationTests/keys)
 
 	@# demo host
-	$(call copy,shared,private.key public.key,server/test/Server.DemoHost/keys)
+	$(call copy,shared,private.key public.key,server/tests/Server.DemoHost/keys)
 
 	@# core tests
-	$(call copy,shared,private.key public.key,lib/test/Annium.Id.Core.Tests/keys)
+	$(call copy,shared,private.key public.key,lib/tests/Annium.Id.Core.Tests/keys)
 
 deconfigure:
 	rm -rf run
