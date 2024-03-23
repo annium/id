@@ -52,17 +52,16 @@ internal class TokenGenerator : ITokenGenerator
         var companyIds = companyUserRoles.Keys.Union(companyUserClaims.Keys).ToArray();
         var companies = await _companyRepository.GetAllByIdsAsync(companyIds);
         var companyTokens = companies
-            .Select(
-                company =>
-                    BuildCompanyToken(
-                        company,
-                        companyUserRoles.ContainsKey(company.Id)
-                            ? companyUserRoles[company.Id]
-                            : Array.Empty<CompanyRole>(),
-                        companyUserClaims.ContainsKey(company.Id)
-                            ? companyUserClaims[company.Id]
-                            : Array.Empty<CompanyUserClaim>()
-                    )
+            .Select(company =>
+                BuildCompanyToken(
+                    company,
+                    companyUserRoles.ContainsKey(company.Id)
+                        ? companyUserRoles[company.Id]
+                        : Array.Empty<CompanyRole>(),
+                    companyUserClaims.ContainsKey(company.Id)
+                        ? companyUserClaims[company.Id]
+                        : Array.Empty<CompanyUserClaim>()
+                )
             )
             .ToArray();
 
@@ -88,8 +87,8 @@ internal class TokenGenerator : ITokenGenerator
 
         var claims = new Dictionary<string, string>();
         foreach (var role in userRoles.OrderBy(ur => ur.Key))
-            foreach (var roleClaim in role.Claims)
-                claims[roleClaim.Claim.Key] = roleClaim.Value;
+        foreach (var roleClaim in role.Claims)
+            claims[roleClaim.Claim.Key] = roleClaim.Value;
         foreach (var userClaim in userClaims)
             claims[userClaim.Claim.Key] = userClaim.Value;
 
@@ -106,8 +105,8 @@ internal class TokenGenerator : ITokenGenerator
 
         var claims = new Dictionary<string, string>();
         foreach (var role in userRoles.OrderBy(ur => ur.Key))
-            foreach (var roleClaim in role.Claims)
-                claims[roleClaim.Claim.Key] = roleClaim.Value;
+        foreach (var roleClaim in role.Claims)
+            claims[roleClaim.Claim.Key] = roleClaim.Value;
         foreach (var userClaim in userClaims)
             claims[userClaim.Claim.Key] = userClaim.Value;
 

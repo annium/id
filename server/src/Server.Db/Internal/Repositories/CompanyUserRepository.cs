@@ -32,8 +32,8 @@ internal class CompanyUserRepository : ICompanyUserRepository
 
     public async Task<IReadOnlyCollection<User>> GetAllAsync(Guid companyId)
     {
-        var entities = await _db.CompanyUsers
-            .LoadWith(x => x.User)
+        var entities = await _db
+            .CompanyUsers.LoadWith(x => x.User)
             .Where(x => x.CompanyId == companyId)
             .Select(x => x.User)
             .ToArrayAsync();

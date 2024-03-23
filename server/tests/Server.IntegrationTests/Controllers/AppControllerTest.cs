@@ -43,8 +43,8 @@ public class AppControllerTest : IntegrationTestBase
 
         // act
         var app = await Id(token).App.Register(appName);
-        var apps = await Id(token).App
-            .FindApps(appName, Result.New(Array.Empty<AppResponse>()).Error("Failed to find apps"))
+        var apps = await Id(token)
+            .App.FindApps(appName, Result.New(Array.Empty<AppResponse>()).Error("Failed to find apps"))
             .GetData();
 
         // assert
@@ -60,10 +60,8 @@ public class AppControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
 
         // act
-        var response = await Id(token).App.GetAppApiToken(
-            Guid.NewGuid(),
-            Result.New(Guid.Empty).Error("Failed to get app API token")
-        );
+        var response = await Id(token)
+            .App.GetAppApiToken(Guid.NewGuid(), Result.New(Guid.Empty).Error("Failed to get app API token"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -78,10 +76,8 @@ public class AppControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
 
         // act
-        var response = await Id(token).App.GetAppApiToken(
-            app.Id,
-            Result.New(Guid.Empty).Error("Failed to get app API token")
-        );
+        var response = await Id(token)
+            .App.GetAppApiToken(app.Id, Result.New(Guid.Empty).Error("Failed to get app API token"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -95,8 +91,8 @@ public class AppControllerTest : IntegrationTestBase
         var app = await Id(token).App.Register();
 
         // act
-        var response = await Id(token).App
-            .GetAppApiToken(app.Id, Result.New(Guid.Empty).Error("Failed to get app API token"))
+        var response = await Id(token)
+            .App.GetAppApiToken(app.Id, Result.New(Guid.Empty).Error("Failed to get app API token"))
             .GetData();
 
         // assert
@@ -110,10 +106,8 @@ public class AppControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
 
         // act
-        var response = await Id(token).App.UpdateAppApiToken(
-            Guid.NewGuid(),
-            Result.New(Guid.Empty).Error("Failed to update app API token")
-        );
+        var response = await Id(token)
+            .App.UpdateAppApiToken(Guid.NewGuid(), Result.New(Guid.Empty).Error("Failed to update app API token"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -128,10 +122,8 @@ public class AppControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
 
         // act
-        var response = await Id(token).App.UpdateAppApiToken(
-            app.Id,
-            Result.New(Guid.Empty).Error("Failed to update app API token")
-        );
+        var response = await Id(token)
+            .App.UpdateAppApiToken(app.Id, Result.New(Guid.Empty).Error("Failed to update app API token"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -145,10 +137,8 @@ public class AppControllerTest : IntegrationTestBase
         var app = await Id(token).App.Register();
 
         // act
-        var response = await Id(token).App.UpdateAppApiToken(
-            app.Id,
-            Result.New(Guid.Empty).Error("Failed to update app API token")
-        );
+        var response = await Id(token)
+            .App.UpdateAppApiToken(app.Id, Result.New(Guid.Empty).Error("Failed to update app API token"));
 
         // assert
         response.Data.Data.IsNotDefault();
@@ -161,8 +151,8 @@ public class AppControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
 
         // act
-        var response = await Id(token).App
-            .FindApps(string.Empty, Result.New(Array.Empty<AppResponse>()).Error("Failed to find apps"))
+        var response = await Id(token)
+            .App.FindApps(string.Empty, Result.New(Array.Empty<AppResponse>()).Error("Failed to find apps"))
             .GetData();
 
         // assert
@@ -178,8 +168,8 @@ public class AppControllerTest : IntegrationTestBase
         var app = await Id(token).App.Register();
 
         // act
-        var response = await Id(token).App
-            .FindApps(app.Name, Result.New(Array.Empty<AppResponse>()).Error("Failed to find apps"))
+        var response = await Id(token)
+            .App.FindApps(app.Name, Result.New(Array.Empty<AppResponse>()).Error("Failed to find apps"))
             .GetData();
 
         // assert
@@ -194,8 +184,8 @@ public class AppControllerTest : IntegrationTestBase
         var app = await Id(token).App.Register();
 
         // act
-        var response = await Id(token).App
-            .ListMyApps(Result.New(Array.Empty<AppResponse>()).Error("Failed to list my apps"))
+        var response = await Id(token)
+            .App.ListMyApps(Result.New(Array.Empty<AppResponse>()).Error("Failed to list my apps"))
             .GetData();
 
         // assert
@@ -210,8 +200,8 @@ public class AppControllerTest : IntegrationTestBase
         var app = await Id(token).App.Register();
 
         // act
-        var response = await Id(token).App
-            .GetApp(app.Id, Result.New(new AppResponse()).Error("Failed to get app"))
+        var response = await Id(token)
+            .App.GetApp(app.Id, Result.New(new AppResponse()).Error("Failed to get app"))
             .GetData();
 
         // assert
@@ -241,11 +231,8 @@ public class AppControllerTest : IntegrationTestBase
         var request = new UpdateAppRequestBody { Name = Faker.Random.String2(10) };
 
         // act
-        var response = await Id(token).App.UpdateApp(
-            Guid.NewGuid(),
-            request,
-            Result.New().Error("Failed to update app")
-        );
+        var response = await Id(token)
+            .App.UpdateApp(Guid.NewGuid(), request, Result.New().Error("Failed to update app"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -277,8 +264,8 @@ public class AppControllerTest : IntegrationTestBase
 
         // act
         var response = await Id(token).App.UpdateApp(app.Id, request, Result.New().Error("Failed to update app"));
-        var result = await Id(token).App
-            .GetApp(app.Id, Result.New(new AppResponse()).Error("Failed to get app"))
+        var result = await Id(token)
+            .App.GetApp(app.Id, Result.New(new AppResponse()).Error("Failed to get app"))
             .GetData();
 
         // assert
@@ -294,11 +281,8 @@ public class AppControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
 
         // act
-        var response = await Id(token).App.SetAppOwner(
-            Guid.NewGuid(),
-            Guid.NewGuid(),
-            Result.New().Error("Failed to set app owner")
-        );
+        var response = await Id(token)
+            .App.SetAppOwner(Guid.NewGuid(), Guid.NewGuid(), Result.New().Error("Failed to set app owner"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -311,8 +295,8 @@ public class AppControllerTest : IntegrationTestBase
         var otherToken = await Id().RegisterLogUserIn();
         var app = await Id(otherToken).App.Register();
         var token = await Id().RegisterLogUserIn();
-        var me = await Id(token).Me
-            .GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
+        var me = await Id(token)
+            .Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
             .GetData();
 
         // act
@@ -330,11 +314,8 @@ public class AppControllerTest : IntegrationTestBase
         var app = await Id(token).App.Register();
 
         // act
-        var response = await Id(token).App.SetAppOwner(
-            app.Id,
-            Guid.NewGuid(),
-            Result.New().Error("Failed to set app owner")
-        );
+        var response = await Id(token)
+            .App.SetAppOwner(app.Id, Guid.NewGuid(), Result.New().Error("Failed to set app owner"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -347,14 +328,14 @@ public class AppControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
         var app = await Id(token).App.Register();
         var otherToken = await Id().RegisterLogUserIn();
-        var user = await Id(otherToken).Me
-            .GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
+        var user = await Id(otherToken)
+            .Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
             .GetData();
 
         // act
         var response = await Id(token).App.SetAppOwner(app.Id, user.Id, Result.New().Error("Failed to set app owner"));
-        var appTokenResult = await Id(otherToken).App
-            .GetAppApiToken(app.Id, Result.New(Guid.Empty).Error("Failed to get app API token"))
+        var appTokenResult = await Id(otherToken)
+            .App.GetAppApiToken(app.Id, Result.New(Guid.Empty).Error("Failed to get app API token"))
             .GetResult();
 
         // assert

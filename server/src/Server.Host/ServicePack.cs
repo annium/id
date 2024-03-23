@@ -29,12 +29,11 @@ public class ServicePack : ServicePackBase
     public override void Setup(IServiceProvider provider)
     {
         var ignored = new[] { "ChainBuilder", "PipeHandler" };
-        provider.UseLogging(
-            route =>
-                route
-                    // .UseConsole());
-                    .For(m => !ignored.Any(m.SubjectType.Contains))
-                    .UseConsole()
+        provider.UseLogging(route =>
+            route
+                // .UseConsole());
+                .For(m => !ignored.Any(m.SubjectType.Contains))
+                .UseConsole()
         );
         SetupNetTypes(provider.Resolve<IMapperConfig>());
     }

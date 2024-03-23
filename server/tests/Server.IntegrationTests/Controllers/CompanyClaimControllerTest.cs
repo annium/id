@@ -24,10 +24,8 @@ public class CompanyClaimControllerTest : IntegrationTestBase
         var request = new CreateCompanyClaimRequest { AppId = Guid.NewGuid(), Key = Faker.Random.String2(5) };
 
         // act
-        var response = await Id(token).CompanyClaim.CreateCompanyClaim(
-            request,
-            Result.New(Guid.Empty).Error("Failed to create claim")
-        );
+        var response = await Id(token)
+            .CompanyClaim.CreateCompanyClaim(request, Result.New(Guid.Empty).Error("Failed to create claim"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.BadRequest);
@@ -46,10 +44,8 @@ public class CompanyClaimControllerTest : IntegrationTestBase
         };
 
         // act
-        var response = await Id(token).CompanyClaim.CreateCompanyClaim(
-            request,
-            Result.New(Guid.Empty).Error("Failed to create claim")
-        );
+        var response = await Id(token)
+            .CompanyClaim.CreateCompanyClaim(request, Result.New(Guid.Empty).Error("Failed to create claim"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -68,16 +64,12 @@ public class CompanyClaimControllerTest : IntegrationTestBase
             Name = Faker.Random.String2(10)
         };
 
-        await Id(token).CompanyClaim.CreateCompanyClaim(
-            request,
-            Result.New(Guid.Empty).Error("Failed to create claim")
-        );
+        await Id(token)
+            .CompanyClaim.CreateCompanyClaim(request, Result.New(Guid.Empty).Error("Failed to create claim"));
 
         // act
-        var response = await Id(token).CompanyClaim.CreateCompanyClaim(
-            request,
-            Result.New(Guid.Empty).Error("Failed to create claim")
-        );
+        var response = await Id(token)
+            .CompanyClaim.CreateCompanyClaim(request, Result.New(Guid.Empty).Error("Failed to create claim"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.BadRequest);
@@ -98,10 +90,8 @@ public class CompanyClaimControllerTest : IntegrationTestBase
         };
 
         // act
-        var response = await Id(token).CompanyClaim.CreateCompanyClaim(
-            request,
-            Result.New(Guid.Empty).Error("Failed to create claim")
-        );
+        var response = await Id(token)
+            .CompanyClaim.CreateCompanyClaim(request, Result.New(Guid.Empty).Error("Failed to create claim"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -138,10 +128,11 @@ public class CompanyClaimControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
 
         // act
-        var response = await Id(token).CompanyClaim.ListCompanyClaims(
-            Guid.NewGuid(),
-            Result.New(Array.Empty<CompanyClaimResponse>()).Error("Failed to list claims")
-        );
+        var response = await Id(token)
+            .CompanyClaim.ListCompanyClaims(
+                Guid.NewGuid(),
+                Result.New(Array.Empty<CompanyClaimResponse>()).Error("Failed to list claims")
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -156,8 +147,11 @@ public class CompanyClaimControllerTest : IntegrationTestBase
         var claim = await Id(token).CompanyClaim.Register(app.Id);
 
         // act
-        var claims = await Id(token).CompanyClaim
-            .ListCompanyClaims(app.Id, Result.New(Array.Empty<CompanyClaimResponse>()).Error("Failed to list claims"))
+        var claims = await Id(token)
+            .CompanyClaim.ListCompanyClaims(
+                app.Id,
+                Result.New(Array.Empty<CompanyClaimResponse>()).Error("Failed to list claims")
+            )
             .GetData();
 
         // assert
@@ -173,11 +167,8 @@ public class CompanyClaimControllerTest : IntegrationTestBase
         var request = new UpdateCompanyClaimRequestBody { Key = Faker.Random.String2(5) };
 
         // act
-        var response = await Id(token).CompanyClaim.UpdateCompanyClaim(
-            Guid.NewGuid(),
-            request,
-            Result.New().Error("Failed to update claim")
-        );
+        var response = await Id(token)
+            .CompanyClaim.UpdateCompanyClaim(Guid.NewGuid(), request, Result.New().Error("Failed to update claim"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.BadRequest);
@@ -195,11 +186,8 @@ public class CompanyClaimControllerTest : IntegrationTestBase
         };
 
         // act
-        var response = await Id(token).CompanyClaim.UpdateCompanyClaim(
-            Guid.NewGuid(),
-            request,
-            Result.New().Error("Failed to update claim")
-        );
+        var response = await Id(token)
+            .CompanyClaim.UpdateCompanyClaim(Guid.NewGuid(), request, Result.New().Error("Failed to update claim"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -220,11 +208,8 @@ public class CompanyClaimControllerTest : IntegrationTestBase
         };
 
         // act
-        var response = await Id(token).CompanyClaim.UpdateCompanyClaim(
-            claim.Id,
-            request,
-            Result.New().Error("Failed to update claim")
-        );
+        var response = await Id(token)
+            .CompanyClaim.UpdateCompanyClaim(claim.Id, request, Result.New().Error("Failed to update claim"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -245,11 +230,8 @@ public class CompanyClaimControllerTest : IntegrationTestBase
         await Id(token).CompanyClaim.Register(app.Id, request.Key, request.Name);
 
         // act
-        var response = await Id(token).CompanyClaim.UpdateCompanyClaim(
-            claim.Id,
-            request,
-            Result.New().Error("Failed to update claim")
-        );
+        var response = await Id(token)
+            .CompanyClaim.UpdateCompanyClaim(claim.Id, request, Result.New().Error("Failed to update claim"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Conflict);
@@ -269,11 +251,8 @@ public class CompanyClaimControllerTest : IntegrationTestBase
         };
 
         // act
-        var response = await Id(token).CompanyClaim.UpdateCompanyClaim(
-            claim.Id,
-            request,
-            Result.New().Error("Failed to update claim")
-        );
+        var response = await Id(token)
+            .CompanyClaim.UpdateCompanyClaim(claim.Id, request, Result.New().Error("Failed to update claim"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.OK);
@@ -286,10 +265,8 @@ public class CompanyClaimControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
 
         // act
-        var response = await Id(token).CompanyClaim.DeleteCompanyClaim(
-            Guid.NewGuid(),
-            Result.New().Error("Failed to delete claim")
-        );
+        var response = await Id(token)
+            .CompanyClaim.DeleteCompanyClaim(Guid.NewGuid(), Result.New().Error("Failed to delete claim"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -305,10 +282,8 @@ public class CompanyClaimControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
 
         // act
-        var response = await Id(token).CompanyClaim.DeleteCompanyClaim(
-            claim.Id,
-            Result.New().Error("Failed to delete claim")
-        );
+        var response = await Id(token)
+            .CompanyClaim.DeleteCompanyClaim(claim.Id, Result.New().Error("Failed to delete claim"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -323,10 +298,8 @@ public class CompanyClaimControllerTest : IntegrationTestBase
         var claim = await Id(token).CompanyClaim.Register(app.Id);
 
         // act
-        var response = await Id(token).CompanyClaim.DeleteCompanyClaim(
-            claim.Id,
-            Result.New().Error("Failed to delete claim")
-        );
+        var response = await Id(token)
+            .CompanyClaim.DeleteCompanyClaim(claim.Id, Result.New().Error("Failed to delete claim"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.OK);

@@ -27,19 +27,17 @@ public class TestServicePack : ServicePackBase
     public override void Setup(IServiceProvider provider)
     {
         var ignored = new[] { "ChainBuilder", "PipeHandler" };
-        provider.UseLogging(
-            route =>
-                route
-                    // .For(m =>
-                    //     !ignored.Any(m.Source.Name.Contains)
-                    // )
-                    .For(
-                        m =>
-                            m.Level >= LogLevel.Warn
-                            || m.Exception != null
-                            || m.Message.Contains("failure", StringComparison.InvariantCultureIgnoreCase)
-                    )
-                    .UseConsole()
+        provider.UseLogging(route =>
+            route
+                // .For(m =>
+                //     !ignored.Any(m.Source.Name.Contains)
+                // )
+                .For(m =>
+                    m.Level >= LogLevel.Warn
+                    || m.Exception != null
+                    || m.Message.Contains("failure", StringComparison.InvariantCultureIgnoreCase)
+                )
+                .UseConsole()
         );
     }
 }

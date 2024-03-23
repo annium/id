@@ -14,8 +14,8 @@ public class ServicePack : ServicePackBase
 
     public override void Configure(IServiceContainer container)
     {
-        container.AddConfiguration<Configuration>(
-            builder => builder.AddYamlFile(Path.Combine("configuration", "email.yml"))
+        container.AddConfiguration<Configuration>(builder =>
+            builder.AddYamlFile(Path.Combine("configuration", "email.yml"))
         );
     }
 

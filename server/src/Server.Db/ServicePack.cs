@@ -17,15 +17,15 @@ public class ServicePack : ServicePackBase
 
     public override void Configure(IServiceContainer container)
     {
-        container.AddConfiguration<PostgreSqlConfiguration>(
-            x => x.AddYamlFile(Path.Combine("configuration", "db.yml"))
+        container.AddConfiguration<PostgreSqlConfiguration>(x =>
+            x.AddYamlFile(Path.Combine("configuration", "db.yml"))
         );
     }
 
     public override void Setup(IServiceProvider provider)
     {
-        Migrator.Instance
-            .ForPostgresql(provider.Resolve<PostgreSqlConfiguration>().ConnectionString, Constants.Schema)
+        Migrator
+            .Instance.ForPostgresql(provider.Resolve<PostgreSqlConfiguration>().ConnectionString, Constants.Schema)
             .WithScriptsFromAssembly(GetType().Assembly)
             .Execute();
     }

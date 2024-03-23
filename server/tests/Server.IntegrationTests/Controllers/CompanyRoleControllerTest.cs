@@ -24,10 +24,8 @@ public class CompanyRoleControllerTest : IntegrationTestBase
         var request = new CreateCompanyRoleRequest { AppId = Guid.NewGuid(), Key = Faker.Random.String2(5) };
 
         // act
-        var response = await Id(token).CompanyRole.CreateRole(
-            request,
-            Result.New(Guid.Empty).Error("Failed to create role")
-        );
+        var response = await Id(token)
+            .CompanyRole.CreateRole(request, Result.New(Guid.Empty).Error("Failed to create role"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.BadRequest);
@@ -46,10 +44,8 @@ public class CompanyRoleControllerTest : IntegrationTestBase
         };
 
         // act
-        var response = await Id(token).CompanyRole.CreateRole(
-            request,
-            Result.New(Guid.Empty).Error("Failed to create role")
-        );
+        var response = await Id(token)
+            .CompanyRole.CreateRole(request, Result.New(Guid.Empty).Error("Failed to create role"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -70,10 +66,8 @@ public class CompanyRoleControllerTest : IntegrationTestBase
         };
 
         // act
-        var response = await Id(token).CompanyRole.CreateRole(
-            request,
-            Result.New(Guid.Empty).Error("Failed to create role")
-        );
+        var response = await Id(token)
+            .CompanyRole.CreateRole(request, Result.New(Guid.Empty).Error("Failed to create role"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -96,10 +90,8 @@ public class CompanyRoleControllerTest : IntegrationTestBase
         };
 
         // act
-        var response = await Id(token).CompanyRole.CreateRole(
-            request,
-            Result.New(Guid.Empty).Error("Failed to create role")
-        );
+        var response = await Id(token)
+            .CompanyRole.CreateRole(request, Result.New(Guid.Empty).Error("Failed to create role"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.BadRequest);
@@ -131,10 +123,11 @@ public class CompanyRoleControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
 
         // act
-        var response = await Id(token).CompanyRole.ListRoles(
-            Guid.NewGuid(),
-            Result.New(Array.Empty<CompanyRoleResponse>()).Error("Failed to list roles")
-        );
+        var response = await Id(token)
+            .CompanyRole.ListRoles(
+                Guid.NewGuid(),
+                Result.New(Array.Empty<CompanyRoleResponse>()).Error("Failed to list roles")
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -151,8 +144,8 @@ public class CompanyRoleControllerTest : IntegrationTestBase
         var role = await Id(token).CompanyRole.Register(app.Id, roleKey, roleName);
 
         // act
-        var roles = await Id(token).CompanyRole
-            .ListRoles(app.Id, Result.New(Array.Empty<CompanyRoleResponse>()).Error("Failed to list roles"))
+        var roles = await Id(token)
+            .CompanyRole.ListRoles(app.Id, Result.New(Array.Empty<CompanyRoleResponse>()).Error("Failed to list roles"))
             .GetData();
 
         // assert
@@ -169,11 +162,8 @@ public class CompanyRoleControllerTest : IntegrationTestBase
         var request = new UpdateCompanyRoleRequestBody { Key = Faker.Random.String2(5) };
 
         // act
-        var response = await Id(token).CompanyRole.UpdateRole(
-            Guid.NewGuid(),
-            request,
-            Result.New().Error("Failed to update role")
-        );
+        var response = await Id(token)
+            .CompanyRole.UpdateRole(Guid.NewGuid(), request, Result.New().Error("Failed to update role"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.BadRequest);
@@ -191,11 +181,8 @@ public class CompanyRoleControllerTest : IntegrationTestBase
         };
 
         // act
-        var response = await Id(token).CompanyRole.UpdateRole(
-            Guid.NewGuid(),
-            request,
-            Result.New().Error("Failed to update role")
-        );
+        var response = await Id(token)
+            .CompanyRole.UpdateRole(Guid.NewGuid(), request, Result.New().Error("Failed to update role"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -216,11 +203,8 @@ public class CompanyRoleControllerTest : IntegrationTestBase
         };
 
         // act
-        var response = await Id(token).CompanyRole.UpdateRole(
-            role.Id,
-            request,
-            Result.New().Error("Failed to update role")
-        );
+        var response = await Id(token)
+            .CompanyRole.UpdateRole(role.Id, request, Result.New().Error("Failed to update role"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -237,11 +221,8 @@ public class CompanyRoleControllerTest : IntegrationTestBase
         var request = new UpdateCompanyRoleRequestBody { Key = otherRole.Key, Name = otherRole.Name };
 
         // act
-        var response = await Id(token).CompanyRole.UpdateRole(
-            role.Id,
-            request,
-            Result.New().Error("Failed to update role")
-        );
+        var response = await Id(token)
+            .CompanyRole.UpdateRole(role.Id, request, Result.New().Error("Failed to update role"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Conflict);
@@ -261,11 +242,8 @@ public class CompanyRoleControllerTest : IntegrationTestBase
         };
 
         // act
-        var response = await Id(token).CompanyRole.UpdateRole(
-            role.Id,
-            request,
-            Result.New().Error("Failed to update role")
-        );
+        var response = await Id(token)
+            .CompanyRole.UpdateRole(role.Id, request, Result.New().Error("Failed to update role"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.OK);
@@ -278,11 +256,8 @@ public class CompanyRoleControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
 
         // act
-        var response = await Id(token).CompanyRole.AddClaimToRole(
-            Guid.NewGuid(),
-            Guid.NewGuid(),
-            Faker.Random.String2(1)
-        );
+        var response = await Id(token)
+            .CompanyRole.AddClaimToRole(Guid.NewGuid(), Guid.NewGuid(), Faker.Random.String2(1));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.BadRequest);
@@ -362,8 +337,8 @@ public class CompanyRoleControllerTest : IntegrationTestBase
 
         // act
         var response = await Id(token).CompanyRole.AddClaimToRole(role.Id, claim.Id, claimValue);
-        var roles = await Id(token).CompanyRole
-            .ListRoles(app.Id, Result.New(Array.Empty<CompanyRoleResponse>()).Error("Failed to list roles"))
+        var roles = await Id(token)
+            .CompanyRole.ListRoles(app.Id, Result.New(Array.Empty<CompanyRoleResponse>()).Error("Failed to list roles"))
             .GetData();
 
         // assert
@@ -387,11 +362,12 @@ public class CompanyRoleControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
 
         // act
-        var response = await Id(token).CompanyRole.DeleteClaimFromRole(
-            Guid.NewGuid(),
-            Guid.NewGuid(),
-            Result.New().Error("Failed to delete claim from role")
-        );
+        var response = await Id(token)
+            .CompanyRole.DeleteClaimFromRole(
+                Guid.NewGuid(),
+                Guid.NewGuid(),
+                Result.New().Error("Failed to delete claim from role")
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -406,11 +382,12 @@ public class CompanyRoleControllerTest : IntegrationTestBase
         var role = await Id(token).CompanyRole.Register(app.Id);
 
         // act
-        var response = await Id(token).CompanyRole.DeleteClaimFromRole(
-            role.Id,
-            Guid.NewGuid(),
-            Result.New().Error("Failed to delete claim from role")
-        );
+        var response = await Id(token)
+            .CompanyRole.DeleteClaimFromRole(
+                role.Id,
+                Guid.NewGuid(),
+                Result.New().Error("Failed to delete claim from role")
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -427,11 +404,8 @@ public class CompanyRoleControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
 
         // act
-        var response = await Id(token).CompanyRole.DeleteClaimFromRole(
-            role.Id,
-            claim.Id,
-            Result.New().Error("Failed to delete claim from role")
-        );
+        var response = await Id(token)
+            .CompanyRole.DeleteClaimFromRole(role.Id, claim.Id, Result.New().Error("Failed to delete claim from role"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -448,11 +422,8 @@ public class CompanyRoleControllerTest : IntegrationTestBase
         var claim = await Id(token).CompanyClaim.Register(app1.Id);
 
         // act
-        var response = await Id(token).CompanyRole.DeleteClaimFromRole(
-            role.Id,
-            claim.Id,
-            Result.New().Error("Failed to delete claim from role")
-        );
+        var response = await Id(token)
+            .CompanyRole.DeleteClaimFromRole(role.Id, claim.Id, Result.New().Error("Failed to delete claim from role"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -468,11 +439,8 @@ public class CompanyRoleControllerTest : IntegrationTestBase
         var claim = await Id(token).CompanyClaim.Register(app.Id);
 
         // act
-        var response = await Id(token).CompanyRole.DeleteClaimFromRole(
-            role.Id,
-            claim.Id,
-            Result.New().Error("Failed to delete claim from role")
-        );
+        var response = await Id(token)
+            .CompanyRole.DeleteClaimFromRole(role.Id, claim.Id, Result.New().Error("Failed to delete claim from role"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.OK);
@@ -485,10 +453,8 @@ public class CompanyRoleControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
 
         // act
-        var response = await Id(token).CompanyRole.DeleteRole(
-            Guid.NewGuid(),
-            Result.New().Error("Failed to delete role")
-        );
+        var response = await Id(token)
+            .CompanyRole.DeleteRole(Guid.NewGuid(), Result.New().Error("Failed to delete role"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);

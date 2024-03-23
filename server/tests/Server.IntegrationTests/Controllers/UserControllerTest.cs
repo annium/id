@@ -24,8 +24,8 @@ public class UserControllerTest : IntegrationTestBase
         var me = await Id().RegisterLogInGetUser();
 
         // act
-        var response = await Id().User
-            .FindUsers(me.Login, 1, Result.New(Array.Empty<UserResponse>()).Error("Failed to find users"))
+        var response = await Id()
+            .User.FindUsers(me.Login, 1, Result.New(Array.Empty<UserResponse>()).Error("Failed to find users"))
             .GetData();
 
         // assert
@@ -44,8 +44,8 @@ public class UserControllerTest : IntegrationTestBase
         var me = await Id().RegisterLogInGetUser();
 
         // act
-        var response = await Id().User
-            .GetUser(me.Id, Result.New(new UserResponse()).Error("Failed to load user"))
+        var response = await Id()
+            .User.GetUser(me.Id, Result.New(new UserResponse()).Error("Failed to load user"))
             .GetData();
 
         // assert
@@ -59,11 +59,8 @@ public class UserControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
 
         // act
-        var response = await Id(token).User.AddRoleToUser(
-            Guid.NewGuid(),
-            Guid.NewGuid(),
-            Result.New().Error("Failed to add role to user")
-        );
+        var response = await Id(token)
+            .User.AddRoleToUser(Guid.NewGuid(), Guid.NewGuid(), Result.New().Error("Failed to add role to user"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -78,16 +75,13 @@ public class UserControllerTest : IntegrationTestBase
         var role = await Id(otherToken).Role.Register(app.Id);
 
         var token = await Id().RegisterLogUserIn();
-        var user = await Id(token).Me
-            .GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
+        var user = await Id(token)
+            .Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
             .GetData();
 
         // act
-        var response = await Id(token).User.AddRoleToUser(
-            user.Id,
-            role.Id,
-            Result.New().Error("Failed to add role to user")
-        );
+        var response = await Id(token)
+            .User.AddRoleToUser(user.Id, role.Id, Result.New().Error("Failed to add role to user"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -100,11 +94,8 @@ public class UserControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
 
         // act
-        var response = await Id(token).User.AddRoleToUser(
-            Guid.NewGuid(),
-            Guid.NewGuid(),
-            Result.New().Error("Failed to add role to user")
-        );
+        var response = await Id(token)
+            .User.AddRoleToUser(Guid.NewGuid(), Guid.NewGuid(), Result.New().Error("Failed to add role to user"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -118,11 +109,8 @@ public class UserControllerTest : IntegrationTestBase
         var other = await Id().RegisterLogInGetUser();
 
         // act
-        var response = await Id(token).User.AddRoleToUser(
-            other.Id,
-            Guid.NewGuid(),
-            Result.New().Error("Failed to add role to user")
-        );
+        var response = await Id(token)
+            .User.AddRoleToUser(other.Id, Guid.NewGuid(), Result.New().Error("Failed to add role to user"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -138,11 +126,8 @@ public class UserControllerTest : IntegrationTestBase
         var other = await Id().RegisterLogInGetUser();
 
         // act
-        var response = await Id(token).User.AddRoleToUser(
-            other.Id,
-            role.Id,
-            Result.New().Error("Failed to add role to user")
-        );
+        var response = await Id(token)
+            .User.AddRoleToUser(other.Id, role.Id, Result.New().Error("Failed to add role to user"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.OK);
@@ -155,11 +140,12 @@ public class UserControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
 
         // act
-        var response = await Id(token).User.DeleteRoleFromUser(
-            Guid.NewGuid(),
-            Guid.NewGuid(),
-            Result.New().Error("Failed to delete role from user")
-        );
+        var response = await Id(token)
+            .User.DeleteRoleFromUser(
+                Guid.NewGuid(),
+                Guid.NewGuid(),
+                Result.New().Error("Failed to delete role from user")
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -170,19 +156,16 @@ public class UserControllerTest : IntegrationTestBase
     {
         // arrange
         var otherToken = await Id().RegisterLogUserIn();
-        var owner = await Id(otherToken).Me
-            .GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
+        var owner = await Id(otherToken)
+            .Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
             .GetData();
         var app = await Id(otherToken).App.Register();
         var role = await Id(otherToken).Role.Register(app.Id);
         var token = await Id().RegisterLogUserIn();
 
         // act
-        var response = await Id(token).User.DeleteRoleFromUser(
-            owner.Id,
-            role.Id,
-            Result.New().Error("Failed to delete role from user")
-        );
+        var response = await Id(token)
+            .User.DeleteRoleFromUser(owner.Id, role.Id, Result.New().Error("Failed to delete role from user"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -195,11 +178,12 @@ public class UserControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
 
         // act
-        var response = await Id(token).User.DeleteRoleFromUser(
-            Guid.NewGuid(),
-            Guid.NewGuid(),
-            Result.New().Error("Failed to delete role from user")
-        );
+        var response = await Id(token)
+            .User.DeleteRoleFromUser(
+                Guid.NewGuid(),
+                Guid.NewGuid(),
+                Result.New().Error("Failed to delete role from user")
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -213,11 +197,8 @@ public class UserControllerTest : IntegrationTestBase
         var other = await Id().RegisterLogInGetUser();
 
         // act
-        var response = await Id(token).User.DeleteRoleFromUser(
-            other.Id,
-            Guid.NewGuid(),
-            Result.New().Error("Failed to delete role from user")
-        );
+        var response = await Id(token)
+            .User.DeleteRoleFromUser(other.Id, Guid.NewGuid(), Result.New().Error("Failed to delete role from user"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -233,11 +214,8 @@ public class UserControllerTest : IntegrationTestBase
         var other = await Id().RegisterLogInGetUser();
 
         // act
-        var response = await Id(token).User.DeleteRoleFromUser(
-            other.Id,
-            role.Id,
-            Result.New().Error("Failed to delete role from user")
-        );
+        var response = await Id(token)
+            .User.DeleteRoleFromUser(other.Id, role.Id, Result.New().Error("Failed to delete role from user"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.OK);
@@ -267,8 +245,8 @@ public class UserControllerTest : IntegrationTestBase
         var app = await Id(otherToken).App.Register();
         var claim = await Id(otherToken).Claim.Register(app.Id);
         var token = await Id().RegisterLogUserIn();
-        var user = await Id(token).Me
-            .GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
+        var user = await Id(token)
+            .Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
             .GetData();
 
         // act
@@ -328,11 +306,12 @@ public class UserControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
 
         // act
-        var response = await Id(token).User.DeleteClaimFromUser(
-            Guid.NewGuid(),
-            Guid.NewGuid(),
-            Result.New().Error("Failed to delete claim from user")
-        );
+        var response = await Id(token)
+            .User.DeleteClaimFromUser(
+                Guid.NewGuid(),
+                Guid.NewGuid(),
+                Result.New().Error("Failed to delete claim from user")
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -343,19 +322,16 @@ public class UserControllerTest : IntegrationTestBase
     {
         // arrange
         var otherToken = await Id().RegisterLogUserIn();
-        var owner = await Id(otherToken).Me
-            .GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
+        var owner = await Id(otherToken)
+            .Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
             .GetData();
         var app = await Id(otherToken).App.Register();
         var claim = await Id(otherToken).Claim.Register(app.Id);
         var token = await Id().RegisterLogUserIn();
 
         // act
-        var response = await Id(token).User.DeleteClaimFromUser(
-            owner.Id,
-            claim.Id,
-            Result.New().Error("Failed to delete claim from user")
-        );
+        var response = await Id(token)
+            .User.DeleteClaimFromUser(owner.Id, claim.Id, Result.New().Error("Failed to delete claim from user"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -368,11 +344,12 @@ public class UserControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
 
         // act
-        var response = await Id(token).User.DeleteClaimFromUser(
-            Guid.NewGuid(),
-            Guid.NewGuid(),
-            Result.New().Error("Failed to delete claim from user")
-        );
+        var response = await Id(token)
+            .User.DeleteClaimFromUser(
+                Guid.NewGuid(),
+                Guid.NewGuid(),
+                Result.New().Error("Failed to delete claim from user")
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -386,11 +363,8 @@ public class UserControllerTest : IntegrationTestBase
         var other = await Id().RegisterLogInGetUser();
 
         // act
-        var response = await Id(token).User.DeleteClaimFromUser(
-            other.Id,
-            Guid.NewGuid(),
-            Result.New().Error("Failed to delete claim from user")
-        );
+        var response = await Id(token)
+            .User.DeleteClaimFromUser(other.Id, Guid.NewGuid(), Result.New().Error("Failed to delete claim from user"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -406,11 +380,8 @@ public class UserControllerTest : IntegrationTestBase
         var other = await Id().RegisterLogInGetUser();
 
         // act
-        var response = await Id(token).User.DeleteClaimFromUser(
-            other.Id,
-            claim.Id,
-            Result.New().Error("Failed to delete claim from user")
-        );
+        var response = await Id(token)
+            .User.DeleteClaimFromUser(other.Id, claim.Id, Result.New().Error("Failed to delete claim from user"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.OK);

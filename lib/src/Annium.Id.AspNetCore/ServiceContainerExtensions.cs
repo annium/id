@@ -29,22 +29,22 @@ public static class ServiceContainerExtensions
 
         // filters
         container
-            .Add<Func<AuthorizationFilterOptions, AuthorizationFilter>>(
-                sp =>
-                    options =>
-                        new AuthorizationFilter(options, sp.Resolve<RequestTokenReader>(), sp.Resolve<ITokenReader>())
+            .Add<Func<AuthorizationFilterOptions, AuthorizationFilter>>(sp =>
+                options => new AuthorizationFilter(
+                    options,
+                    sp.Resolve<RequestTokenReader>(),
+                    sp.Resolve<ITokenReader>()
+                )
             )
             .AsSelf()
             .Singleton();
         container
-            .Add<Func<Policy, PolicyFilter>>(
-                sp =>
-                    policy =>
-                        new PolicyFilter(
-                            sp.Resolve<ITokenAccessor>(),
-                            policy,
-                            sp.Resolve<IPolicyMapper>().CreateMapper(policy)
-                        )
+            .Add<Func<Policy, PolicyFilter>>(sp =>
+                policy => new PolicyFilter(
+                    sp.Resolve<ITokenAccessor>(),
+                    policy,
+                    sp.Resolve<IPolicyMapper>().CreateMapper(policy)
+                )
             )
             .AsSelf()
             .Singleton();
@@ -122,8 +122,8 @@ public static class ServiceContainerExtensions
         if (policies.Contains(name))
             throw new ArgumentException($"Policy {name} is already registered");
 
-        var parameters = expression.Parameters
-            .Where(p => !typeof(IdToken).IsAssignableFrom(p.Type))
+        var parameters = expression
+            .Parameters.Where(p => !typeof(IdToken).IsAssignableFrom(p.Type))
             .ToDictionary(p => p.Name!, p => p.Type);
         var handle = expression.Compile();
 

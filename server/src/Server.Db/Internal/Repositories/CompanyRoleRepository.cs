@@ -25,8 +25,8 @@ internal class CompanyRoleRepository : ICompanyRoleRepository
 
     public async Task<IReadOnlyCollection<CompanyRole>> GetAllAsync(Guid appId)
     {
-        var entities = await _db.CompanyRoles
-            .LoadWith(x => x.Claims)
+        var entities = await _db
+            .CompanyRoles.LoadWith(x => x.Claims)
             .ThenLoad(x => x.Claim)
             .Where(x => x.AppId == appId)
             .ToArrayAsync();

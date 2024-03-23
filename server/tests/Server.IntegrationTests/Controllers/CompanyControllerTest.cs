@@ -28,10 +28,8 @@ public class CompanyControllerTest : IntegrationTestBase
         var request = new RegisterCompanyRequest { Name = Faker.Random.String2(2) };
 
         // act
-        var response = await Id(token).Company.RegisterCompany(
-            request,
-            Result.New(Guid.Empty).Error("Failed to register company")
-        );
+        var response = await Id(token)
+            .Company.RegisterCompany(request, Result.New(Guid.Empty).Error("Failed to register company"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.BadRequest);
@@ -45,10 +43,8 @@ public class CompanyControllerTest : IntegrationTestBase
         var request = new RegisterCompanyRequest { ParentId = Guid.NewGuid(), Name = Faker.Random.String2(10) };
 
         // act
-        var response = await Id(token).Company.RegisterCompany(
-            request,
-            Result.New(Guid.Empty).Error("Failed to register company")
-        );
+        var response = await Id(token)
+            .Company.RegisterCompany(request, Result.New(Guid.Empty).Error("Failed to register company"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -64,10 +60,8 @@ public class CompanyControllerTest : IntegrationTestBase
         var request = new RegisterCompanyRequest { ParentId = parent.Id, Name = Faker.Random.String2(10) };
 
         // act
-        var response = await Id(token).Company.RegisterCompany(
-            request,
-            Result.New(Guid.Empty).Error("Failed to register company")
-        );
+        var response = await Id(token)
+            .Company.RegisterCompany(request, Result.New(Guid.Empty).Error("Failed to register company"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -96,10 +90,11 @@ public class CompanyControllerTest : IntegrationTestBase
         var company = await Id(token).Company.Register();
 
         // act
-        var res = await Id(token).Company.FindCompanies(
-            string.Empty,
-            Result.New(Array.Empty<CompanyResponse>()).Error("Failed to find companies")
-        );
+        var res = await Id(token)
+            .Company.FindCompanies(
+                string.Empty,
+                Result.New(Array.Empty<CompanyResponse>()).Error("Failed to find companies")
+            );
         var response = res.Data.Data.ToArray();
 
         // assert
@@ -114,8 +109,11 @@ public class CompanyControllerTest : IntegrationTestBase
         var company = await Id(token).Company.Register();
 
         // act
-        var response = await Id(token).Company
-            .FindCompanies(company.Name, Result.New(Array.Empty<CompanyResponse>()).Error("Failed to find companies"))
+        var response = await Id(token)
+            .Company.FindCompanies(
+                company.Name,
+                Result.New(Array.Empty<CompanyResponse>()).Error("Failed to find companies")
+            )
             .GetData();
 
         // assert
@@ -130,8 +128,8 @@ public class CompanyControllerTest : IntegrationTestBase
         var company = await Id(token).Company.Register();
 
         // act
-        var response = await Id(token).Company
-            .ListMyCompanies(Result.New(Array.Empty<CompanyResponse>()).Error("Failed to list my companies"))
+        var response = await Id(token)
+            .Company.ListMyCompanies(Result.New(Array.Empty<CompanyResponse>()).Error("Failed to list my companies"))
             .GetData();
 
         // assert
@@ -146,8 +144,8 @@ public class CompanyControllerTest : IntegrationTestBase
         var company = await Id(token).Company.Register();
 
         // act
-        var response = await Id(token).Company
-            .GetCompany(company.Id, Result.New(new CompanyResponse()).Error("Failed to load company info"))
+        var response = await Id(token)
+            .Company.GetCompany(company.Id, Result.New(new CompanyResponse()).Error("Failed to load company info"))
             .GetData();
 
         // assert
@@ -161,10 +159,8 @@ public class CompanyControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
 
         // act
-        var response = await Id(token).Company.GetCompany(
-            Guid.NewGuid(),
-            Result.New(new CompanyResponse()).Error("Failed to load company info")
-        );
+        var response = await Id(token)
+            .Company.GetCompany(Guid.NewGuid(), Result.New(new CompanyResponse()).Error("Failed to load company info"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -178,8 +174,8 @@ public class CompanyControllerTest : IntegrationTestBase
         var company = await Id(token).Company.Register();
 
         // act
-        var response = await Id(token).Company
-            .GetCompany(company.Id, Result.New(new CompanyResponse()).Error("Failed to load company info"))
+        var response = await Id(token)
+            .Company.GetCompany(company.Id, Result.New(new CompanyResponse()).Error("Failed to load company info"))
             .GetData();
 
         // assert
@@ -194,10 +190,11 @@ public class CompanyControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
 
         // act
-        var response = await Id(token).Company.GetCompanyUsers(
-            Guid.NewGuid(),
-            Result.New(Array.Empty<UserResponse>()).Error("Failed to list company users")
-        );
+        var response = await Id(token)
+            .Company.GetCompanyUsers(
+                Guid.NewGuid(),
+                Result.New(Array.Empty<UserResponse>()).Error("Failed to list company users")
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -208,15 +205,18 @@ public class CompanyControllerTest : IntegrationTestBase
     {
         // arrange
         var token = await Id().RegisterLogUserIn();
-        var user = await Id(token).Me
-            .GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
+        var user = await Id(token)
+            .Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
             .GetData();
         var company = await Id(token).Company.Register();
         await Id(token).CompanyUser.AddUser(company.Id, user.Id);
 
         // act
-        var response = await Id(token).Company
-            .GetCompanyUsers(company.Id, Result.New(Array.Empty<UserResponse>()).Error("Failed to list company users"))
+        var response = await Id(token)
+            .Company.GetCompanyUsers(
+                company.Id,
+                Result.New(Array.Empty<UserResponse>()).Error("Failed to list company users")
+            )
             .GetData();
 
         // assert
@@ -234,11 +234,8 @@ public class CompanyControllerTest : IntegrationTestBase
         var request = new UpdateCompanyRequestBody { Name = Faker.Random.String2(2) };
 
         // act
-        var response = await Id(token).Company.UpdateCompany(
-            company.Id,
-            request,
-            Result.New().Error("Failed to update company")
-        );
+        var response = await Id(token)
+            .Company.UpdateCompany(company.Id, request, Result.New().Error("Failed to update company"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.BadRequest);
@@ -252,11 +249,8 @@ public class CompanyControllerTest : IntegrationTestBase
         var request = new UpdateCompanyRequestBody { Name = Faker.Random.String2(10) };
 
         // act
-        var response = await Id(token).Company.UpdateCompany(
-            Guid.NewGuid(),
-            request,
-            Result.New().Error("Failed to update company")
-        );
+        var response = await Id(token)
+            .Company.UpdateCompany(Guid.NewGuid(), request, Result.New().Error("Failed to update company"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -272,11 +266,8 @@ public class CompanyControllerTest : IntegrationTestBase
         var request = new UpdateCompanyRequestBody { Name = Faker.Random.String2(10) };
 
         // act
-        var response = await Id(token).Company.UpdateCompany(
-            company.Id,
-            request,
-            Result.New().Error("Failed to update company")
-        );
+        var response = await Id(token)
+            .Company.UpdateCompany(company.Id, request, Result.New().Error("Failed to update company"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -291,11 +282,8 @@ public class CompanyControllerTest : IntegrationTestBase
         var request = new UpdateCompanyRequestBody { ParentId = Guid.NewGuid(), Name = Faker.Random.String2(10) };
 
         // act
-        var response = await Id(token).Company.UpdateCompany(
-            company.Id,
-            request,
-            Result.New().Error("Failed to update company")
-        );
+        var response = await Id(token)
+            .Company.UpdateCompany(company.Id, request, Result.New().Error("Failed to update company"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -312,11 +300,8 @@ public class CompanyControllerTest : IntegrationTestBase
         var request = new UpdateCompanyRequestBody { ParentId = parent.Id, Name = Faker.Random.String2(10) };
 
         // act
-        var response = await Id(token).Company.UpdateCompany(
-            company.Id,
-            request,
-            Result.New().Error("Failed to update company")
-        );
+        var response = await Id(token)
+            .Company.UpdateCompany(company.Id, request, Result.New().Error("Failed to update company"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -331,11 +316,8 @@ public class CompanyControllerTest : IntegrationTestBase
         var request = new UpdateCompanyRequestBody { Name = Faker.Random.String2(10) };
 
         // act
-        var response = await Id(token).Company.UpdateCompany(
-            company.Id,
-            request,
-            Result.New().Error("Failed to update company")
-        );
+        var response = await Id(token)
+            .Company.UpdateCompany(company.Id, request, Result.New().Error("Failed to update company"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.OK);
@@ -348,11 +330,8 @@ public class CompanyControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
 
         // act
-        var response = await Id(token).Company.SetCompanyOwner(
-            Guid.NewGuid(),
-            Guid.NewGuid(),
-            Result.New().Error("Failed to set company owner")
-        );
+        var response = await Id(token)
+            .Company.SetCompanyOwner(Guid.NewGuid(), Guid.NewGuid(), Result.New().Error("Failed to set company owner"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -365,16 +344,13 @@ public class CompanyControllerTest : IntegrationTestBase
         var otherToken = await Id().RegisterLogUserIn();
         var company = await Id(otherToken).Company.Register();
         var token = await Id().RegisterLogUserIn();
-        var user = await Id(token).Me
-            .GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
+        var user = await Id(token)
+            .Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
             .GetData();
 
         // act
-        var response = await Id(token).Company.SetCompanyOwner(
-            company.Id,
-            user.Id,
-            Result.New().Error("Failed to set company owner")
-        );
+        var response = await Id(token)
+            .Company.SetCompanyOwner(company.Id, user.Id, Result.New().Error("Failed to set company owner"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -388,11 +364,8 @@ public class CompanyControllerTest : IntegrationTestBase
         var company = await Id(otherToken).Company.Register();
 
         // act
-        var response = await Id(otherToken).Company.SetCompanyOwner(
-            company.Id,
-            Guid.NewGuid(),
-            Result.New().Error("Failed to set company owner")
-        );
+        var response = await Id(otherToken)
+            .Company.SetCompanyOwner(company.Id, Guid.NewGuid(), Result.New().Error("Failed to set company owner"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -405,16 +378,13 @@ public class CompanyControllerTest : IntegrationTestBase
         var otherToken = await Id().RegisterLogUserIn();
         var company = await Id(otherToken).Company.Register();
         var token = await Id().RegisterLogUserIn();
-        var user = await Id(token).Me
-            .GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
+        var user = await Id(token)
+            .Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
             .GetData();
 
         // act
-        var response = await Id(otherToken).Company.SetCompanyOwner(
-            company.Id,
-            user.Id,
-            Result.New().Error("Failed to set company owner")
-        );
+        var response = await Id(otherToken)
+            .Company.SetCompanyOwner(company.Id, user.Id, Result.New().Error("Failed to set company owner"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.OK);
@@ -427,10 +397,8 @@ public class CompanyControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
 
         // act
-        var response = await Id(token).Company.UnregisterCompany(
-            Guid.NewGuid(),
-            Result.New().Error("Failed to unregister company")
-        );
+        var response = await Id(token)
+            .Company.UnregisterCompany(Guid.NewGuid(), Result.New().Error("Failed to unregister company"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -445,10 +413,8 @@ public class CompanyControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
 
         // act
-        var response = await Id(token).Company.UnregisterCompany(
-            company.Id,
-            Result.New().Error("Failed to unregister company")
-        );
+        var response = await Id(token)
+            .Company.UnregisterCompany(company.Id, Result.New().Error("Failed to unregister company"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -462,10 +428,8 @@ public class CompanyControllerTest : IntegrationTestBase
         var company = await Id(token).Company.Register();
 
         // act
-        var response = await Id(token).Company.UnregisterCompany(
-            company.Id,
-            Result.New().Error("Failed to unregister company")
-        );
+        var response = await Id(token)
+            .Company.UnregisterCompany(company.Id, Result.New().Error("Failed to unregister company"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.OK);

@@ -28,8 +28,8 @@ internal class CompanyUserClaimRepository : ICompanyUserClaimRepository
         Guid userId
     )
     {
-        var entities = await _db.CompanyUserClaims
-            .LoadWith(x => x.Claim)
+        var entities = await _db
+            .CompanyUserClaims.LoadWith(x => x.Claim)
             .Where(x => x.Claim.AppId == appId && x.UserId == userId)
             .ToArrayAsync();
 
@@ -40,8 +40,8 @@ internal class CompanyUserClaimRepository : ICompanyUserClaimRepository
 
     public async Task DeleteByIdAsync(Guid companyId, Guid userId, Guid claimId)
     {
-        await _db.CompanyUserClaims.DeleteAsync(
-            x => x.CompanyId == companyId && x.UserId == userId && x.ClaimId == claimId
+        await _db.CompanyUserClaims.DeleteAsync(x =>
+            x.CompanyId == companyId && x.UserId == userId && x.ClaimId == claimId
         );
     }
 }

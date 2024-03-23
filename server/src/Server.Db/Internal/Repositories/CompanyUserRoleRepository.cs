@@ -28,8 +28,8 @@ internal class CompanyUserRoleRepository : ICompanyUserRoleRepository
         Guid userId
     )
     {
-        var entities = await _db.CompanyUserRoles
-            .LoadWith(x => x.Role)
+        var entities = await _db
+            .CompanyUserRoles.LoadWith(x => x.Role)
             .ThenLoad(x => x.Claims)
             .ThenLoad(x => x.Claim)
             .Where(x => x.Role.AppId == appId && x.UserId == userId)
@@ -42,8 +42,8 @@ internal class CompanyUserRoleRepository : ICompanyUserRoleRepository
 
     public async Task DeleteByIdAsync(Guid companyId, Guid userId, Guid roleId)
     {
-        await _db.CompanyUserRoles.DeleteAsync(
-            x => x.CompanyId == companyId && x.UserId == userId && x.RoleId == roleId
+        await _db.CompanyUserRoles.DeleteAsync(x =>
+            x.CompanyId == companyId && x.UserId == userId && x.RoleId == roleId
         );
     }
 }

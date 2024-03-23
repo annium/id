@@ -25,11 +25,8 @@ public class LoginControllerTest : IntegrationTestBase
         var request = new LogInRequest { Login = Faker.Internet.UserName(), Password = Faker.Internet.Password(4) };
 
         // act
-        var response = await Id().Login.LogIn(
-            app.Id,
-            request,
-            Result.New(new TokensResponse()).Error("Failed to log in")
-        );
+        var response = await Id()
+            .Login.LogIn(app.Id, request, Result.New(new TokensResponse()).Error("Failed to log in"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.BadRequest);
@@ -44,11 +41,8 @@ public class LoginControllerTest : IntegrationTestBase
         var request = new LogInRequest { Login = Faker.Internet.UserName(), Password = Faker.Internet.Password() };
 
         // act
-        var response = await Id().Login.LogIn(
-            app.Id,
-            request,
-            Result.New(new TokensResponse()).Error("Failed to log in")
-        );
+        var response = await Id()
+            .Login.LogIn(app.Id, request, Result.New(new TokensResponse()).Error("Failed to log in"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -64,11 +58,8 @@ public class LoginControllerTest : IntegrationTestBase
         var request = new LogInRequest { Login = login, Password = Faker.Internet.Password() };
 
         // act
-        var response = await Id().Login.LogIn(
-            app.Id,
-            request,
-            Result.New(new TokensResponse()).Error("Failed to log in")
-        );
+        var response = await Id()
+            .Login.LogIn(app.Id, request, Result.New(new TokensResponse()).Error("Failed to log in"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -85,11 +76,8 @@ public class LoginControllerTest : IntegrationTestBase
         var request = new LogInRequest { Login = login, Password = password };
 
         // act
-        var response = await Id().Login.LogIn(
-            app.Id,
-            request,
-            Result.New(new TokensResponse()).Error("Failed to log in")
-        );
+        var response = await Id()
+            .Login.LogIn(app.Id, request, Result.New(new TokensResponse()).Error("Failed to log in"));
 
         // assert
         response.StatusCode.Is(HttpStatusCode.OK);
@@ -107,11 +95,12 @@ public class LoginControllerTest : IntegrationTestBase
         token = await Id(token).LogUserIn(app.Id, login, password);
 
         // act
-        var response = await Id(token).Login.UpdateToken(
-            app.Id,
-            Guid.NewGuid(),
-            Result.New(new TokensResponse()).Error("Failed to update token")
-        );
+        var response = await Id(token)
+            .Login.UpdateToken(
+                app.Id,
+                Guid.NewGuid(),
+                Result.New(new TokensResponse()).Error("Failed to update token")
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -126,8 +115,8 @@ public class LoginControllerTest : IntegrationTestBase
         var password = Faker.Internet.Password();
         var token = await Id().RegisterLogUserIn(login, email, password);
         var app = await Id(token).App.Register();
-        var tokens = await Id(token).Login
-            .LogIn(
+        var tokens = await Id(token)
+            .Login.LogIn(
                 app.Id,
                 new LogInRequestBody { Login = login, Password = password },
                 Result.New(new TokensResponse()).Error("Failed to log in")
@@ -135,8 +124,12 @@ public class LoginControllerTest : IntegrationTestBase
             .GetData();
 
         // act
-        var response = await Id(tokens.AccessToken).Login
-            .UpdateToken(app.Id, tokens.RefreshToken, Result.New(new TokensResponse()).Error("Failed to update token"))
+        var response = await Id(tokens.AccessToken)
+            .Login.UpdateToken(
+                app.Id,
+                tokens.RefreshToken,
+                Result.New(new TokensResponse()).Error("Failed to update token")
+            )
             .GetData();
 
         // assert

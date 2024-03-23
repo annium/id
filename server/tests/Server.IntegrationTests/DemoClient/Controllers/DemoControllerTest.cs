@@ -87,8 +87,8 @@ public class DemoControllerTest : IntegrationTestBase
         var email = Faker.Internet.Email();
         var password = Faker.Internet.Password();
         var token = await Id().RegisterLogUserIn(login, email, password);
-        var user = await Id(token).Me
-            .GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
+        var user = await Id(token)
+            .Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
             .GetData();
         var app = await Id(token).App.Register();
         var role = await Id(token).Role.Register(app.Id, "admin", "Administrator");
@@ -110,8 +110,8 @@ public class DemoControllerTest : IntegrationTestBase
         var email = Faker.Internet.Email();
         var password = Faker.Internet.Password();
         var token = await Id().RegisterLogUserIn(login, email, password);
-        var user = await Id(token).Me
-            .GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
+        var user = await Id(token)
+            .Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
             .GetData();
         var app = await Id(token).App.Register();
         var role = await Id(token).Role.Register(app.Id, "coo", "Chief Operations Officer");
@@ -135,8 +135,8 @@ public class DemoControllerTest : IntegrationTestBase
         var email = Faker.Internet.Email();
         var password = Faker.Internet.Password();
         var token = await Id().RegisterLogUserIn(login, email, password);
-        var user = await Id(token).Me
-            .GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
+        var user = await Id(token)
+            .Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
             .GetData();
         var app = await Id(token).App.Register();
         var claim = await Id(token).Claim.Register(app.Id, "paymentsAccess", "Payments Access");
@@ -158,8 +158,8 @@ public class DemoControllerTest : IntegrationTestBase
         var email = Faker.Internet.Email();
         var password = Faker.Internet.Password();
         var token = await Id().RegisterLogUserIn(login, email, password);
-        var user = await Id(token).Me
-            .GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
+        var user = await Id(token)
+            .Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
             .GetData();
         var app = await Id(token).App.Register();
         var role = await Id(token).Role.Register(app.Id, "coo", "Chief Operations Officer");

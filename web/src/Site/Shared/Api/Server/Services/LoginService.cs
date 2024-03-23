@@ -24,8 +24,8 @@ internal class LoginService : ILoginService
 
     public async Task<IResult<TokensResponse>> LogIn(string login, string password)
     {
-        var response = await _serverApi.Public
-            .Client()
+        var response = await _serverApi
+            .Public.Client()
             .Login.LogIn(
                 _config.AppId,
                 new LogInRequestBody { Login = login, Password = password },
@@ -45,8 +45,8 @@ internal class LoginService : ILoginService
 
     public async Task<IResult<TokensResponse>> UpdateToken(Guid refreshToken)
     {
-        var response = await _serverApi.Private
-            .Client()
+        var response = await _serverApi
+            .Private.Client()
             .Login.UpdateToken(
                 _config.AppId,
                 refreshToken,

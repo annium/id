@@ -51,8 +51,8 @@ public static class Database
         await Db.StartAsync();
         Config.Host = Db.Hostname;
         Config.Port = Db.GetMappedPublicPort(PostgreSqlBuilder.PostgreSqlPort);
-        Migrator.Instance
-            .ForPostgresql(Config.ConnectionString, Constants.Schema)
+        Migrator
+            .Instance.ForPostgresql(Config.ConnectionString, Constants.Schema)
             .WithScriptsFromAssembly(typeof(TestServicePack).Assembly)
             .Execute();
         InitTcs.SetResult();

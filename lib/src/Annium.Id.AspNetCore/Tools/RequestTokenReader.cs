@@ -14,7 +14,8 @@ internal class RequestTokenReader
     {
         if (!request.Headers.ContainsKey(HeaderNames.Authorization))
             return Fail(HttpStatusCode.Unauthorized, "Bearer authorization required.");
-        var authorization = request.Headers[HeaderNames.Authorization]
+        var authorization = request
+            .Headers[HeaderNames.Authorization]
             .ToString()
             .Split(' ')
             .Select(e => e.Trim())

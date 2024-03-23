@@ -113,20 +113,17 @@ public class MeControllerTest : IntegrationTestBase
     {
         // arrange
         var token = await Id().RegisterLogUserIn();
-        var user = await Id(token).Me
-            .GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
+        var user = await Id(token)
+            .Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
             .GetData();
         var request = new RestoreMyAccessRequestBody { Server = Faker.Internet.Url(), Email = user.Email };
 
         // act
-        await Id(token).Me.RestoreMyAccess(
-            Constants.IdAppId,
-            request,
-            Result.New().Error("Failed to run access restore")
-        );
+        await Id(token)
+            .Me.RestoreMyAccess(Constants.IdAppId, request, Result.New().Error("Failed to run access restore"));
         token = EmailService.Emails.Last().Data.As<RestoreAccessData>().Tokens.AccessToken;
-        var response = await Id(token).Me
-            .GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
+        var response = await Id(token)
+            .Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
             .GetData();
 
         // assert
@@ -140,8 +137,8 @@ public class MeControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserIn();
 
         // act
-        var response = await Id(token).Me
-            .GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
+        var response = await Id(token)
+            .Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
             .GetData();
 
         // assert
@@ -156,16 +153,15 @@ public class MeControllerTest : IntegrationTestBase
         var email = Faker.Internet.Email();
         var password = Faker.Internet.Password();
         var token = await Id().RegisterLogUserIn(login, email, password);
-        var me = await Id(token).Me
-            .GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
+        var me = await Id(token)
+            .Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
             .GetData();
         var app = await Id(token).App.Register();
         token = await Id().LogUserIn(app.Id, login, password);
 
         // act
-        var response = await Id(token).Me.GetMyToken(
-            Result.New(new IdTokenResponse()).Error("Failed to load access tokens")
-        );
+        var response = await Id(token)
+            .Me.GetMyToken(Result.New(new IdTokenResponse()).Error("Failed to load access tokens"));
         var idToken = response.Data.Data;
 
         // assert

@@ -25,8 +25,8 @@ internal class UserClaimRepository : IUserClaimRepository
 
     public async Task<IReadOnlyCollection<UserClaim>> GetUserClaimsAsync(Guid appId, Guid userId)
     {
-        var entities = await _db.UserClaims
-            .LoadWith(x => x.Claim)
+        var entities = await _db
+            .UserClaims.LoadWith(x => x.Claim)
             .Where(x => x.Claim.AppId == appId && x.UserId == userId)
             .ToArrayAsync();
 

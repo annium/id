@@ -40,11 +40,8 @@ public class ServicePack : ServicePackBase
         container.AddIdPolicy<Guid>(
             "hasCompanyPaymentsAccess",
             (token, companyId) =>
-                token.Companies.Any(
-                    c =>
-                        c.Id == companyId
-                        && c.Claims.ContainsKey("paymentsAccess")
-                        && c.Claims["paymentsAccess"] == "full"
+                token.Companies.Any(c =>
+                    c.Id == companyId && c.Claims.ContainsKey("paymentsAccess") && c.Claims["paymentsAccess"] == "full"
                 )
         );
 
