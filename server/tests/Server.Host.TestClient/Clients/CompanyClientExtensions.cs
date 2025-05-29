@@ -9,7 +9,7 @@ namespace Server.Host.TestClient.Clients;
 
 public static class CompanyClientExtensions
 {
-    public static async Task<CompanyResponse> Register(
+    public static async Task<CompanyResponse> RegisterAsync(
         this CompanyClient client,
         Guid? parentId = default,
         string? name = null
@@ -17,11 +17,11 @@ public static class CompanyClientExtensions
     {
         var request = new RegisterCompanyRequest { ParentId = parentId, Name = name ?? Faker.Random.String2(10) };
         var companyId = await client
-            .RegisterCompany(request, Result.New(Guid.Empty).Error("Failed to register company"))
-            .GetData();
+            .RegisterCompanyAsync(request, Result.New(Guid.Empty).Error("Failed to register company"))
+            .GetDataAsync();
         var company = await client
-            .GetCompany(companyId, Result.New(new CompanyResponse()).Error("Failed to load company information"))
-            .GetData();
+            .GetCompanyAsync(companyId, Result.New(new CompanyResponse()).Error("Failed to load company information"))
+            .GetDataAsync();
 
         return company;
     }

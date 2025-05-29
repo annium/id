@@ -39,7 +39,7 @@ internal class AuthorizationFilter : IAuthorizationFilter
         var tokenReadOptions = new TokenReadOptions
         {
             ValidateAudience = _options.ValidateAudience,
-            ValidateExpiration = _options.ValidateExpiration
+            ValidateExpiration = _options.ValidateExpiration,
         };
         var readResult = _tokenReader.ReadToken(tokenString, tokenReadOptions);
         if (readResult.Status == JwtReadStatus.BadSource)

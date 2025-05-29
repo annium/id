@@ -17,7 +17,7 @@ public class UserClient
         _request = request;
     }
 
-    public async Task<IHttpResponse<IResult<UserResponse[]>>> FindUsers(
+    public async Task<IHttpResponse<IResult<UserResponse[]>>> FindUsersAsync(
         string query,
         int limit,
         IResult<UserResponse[]> defaultValue,
@@ -31,7 +31,7 @@ public class UserClient
             .AsResponseAsync(defaultValue, ct);
     }
 
-    public async Task<IHttpResponse<IResult<UserResponse>>> GetUser(
+    public async Task<IHttpResponse<IResult<UserResponse>>> GetUserAsync(
         Guid userId,
         IResult<UserResponse> defaultValue,
         CancellationToken ct = default
@@ -40,7 +40,7 @@ public class UserClient
         return await _request.Get($"users/{userId}").AsResponseAsync(defaultValue, ct);
     }
 
-    public async Task<IHttpResponse<IResult>> AddRoleToUser(
+    public async Task<IHttpResponse<IResult>> AddRoleToUserAsync(
         Guid userId,
         Guid roleId,
         IResult defaultValue,
@@ -50,7 +50,7 @@ public class UserClient
         return await _request.Post($"users/{userId}/roles/{roleId}").AsResponseAsync(defaultValue, ct);
     }
 
-    public async Task<IHttpResponse<IResult>> DeleteRoleFromUser(
+    public async Task<IHttpResponse<IResult>> DeleteRoleFromUserAsync(
         Guid userId,
         Guid roleId,
         IResult defaultValue,
@@ -60,7 +60,7 @@ public class UserClient
         return await _request.Delete($"users/{userId}/roles/{roleId}").AsResponseAsync(defaultValue, ct);
     }
 
-    public async Task<IHttpResponse<IResult>> AddClaimToUser(
+    public async Task<IHttpResponse<IResult>> AddClaimToUserAsync(
         Guid userId,
         Guid claimId,
         AddClaimToUserRequestBody body,
@@ -74,7 +74,7 @@ public class UserClient
             .AsResponseAsync(defaultValue, ct);
     }
 
-    public async Task<IHttpResponse<IResult>> DeleteClaimFromUser(
+    public async Task<IHttpResponse<IResult>> DeleteClaimFromUserAsync(
         Guid userId,
         Guid claimId,
         IResult defaultValue,

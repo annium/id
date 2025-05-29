@@ -31,11 +31,14 @@ internal class Store : StateBase, IStore
         Form.UseValidator(validator);
     }
 
-    public async Task LogIn()
+    public async Task LogInAsync()
     {
         State.Start();
 
-        var result = await _loginService.LogIn(Form.AtAtomic(x => x.Login).Value, Form.AtAtomic(x => x.Password).Value);
+        var result = await _loginService.LogInAsync(
+            Form.AtAtomic(x => x.Login).Value,
+            Form.AtAtomic(x => x.Password).Value
+        );
 
         if (result.HasErrors)
         {
@@ -53,7 +56,7 @@ internal class Store : StateBase, IStore
             return;
         }
 
-        await _meStore.Load();
+        await _meStore.LoadAsync();
         if (_meStore.HasAccess)
         {
             State.Succeed();
@@ -69,5 +72,5 @@ public interface IStore
 {
     IObjectContainer<LoginData> Form { get; }
     bool CanLogin { get; }
-    Task LogIn();
+    Task LogInAsync();
 }

@@ -16,7 +16,7 @@ public class CompanyUserClient
         _request = request;
     }
 
-    public async Task<IResult> AddUserToCompany(
+    public async Task<IResult> AddUserToCompanyAsync(
         Guid companyId,
         Guid userId,
         IResult defaultValue,
@@ -26,7 +26,7 @@ public class CompanyUserClient
         return await _request.Post($"companies/{companyId}/users/{userId}").AsAsync(defaultValue, ct);
     }
 
-    public async Task<IResult> AddCompanyRoleToCompanyUser(
+    public async Task<IResult> AddCompanyRoleToCompanyUserAsync(
         Guid companyId,
         Guid userId,
         Guid roleId,
@@ -37,7 +37,7 @@ public class CompanyUserClient
         return await _request.Post($"companies/{companyId}/users/{userId}/roles/{roleId}").AsAsync(defaultValue, ct);
     }
 
-    public async Task<IResult> DeleteCompanyRoleFromCompanyUser(
+    public async Task<IResult> DeleteCompanyRoleFromCompanyUserAsync(
         Guid companyId,
         Guid userId,
         Guid roleId,
@@ -48,7 +48,7 @@ public class CompanyUserClient
         return await _request.Delete($"companies/{companyId}/users/{userId}/roles/{roleId}").AsAsync(defaultValue, ct);
     }
 
-    public async Task<IResult> AddCompanyClaimToCompanyUser(
+    public async Task<IResult> AddCompanyClaimToCompanyUserAsync(
         Guid companyId,
         Guid userId,
         Guid claimId,
@@ -63,7 +63,7 @@ public class CompanyUserClient
             .AsAsync(defaultValue, ct);
     }
 
-    public async Task<IResult> DeleteCompanyClaimFromCompanyUser(
+    public async Task<IResult> DeleteCompanyClaimFromCompanyUserAsync(
         Guid companyId,
         Guid userId,
         Guid claimId,
@@ -76,7 +76,7 @@ public class CompanyUserClient
             .AsAsync(defaultValue, ct);
     }
 
-    public async Task<IResult> DeleteUserFromCompany(
+    public async Task<IResult> DeleteUserFromCompanyAsync(
         Guid companyId,
         Guid userId,
         IResult defaultValue,

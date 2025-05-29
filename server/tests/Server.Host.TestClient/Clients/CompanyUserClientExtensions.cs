@@ -9,9 +9,13 @@ namespace Server.Host.TestClient.Clients;
 
 public static class CompanyUserClientExtensions
 {
-    public static async Task<IHttpResponse<IResult>> AddUser(this CompanyUserClient client, Guid companyId, Guid userId)
+    public static async Task<IHttpResponse<IResult>> AddUserAsync(
+        this CompanyUserClient client,
+        Guid companyId,
+        Guid userId
+    )
     {
-        var response = await client.AddUserToCompany(
+        var response = await client.AddUserToCompanyAsync(
             companyId,
             userId,
             Result.New().Error("Failed to add user to company")
@@ -20,14 +24,14 @@ public static class CompanyUserClientExtensions
         return response;
     }
 
-    public static async Task<IHttpResponse<IResult>> AddUserRole(
+    public static async Task<IHttpResponse<IResult>> AddUserRoleAsync(
         this CompanyUserClient client,
         Guid companyId,
         Guid userId,
         Guid roleId
     )
     {
-        var response = await client.AddCompanyRoleToCompanyUser(
+        var response = await client.AddCompanyRoleToCompanyUserAsync(
             companyId,
             userId,
             roleId,
@@ -37,7 +41,7 @@ public static class CompanyUserClientExtensions
         return response;
     }
 
-    public static async Task<IHttpResponse<IResult>> AddUserClaim(
+    public static async Task<IHttpResponse<IResult>> AddUserClaimAsync(
         this CompanyUserClient client,
         Guid companyId,
         Guid userId,
@@ -45,7 +49,7 @@ public static class CompanyUserClientExtensions
         string? value = null
     )
     {
-        var response = await client.AddCompanyClaimToCompanyUser(
+        var response = await client.AddCompanyClaimToCompanyUserAsync(
             companyId,
             userId,
             claimId,

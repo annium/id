@@ -71,7 +71,7 @@ internal class LoginCommandHandler
 
         login.Update(Guid.NewGuid(), _timeProvider.Now + _options.RefreshTokenLifeTime);
         await _userLoginRepository.UpdateRefreshTokenAsync(login);
-        var token = await _tokenGenerator.GenerateTokenString(login);
+        var token = await _tokenGenerator.GenerateTokenStringAsync(login);
 
         return Result.Status(OperationStatus.Ok, new Tokens(token, login.RefreshToken, login.RefreshTokenExpires));
     }

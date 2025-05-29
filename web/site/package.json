@@ -1,6 +1,6 @@
 {
   "name": "@id/site",
-  "version": "0.1.0",
+  "version": "0.0.0",
   "description": "Annium.Id site.",
   "main": "dist",
   "dependencies": {

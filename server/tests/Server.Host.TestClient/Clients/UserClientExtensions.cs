@@ -9,14 +9,14 @@ namespace Server.Host.TestClient.Clients;
 
 public static class UserClientExtensions
 {
-    public static async Task<IHttpResponse<IResult>> AddUserClaim(
+    public static async Task<IHttpResponse<IResult>> AddUserClaimAsync(
         this UserClient client,
         Guid userId,
         Guid claimId,
         string? value = null
     )
     {
-        var response = await client.AddClaimToUser(
+        var response = await client.AddClaimToUserAsync(
             userId,
             claimId,
             new AddClaimToUserRequestBody { Value = value ?? Faker.Random.String2(10) },

@@ -12,10 +12,10 @@ configuration/
 keys/
 *.blob
 *.log
+*.nupkg
 
 # xs ignore patterns
 .xs.ignore
 .xs.credentials
-nuget.config
 lcov.info
 .npmrc

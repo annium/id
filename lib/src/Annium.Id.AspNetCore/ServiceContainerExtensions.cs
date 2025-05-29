@@ -14,7 +14,7 @@ namespace Annium.Core.DependencyInjection;
 
 public static class ServiceContainerExtensions
 {
-    private static readonly ConditionalWeakTable<IServiceContainer, List<string>> PoliciesContainer = new();
+    private static readonly ConditionalWeakTable<IServiceContainer, List<string>> _policiesContainer = new();
 
     public static IServiceContainer AddIdAuthorization(
         this IServiceContainer container,
@@ -117,7 +117,7 @@ public static class ServiceContainerExtensions
         LambdaExpression expression
     )
     {
-        var policies = PoliciesContainer.GetOrCreateValue(container);
+        var policies = _policiesContainer.GetOrCreateValue(container);
 
         if (policies.Contains(name))
             throw new ArgumentException($"Policy {name} is already registered");

@@ -1,9 +1,10 @@
 using System.Threading;
 using System.Threading.Tasks;
+using Annium.DbUp.Core;
+using Annium.DbUp.PostgreSql;
 using Server.Db;
 using Server.Db.Internal;
 using Testcontainers.PostgreSql;
-using Xdb;
 using PostgreSqlConfiguration = Annium.linq2db.PostgreSql.PostgreSqlConfiguration;
 
 namespace Server.IntegrationTests.Fixtures;
@@ -18,20 +19,20 @@ public static class Database
             Password = "postgres",
         };
 
-    private static readonly PostgreSqlContainer Db;
-    private static readonly TaskCompletionSource InitTcs = new();
+    private static readonly PostgreSqlContainer _db;
+    private static readonly TaskCompletionSource _initTcs = new();
     private static volatile int _refs;
 
     static Database()
     {
-        Db = new PostgreSqlBuilder()
-            .WithImage("registry.annium.com/postgres:15")
+        _db = new PostgreSqlBuilder()
+            .WithImage("registry.annium.com/postgres:17-alpine")
             .WithDatabase(Config.Database)
             .WithUsername(Config.User)
             .WithPassword(Config.Password)
             .Build();
         // Db = new ContainerBuilder<PostgreSqlTestcontainer>()
-        //     .WithDatabase(new PostgreSqlTestcontainerConfiguration("registry.annium.com/postgres:15")
+        //     .WithDatabase(new PostgreSqlTestcontainerConfiguration("registry.annium.com/postgres:17")
         //     {
         //         Database = Config.Database,
         //         Username = Config.User,
@@ -44,17 +45,19 @@ public static class Database
     {
         if (Interlocked.Increment(ref _refs) > 1)
         {
-            await InitTcs.Task;
+#pragma warning disable VSTHRD003
+            await _initTcs.Task;
+#pragma warning restore VSTHRD003
             return;
         }
 
-        await Db.StartAsync();
-        Config.Host = Db.Hostname;
-        Config.Port = Db.GetMappedPublicPort(PostgreSqlBuilder.PostgreSqlPort);
+        await _db.StartAsync();
+        Config.Host = _db.Hostname;
+        Config.Port = _db.GetMappedPublicPort(PostgreSqlBuilder.PostgreSqlPort);
         Migrator
             .Instance.ForPostgresql(Config.ConnectionString, Constants.Schema)
             .WithScriptsFromAssembly(typeof(TestServicePack).Assembly)
             .Execute();
-        InitTcs.SetResult();
+        _initTcs.SetResult();
     }
 }

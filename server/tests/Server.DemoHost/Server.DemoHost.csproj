@@ -1,25 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-    <PropertyGroup>
-        <PackageId>Server.DemoHost</PackageId>
-        <PackageVersion>0.1.0</PackageVersion>
-        <Description>Server.DemoHost</Description>
-        <Solutions>Annium.Id</Solutions>
-        <TargetFramework>net8.0</TargetFramework>
-        <OutputType>Exe</OutputType>
-        <DebugType>portable</DebugType>
-        <WarningsAsErrors>true</WarningsAsErrors>
-        <IsPackable>false</IsPackable>
-        <Nullable>enable</Nullable>
-    </PropertyGroup>
-    <ItemGroup>
-        <ProjectReference Include="../../../lib/src/Annium.Id.AspNetCore/Annium.Id.AspNetCore.csproj" />
-    </ItemGroup>
-    <ItemGroup>
-        <PackageReference Include="Annium.Configuration.Abstractions" Version="0.1.0" />
-        <PackageReference Include="Annium.Infrastructure.Hosting" Version="0.1.0" />
-        <PackageReference Include="Annium.Logging.Console" Version="0.1.0" />
-        <PackageReference Include="Annium.Logging.Microsoft" Version="0.1.0" />
-        <PackageReference Include="Annium.Net.Http" Version="0.1.0" />
-        <PackageReference Include="XRest.Sources.AspNetCore" Version="0.1.0" />
-    </ItemGroup>
+  <PropertyGroup>
+    <Solutions>Annium.Id</Solutions>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../../lib/src/Annium.Id.AspNetCore/Annium.Id.AspNetCore.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Annium.Configuration.Abstractions" />
+    <PackageReference Include="Annium.Infrastructure.Hosting" />
+    <PackageReference Include="Annium.Logging.Console" />
+    <PackageReference Include="Annium.Logging.Microsoft" />
+    <PackageReference Include="Annium.Net.Http" />
+    <PackageReference Include="Annium.XRest.Sources.AspNetCore" />
+  </ItemGroup>
 </Project>

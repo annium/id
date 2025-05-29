@@ -35,34 +35,34 @@ internal class MeStore : StateBase, IMeStore
         _mapper = mapper;
     }
 
-    public Task Load()
+    public Task LoadAsync()
     {
         Console.WriteLine("MeStore.Load");
 
-        return Load(false);
+        return LoadAsync(false);
     }
 
-    public Task Reload()
+    public Task ReloadAsync()
     {
         Console.WriteLine("MeStore.Reload");
 
-        return Load(true);
+        return LoadAsync(true);
     }
 
-    public async Task LogOut()
+    public async Task LogOutAsync()
     {
         Console.WriteLine("MeStore.LogOut: start");
         State.Start();
 
         Console.WriteLine("MeStore.LogOut: api start");
-        await _loginService.LogOut();
+        await _loginService.LogOutAsync();
         Console.WriteLine("MeStore.LogOut: api end");
 
         State.Reset();
         Console.WriteLine("MeStore.LogOut: reset");
     }
 
-    private async Task Load(bool force)
+    private async Task LoadAsync(bool force)
     {
         // fail immediately if no tokens
         if (_tokenStore.Get() is null)
@@ -87,7 +87,7 @@ internal class MeStore : StateBase, IMeStore
         State.Start();
 
         Console.WriteLine("MeStore.Load: api start");
-        var result = await _meService.GetMe();
+        var result = await _meService.GetMeAsync();
         Console.WriteLine("MeStore.Load: api end");
 
         if (result.IsOk)
@@ -99,7 +99,7 @@ internal class MeStore : StateBase, IMeStore
         else
         {
             Console.WriteLine("MeStore.Load: logout api start");
-            await _loginService.LogOut();
+            await _loginService.LogOutAsync();
             Console.WriteLine("MeStore.Load: logout api end");
             State.Fail(result);
             Console.WriteLine("MeStore.Load: failure");
@@ -115,7 +115,7 @@ public interface IMeStore
     IValueTrackedState<bool> HasLoadedOnce { get; }
     bool HasAccess { get; }
     IOperationState<Me> State { get; }
-    Task Load();
-    Task Reload();
-    Task LogOut();
+    Task LoadAsync();
+    Task ReloadAsync();
+    Task LogOutAsync();
 }

@@ -70,7 +70,7 @@ internal class PolicyFilter : IActionFilter
     {
         return new ObjectResult(Result.New(OperationStatus.Forbidden).Error(error))
         {
-            StatusCode = (int)HttpStatusCode.Forbidden
+            StatusCode = (int)HttpStatusCode.Forbidden,
         };
     }
 }

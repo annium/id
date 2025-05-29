@@ -20,14 +20,14 @@ public class CompanyController : ServerController
 
     [HttpPost]
     [Authorize]
-    public Task<IResult<Guid>> RegisterCompany([FromBody] RegisterCompanyRequest request)
+    public Task<IResult<Guid>> RegisterCompanyAsync([FromBody] RegisterCompanyRequest request)
     {
         return HandleAsync<RegisterCompanyRequest, Guid>(request);
     }
 
     [HttpGet]
     [Authorize]
-    public Task<IResult<IEnumerable<CompanyResponse>>> FindCompanies(string query)
+    public Task<IResult<IEnumerable<CompanyResponse>>> FindCompaniesAsync(string query)
     {
         var request = new FindCompaniesRequest { Query = query };
 
@@ -36,14 +36,14 @@ public class CompanyController : ServerController
 
     [HttpGet("my")]
     [Authorize]
-    public Task<IResult<IEnumerable<CompanyResponse>>> ListMyCompanies()
+    public Task<IResult<IEnumerable<CompanyResponse>>> ListMyCompaniesAsync()
     {
         return HandleAsync<ListMyCompaniesRequest, IEnumerable<CompanyResponse>>(new ListMyCompaniesRequest());
     }
 
     [HttpGet("{companyId:guid}")]
     [Authorize]
-    public Task<IResult<CompanyResponse>> GetCompany(Guid companyId)
+    public Task<IResult<CompanyResponse>> GetCompanyAsync(Guid companyId)
     {
         var request = new GetCompanyRequest { CompanyId = companyId };
 
@@ -52,7 +52,7 @@ public class CompanyController : ServerController
 
     [HttpGet("{companyId:guid}/users")]
     [Authorize]
-    public Task<IResult<IEnumerable<UserResponse>>> GetCompanyUsers(Guid companyId)
+    public Task<IResult<IEnumerable<UserResponse>>> GetCompanyUsersAsync(Guid companyId)
     {
         var request = new GetCompanyUsersRequest { CompanyId = companyId };
 
@@ -61,13 +61,13 @@ public class CompanyController : ServerController
 
     [HttpPut("{companyId:guid}")]
     [Authorize]
-    public Task<IResult> UpdateCompany(Guid companyId, [FromBody] UpdateCompanyRequestBody requestBody)
+    public Task<IResult> UpdateCompanyAsync(Guid companyId, [FromBody] UpdateCompanyRequestBody requestBody)
     {
         var request = new UpdateCompanyRequest
         {
             CompanyId = companyId,
             ParentId = requestBody.ParentId,
-            Name = requestBody.Name
+            Name = requestBody.Name,
         };
 
         return HandleAsync(request);
@@ -75,7 +75,7 @@ public class CompanyController : ServerController
 
     [HttpPut("{companyId:guid}/owner/{userId:guid}")]
     [Authorize]
-    public Task<IResult> SetCompanyOwner(Guid companyId, Guid userId)
+    public Task<IResult> SetCompanyOwnerAsync(Guid companyId, Guid userId)
     {
         var request = new SetCompanyOwnerRequest { CompanyId = companyId, UserId = userId };
 
@@ -84,7 +84,7 @@ public class CompanyController : ServerController
 
     [HttpDelete("{companyId:guid}")]
     [Authorize]
-    public Task<IResult> UnregisterCompany(Guid companyId)
+    public Task<IResult> UnregisterCompanyAsync(Guid companyId)
     {
         var request = new UnregisterCompanyRequest { CompanyId = companyId };
 

@@ -137,7 +137,7 @@ public class TokenReaderWriterTest
                     Guid.NewGuid(),
                     new[] { "stuff", "manager" },
                     new Dictionary<string, string> { { "billing", "yes" }, { "hr", "yes" } }
-                )
+                ),
             }
         );
     }

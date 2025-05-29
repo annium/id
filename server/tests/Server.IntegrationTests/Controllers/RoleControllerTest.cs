@@ -7,7 +7,6 @@ using Server.Host.TestClient.Clients;
 using Server.ViewModels.Requests.Roles;
 using Server.ViewModels.Responses.Roles;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Server.IntegrationTests.Controllers;
 
@@ -20,11 +19,16 @@ public class RoleControllerTest : IntegrationTestBase
     public async Task Create_InvalidPayload_BadRequest()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
+        var token = await Id().RegisterLogUserInAsync();
         var request = new CreateRoleRequest { Key = Faker.Random.String2(5) };
 
         // act
-        var response = await Id(token).Role.CreateRole(request, Result.New(Guid.Empty).Error("Failed to create role"));
+        var response = await Id(token)
+            .Role.CreateRoleAsync(
+                request,
+                Result.New(Guid.Empty).Error("Failed to create role"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.BadRequest);
@@ -34,16 +38,21 @@ public class RoleControllerTest : IntegrationTestBase
     public async Task Create_AppMissing_NotFound()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
+        var token = await Id().RegisterLogUserInAsync();
         var request = new CreateRoleRequest
         {
             AppId = Guid.NewGuid(),
             Key = Faker.Random.String2(5),
-            Name = Faker.Random.String2(10)
+            Name = Faker.Random.String2(10),
         };
 
         // act
-        var response = await Id(token).Role.CreateRole(request, Result.New(Guid.Empty).Error("Failed to create role"));
+        var response = await Id(token)
+            .Role.CreateRoleAsync(
+                request,
+                Result.New(Guid.Empty).Error("Failed to create role"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -53,18 +62,23 @@ public class RoleControllerTest : IntegrationTestBase
     public async Task Create_NotOwner_Forbidden()
     {
         // arrange
-        var otherToken = await Id().RegisterLogUserIn();
-        var app = await Id(otherToken).App.Register();
-        var token = await Id().RegisterLogUserIn();
+        var otherToken = await Id().RegisterLogUserInAsync();
+        var app = await Id(otherToken).App.RegisterAsync();
+        var token = await Id().RegisterLogUserInAsync();
         var request = new CreateRoleRequest
         {
             AppId = app.Id,
             Key = Faker.Random.String2(5),
-            Name = Faker.Random.String2(10)
+            Name = Faker.Random.String2(10),
         };
 
         // act
-        var response = await Id(token).Role.CreateRole(request, Result.New(Guid.Empty).Error("Failed to create role"));
+        var response = await Id(token)
+            .Role.CreateRoleAsync(
+                request,
+                Result.New(Guid.Empty).Error("Failed to create role"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -74,20 +88,25 @@ public class RoleControllerTest : IntegrationTestBase
     public async Task Create_NonUniqueKey_BadRequest()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
-        var app = await Id(token).App.Register();
+        var token = await Id().RegisterLogUserInAsync();
+        var app = await Id(token).App.RegisterAsync();
         var roleKey = Faker.Random.String2(5);
         var roleName = Faker.Random.String2(10);
-        await Id(token).Role.Register(app.Id, roleKey, roleName);
+        await Id(token).Role.RegisterAsync(app.Id, roleKey, roleName);
         var request = new CreateRoleRequest
         {
             AppId = app.Id,
             Key = roleKey,
-            Name = roleName
+            Name = roleName,
         };
 
         // act
-        var response = await Id(token).Role.CreateRole(request, Result.New(Guid.Empty).Error("Failed to create role"));
+        var response = await Id(token)
+            .Role.CreateRoleAsync(
+                request,
+                Result.New(Guid.Empty).Error("Failed to create role"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.BadRequest);
@@ -97,13 +116,13 @@ public class RoleControllerTest : IntegrationTestBase
     public async Task Create_ValidPayload_Ok()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
-        var app = await Id(token).App.Register();
+        var token = await Id().RegisterLogUserInAsync();
+        var app = await Id(token).App.RegisterAsync();
         var roleKey = Faker.Random.String2(5);
         var roleName = Faker.Random.String2(10);
 
         // act
-        var role = await Id(token).Role.Register(app.Id, roleKey, roleName);
+        var role = await Id(token).Role.RegisterAsync(app.Id, roleKey, roleName);
 
         // assert
         role.Id.IsNotDefault();
@@ -116,11 +135,15 @@ public class RoleControllerTest : IntegrationTestBase
     public async Task List_MissingApp_NotFound()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
+        var token = await Id().RegisterLogUserInAsync();
 
         // act
         var response = await Id(token)
-            .Role.ListRoles(Guid.NewGuid(), Result.New(Array.Empty<RoleResponse>()).Error("Failed to list roles"));
+            .Role.ListRolesAsync(
+                Guid.NewGuid(),
+                Result.New(Array.Empty<RoleResponse>()).Error("Failed to list roles"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -130,16 +153,20 @@ public class RoleControllerTest : IntegrationTestBase
     public async Task List_Ok()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
-        var app = await Id(token).App.Register();
+        var token = await Id().RegisterLogUserInAsync();
+        var app = await Id(token).App.RegisterAsync();
         var roleKey = Faker.Random.String2(5);
         var roleName = Faker.Random.String2(10);
-        var role = await Id(token).Role.Register(app.Id, roleKey, roleName);
+        var role = await Id(token).Role.RegisterAsync(app.Id, roleKey, roleName);
 
         // act
         var roles = await Id(token)
-            .Role.ListRoles(app.Id, Result.New(Array.Empty<RoleResponse>()).Error("Failed to list roles"))
-            .GetData();
+            .Role.ListRolesAsync(
+                app.Id,
+                Result.New(Array.Empty<RoleResponse>()).Error("Failed to list roles"),
+                TestContext.Current.CancellationToken
+            )
+            .GetDataAsync();
 
         // assert
         roles.Has(1);
@@ -154,13 +181,19 @@ public class RoleControllerTest : IntegrationTestBase
     public async Task Update_IncorrectPayload_BadRequest()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
-        var app = await Id(token).App.Register();
-        var role = await Id(token).Role.Register(app.Id);
+        var token = await Id().RegisterLogUserInAsync();
+        var app = await Id(token).App.RegisterAsync();
+        var role = await Id(token).Role.RegisterAsync(app.Id);
         var request = new UpdateRoleRequest { Key = Faker.Random.String2(5) };
 
         // act
-        var response = await Id(token).Role.UpdateRole(role.Id, request, Result.New().Error("Failed to update role"));
+        var response = await Id(token)
+            .Role.UpdateRoleAsync(
+                role.Id,
+                request,
+                Result.New().Error("Failed to update role"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.BadRequest);
@@ -170,12 +203,17 @@ public class RoleControllerTest : IntegrationTestBase
     public async Task Update_MissingRole_NotFound()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
+        var token = await Id().RegisterLogUserInAsync();
         var request = new UpdateRoleRequest { Key = Faker.Random.String2(5), Name = Faker.Random.String2(10) };
 
         // act
         var response = await Id(token)
-            .Role.UpdateRole(Guid.NewGuid(), request, Result.New().Error("Failed to update role"));
+            .Role.UpdateRoleAsync(
+                Guid.NewGuid(),
+                request,
+                Result.New().Error("Failed to update role"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -185,14 +223,20 @@ public class RoleControllerTest : IntegrationTestBase
     public async Task Update_NonUniqueKey_Conflict()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
-        var app = await Id(token).App.Register();
-        var otherRole = await Id(token).Role.Register(app.Id);
-        var role = await Id(token).Role.Register(app.Id);
+        var token = await Id().RegisterLogUserInAsync();
+        var app = await Id(token).App.RegisterAsync();
+        var otherRole = await Id(token).Role.RegisterAsync(app.Id);
+        var role = await Id(token).Role.RegisterAsync(app.Id);
         var request = new UpdateRoleRequest { Key = otherRole.Key, Name = Faker.Random.String2(10) };
 
         // act
-        var response = await Id(token).Role.UpdateRole(role.Id, request, Result.New().Error("Failed to update role"));
+        var response = await Id(token)
+            .Role.UpdateRoleAsync(
+                role.Id,
+                request,
+                Result.New().Error("Failed to update role"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Conflict);
@@ -202,14 +246,20 @@ public class RoleControllerTest : IntegrationTestBase
     public async Task Update_NotOwner_Forbidden()
     {
         // arrange
-        var otherToken = await Id().RegisterLogUserIn();
-        var app = await Id(otherToken).App.Register();
-        var role = await Id(otherToken).Role.Register(app.Id);
-        var token = await Id().RegisterLogUserIn();
+        var otherToken = await Id().RegisterLogUserInAsync();
+        var app = await Id(otherToken).App.RegisterAsync();
+        var role = await Id(otherToken).Role.RegisterAsync(app.Id);
+        var token = await Id().RegisterLogUserInAsync();
         var request = new UpdateRoleRequest { Key = Faker.Random.String2(5), Name = Faker.Random.String2(10) };
 
         // act
-        var response = await Id(token).Role.UpdateRole(role.Id, request, Result.New().Error("Failed to update role"));
+        var response = await Id(token)
+            .Role.UpdateRoleAsync(
+                role.Id,
+                request,
+                Result.New().Error("Failed to update role"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -219,13 +269,19 @@ public class RoleControllerTest : IntegrationTestBase
     public async Task Update_Valid_Ok()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
-        var app = await Id(token).App.Register();
-        var role = await Id(token).Role.Register(app.Id);
+        var token = await Id().RegisterLogUserInAsync();
+        var app = await Id(token).App.RegisterAsync();
+        var role = await Id(token).Role.RegisterAsync(app.Id);
         var request = new UpdateRoleRequest { Key = Faker.Random.String2(5), Name = Faker.Random.String2(10) };
 
         // act
-        var response = await Id(token).Role.UpdateRole(role.Id, request, Result.New().Error("Failed to update role"));
+        var response = await Id(token)
+            .Role.UpdateRoleAsync(
+                role.Id,
+                request,
+                Result.New().Error("Failed to update role"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.OK);
@@ -235,15 +291,21 @@ public class RoleControllerTest : IntegrationTestBase
     public async Task AddClaimToRole_IncorrectPayload_BadRequest()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
-        var app = await Id(token).App.Register();
-        var role = await Id(token).Role.Register(app.Id);
-        var claim = await Id(token).Claim.Register(app.Id);
+        var token = await Id().RegisterLogUserInAsync();
+        var app = await Id(token).App.RegisterAsync();
+        var role = await Id(token).Role.RegisterAsync(app.Id);
+        var claim = await Id(token).Claim.RegisterAsync(app.Id);
         var request = new AddClaimToRoleRequest { Value = Faker.Random.String2(1) };
 
         // act
         var response = await Id(token)
-            .Role.AddClaimToRole(role.Id, claim.Id, request, Result.New().Error("Failed to add claim to role"));
+            .Role.AddClaimToRoleAsync(
+                role.Id,
+                claim.Id,
+                request,
+                Result.New().Error("Failed to add claim to role"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.BadRequest);
@@ -253,16 +315,17 @@ public class RoleControllerTest : IntegrationTestBase
     public async Task AddClaimToRole_MissingRole_NotFound()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
+        var token = await Id().RegisterLogUserInAsync();
         var request = new AddClaimToRoleRequest { Value = Faker.Random.String2(5) };
 
         // act
         var response = await Id(token)
-            .Role.AddClaimToRole(
+            .Role.AddClaimToRoleAsync(
                 Guid.NewGuid(),
                 Guid.NewGuid(),
                 request,
-                Result.New().Error("Failed to add claim to role")
+                Result.New().Error("Failed to add claim to role"),
+                TestContext.Current.CancellationToken
             );
 
         // assert
@@ -273,14 +336,20 @@ public class RoleControllerTest : IntegrationTestBase
     public async Task AddClaimToRole_MissingClaim_NotFound()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
-        var app = await Id(token).App.Register();
-        var role = await Id(token).Role.Register(app.Id);
+        var token = await Id().RegisterLogUserInAsync();
+        var app = await Id(token).App.RegisterAsync();
+        var role = await Id(token).Role.RegisterAsync(app.Id);
         var request = new AddClaimToRoleRequest { Value = Faker.Random.String2(5) };
 
         // act
         var response = await Id(token)
-            .Role.AddClaimToRole(role.Id, Guid.NewGuid(), request, Result.New().Error("Failed to add claim to role"));
+            .Role.AddClaimToRoleAsync(
+                role.Id,
+                Guid.NewGuid(),
+                request,
+                Result.New().Error("Failed to add claim to role"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -290,16 +359,22 @@ public class RoleControllerTest : IntegrationTestBase
     public async Task AddClaimToRole_NotOwner_Forbidden()
     {
         // arrange
-        var otherToken = await Id().RegisterLogUserIn();
-        var app = await Id(otherToken).App.Register();
-        var role = await Id(otherToken).Role.Register(app.Id);
-        var claim = await Id(otherToken).Claim.Register(app.Id);
-        var token = await Id().RegisterLogUserIn();
+        var otherToken = await Id().RegisterLogUserInAsync();
+        var app = await Id(otherToken).App.RegisterAsync();
+        var role = await Id(otherToken).Role.RegisterAsync(app.Id);
+        var claim = await Id(otherToken).Claim.RegisterAsync(app.Id);
+        var token = await Id().RegisterLogUserInAsync();
         var request = new AddClaimToRoleRequest { Value = Faker.Random.String2(5) };
 
         // act
         var response = await Id(token)
-            .Role.AddClaimToRole(role.Id, claim.Id, request, Result.New().Error("Failed to add claim to role"));
+            .Role.AddClaimToRoleAsync(
+                role.Id,
+                claim.Id,
+                request,
+                Result.New().Error("Failed to add claim to role"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -309,16 +384,22 @@ public class RoleControllerTest : IntegrationTestBase
     public async Task AddClaimToRole_ClaimBelongsOtherApp_Forbidden()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
-        var app1 = await Id(token).App.Register();
-        var app2 = await Id(token).App.Register();
-        var role = await Id(token).Role.Register(app2.Id);
-        var claim = await Id(token).Claim.Register(app1.Id);
+        var token = await Id().RegisterLogUserInAsync();
+        var app1 = await Id(token).App.RegisterAsync();
+        var app2 = await Id(token).App.RegisterAsync();
+        var role = await Id(token).Role.RegisterAsync(app2.Id);
+        var claim = await Id(token).Claim.RegisterAsync(app1.Id);
         var request = new AddClaimToRoleRequest { Value = Faker.Random.String2(5) };
 
         // act
         var response = await Id(token)
-            .Role.AddClaimToRole(role.Id, claim.Id, request, Result.New().Error("Failed to add claim to role"));
+            .Role.AddClaimToRoleAsync(
+                role.Id,
+                claim.Id,
+                request,
+                Result.New().Error("Failed to add claim to role"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -328,17 +409,21 @@ public class RoleControllerTest : IntegrationTestBase
     public async Task AddClaimToRole_Valid_Ok()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
-        var app = await Id(token).App.Register();
-        var role = await Id(token).Role.Register(app.Id);
-        var claim = await Id(token).Claim.Register(app.Id);
+        var token = await Id().RegisterLogUserInAsync();
+        var app = await Id(token).App.RegisterAsync();
+        var role = await Id(token).Role.RegisterAsync(app.Id);
+        var claim = await Id(token).Claim.RegisterAsync(app.Id);
         var claimValue = Faker.Random.String2(5);
 
         // act
-        var response = await Id(token).Role.AddClaimToRole(role.Id, claim.Id, claimValue);
+        var response = await Id(token).Role.AddClaimToRoleAsync(role.Id, claim.Id, claimValue);
         var roles = await Id(token)
-            .Role.ListRoles(app.Id, Result.New(Array.Empty<RoleResponse>()).Error("Failed to list roles"))
-            .GetData();
+            .Role.ListRolesAsync(
+                app.Id,
+                Result.New(Array.Empty<RoleResponse>()).Error("Failed to list roles"),
+                TestContext.Current.CancellationToken
+            )
+            .GetDataAsync();
 
         // assert
         response.StatusCode.Is(HttpStatusCode.OK);
@@ -358,14 +443,15 @@ public class RoleControllerTest : IntegrationTestBase
     public async Task DeleteClaimFromRole_MissingRole_NotFound()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
+        var token = await Id().RegisterLogUserInAsync();
 
         // act
         var response = await Id(token)
-            .Role.DeleteClaimFromRole(
+            .Role.DeleteClaimFromRoleAsync(
                 Guid.NewGuid(),
                 Guid.NewGuid(),
-                Result.New().Error("Failed to delete claim from role")
+                Result.New().Error("Failed to delete claim from role"),
+                TestContext.Current.CancellationToken
             );
 
         // assert
@@ -376,13 +462,18 @@ public class RoleControllerTest : IntegrationTestBase
     public async Task DeleteClaimFromRole_MissingClaim_NotFound()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
-        var app = await Id(token).App.Register();
-        var role = await Id(token).Role.Register(app.Id);
+        var token = await Id().RegisterLogUserInAsync();
+        var app = await Id(token).App.RegisterAsync();
+        var role = await Id(token).Role.RegisterAsync(app.Id);
 
         // act
         var response = await Id(token)
-            .Role.DeleteClaimFromRole(role.Id, Guid.NewGuid(), Result.New().Error("Failed to delete claim from role"));
+            .Role.DeleteClaimFromRoleAsync(
+                role.Id,
+                Guid.NewGuid(),
+                Result.New().Error("Failed to delete claim from role"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -392,15 +483,20 @@ public class RoleControllerTest : IntegrationTestBase
     public async Task DeleteClaimFromRole_NotOwner_Forbidden()
     {
         // arrange
-        var otherToken = await Id().RegisterLogUserIn();
-        var app = await Id(otherToken).App.Register();
-        var role = await Id(otherToken).Role.Register(app.Id);
-        var claim = await Id(otherToken).Claim.Register(app.Id);
-        var token = await Id().RegisterLogUserIn();
+        var otherToken = await Id().RegisterLogUserInAsync();
+        var app = await Id(otherToken).App.RegisterAsync();
+        var role = await Id(otherToken).Role.RegisterAsync(app.Id);
+        var claim = await Id(otherToken).Claim.RegisterAsync(app.Id);
+        var token = await Id().RegisterLogUserInAsync();
 
         // act
         var response = await Id(token)
-            .Role.DeleteClaimFromRole(role.Id, claim.Id, Result.New().Error("Failed to delete claim from role"));
+            .Role.DeleteClaimFromRoleAsync(
+                role.Id,
+                claim.Id,
+                Result.New().Error("Failed to delete claim from role"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -410,15 +506,20 @@ public class RoleControllerTest : IntegrationTestBase
     public async Task DeleteClaimFromRole_ClaimBelongsOtherApp_Forbidden()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
-        var app1 = await Id(token).App.Register();
-        var app2 = await Id(token).App.Register();
-        var role = await Id(token).Role.Register(app2.Id);
-        var claim = await Id(token).Claim.Register(app1.Id);
+        var token = await Id().RegisterLogUserInAsync();
+        var app1 = await Id(token).App.RegisterAsync();
+        var app2 = await Id(token).App.RegisterAsync();
+        var role = await Id(token).Role.RegisterAsync(app2.Id);
+        var claim = await Id(token).Claim.RegisterAsync(app1.Id);
 
         // act
         var response = await Id(token)
-            .Role.DeleteClaimFromRole(role.Id, claim.Id, Result.New().Error("Failed to delete claim from role"));
+            .Role.DeleteClaimFromRoleAsync(
+                role.Id,
+                claim.Id,
+                Result.New().Error("Failed to delete claim from role"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -428,14 +529,19 @@ public class RoleControllerTest : IntegrationTestBase
     public async Task DeleteClaimFromRole_Valid_Ok()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
-        var app = await Id(token).App.Register();
-        var role = await Id(token).Role.Register(app.Id);
-        var claim = await Id(token).Claim.Register(app.Id);
+        var token = await Id().RegisterLogUserInAsync();
+        var app = await Id(token).App.RegisterAsync();
+        var role = await Id(token).Role.RegisterAsync(app.Id);
+        var claim = await Id(token).Claim.RegisterAsync(app.Id);
 
         // act
         var response = await Id(token)
-            .Role.DeleteClaimFromRole(role.Id, claim.Id, Result.New().Error("Failed to delete claim from role"));
+            .Role.DeleteClaimFromRoleAsync(
+                role.Id,
+                claim.Id,
+                Result.New().Error("Failed to delete claim from role"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.OK);
@@ -445,10 +551,15 @@ public class RoleControllerTest : IntegrationTestBase
     public async Task Delete_MissingRole_NotFound()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
+        var token = await Id().RegisterLogUserInAsync();
 
         // act
-        var response = await Id(token).Role.DeleteRole(Guid.NewGuid(), Result.New().Error("Failed to delete role"));
+        var response = await Id(token)
+            .Role.DeleteRoleAsync(
+                Guid.NewGuid(),
+                Result.New().Error("Failed to delete role"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -458,13 +569,18 @@ public class RoleControllerTest : IntegrationTestBase
     public async Task Delete_NotOwner_Forbidden()
     {
         // arrange
-        var otherToken = await Id().RegisterLogUserIn();
-        var app = await Id(otherToken).App.Register();
-        var token = await Id().RegisterLogUserIn();
-        var role = await Id(otherToken).Role.Register(app.Id);
+        var otherToken = await Id().RegisterLogUserInAsync();
+        var app = await Id(otherToken).App.RegisterAsync();
+        var token = await Id().RegisterLogUserInAsync();
+        var role = await Id(otherToken).Role.RegisterAsync(app.Id);
 
         // act
-        var response = await Id(token).Role.DeleteRole(role.Id, Result.New().Error("Failed to delete role"));
+        var response = await Id(token)
+            .Role.DeleteRoleAsync(
+                role.Id,
+                Result.New().Error("Failed to delete role"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -474,12 +590,17 @@ public class RoleControllerTest : IntegrationTestBase
     public async Task Delete_Valid_Ok()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
-        var app = await Id(token).App.Register();
-        var role = await Id(token).Role.Register(app.Id);
+        var token = await Id().RegisterLogUserInAsync();
+        var app = await Id(token).App.RegisterAsync();
+        var role = await Id(token).Role.RegisterAsync(app.Id);
 
         // act
-        var response = await Id(token).Role.DeleteRole(role.Id, Result.New().Error("Failed to delete role"));
+        var response = await Id(token)
+            .Role.DeleteRoleAsync(
+                role.Id,
+                Result.New().Error("Failed to delete role"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.OK);

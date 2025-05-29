@@ -11,7 +11,6 @@ using Server.ViewModels.Requests.Apps;
 using Server.ViewModels.Responses.Apps;
 using Server.ViewModels.Responses.Me;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Server.IntegrationTests.Controllers;
 
@@ -24,11 +23,16 @@ public class AppControllerTest : IntegrationTestBase
     public async Task Create_InvalidPayload_BadRequest()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
+        var token = await Id().RegisterLogUserInAsync();
         var request = new CreateAppRequest { Name = Faker.Random.String2(1, 1) };
 
         // act
-        var response = await Id(token).App.CreateApp(request, Result.New(Guid.Empty).Error("Failed to create app"));
+        var response = await Id(token)
+            .App.CreateAppAsync(
+                request,
+                Result.New(Guid.Empty).Error("Failed to create app"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.BadRequest);
@@ -38,14 +42,18 @@ public class AppControllerTest : IntegrationTestBase
     public async Task Create_ValidPayload_Ok()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
+        var token = await Id().RegisterLogUserInAsync();
         var appName = Faker.Random.String2(10);
 
         // act
-        var app = await Id(token).App.Register(appName);
+        var app = await Id(token).App.RegisterAsync(appName);
         var apps = await Id(token)
-            .App.FindApps(appName, Result.New(Array.Empty<AppResponse>()).Error("Failed to find apps"))
-            .GetData();
+            .App.FindAppsAsync(
+                appName,
+                Result.New(Array.Empty<AppResponse>()).Error("Failed to find apps"),
+                TestContext.Current.CancellationToken
+            )
+            .GetDataAsync();
 
         // assert
         apps.Has(1);
@@ -57,11 +65,15 @@ public class AppControllerTest : IntegrationTestBase
     public async Task GetApiToken_Missing_NotFound()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
+        var token = await Id().RegisterLogUserInAsync();
 
         // act
         var response = await Id(token)
-            .App.GetAppApiToken(Guid.NewGuid(), Result.New(Guid.Empty).Error("Failed to get app API token"));
+            .App.GetAppApiTokenAsync(
+                Guid.NewGuid(),
+                Result.New(Guid.Empty).Error("Failed to get app API token"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -71,13 +83,17 @@ public class AppControllerTest : IntegrationTestBase
     public async Task GetApiToken_NotOwner_Forbidden()
     {
         // arrange
-        var otherToken = await Id().RegisterLogUserIn();
-        var app = await Id(otherToken).App.Register();
-        var token = await Id().RegisterLogUserIn();
+        var otherToken = await Id().RegisterLogUserInAsync();
+        var app = await Id(otherToken).App.RegisterAsync();
+        var token = await Id().RegisterLogUserInAsync();
 
         // act
         var response = await Id(token)
-            .App.GetAppApiToken(app.Id, Result.New(Guid.Empty).Error("Failed to get app API token"));
+            .App.GetAppApiTokenAsync(
+                app.Id,
+                Result.New(Guid.Empty).Error("Failed to get app API token"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -87,13 +103,17 @@ public class AppControllerTest : IntegrationTestBase
     public async Task GetApiToken_Valid_Ok()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
-        var app = await Id(token).App.Register();
+        var token = await Id().RegisterLogUserInAsync();
+        var app = await Id(token).App.RegisterAsync();
 
         // act
         var response = await Id(token)
-            .App.GetAppApiToken(app.Id, Result.New(Guid.Empty).Error("Failed to get app API token"))
-            .GetData();
+            .App.GetAppApiTokenAsync(
+                app.Id,
+                Result.New(Guid.Empty).Error("Failed to get app API token"),
+                TestContext.Current.CancellationToken
+            )
+            .GetDataAsync();
 
         // assert
         response.IsNotDefault();
@@ -103,11 +123,15 @@ public class AppControllerTest : IntegrationTestBase
     public async Task UpdateApiToken_Missing_NotFound()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
+        var token = await Id().RegisterLogUserInAsync();
 
         // act
         var response = await Id(token)
-            .App.UpdateAppApiToken(Guid.NewGuid(), Result.New(Guid.Empty).Error("Failed to update app API token"));
+            .App.UpdateAppApiTokenAsync(
+                Guid.NewGuid(),
+                Result.New(Guid.Empty).Error("Failed to update app API token"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -117,13 +141,17 @@ public class AppControllerTest : IntegrationTestBase
     public async Task UpdateApiToken_NotOwner_Forbidden()
     {
         // arrange
-        var otherToken = await Id().RegisterLogUserIn();
-        var app = await Id(otherToken).App.Register();
-        var token = await Id().RegisterLogUserIn();
+        var otherToken = await Id().RegisterLogUserInAsync();
+        var app = await Id(otherToken).App.RegisterAsync();
+        var token = await Id().RegisterLogUserInAsync();
 
         // act
         var response = await Id(token)
-            .App.UpdateAppApiToken(app.Id, Result.New(Guid.Empty).Error("Failed to update app API token"));
+            .App.UpdateAppApiTokenAsync(
+                app.Id,
+                Result.New(Guid.Empty).Error("Failed to update app API token"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -133,12 +161,16 @@ public class AppControllerTest : IntegrationTestBase
     public async Task UpdateApiToken_Valid_Ok()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
-        var app = await Id(token).App.Register();
+        var token = await Id().RegisterLogUserInAsync();
+        var app = await Id(token).App.RegisterAsync();
 
         // act
         var response = await Id(token)
-            .App.UpdateAppApiToken(app.Id, Result.New(Guid.Empty).Error("Failed to update app API token"));
+            .App.UpdateAppApiTokenAsync(
+                app.Id,
+                Result.New(Guid.Empty).Error("Failed to update app API token"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.Data.Data.IsNotDefault();
@@ -148,12 +180,16 @@ public class AppControllerTest : IntegrationTestBase
     public async Task Find_All_Ok()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
+        var token = await Id().RegisterLogUserInAsync();
 
         // act
         var response = await Id(token)
-            .App.FindApps(string.Empty, Result.New(Array.Empty<AppResponse>()).Error("Failed to find apps"))
-            .GetData();
+            .App.FindAppsAsync(
+                string.Empty,
+                Result.New(Array.Empty<AppResponse>()).Error("Failed to find apps"),
+                TestContext.Current.CancellationToken
+            )
+            .GetDataAsync();
 
         // assert
         response.IsNotEmpty();
@@ -164,13 +200,17 @@ public class AppControllerTest : IntegrationTestBase
     public async Task Find_Query_Ok()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
-        var app = await Id(token).App.Register();
+        var token = await Id().RegisterLogUserInAsync();
+        var app = await Id(token).App.RegisterAsync();
 
         // act
         var response = await Id(token)
-            .App.FindApps(app.Name, Result.New(Array.Empty<AppResponse>()).Error("Failed to find apps"))
-            .GetData();
+            .App.FindAppsAsync(
+                app.Name,
+                Result.New(Array.Empty<AppResponse>()).Error("Failed to find apps"),
+                TestContext.Current.CancellationToken
+            )
+            .GetDataAsync();
 
         // assert
         response.IsShallowEqual(new[] { app });
@@ -180,13 +220,16 @@ public class AppControllerTest : IntegrationTestBase
     public async Task ListMy_Ok()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
-        var app = await Id(token).App.Register();
+        var token = await Id().RegisterLogUserInAsync();
+        var app = await Id(token).App.RegisterAsync();
 
         // act
         var response = await Id(token)
-            .App.ListMyApps(Result.New(Array.Empty<AppResponse>()).Error("Failed to list my apps"))
-            .GetData();
+            .App.ListMyAppsAsync(
+                Result.New(Array.Empty<AppResponse>()).Error("Failed to list my apps"),
+                TestContext.Current.CancellationToken
+            )
+            .GetDataAsync();
 
         // assert
         response.IsShallowEqual(new[] { app });
@@ -196,13 +239,17 @@ public class AppControllerTest : IntegrationTestBase
     public async Task Get_Ok()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
-        var app = await Id(token).App.Register();
+        var token = await Id().RegisterLogUserInAsync();
+        var app = await Id(token).App.RegisterAsync();
 
         // act
         var response = await Id(token)
-            .App.GetApp(app.Id, Result.New(new AppResponse()).Error("Failed to get app"))
-            .GetData();
+            .App.GetAppAsync(
+                app.Id,
+                Result.New(new AppResponse()).Error("Failed to get app"),
+                TestContext.Current.CancellationToken
+            )
+            .GetDataAsync();
 
         // assert
         response.IsShallowEqual(app);
@@ -212,12 +259,18 @@ public class AppControllerTest : IntegrationTestBase
     public async Task Update_IncorrectPayload_BadRequest()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
-        var app = await Id(token).App.Register();
+        var token = await Id().RegisterLogUserInAsync();
+        var app = await Id(token).App.RegisterAsync();
         var request = new UpdateAppRequestBody { Name = Faker.Random.String2(1, 1) };
 
         // act
-        var response = await Id(token).App.UpdateApp(app.Id, request, Result.New().Error("Failed to update app"));
+        var response = await Id(token)
+            .App.UpdateAppAsync(
+                app.Id,
+                request,
+                Result.New().Error("Failed to update app"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.BadRequest);
@@ -227,12 +280,17 @@ public class AppControllerTest : IntegrationTestBase
     public async Task Update_Missing_NotFound()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
+        var token = await Id().RegisterLogUserInAsync();
         var request = new UpdateAppRequestBody { Name = Faker.Random.String2(10) };
 
         // act
         var response = await Id(token)
-            .App.UpdateApp(Guid.NewGuid(), request, Result.New().Error("Failed to update app"));
+            .App.UpdateAppAsync(
+                Guid.NewGuid(),
+                request,
+                Result.New().Error("Failed to update app"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -242,13 +300,19 @@ public class AppControllerTest : IntegrationTestBase
     public async Task Update_NotOwner_Forbidden()
     {
         // arrange
-        var otherToken = await Id().RegisterLogUserIn();
-        var app = await Id(otherToken).App.Register();
-        var token = await Id().RegisterLogUserIn();
+        var otherToken = await Id().RegisterLogUserInAsync();
+        var app = await Id(otherToken).App.RegisterAsync();
+        var token = await Id().RegisterLogUserInAsync();
         var request = new UpdateAppRequestBody { Name = Faker.Random.String2(10) };
 
         // act
-        var response = await Id(token).App.UpdateApp(app.Id, request, Result.New().Error("Failed to update app"));
+        var response = await Id(token)
+            .App.UpdateAppAsync(
+                app.Id,
+                request,
+                Result.New().Error("Failed to update app"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -258,15 +322,25 @@ public class AppControllerTest : IntegrationTestBase
     public async Task Update_Valid_Ok()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
-        var app = await Id(token).App.Register();
+        var token = await Id().RegisterLogUserInAsync();
+        var app = await Id(token).App.RegisterAsync();
         var request = new UpdateAppRequestBody { Name = Faker.Random.String2(10) };
 
         // act
-        var response = await Id(token).App.UpdateApp(app.Id, request, Result.New().Error("Failed to update app"));
+        var response = await Id(token)
+            .App.UpdateAppAsync(
+                app.Id,
+                request,
+                Result.New().Error("Failed to update app"),
+                TestContext.Current.CancellationToken
+            );
         var result = await Id(token)
-            .App.GetApp(app.Id, Result.New(new AppResponse()).Error("Failed to get app"))
-            .GetData();
+            .App.GetAppAsync(
+                app.Id,
+                Result.New(new AppResponse()).Error("Failed to get app"),
+                TestContext.Current.CancellationToken
+            )
+            .GetDataAsync();
 
         // assert
         response.StatusCode.Is(HttpStatusCode.OK);
@@ -278,11 +352,16 @@ public class AppControllerTest : IntegrationTestBase
     public async Task SetOwner_MissingApp_NotFound()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
+        var token = await Id().RegisterLogUserInAsync();
 
         // act
         var response = await Id(token)
-            .App.SetAppOwner(Guid.NewGuid(), Guid.NewGuid(), Result.New().Error("Failed to set app owner"));
+            .App.SetAppOwnerAsync(
+                Guid.NewGuid(),
+                Guid.NewGuid(),
+                Result.New().Error("Failed to set app owner"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -292,15 +371,24 @@ public class AppControllerTest : IntegrationTestBase
     public async Task SetOwner_NotOwner_Forbidden()
     {
         // arrange
-        var otherToken = await Id().RegisterLogUserIn();
-        var app = await Id(otherToken).App.Register();
-        var token = await Id().RegisterLogUserIn();
+        var otherToken = await Id().RegisterLogUserInAsync();
+        var app = await Id(otherToken).App.RegisterAsync();
+        var token = await Id().RegisterLogUserInAsync();
         var me = await Id(token)
-            .Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
-            .GetData();
+            .Me.GetMeAsync(
+                Result.New(new MeResponse()).Error("Failed to load personal information"),
+                TestContext.Current.CancellationToken
+            )
+            .GetDataAsync();
 
         // act
-        var response = await Id(token).App.SetAppOwner(app.Id, me.Id, Result.New().Error("Failed to set app owner"));
+        var response = await Id(token)
+            .App.SetAppOwnerAsync(
+                app.Id,
+                me.Id,
+                Result.New().Error("Failed to set app owner"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -310,12 +398,17 @@ public class AppControllerTest : IntegrationTestBase
     public async Task SetOwner_MissingSuccessor_NotFound()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
-        var app = await Id(token).App.Register();
+        var token = await Id().RegisterLogUserInAsync();
+        var app = await Id(token).App.RegisterAsync();
 
         // act
         var response = await Id(token)
-            .App.SetAppOwner(app.Id, Guid.NewGuid(), Result.New().Error("Failed to set app owner"));
+            .App.SetAppOwnerAsync(
+                app.Id,
+                Guid.NewGuid(),
+                Result.New().Error("Failed to set app owner"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -325,18 +418,31 @@ public class AppControllerTest : IntegrationTestBase
     public async Task SetOwner_Valid_Ok()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
-        var app = await Id(token).App.Register();
-        var otherToken = await Id().RegisterLogUserIn();
+        var token = await Id().RegisterLogUserInAsync();
+        var app = await Id(token).App.RegisterAsync();
+        var otherToken = await Id().RegisterLogUserInAsync();
         var user = await Id(otherToken)
-            .Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
-            .GetData();
+            .Me.GetMeAsync(
+                Result.New(new MeResponse()).Error("Failed to load personal information"),
+                TestContext.Current.CancellationToken
+            )
+            .GetDataAsync();
 
         // act
-        var response = await Id(token).App.SetAppOwner(app.Id, user.Id, Result.New().Error("Failed to set app owner"));
+        var response = await Id(token)
+            .App.SetAppOwnerAsync(
+                app.Id,
+                user.Id,
+                Result.New().Error("Failed to set app owner"),
+                TestContext.Current.CancellationToken
+            );
         var appTokenResult = await Id(otherToken)
-            .App.GetAppApiToken(app.Id, Result.New(Guid.Empty).Error("Failed to get app API token"))
-            .GetResult();
+            .App.GetAppApiTokenAsync(
+                app.Id,
+                Result.New(Guid.Empty).Error("Failed to get app API token"),
+                TestContext.Current.CancellationToken
+            )
+            .GetResultAsync();
 
         // assert
         response.StatusCode.Is(HttpStatusCode.OK);
@@ -348,10 +454,15 @@ public class AppControllerTest : IntegrationTestBase
     public async Task Delete_MissingApp_NotFound()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
+        var token = await Id().RegisterLogUserInAsync();
 
         // act
-        var response = await Id(token).App.DeleteApp(Guid.NewGuid(), Result.New().Error("Failed to delete app"));
+        var response = await Id(token)
+            .App.DeleteAppAsync(
+                Guid.NewGuid(),
+                Result.New().Error("Failed to delete app"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -361,12 +472,17 @@ public class AppControllerTest : IntegrationTestBase
     public async Task Delete_NotOwner_Forbidden()
     {
         // arrange
-        var otherToken = await Id().RegisterLogUserIn();
-        var app = await Id(otherToken).App.Register();
-        var token = await Id().RegisterLogUserIn();
+        var otherToken = await Id().RegisterLogUserInAsync();
+        var app = await Id(otherToken).App.RegisterAsync();
+        var token = await Id().RegisterLogUserInAsync();
 
         // act
-        var response = await Id(token).App.DeleteApp(app.Id, Result.New().Error("Failed to delete app"));
+        var response = await Id(token)
+            .App.DeleteAppAsync(
+                app.Id,
+                Result.New().Error("Failed to delete app"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -376,11 +492,16 @@ public class AppControllerTest : IntegrationTestBase
     public async Task Delete_Valid_Ok()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
-        var app = await Id(token).App.Register();
+        var token = await Id().RegisterLogUserInAsync();
+        var app = await Id(token).App.RegisterAsync();
 
         // act
-        var response = await Id(token).App.DeleteApp(app.Id, Result.New().Error("Failed to delete app"));
+        var response = await Id(token)
+            .App.DeleteAppAsync(
+                app.Id,
+                Result.New().Error("Failed to delete app"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.OK);

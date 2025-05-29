@@ -17,7 +17,7 @@ public class TestServicePack : ServicePackBase
                 new Configuration
                 {
                     PrivateKeyFile = Path.Combine("keys", "private.key"),
-                    PublicKeyFile = Path.Combine("keys", "public.key")
+                    PublicKeyFile = Path.Combine("keys", "public.key"),
                 }
             )
             .AsSelf()

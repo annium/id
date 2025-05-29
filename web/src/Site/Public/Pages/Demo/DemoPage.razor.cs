@@ -14,8 +14,8 @@ public partial class DemoPage
             new Blog
             {
                 Name = "Demo",
-                Author = new User { Name = "", },
-                Messages = new List<Message> { new() { Text = "Hi" } }
+                Author = new User { Name = "" },
+                Messages = new List<Message> { new() { Text = "Hi" } },
             }
         );
         ObserveStates();

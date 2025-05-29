@@ -19,14 +19,14 @@ public class ClaimController : ServerController
 
     [HttpPost]
     [Authorize]
-    public Task<IResult<Guid>> CreateClaim([FromBody] CreateClaimRequest request)
+    public Task<IResult<Guid>> CreateClaimAsync([FromBody] CreateClaimRequest request)
     {
         return HandleAsync<CreateClaimRequest, Guid>(request);
     }
 
     [HttpGet]
     [Authorize]
-    public Task<IResult<IEnumerable<ClaimResponse>>> ListClaims(Guid appId)
+    public Task<IResult<IEnumerable<ClaimResponse>>> ListClaimsAsync(Guid appId)
     {
         var request = new ListClaimsRequest { AppId = appId };
 
@@ -35,13 +35,13 @@ public class ClaimController : ServerController
 
     [HttpPut("{claimId:guid}")]
     [Authorize]
-    public Task<IResult> UpdateClaim(Guid claimId, [FromBody] UpdateClaimRequestBody requestBody)
+    public Task<IResult> UpdateClaimAsync(Guid claimId, [FromBody] UpdateClaimRequestBody requestBody)
     {
         var request = new UpdateClaimRequest
         {
             ClaimId = claimId,
             Key = requestBody.Key,
-            Name = requestBody.Name
+            Name = requestBody.Name,
         };
 
         return HandleAsync(request);
@@ -49,7 +49,7 @@ public class ClaimController : ServerController
 
     [HttpDelete("{claimId:guid}")]
     [Authorize]
-    public Task<IResult> DeleteClaim(Guid claimId)
+    public Task<IResult> DeleteClaimAsync(Guid claimId)
     {
         var request = new DeleteClaimRequest { ClaimId = claimId };
 

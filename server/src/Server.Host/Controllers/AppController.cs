@@ -19,14 +19,14 @@ public class AppController : ServerController
 
     [HttpPost]
     [Authorize]
-    public Task<IResult<Guid>> CreateApp([FromBody] CreateAppRequest request)
+    public Task<IResult<Guid>> CreateAppAsync([FromBody] CreateAppRequest request)
     {
         return HandleAsync<CreateAppRequest, Guid>(request);
     }
 
     [HttpGet]
     [Authorize]
-    public Task<IResult<IEnumerable<AppResponse>>> FindApps(string query = "")
+    public Task<IResult<IEnumerable<AppResponse>>> FindAppsAsync(string query = "")
     {
         var request = new FindAppsRequest { Query = query };
 
@@ -35,14 +35,14 @@ public class AppController : ServerController
 
     [HttpGet("my")]
     [Authorize]
-    public Task<IResult<IEnumerable<AppResponse>>> ListMyApps()
+    public Task<IResult<IEnumerable<AppResponse>>> ListMyAppsAsync()
     {
         return HandleAsync<ListMyAppsRequest, IEnumerable<AppResponse>>(new ListMyAppsRequest());
     }
 
     [HttpGet("{appId:guid}")]
     [Authorize]
-    public Task<IResult<AppResponse>> GetApp(Guid appId)
+    public Task<IResult<AppResponse>> GetAppAsync(Guid appId)
     {
         var request = new GetAppRequest { AppId = appId };
 
@@ -51,7 +51,7 @@ public class AppController : ServerController
 
     [HttpGet("{appId:guid}/token")]
     [Authorize]
-    public Task<IResult<Guid>> GetAppApiToken(Guid appId)
+    public Task<IResult<Guid>> GetAppApiTokenAsync(Guid appId)
     {
         var request = new GetAppApiTokenRequest { AppId = appId };
 
@@ -60,7 +60,7 @@ public class AppController : ServerController
 
     [HttpPut("{appId:guid}")]
     [Authorize]
-    public Task<IResult> UpdateApp(Guid appId, [FromBody] UpdateAppRequestBody requestBody)
+    public Task<IResult> UpdateAppAsync(Guid appId, [FromBody] UpdateAppRequestBody requestBody)
     {
         var request = new UpdateAppRequest { AppId = appId, Name = requestBody.Name };
 
@@ -69,7 +69,7 @@ public class AppController : ServerController
 
     [HttpPut("{appId:guid}/owner/{newOwnerId:guid}")]
     [Authorize]
-    public Task<IResult> SetAppOwner(Guid appId, Guid newOwnerId)
+    public Task<IResult> SetAppOwnerAsync(Guid appId, Guid newOwnerId)
     {
         var request = new SetAppOwnerRequest { AppId = appId, NewOwnerId = newOwnerId };
 
@@ -78,7 +78,7 @@ public class AppController : ServerController
 
     [HttpPut("{appId:guid}/token")]
     [Authorize]
-    public Task<IResult<Guid>> UpdateAppApiToken(Guid appId)
+    public Task<IResult<Guid>> UpdateAppApiTokenAsync(Guid appId)
     {
         var request = new UpdateAppApiTokenRequest { AppId = appId };
 
@@ -87,7 +87,7 @@ public class AppController : ServerController
 
     [HttpDelete("{appId:guid}")]
     [Authorize]
-    public Task<IResult> DeleteApp(Guid appId)
+    public Task<IResult> DeleteAppAsync(Guid appId)
     {
         var request = new DeleteAppRequest { AppId = appId };
 

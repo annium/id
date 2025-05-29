@@ -37,7 +37,7 @@ internal class TokenGenerator : ITokenGenerator
         _tokenWriter = tokenWriter;
     }
 
-    public async Task<IdToken> GenerateToken(UserLogin login)
+    public async Task<IdToken> GenerateTokenAsync(UserLogin login)
     {
         var app = await _appRepository.GetByIdAsync(login.AppId);
 
@@ -70,9 +70,9 @@ internal class TokenGenerator : ITokenGenerator
         return token;
     }
 
-    public async Task<string> GenerateTokenString(UserLogin login)
+    public async Task<string> GenerateTokenStringAsync(UserLogin login)
     {
-        var token = await GenerateToken(login);
+        var token = await GenerateTokenAsync(login);
 
         return _tokenWriter.WriteToken(token);
     }

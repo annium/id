@@ -16,7 +16,7 @@ public class CompanyUserClient
         _request = request;
     }
 
-    public async Task<IHttpResponse<IResult>> AddUserToCompany(
+    public async Task<IHttpResponse<IResult>> AddUserToCompanyAsync(
         Guid companyId,
         Guid userId,
         IResult defaultValue,
@@ -26,7 +26,7 @@ public class CompanyUserClient
         return await _request.Post($"companies/{companyId}/users/{userId}").AsResponseAsync(defaultValue, ct);
     }
 
-    public async Task<IHttpResponse<IResult>> AddCompanyRoleToCompanyUser(
+    public async Task<IHttpResponse<IResult>> AddCompanyRoleToCompanyUserAsync(
         Guid companyId,
         Guid userId,
         Guid roleId,
@@ -39,7 +39,7 @@ public class CompanyUserClient
             .AsResponseAsync(defaultValue, ct);
     }
 
-    public async Task<IHttpResponse<IResult>> DeleteCompanyRoleFromCompanyUser(
+    public async Task<IHttpResponse<IResult>> DeleteCompanyRoleFromCompanyUserAsync(
         Guid companyId,
         Guid userId,
         Guid roleId,
@@ -52,7 +52,7 @@ public class CompanyUserClient
             .AsResponseAsync(defaultValue, ct);
     }
 
-    public async Task<IHttpResponse<IResult>> AddCompanyClaimToCompanyUser(
+    public async Task<IHttpResponse<IResult>> AddCompanyClaimToCompanyUserAsync(
         Guid companyId,
         Guid userId,
         Guid claimId,
@@ -67,7 +67,7 @@ public class CompanyUserClient
             .AsResponseAsync(defaultValue, ct);
     }
 
-    public async Task<IHttpResponse<IResult>> DeleteCompanyClaimFromCompanyUser(
+    public async Task<IHttpResponse<IResult>> DeleteCompanyClaimFromCompanyUserAsync(
         Guid companyId,
         Guid userId,
         Guid claimId,
@@ -80,7 +80,7 @@ public class CompanyUserClient
             .AsResponseAsync(defaultValue, ct);
     }
 
-    public async Task<IHttpResponse<IResult>> DeleteUserFromCompany(
+    public async Task<IHttpResponse<IResult>> DeleteUserFromCompanyAsync(
         Guid companyId,
         Guid userId,
         IResult defaultValue,

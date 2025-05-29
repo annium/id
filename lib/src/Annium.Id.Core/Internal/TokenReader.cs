@@ -51,20 +51,24 @@ internal class TokenReader : ITokenReader, ILogSubject
             exception =>
                 exception switch
                 {
-                    SecurityTokenDecompressionFailedException _ => FromFailure(result),
-                    SecurityTokenEncryptionKeyNotFoundException _
-                        => FromFailureWithLog(result, "Token encryption key not found"),
-                    SecurityTokenDecryptionFailedException _ => FromFailure(result),
-                    SecurityTokenNoExpirationException _ => FromFailure(result),
-                    SecurityTokenExpiredException _ => FromFailure(result),
-                    SecurityTokenNotYetValidException _ => FromFailure(result),
-                    SecurityTokenInvalidLifetimeException _ => FromFailure(result),
-                    SecurityTokenInvalidAudienceException _ => FromFailure(result),
-                    SecurityTokenInvalidIssuerException _ => FromFailure(result),
-                    SecurityTokenSignatureKeyNotFoundException _
-                        => FromFailureWithLog(result, "Token signature key not found"),
-                    SecurityTokenInvalidSignatureException _ => FromFailure(result),
-                    _ => FromFailureWithLog(result, $"Token validation failed: {exception}")
+                    SecurityTokenDecompressionFailedException => FromFailure(result),
+                    SecurityTokenEncryptionKeyNotFoundException => FromFailureWithLog(
+                        result,
+                        "Token encryption key not found"
+                    ),
+                    SecurityTokenDecryptionFailedException => FromFailure(result),
+                    SecurityTokenNoExpirationException => FromFailure(result),
+                    SecurityTokenExpiredException => FromFailure(result),
+                    SecurityTokenNotYetValidException => FromFailure(result),
+                    SecurityTokenInvalidLifetimeException => FromFailure(result),
+                    SecurityTokenInvalidAudienceException => FromFailure(result),
+                    SecurityTokenInvalidIssuerException => FromFailure(result),
+                    SecurityTokenSignatureKeyNotFoundException => FromFailureWithLog(
+                        result,
+                        "Token signature key not found"
+                    ),
+                    SecurityTokenInvalidSignatureException => FromFailure(result),
+                    _ => FromFailureWithLog(result, $"Token validation failed: {exception}"),
                 }
         );
     }

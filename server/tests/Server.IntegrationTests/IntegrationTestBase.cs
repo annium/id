@@ -12,7 +12,6 @@ using Server.DemoHost.TestClient.Clients;
 using Server.Host;
 using Server.Host.TestClient.Clients;
 using Xunit;
-using Xunit.Abstractions;
 using Database = Server.IntegrationTests.Fixtures.Database;
 using ServicePack = Server.DemoHost.ServicePack;
 
@@ -25,12 +24,12 @@ public class IntegrationTestBase : IntegrationTest, IAsyncLifetime
     public IntegrationTestBase(ITestOutputHelper outputHelper)
         : base(outputHelper) { }
 
-    public async Task InitializeAsync()
+    public async ValueTask InitializeAsync()
     {
         await Database.AcquireAsync();
     }
 
-    public new async Task DisposeAsync()
+    public new async ValueTask DisposeAsync()
     {
         await base.DisposeAsync();
     }

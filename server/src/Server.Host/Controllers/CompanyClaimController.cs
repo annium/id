@@ -19,14 +19,14 @@ public class CompanyClaimController : ServerController
 
     [HttpPost]
     [Authorize]
-    public Task<IResult<Guid>> CreateCompanyClaim([FromBody] CreateCompanyClaimRequest request)
+    public Task<IResult<Guid>> CreateCompanyClaimAsync([FromBody] CreateCompanyClaimRequest request)
     {
         return HandleAsync<CreateCompanyClaimRequest, Guid>(request);
     }
 
     [HttpGet]
     [Authorize]
-    public Task<IResult<IEnumerable<CompanyClaimResponse>>> ListCompanyClaims(Guid appId)
+    public Task<IResult<IEnumerable<CompanyClaimResponse>>> ListCompanyClaimsAsync(Guid appId)
     {
         var request = new ListCompanyClaimsRequest { AppId = appId };
 
@@ -35,13 +35,13 @@ public class CompanyClaimController : ServerController
 
     [HttpPut("{claimId:guid}")]
     [Authorize]
-    public Task<IResult> UpdateCompanyClaim(Guid claimId, [FromBody] UpdateCompanyClaimRequestBody requestBody)
+    public Task<IResult> UpdateCompanyClaimAsync(Guid claimId, [FromBody] UpdateCompanyClaimRequestBody requestBody)
     {
         var request = new UpdateCompanyClaimRequest
         {
             ClaimId = claimId,
             Key = requestBody.Key,
-            Name = requestBody.Name
+            Name = requestBody.Name,
         };
 
         return HandleAsync(request);
@@ -49,7 +49,7 @@ public class CompanyClaimController : ServerController
 
     [HttpDelete("{claimId:guid}")]
     [Authorize]
-    public Task<IResult> DeleteCompanyClaim(Guid claimId)
+    public Task<IResult> DeleteCompanyClaimAsync(Guid claimId)
     {
         var request = new DeleteCompanyClaimRequest { ClaimId = claimId };
 

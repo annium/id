@@ -17,7 +17,7 @@ public class CompanyRoleClient
         _request = request;
     }
 
-    public async Task<IResult<Guid>> CreateRole(
+    public async Task<IResult<Guid>> CreateRoleAsync(
         CreateCompanyRoleRequest body,
         IResult<Guid> defaultValue,
         CancellationToken ct = default
@@ -26,7 +26,7 @@ public class CompanyRoleClient
         return await _request.Post("companies/roles").JsonContent(body).AsAsync(defaultValue, ct);
     }
 
-    public async Task<IResult<CompanyRoleResponse[]>> ListRoles(
+    public async Task<IResult<CompanyRoleResponse[]>> ListRolesAsync(
         Guid appId,
         IResult<CompanyRoleResponse[]> defaultValue,
         CancellationToken ct = default
@@ -35,7 +35,7 @@ public class CompanyRoleClient
         return await _request.Get("companies/roles").Param("appId", appId).AsAsync(defaultValue, ct);
     }
 
-    public async Task<IResult> UpdateRole(
+    public async Task<IResult> UpdateRoleAsync(
         Guid roleId,
         UpdateCompanyRoleRequestBody body,
         IResult defaultValue,
@@ -45,7 +45,7 @@ public class CompanyRoleClient
         return await _request.Put($"companies/roles/{roleId}").JsonContent(body).AsAsync(defaultValue, ct);
     }
 
-    public async Task<IResult> AddClaimToRole(
+    public async Task<IResult> AddClaimToRoleAsync(
         Guid roleId,
         Guid claimId,
         AddCompanyClaimToCompanyRoleRequestBody body,
@@ -59,7 +59,7 @@ public class CompanyRoleClient
             .AsAsync(defaultValue, ct);
     }
 
-    public async Task<IResult> DeleteClaimFromRole(
+    public async Task<IResult> DeleteClaimFromRoleAsync(
         Guid roleId,
         Guid claimId,
         IResult defaultValue,
@@ -69,7 +69,7 @@ public class CompanyRoleClient
         return await _request.Delete($"companies/roles/{roleId}/claims/{claimId}").AsAsync(defaultValue, ct);
     }
 
-    public async Task<IResult> DeleteRole(Guid roleId, IResult defaultValue, CancellationToken ct = default)
+    public async Task<IResult> DeleteRoleAsync(Guid roleId, IResult defaultValue, CancellationToken ct = default)
     {
         return await _request.Delete($"companies/roles/{roleId}").AsAsync(defaultValue, ct);
     }

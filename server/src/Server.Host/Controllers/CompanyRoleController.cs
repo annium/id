@@ -19,14 +19,14 @@ public class CompanyRoleController : ServerController
 
     [HttpPost]
     [Authorize]
-    public Task<IResult<Guid>> CreateRole([FromBody] CreateCompanyRoleRequest request)
+    public Task<IResult<Guid>> CreateRoleAsync([FromBody] CreateCompanyRoleRequest request)
     {
         return HandleAsync<CreateCompanyRoleRequest, Guid>(request);
     }
 
     [HttpGet]
     [Authorize]
-    public Task<IResult<IEnumerable<CompanyRoleResponse>>> ListRoles(Guid appId)
+    public Task<IResult<IEnumerable<CompanyRoleResponse>>> ListRolesAsync(Guid appId)
     {
         var request = new ListCompanyRolesRequest { AppId = appId };
 
@@ -35,13 +35,13 @@ public class CompanyRoleController : ServerController
 
     [HttpPut("{roleId:guid}")]
     [Authorize]
-    public Task<IResult> UpdateRole(Guid roleId, [FromBody] UpdateCompanyRoleRequestBody requestBody)
+    public Task<IResult> UpdateRoleAsync(Guid roleId, [FromBody] UpdateCompanyRoleRequestBody requestBody)
     {
         var request = new UpdateCompanyRoleRequest
         {
             RoleId = roleId,
             Key = requestBody.Key,
-            Name = requestBody.Name
+            Name = requestBody.Name,
         };
 
         return HandleAsync(request);
@@ -49,7 +49,7 @@ public class CompanyRoleController : ServerController
 
     [HttpPost("{roleId:guid}/claims/{claimId:guid}")]
     [Authorize]
-    public Task<IResult> AddClaimToRole(
+    public Task<IResult> AddClaimToRoleAsync(
         Guid roleId,
         Guid claimId,
         [FromBody] AddCompanyClaimToCompanyRoleRequestBody requestBody
@@ -59,7 +59,7 @@ public class CompanyRoleController : ServerController
         {
             RoleId = roleId,
             ClaimId = claimId,
-            Value = requestBody.Value
+            Value = requestBody.Value,
         };
 
         return HandleAsync(request);
@@ -67,7 +67,7 @@ public class CompanyRoleController : ServerController
 
     [HttpDelete("{roleId:guid}/claims/{claimId:guid}")]
     [Authorize]
-    public Task<IResult> DeleteClaimFromRole(Guid roleId, Guid claimId)
+    public Task<IResult> DeleteClaimFromRoleAsync(Guid roleId, Guid claimId)
     {
         var request = new DeleteCompanyClaimFromCompanyRoleRequest { RoleId = roleId, ClaimId = claimId };
 
@@ -76,7 +76,7 @@ public class CompanyRoleController : ServerController
 
     [HttpDelete("{roleId:guid}")]
     [Authorize]
-    public Task<IResult> DeleteRole(Guid roleId)
+    public Task<IResult> DeleteRoleAsync(Guid roleId)
     {
         var request = new DeleteCompanyRoleRequest { RoleId = roleId };
 

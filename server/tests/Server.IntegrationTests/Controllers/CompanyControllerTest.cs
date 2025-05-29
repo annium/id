@@ -11,7 +11,6 @@ using Server.ViewModels.Responses.Companies;
 using Server.ViewModels.Responses.Me;
 using Server.ViewModels.Responses.Users;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Server.IntegrationTests.Controllers;
 
@@ -24,12 +23,16 @@ public class CompanyControllerTest : IntegrationTestBase
     public async Task Create_InvalidPayload_BadRequest()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
+        var token = await Id().RegisterLogUserInAsync();
         var request = new RegisterCompanyRequest { Name = Faker.Random.String2(2) };
 
         // act
         var response = await Id(token)
-            .Company.RegisterCompany(request, Result.New(Guid.Empty).Error("Failed to register company"));
+            .Company.RegisterCompanyAsync(
+                request,
+                Result.New(Guid.Empty).Error("Failed to register company"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.BadRequest);
@@ -39,12 +42,16 @@ public class CompanyControllerTest : IntegrationTestBase
     public async Task Create_MissingParent_NotFound()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
+        var token = await Id().RegisterLogUserInAsync();
         var request = new RegisterCompanyRequest { ParentId = Guid.NewGuid(), Name = Faker.Random.String2(10) };
 
         // act
         var response = await Id(token)
-            .Company.RegisterCompany(request, Result.New(Guid.Empty).Error("Failed to register company"));
+            .Company.RegisterCompanyAsync(
+                request,
+                Result.New(Guid.Empty).Error("Failed to register company"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -54,14 +61,18 @@ public class CompanyControllerTest : IntegrationTestBase
     public async Task Create_NonParentOwner_Forbidden()
     {
         // arrange
-        var otherToken = await Id().RegisterLogUserIn();
-        var parent = await Id(otherToken).Company.Register();
-        var token = await Id().RegisterLogUserIn();
+        var otherToken = await Id().RegisterLogUserInAsync();
+        var parent = await Id(otherToken).Company.RegisterAsync();
+        var token = await Id().RegisterLogUserInAsync();
         var request = new RegisterCompanyRequest { ParentId = parent.Id, Name = Faker.Random.String2(10) };
 
         // act
         var response = await Id(token)
-            .Company.RegisterCompany(request, Result.New(Guid.Empty).Error("Failed to register company"));
+            .Company.RegisterCompanyAsync(
+                request,
+                Result.New(Guid.Empty).Error("Failed to register company"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -71,11 +82,11 @@ public class CompanyControllerTest : IntegrationTestBase
     public async Task Create_ValidPayload_Ok()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
+        var token = await Id().RegisterLogUserInAsync();
         var companyName = Faker.Random.String2(10);
 
         // act
-        var company = await Id(token).Company.Register(name: companyName);
+        var company = await Id(token).Company.RegisterAsync(name: companyName);
 
         // assert
         company.Id.IsNotDefault();
@@ -86,14 +97,15 @@ public class CompanyControllerTest : IntegrationTestBase
     public async Task Find_All_Ok()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
-        var company = await Id(token).Company.Register();
+        var token = await Id().RegisterLogUserInAsync();
+        var company = await Id(token).Company.RegisterAsync();
 
         // act
         var res = await Id(token)
-            .Company.FindCompanies(
+            .Company.FindCompaniesAsync(
                 string.Empty,
-                Result.New(Array.Empty<CompanyResponse>()).Error("Failed to find companies")
+                Result.New(Array.Empty<CompanyResponse>()).Error("Failed to find companies"),
+                TestContext.Current.CancellationToken
             );
         var response = res.Data.Data.ToArray();
 
@@ -105,16 +117,17 @@ public class CompanyControllerTest : IntegrationTestBase
     public async Task Find_Query_Ok()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
-        var company = await Id(token).Company.Register();
+        var token = await Id().RegisterLogUserInAsync();
+        var company = await Id(token).Company.RegisterAsync();
 
         // act
         var response = await Id(token)
-            .Company.FindCompanies(
+            .Company.FindCompaniesAsync(
                 company.Name,
-                Result.New(Array.Empty<CompanyResponse>()).Error("Failed to find companies")
+                Result.New(Array.Empty<CompanyResponse>()).Error("Failed to find companies"),
+                TestContext.Current.CancellationToken
             )
-            .GetData();
+            .GetDataAsync();
 
         // assert
         response.IsShallowEqual(new[] { company });
@@ -124,13 +137,16 @@ public class CompanyControllerTest : IntegrationTestBase
     public async Task ListMy_Ok()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
-        var company = await Id(token).Company.Register();
+        var token = await Id().RegisterLogUserInAsync();
+        var company = await Id(token).Company.RegisterAsync();
 
         // act
         var response = await Id(token)
-            .Company.ListMyCompanies(Result.New(Array.Empty<CompanyResponse>()).Error("Failed to list my companies"))
-            .GetData();
+            .Company.ListMyCompaniesAsync(
+                Result.New(Array.Empty<CompanyResponse>()).Error("Failed to list my companies"),
+                TestContext.Current.CancellationToken
+            )
+            .GetDataAsync();
 
         // assert
         response.IsShallowEqual(new[] { company });
@@ -140,13 +156,17 @@ public class CompanyControllerTest : IntegrationTestBase
     public async Task Get_Ok()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
-        var company = await Id(token).Company.Register();
+        var token = await Id().RegisterLogUserInAsync();
+        var company = await Id(token).Company.RegisterAsync();
 
         // act
         var response = await Id(token)
-            .Company.GetCompany(company.Id, Result.New(new CompanyResponse()).Error("Failed to load company info"))
-            .GetData();
+            .Company.GetCompanyAsync(
+                company.Id,
+                Result.New(new CompanyResponse()).Error("Failed to load company info"),
+                TestContext.Current.CancellationToken
+            )
+            .GetDataAsync();
 
         // assert
         response.IsShallowEqual(company);
@@ -156,11 +176,15 @@ public class CompanyControllerTest : IntegrationTestBase
     public async Task Get_MissingCompany_NotFound()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
+        var token = await Id().RegisterLogUserInAsync();
 
         // act
         var response = await Id(token)
-            .Company.GetCompany(Guid.NewGuid(), Result.New(new CompanyResponse()).Error("Failed to load company info"));
+            .Company.GetCompanyAsync(
+                Guid.NewGuid(),
+                Result.New(new CompanyResponse()).Error("Failed to load company info"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -170,13 +194,17 @@ public class CompanyControllerTest : IntegrationTestBase
     public async Task Get_Valid_Ok()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
-        var company = await Id(token).Company.Register();
+        var token = await Id().RegisterLogUserInAsync();
+        var company = await Id(token).Company.RegisterAsync();
 
         // act
         var response = await Id(token)
-            .Company.GetCompany(company.Id, Result.New(new CompanyResponse()).Error("Failed to load company info"))
-            .GetData();
+            .Company.GetCompanyAsync(
+                company.Id,
+                Result.New(new CompanyResponse()).Error("Failed to load company info"),
+                TestContext.Current.CancellationToken
+            )
+            .GetDataAsync();
 
         // assert
         response.Id.Is(company.Id);
@@ -187,13 +215,14 @@ public class CompanyControllerTest : IntegrationTestBase
     public async Task GetUsers_MissingCompany_NotFound()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
+        var token = await Id().RegisterLogUserInAsync();
 
         // act
         var response = await Id(token)
-            .Company.GetCompanyUsers(
+            .Company.GetCompanyUsersAsync(
                 Guid.NewGuid(),
-                Result.New(Array.Empty<UserResponse>()).Error("Failed to list company users")
+                Result.New(Array.Empty<UserResponse>()).Error("Failed to list company users"),
+                TestContext.Current.CancellationToken
             );
 
         // assert
@@ -204,20 +233,24 @@ public class CompanyControllerTest : IntegrationTestBase
     public async Task GetUsers_Valid_Ok()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
+        var token = await Id().RegisterLogUserInAsync();
         var user = await Id(token)
-            .Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
-            .GetData();
-        var company = await Id(token).Company.Register();
-        await Id(token).CompanyUser.AddUser(company.Id, user.Id);
+            .Me.GetMeAsync(
+                Result.New(new MeResponse()).Error("Failed to load personal information"),
+                TestContext.Current.CancellationToken
+            )
+            .GetDataAsync();
+        var company = await Id(token).Company.RegisterAsync();
+        await Id(token).CompanyUser.AddUserAsync(company.Id, user.Id);
 
         // act
         var response = await Id(token)
-            .Company.GetCompanyUsers(
+            .Company.GetCompanyUsersAsync(
                 company.Id,
-                Result.New(Array.Empty<UserResponse>()).Error("Failed to list company users")
+                Result.New(Array.Empty<UserResponse>()).Error("Failed to list company users"),
+                TestContext.Current.CancellationToken
             )
-            .GetData();
+            .GetDataAsync();
 
         // assert
         response.Has(1);
@@ -229,13 +262,18 @@ public class CompanyControllerTest : IntegrationTestBase
     public async Task Update_IncorrectPayload_BadRequest()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
-        var company = await Id(token).Company.Register();
+        var token = await Id().RegisterLogUserInAsync();
+        var company = await Id(token).Company.RegisterAsync();
         var request = new UpdateCompanyRequestBody { Name = Faker.Random.String2(2) };
 
         // act
         var response = await Id(token)
-            .Company.UpdateCompany(company.Id, request, Result.New().Error("Failed to update company"));
+            .Company.UpdateCompanyAsync(
+                company.Id,
+                request,
+                Result.New().Error("Failed to update company"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.BadRequest);
@@ -245,12 +283,17 @@ public class CompanyControllerTest : IntegrationTestBase
     public async Task Update_MissingCompany_NotFound()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
+        var token = await Id().RegisterLogUserInAsync();
         var request = new UpdateCompanyRequestBody { Name = Faker.Random.String2(10) };
 
         // act
         var response = await Id(token)
-            .Company.UpdateCompany(Guid.NewGuid(), request, Result.New().Error("Failed to update company"));
+            .Company.UpdateCompanyAsync(
+                Guid.NewGuid(),
+                request,
+                Result.New().Error("Failed to update company"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -260,14 +303,19 @@ public class CompanyControllerTest : IntegrationTestBase
     public async Task Update_NotOwner_Forbidden()
     {
         // arrange
-        var otherToken = await Id().RegisterLogUserIn();
-        var company = await Id(otherToken).Company.Register();
-        var token = await Id().RegisterLogUserIn();
+        var otherToken = await Id().RegisterLogUserInAsync();
+        var company = await Id(otherToken).Company.RegisterAsync();
+        var token = await Id().RegisterLogUserInAsync();
         var request = new UpdateCompanyRequestBody { Name = Faker.Random.String2(10) };
 
         // act
         var response = await Id(token)
-            .Company.UpdateCompany(company.Id, request, Result.New().Error("Failed to update company"));
+            .Company.UpdateCompanyAsync(
+                company.Id,
+                request,
+                Result.New().Error("Failed to update company"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -277,13 +325,18 @@ public class CompanyControllerTest : IntegrationTestBase
     public async Task Update_MissingParent_NotFound()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
-        var company = await Id(token).Company.Register();
+        var token = await Id().RegisterLogUserInAsync();
+        var company = await Id(token).Company.RegisterAsync();
         var request = new UpdateCompanyRequestBody { ParentId = Guid.NewGuid(), Name = Faker.Random.String2(10) };
 
         // act
         var response = await Id(token)
-            .Company.UpdateCompany(company.Id, request, Result.New().Error("Failed to update company"));
+            .Company.UpdateCompanyAsync(
+                company.Id,
+                request,
+                Result.New().Error("Failed to update company"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -293,15 +346,20 @@ public class CompanyControllerTest : IntegrationTestBase
     public async Task Update_NonParentOwner_Forbidden()
     {
         // arrange
-        var otherToken = await Id().RegisterLogUserIn();
-        var parent = await Id(otherToken).Company.Register();
-        var token = await Id().RegisterLogUserIn();
-        var company = await Id(token).Company.Register();
+        var otherToken = await Id().RegisterLogUserInAsync();
+        var parent = await Id(otherToken).Company.RegisterAsync();
+        var token = await Id().RegisterLogUserInAsync();
+        var company = await Id(token).Company.RegisterAsync();
         var request = new UpdateCompanyRequestBody { ParentId = parent.Id, Name = Faker.Random.String2(10) };
 
         // act
         var response = await Id(token)
-            .Company.UpdateCompany(company.Id, request, Result.New().Error("Failed to update company"));
+            .Company.UpdateCompanyAsync(
+                company.Id,
+                request,
+                Result.New().Error("Failed to update company"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -311,13 +369,18 @@ public class CompanyControllerTest : IntegrationTestBase
     public async Task Update_Valid_Ok()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
-        var company = await Id(token).Company.Register();
+        var token = await Id().RegisterLogUserInAsync();
+        var company = await Id(token).Company.RegisterAsync();
         var request = new UpdateCompanyRequestBody { Name = Faker.Random.String2(10) };
 
         // act
         var response = await Id(token)
-            .Company.UpdateCompany(company.Id, request, Result.New().Error("Failed to update company"));
+            .Company.UpdateCompanyAsync(
+                company.Id,
+                request,
+                Result.New().Error("Failed to update company"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.OK);
@@ -327,11 +390,16 @@ public class CompanyControllerTest : IntegrationTestBase
     public async Task SetOwner_MissingCompany_NotFound()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
+        var token = await Id().RegisterLogUserInAsync();
 
         // act
         var response = await Id(token)
-            .Company.SetCompanyOwner(Guid.NewGuid(), Guid.NewGuid(), Result.New().Error("Failed to set company owner"));
+            .Company.SetCompanyOwnerAsync(
+                Guid.NewGuid(),
+                Guid.NewGuid(),
+                Result.New().Error("Failed to set company owner"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -341,16 +409,24 @@ public class CompanyControllerTest : IntegrationTestBase
     public async Task SetOwner_NotOwner_Forbidden()
     {
         // arrange
-        var otherToken = await Id().RegisterLogUserIn();
-        var company = await Id(otherToken).Company.Register();
-        var token = await Id().RegisterLogUserIn();
+        var otherToken = await Id().RegisterLogUserInAsync();
+        var company = await Id(otherToken).Company.RegisterAsync();
+        var token = await Id().RegisterLogUserInAsync();
         var user = await Id(token)
-            .Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
-            .GetData();
+            .Me.GetMeAsync(
+                Result.New(new MeResponse()).Error("Failed to load personal information"),
+                TestContext.Current.CancellationToken
+            )
+            .GetDataAsync();
 
         // act
         var response = await Id(token)
-            .Company.SetCompanyOwner(company.Id, user.Id, Result.New().Error("Failed to set company owner"));
+            .Company.SetCompanyOwnerAsync(
+                company.Id,
+                user.Id,
+                Result.New().Error("Failed to set company owner"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -360,12 +436,17 @@ public class CompanyControllerTest : IntegrationTestBase
     public async Task SetOwner_MissingSuccessor_NotFound()
     {
         // arrange
-        var otherToken = await Id().RegisterLogUserIn();
-        var company = await Id(otherToken).Company.Register();
+        var otherToken = await Id().RegisterLogUserInAsync();
+        var company = await Id(otherToken).Company.RegisterAsync();
 
         // act
         var response = await Id(otherToken)
-            .Company.SetCompanyOwner(company.Id, Guid.NewGuid(), Result.New().Error("Failed to set company owner"));
+            .Company.SetCompanyOwnerAsync(
+                company.Id,
+                Guid.NewGuid(),
+                Result.New().Error("Failed to set company owner"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -375,16 +456,24 @@ public class CompanyControllerTest : IntegrationTestBase
     public async Task SetOwner_Valid_Ok()
     {
         // arrange
-        var otherToken = await Id().RegisterLogUserIn();
-        var company = await Id(otherToken).Company.Register();
-        var token = await Id().RegisterLogUserIn();
+        var otherToken = await Id().RegisterLogUserInAsync();
+        var company = await Id(otherToken).Company.RegisterAsync();
+        var token = await Id().RegisterLogUserInAsync();
         var user = await Id(token)
-            .Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"))
-            .GetData();
+            .Me.GetMeAsync(
+                Result.New(new MeResponse()).Error("Failed to load personal information"),
+                TestContext.Current.CancellationToken
+            )
+            .GetDataAsync();
 
         // act
         var response = await Id(otherToken)
-            .Company.SetCompanyOwner(company.Id, user.Id, Result.New().Error("Failed to set company owner"));
+            .Company.SetCompanyOwnerAsync(
+                company.Id,
+                user.Id,
+                Result.New().Error("Failed to set company owner"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.OK);
@@ -394,11 +483,15 @@ public class CompanyControllerTest : IntegrationTestBase
     public async Task Delete_MissingCompany_NotFound()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
+        var token = await Id().RegisterLogUserInAsync();
 
         // act
         var response = await Id(token)
-            .Company.UnregisterCompany(Guid.NewGuid(), Result.New().Error("Failed to unregister company"));
+            .Company.UnregisterCompanyAsync(
+                Guid.NewGuid(),
+                Result.New().Error("Failed to unregister company"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -408,13 +501,17 @@ public class CompanyControllerTest : IntegrationTestBase
     public async Task Delete_NotOwner_Forbidden()
     {
         // arrange
-        var otherToken = await Id().RegisterLogUserIn();
-        var company = await Id(otherToken).Company.Register();
-        var token = await Id().RegisterLogUserIn();
+        var otherToken = await Id().RegisterLogUserInAsync();
+        var company = await Id(otherToken).Company.RegisterAsync();
+        var token = await Id().RegisterLogUserInAsync();
 
         // act
         var response = await Id(token)
-            .Company.UnregisterCompany(company.Id, Result.New().Error("Failed to unregister company"));
+            .Company.UnregisterCompanyAsync(
+                company.Id,
+                Result.New().Error("Failed to unregister company"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -424,12 +521,16 @@ public class CompanyControllerTest : IntegrationTestBase
     public async Task Delete_Valid_Ok()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
-        var company = await Id(token).Company.Register();
+        var token = await Id().RegisterLogUserInAsync();
+        var company = await Id(token).Company.RegisterAsync();
 
         // act
         var response = await Id(token)
-            .Company.UnregisterCompany(company.Id, Result.New().Error("Failed to unregister company"));
+            .Company.UnregisterCompanyAsync(
+                company.Id,
+                Result.New().Error("Failed to unregister company"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.OK);

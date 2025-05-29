@@ -17,13 +17,13 @@ public class LoginController : ServerController
         : base(mediator, sp) { }
 
     [HttpPost("login")]
-    public Task<IResult<TokensResponse>> LogIn(Guid appId, [FromBody] LogInRequestBody requestBody)
+    public Task<IResult<TokensResponse>> LogInAsync(Guid appId, [FromBody] LogInRequestBody requestBody)
     {
         var request = new LogInRequest
         {
             AppId = appId,
             Login = requestBody.Login,
-            Password = requestBody.Password
+            Password = requestBody.Password,
         };
 
         return HandleAsync<LogInRequest, TokensResponse>(request);
@@ -31,7 +31,7 @@ public class LoginController : ServerController
 
     [HttpPut("token")]
     [Authorize(AuthPolicy.CanRefreshToken, false, false)]
-    public Task<IResult<TokensResponse>> UpdateToken(Guid appId, [FromQuery] UpdateTokensRequestBody requestBody)
+    public Task<IResult<TokensResponse>> UpdateTokenAsync(Guid appId, [FromQuery] UpdateTokensRequestBody requestBody)
     {
         var request = new UpdateTokensRequest { AppId = appId, RefreshToken = requestBody.RefreshToken };
 
@@ -40,7 +40,7 @@ public class LoginController : ServerController
 
     [HttpDelete("logout")]
     [Authorize(AuthPolicy.CanLogOut, false)]
-    public Task<IResult> LogOut(Guid appId)
+    public Task<IResult> LogOutAsync(Guid appId)
     {
         var request = new LogOutRequest { AppId = appId };
 

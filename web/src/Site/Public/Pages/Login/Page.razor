@@ -4,8 +4,8 @@
 @layout MinimalCentricLayout
 @using Annium.Blazor.Core
 @using Annium.Localization.Abstractions
-@using Site.Shared.Components.PageTitle
 @using Site.Public.Layouts.MinimalCentric
+@using Site.Shared.Components.PageTitle
 @inherits BaseComponent
 
 @inject IStore Store
@@ -33,11 +33,11 @@
     </FormField>
 
     <Button
-        type="primary"
+        type="@ButtonType.Primary"
         block
         disabled="@(!Store.CanLogin)"
-        size="large"
-        OnClick="@Store.LogIn">
+        size="@ButtonSize.Large"
+        OnClick="@Store.LogInAsync">
         @T["Sign in"]
     </Button>
 

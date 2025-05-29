@@ -8,23 +8,31 @@ namespace Server.DemoHost.TestClient.Clients;
 
 public static class HttpResponseExtensions
 {
-    public static async Task<T> GetData<T>(this Task<IHttpResponse<IResult<T>>> task)
+    public static async Task<T> GetDataAsync<T>(this Task<IHttpResponse<IResult<T>>> task)
     {
+#pragma warning disable VSTHRD003
         var response = await task;
+#pragma warning restore VSTHRD003
 
         return response.Data.Data;
     }
 
-    public static async Task<IReadOnlyCollection<T>> GetData<T>(this Task<IHttpResponse<IResult<IEnumerable<T>>>> task)
+    public static async Task<IReadOnlyCollection<T>> GetDataAsync<T>(
+        this Task<IHttpResponse<IResult<IEnumerable<T>>>> task
+    )
     {
+#pragma warning disable VSTHRD003
         var response = await task;
+#pragma warning restore VSTHRD003
 
         return response.Data.Data.ToArray();
     }
 
-    public static async Task<IResult<T>> GetResult<T>(this Task<IHttpResponse<IResult<T>>> task)
+    public static async Task<IResult<T>> GetResultAsync<T>(this Task<IHttpResponse<IResult<T>>> task)
     {
+#pragma warning disable VSTHRD003
         var response = await task;
+#pragma warning restore VSTHRD003
 
         return response.Data;
     }

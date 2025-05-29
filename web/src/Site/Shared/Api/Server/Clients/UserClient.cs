@@ -17,7 +17,7 @@ public class UserClient
         _request = request;
     }
 
-    public async Task<IResult<UserResponse[]>> FindUsers(
+    public async Task<IResult<UserResponse[]>> FindUsersAsync(
         string query,
         int limit,
         IResult<UserResponse[]> defaultValue,
@@ -27,7 +27,7 @@ public class UserClient
         return await _request.Get("users").Param("query", query).Param("limit", limit).AsAsync(defaultValue, ct);
     }
 
-    public async Task<IResult<UserResponse>> GetUser(
+    public async Task<IResult<UserResponse>> GetUserAsync(
         Guid userId,
         IResult<UserResponse> defaultValue,
         CancellationToken ct = default
@@ -36,7 +36,7 @@ public class UserClient
         return await _request.Get($"users/{userId}").AsAsync(defaultValue, ct);
     }
 
-    public async Task<IResult> AddRoleToUser(
+    public async Task<IResult> AddRoleToUserAsync(
         Guid userId,
         Guid roleId,
         IResult defaultValue,
@@ -46,7 +46,7 @@ public class UserClient
         return await _request.Post($"users/{userId}/roles/{roleId}").AsAsync(defaultValue, ct);
     }
 
-    public async Task<IResult> DeleteRoleFromUser(
+    public async Task<IResult> DeleteRoleFromUserAsync(
         Guid userId,
         Guid roleId,
         IResult defaultValue,
@@ -56,7 +56,7 @@ public class UserClient
         return await _request.Delete($"users/{userId}/roles/{roleId}").AsAsync(defaultValue, ct);
     }
 
-    public async Task<IResult> AddClaimToUser(
+    public async Task<IResult> AddClaimToUserAsync(
         Guid userId,
         Guid claimId,
         AddClaimToUserRequestBody body,
@@ -67,7 +67,7 @@ public class UserClient
         return await _request.Post($"users/{userId}/claims/{claimId}").JsonContent(body).AsAsync(defaultValue, ct);
     }
 
-    public async Task<IResult> DeleteClaimFromUser(
+    public async Task<IResult> DeleteClaimFromUserAsync(
         Guid userId,
         Guid claimId,
         IResult defaultValue,

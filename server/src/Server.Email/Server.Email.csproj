@@ -1,24 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <PackageId>Server.Email</PackageId>
-        <PackageVersion>0.1.0</PackageVersion>
-        <Description>Server.Email</Description>
-        <Solutions>Annium.Id</Solutions>
-        <TargetFramework>net8.0</TargetFramework>
-        <OutputType>Library</OutputType>
-        <DebugType>portable</DebugType>
-        <WarningsAsErrors>true</WarningsAsErrors>
-        <IsPackable>false</IsPackable>
-        <Nullable>enable</Nullable>
-    </PropertyGroup>
-    <ItemGroup>
-        <ProjectReference Include="../Server.Domain/Server.Domain.csproj" />
-    </ItemGroup>
-    <ItemGroup>
-        <PackageReference Include="Annium.Configuration.Yaml" Version="0.1.0" />
-        <PackageReference Include="Annium.Net.Mail" Version="0.1.0" />
-    </ItemGroup>
-    <ItemGroup>
-        <None Update="Templates/*.html" CopyToOutputDirectory="PreserveNewest" />
-    </ItemGroup>
+  <PropertyGroup>
+    <Solutions>Annium.Id</Solutions>
+    <OutputType>Library</OutputType>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Server.Domain/Server.Domain.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Annium.Configuration.Yaml" />
+    <PackageReference Include="Annium.Net.Mail" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Templates/*.html" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

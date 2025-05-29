@@ -7,7 +7,6 @@ using Server.Host.TestClient.Clients;
 using Server.ViewModels.Requests.Claims;
 using Server.ViewModels.Responses.Claims;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Server.IntegrationTests.Controllers;
 
@@ -20,12 +19,16 @@ public class ClaimControllerTest : IntegrationTestBase
     public async Task Create_InvalidPayload_BadRequest()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
+        var token = await Id().RegisterLogUserInAsync();
         var request = new CreateClaimRequest { AppId = Guid.Empty, Key = Faker.Random.String2(10) };
 
         // act
         var response = await Id(token)
-            .Claim.CreateClaim(request, Result.New(Guid.Empty).Error("Failed to create claim"));
+            .Claim.CreateClaimAsync(
+                request,
+                Result.New(Guid.Empty).Error("Failed to create claim"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.BadRequest);
@@ -35,17 +38,21 @@ public class ClaimControllerTest : IntegrationTestBase
     public async Task Create_AppMissing_NotFound()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
+        var token = await Id().RegisterLogUserInAsync();
         var request = new CreateClaimRequest
         {
             AppId = Guid.NewGuid(),
             Key = Faker.Random.String2(10),
-            Name = Faker.Random.String2(10)
+            Name = Faker.Random.String2(10),
         };
 
         // act
         var response = await Id(token)
-            .Claim.CreateClaim(request, Result.New(Guid.Empty).Error("Failed to create claim"));
+            .Claim.CreateClaimAsync(
+                request,
+                Result.New(Guid.Empty).Error("Failed to create claim"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -55,19 +62,23 @@ public class ClaimControllerTest : IntegrationTestBase
     public async Task Create_NotOwner_Forbidden()
     {
         // arrange
-        var otherToken = await Id().RegisterLogUserIn();
-        var app = await Id(otherToken).App.Register();
-        var token = await Id().RegisterLogUserIn();
+        var otherToken = await Id().RegisterLogUserInAsync();
+        var app = await Id(otherToken).App.RegisterAsync();
+        var token = await Id().RegisterLogUserInAsync();
         var request = new CreateClaimRequest
         {
             AppId = app.Id,
             Key = Faker.Random.String2(10),
-            Name = Faker.Random.String2(10)
+            Name = Faker.Random.String2(10),
         };
 
         // act
         var response = await Id(token)
-            .Claim.CreateClaim(request, Result.New(Guid.Empty).Error("Failed to create claim"));
+            .Claim.CreateClaimAsync(
+                request,
+                Result.New(Guid.Empty).Error("Failed to create claim"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -77,20 +88,29 @@ public class ClaimControllerTest : IntegrationTestBase
     public async Task Create_NonUniqueKey_BadRequest()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
-        var app = await Id(token).App.Register();
+        var token = await Id().RegisterLogUserInAsync();
+        var app = await Id(token).App.RegisterAsync();
         var request = new CreateClaimRequest
         {
             AppId = app.Id,
             Key = Faker.Random.String2(10),
-            Name = Faker.Random.String2(10)
+            Name = Faker.Random.String2(10),
         };
 
-        await Id(token).Claim.CreateClaim(request, Result.New(Guid.Empty).Error("Failed to create claim"));
+        await Id(token)
+            .Claim.CreateClaimAsync(
+                request,
+                Result.New(Guid.Empty).Error("Failed to create claim"),
+                TestContext.Current.CancellationToken
+            );
 
         // act
         var response = await Id(token)
-            .Claim.CreateClaim(request, Result.New(Guid.Empty).Error("Failed to create claim"));
+            .Claim.CreateClaimAsync(
+                request,
+                Result.New(Guid.Empty).Error("Failed to create claim"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.BadRequest);
@@ -100,13 +120,13 @@ public class ClaimControllerTest : IntegrationTestBase
     public async Task Create_ValidPayload_Ok()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
-        var app = await Id(token).App.Register();
+        var token = await Id().RegisterLogUserInAsync();
+        var app = await Id(token).App.RegisterAsync();
         var claimKey = Faker.Random.String2(5);
         var claimName = Faker.Random.String2(10);
 
         // act
-        var claim = await Id(token).Claim.Register(app.Id, claimKey, claimName);
+        var claim = await Id(token).Claim.RegisterAsync(app.Id, claimKey, claimName);
 
         // assert
         claim.Id.IsNotDefault();
@@ -119,11 +139,15 @@ public class ClaimControllerTest : IntegrationTestBase
     public async Task List_MissingApp_NotFound()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
+        var token = await Id().RegisterLogUserInAsync();
 
         // act
         var response = await Id(token)
-            .Claim.ListClaims(Guid.NewGuid(), Result.New(Array.Empty<ClaimResponse>()).Error("Failed to list claims"));
+            .Claim.ListClaimsAsync(
+                Guid.NewGuid(),
+                Result.New(Array.Empty<ClaimResponse>()).Error("Failed to list claims"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -133,14 +157,18 @@ public class ClaimControllerTest : IntegrationTestBase
     public async Task List_Ok()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
-        var app = await Id(token).App.Register();
-        var claim = await Id(token).Claim.Register(app.Id);
+        var token = await Id().RegisterLogUserInAsync();
+        var app = await Id(token).App.RegisterAsync();
+        var claim = await Id(token).Claim.RegisterAsync(app.Id);
 
         // act
         var claims = await Id(token)
-            .Claim.ListClaims(app.Id, Result.New(Array.Empty<ClaimResponse>()).Error("Failed to list claims"))
-            .GetData();
+            .Claim.ListClaimsAsync(
+                app.Id,
+                Result.New(Array.Empty<ClaimResponse>()).Error("Failed to list claims"),
+                TestContext.Current.CancellationToken
+            )
+            .GetDataAsync();
 
         // assert
         claims.Has(1);
@@ -151,14 +179,19 @@ public class ClaimControllerTest : IntegrationTestBase
     public async Task Update_IncorrectPayload_BadRequest()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
-        var app = await Id(token).App.Register();
-        var claim = await Id(token).Claim.Register(app.Id);
+        var token = await Id().RegisterLogUserInAsync();
+        var app = await Id(token).App.RegisterAsync();
+        var claim = await Id(token).Claim.RegisterAsync(app.Id);
         var request = new UpdateClaimRequestBody { Key = Faker.Random.String2(10) };
 
         // act
         var response = await Id(token)
-            .Claim.UpdateClaim(claim.Id, request, Result.New().Error("Failed to update claim"));
+            .Claim.UpdateClaimAsync(
+                claim.Id,
+                request,
+                Result.New().Error("Failed to update claim"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.BadRequest);
@@ -168,15 +201,20 @@ public class ClaimControllerTest : IntegrationTestBase
     public async Task Update_NotOwner_Forbidden()
     {
         // arrange
-        var otherToken = await Id().RegisterLogUserIn();
-        var app = await Id(otherToken).App.Register();
-        var claim = await Id(otherToken).Claim.Register(app.Id);
-        var token = await Id().RegisterLogUserIn();
+        var otherToken = await Id().RegisterLogUserInAsync();
+        var app = await Id(otherToken).App.RegisterAsync();
+        var claim = await Id(otherToken).Claim.RegisterAsync(app.Id);
+        var token = await Id().RegisterLogUserInAsync();
         var request = new UpdateClaimRequestBody { Key = Faker.Random.String2(10), Name = Faker.Random.String2(10) };
 
         // act
         var response = await Id(token)
-            .Claim.UpdateClaim(claim.Id, request, Result.New().Error("Failed to update claim"));
+            .Claim.UpdateClaimAsync(
+                claim.Id,
+                request,
+                Result.New().Error("Failed to update claim"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -186,12 +224,17 @@ public class ClaimControllerTest : IntegrationTestBase
     public async Task Update_MissingClaim_NotFound()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
+        var token = await Id().RegisterLogUserInAsync();
         var request = new UpdateClaimRequestBody { Key = Faker.Random.String2(10), Name = Faker.Random.String2(10) };
 
         // act
         var response = await Id(token)
-            .Claim.UpdateClaim(Guid.NewGuid(), request, Result.New().Error("Failed to update claim"));
+            .Claim.UpdateClaimAsync(
+                Guid.NewGuid(),
+                request,
+                Result.New().Error("Failed to update claim"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -201,15 +244,20 @@ public class ClaimControllerTest : IntegrationTestBase
     public async Task Update_NonUniqueKey_Conflict()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
-        var app = await Id(token).App.Register();
-        var claim = await Id(token).Claim.Register(app.Id);
+        var token = await Id().RegisterLogUserInAsync();
+        var app = await Id(token).App.RegisterAsync();
+        var claim = await Id(token).Claim.RegisterAsync(app.Id);
         var request = new UpdateClaimRequestBody { Key = Faker.Random.String2(5), Name = Faker.Random.String2(10) };
-        await Id(token).Claim.Register(app.Id, request.Key, request.Name);
+        await Id(token).Claim.RegisterAsync(app.Id, request.Key, request.Name);
 
         // act
         var response = await Id(token)
-            .Claim.UpdateClaim(claim.Id, request, Result.New().Error("Failed to update claim"));
+            .Claim.UpdateClaimAsync(
+                claim.Id,
+                request,
+                Result.New().Error("Failed to update claim"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Conflict);
@@ -219,14 +267,19 @@ public class ClaimControllerTest : IntegrationTestBase
     public async Task Update_Valid_Ok()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
-        var app = await Id(token).App.Register();
-        var claim = await Id(token).Claim.Register(app.Id);
+        var token = await Id().RegisterLogUserInAsync();
+        var app = await Id(token).App.RegisterAsync();
+        var claim = await Id(token).Claim.RegisterAsync(app.Id);
         var request = new UpdateClaimRequestBody { Key = Faker.Random.String2(10), Name = Faker.Random.String2(10) };
 
         // act
         var response = await Id(token)
-            .Claim.UpdateClaim(claim.Id, request, Result.New().Error("Failed to update claim"));
+            .Claim.UpdateClaimAsync(
+                claim.Id,
+                request,
+                Result.New().Error("Failed to update claim"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.OK);
@@ -236,13 +289,18 @@ public class ClaimControllerTest : IntegrationTestBase
     public async Task Delete_NotOwner_Forbidden()
     {
         // arrange
-        var otherToken = await Id().RegisterLogUserIn();
-        var app = await Id(otherToken).App.Register();
-        var claim = await Id(otherToken).Claim.Register(app.Id);
-        var token = await Id().RegisterLogUserIn();
+        var otherToken = await Id().RegisterLogUserInAsync();
+        var app = await Id(otherToken).App.RegisterAsync();
+        var claim = await Id(otherToken).Claim.RegisterAsync(app.Id);
+        var token = await Id().RegisterLogUserInAsync();
 
         // act
-        var response = await Id(token).Claim.DeleteClaim(claim.Id, Result.New().Error("Failed to delete claim"));
+        var response = await Id(token)
+            .Claim.DeleteClaimAsync(
+                claim.Id,
+                Result.New().Error("Failed to delete claim"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -252,10 +310,15 @@ public class ClaimControllerTest : IntegrationTestBase
     public async Task Delete_MissingClaim_NotFound()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
+        var token = await Id().RegisterLogUserInAsync();
 
         // act
-        var response = await Id(token).Claim.DeleteClaim(Guid.NewGuid(), Result.New().Error("Failed to delete claim"));
+        var response = await Id(token)
+            .Claim.DeleteClaimAsync(
+                Guid.NewGuid(),
+                Result.New().Error("Failed to delete claim"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -265,12 +328,17 @@ public class ClaimControllerTest : IntegrationTestBase
     public async Task Delete_Valid_Ok()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
-        var app = await Id(token).App.Register();
-        var claim = await Id(token).Claim.Register(app.Id);
+        var token = await Id().RegisterLogUserInAsync();
+        var app = await Id(token).App.RegisterAsync();
+        var claim = await Id(token).Claim.RegisterAsync(app.Id);
 
         // act
-        var response = await Id(token).Claim.DeleteClaim(claim.Id, Result.New().Error("Failed to delete claim"));
+        var response = await Id(token)
+            .Claim.DeleteClaimAsync(
+                claim.Id,
+                Result.New().Error("Failed to delete claim"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.OK);

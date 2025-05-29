@@ -24,7 +24,7 @@ internal class ServerApi : IServerApi
         _requestFactory
             .New(_config.Server)
             .BearerAuthorization(_tokenStore.Get()?.AccessToken ?? string.Empty)
-            .Intercept(AuthMiddleware);
+            .Intercept(AuthMiddlewareAsync);
 
     public IHttpRequest PrivateBase =>
         _requestFactory.New(_config.Server).BearerAuthorization(_tokenStore.Get()?.AccessToken ?? string.Empty);
@@ -51,7 +51,7 @@ internal class ServerApi : IServerApi
         _config = config;
     }
 
-    private async Task<IHttpResponse> AuthMiddleware(Func<Task<IHttpResponse>> next)
+    private async Task<IHttpResponse> AuthMiddlewareAsync(Func<Task<IHttpResponse>> next)
     {
         var response = await next();
 
@@ -69,7 +69,7 @@ internal class ServerApi : IServerApi
 
         var updateTokenResult = await Private
             .Client()
-            .Login.UpdateToken(
+            .Login.UpdateTokenAsync(
                 _config.AppId,
                 tokens.RefreshToken,
                 Result.New(new TokensResponse()).Error("Failed to update token")

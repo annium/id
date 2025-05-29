@@ -15,11 +15,13 @@ internal class MeService : IMeService
         _serverApi = serverApi;
     }
 
-    public Task<IResult<MeResponse>> GetMe() =>
-        _serverApi.Private.Client().Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal information"));
+    public Task<IResult<MeResponse>> GetMeAsync() =>
+        _serverApi
+            .Private.Client()
+            .Me.GetMeAsync(Result.New(new MeResponse()).Error("Failed to load personal information"));
 }
 
 public interface IMeService : IApiService
 {
-    Task<IResult<MeResponse>> GetMe();
+    Task<IResult<MeResponse>> GetMeAsync();
 }

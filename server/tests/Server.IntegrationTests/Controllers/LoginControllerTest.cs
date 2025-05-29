@@ -7,7 +7,6 @@ using Server.Host.TestClient.Clients;
 using Server.ViewModels.Requests.Login;
 using Server.ViewModels.Responses.Login;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Server.IntegrationTests.Controllers;
 
@@ -20,13 +19,18 @@ public class LoginControllerTest : IntegrationTestBase
     public async Task LogIn_BadPayload_BadRequest()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
-        var app = await Id(token).App.Register();
+        var token = await Id().RegisterLogUserInAsync();
+        var app = await Id(token).App.RegisterAsync();
         var request = new LogInRequest { Login = Faker.Internet.UserName(), Password = Faker.Internet.Password(4) };
 
         // act
         var response = await Id()
-            .Login.LogIn(app.Id, request, Result.New(new TokensResponse()).Error("Failed to log in"));
+            .Login.LogInAsync(
+                app.Id,
+                request,
+                Result.New(new TokensResponse()).Error("Failed to log in"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.BadRequest);
@@ -36,13 +40,18 @@ public class LoginControllerTest : IntegrationTestBase
     public async Task LogIn_InvalidLogin_NotFound()
     {
         // arrange
-        var token = await Id().RegisterLogUserIn();
-        var app = await Id(token).App.Register();
+        var token = await Id().RegisterLogUserInAsync();
+        var app = await Id(token).App.RegisterAsync();
         var request = new LogInRequest { Login = Faker.Internet.UserName(), Password = Faker.Internet.Password() };
 
         // act
         var response = await Id()
-            .Login.LogIn(app.Id, request, Result.New(new TokensResponse()).Error("Failed to log in"));
+            .Login.LogInAsync(
+                app.Id,
+                request,
+                Result.New(new TokensResponse()).Error("Failed to log in"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.NotFound);
@@ -53,13 +62,18 @@ public class LoginControllerTest : IntegrationTestBase
     {
         // arrange
         var login = Faker.Internet.UserName();
-        var token = await Id().RegisterLogUserIn(login: login);
-        var app = await Id(token).App.Register();
+        var token = await Id().RegisterLogUserInAsync(login: login);
+        var app = await Id(token).App.RegisterAsync();
         var request = new LogInRequest { Login = login, Password = Faker.Internet.Password() };
 
         // act
         var response = await Id()
-            .Login.LogIn(app.Id, request, Result.New(new TokensResponse()).Error("Failed to log in"));
+            .Login.LogInAsync(
+                app.Id,
+                request,
+                Result.New(new TokensResponse()).Error("Failed to log in"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -71,13 +85,18 @@ public class LoginControllerTest : IntegrationTestBase
         // arrange
         var login = Faker.Internet.UserName();
         var password = Faker.Internet.Password();
-        var token = await Id().RegisterLogUserIn(login: login, password: password);
-        var app = await Id(token).App.Register();
+        var token = await Id().RegisterLogUserInAsync(login: login, password: password);
+        var app = await Id(token).App.RegisterAsync();
         var request = new LogInRequest { Login = login, Password = password };
 
         // act
         var response = await Id()
-            .Login.LogIn(app.Id, request, Result.New(new TokensResponse()).Error("Failed to log in"));
+            .Login.LogInAsync(
+                app.Id,
+                request,
+                Result.New(new TokensResponse()).Error("Failed to log in"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.OK);
@@ -90,16 +109,17 @@ public class LoginControllerTest : IntegrationTestBase
         var login = Faker.Internet.UserName();
         var email = Faker.Internet.Email();
         var password = Faker.Internet.Password();
-        var token = await Id().RegisterLogUserIn(login, email, password);
-        var app = await Id(token).App.Register();
-        token = await Id(token).LogUserIn(app.Id, login, password);
+        var token = await Id().RegisterLogUserInAsync(login, email, password);
+        var app = await Id(token).App.RegisterAsync();
+        token = await Id(token).LogUserInAsync(app.Id, login, password);
 
         // act
         var response = await Id(token)
-            .Login.UpdateToken(
+            .Login.UpdateTokenAsync(
                 app.Id,
                 Guid.NewGuid(),
-                Result.New(new TokensResponse()).Error("Failed to update token")
+                Result.New(new TokensResponse()).Error("Failed to update token"),
+                TestContext.Current.CancellationToken
             );
 
         // assert
@@ -113,24 +133,26 @@ public class LoginControllerTest : IntegrationTestBase
         var login = Faker.Internet.UserName();
         var email = Faker.Internet.Email();
         var password = Faker.Internet.Password();
-        var token = await Id().RegisterLogUserIn(login, email, password);
-        var app = await Id(token).App.Register();
+        var token = await Id().RegisterLogUserInAsync(login, email, password);
+        var app = await Id(token).App.RegisterAsync();
         var tokens = await Id(token)
-            .Login.LogIn(
+            .Login.LogInAsync(
                 app.Id,
                 new LogInRequestBody { Login = login, Password = password },
-                Result.New(new TokensResponse()).Error("Failed to log in")
+                Result.New(new TokensResponse()).Error("Failed to log in"),
+                TestContext.Current.CancellationToken
             )
-            .GetData();
+            .GetDataAsync();
 
         // act
         var response = await Id(tokens.AccessToken)
-            .Login.UpdateToken(
+            .Login.UpdateTokenAsync(
                 app.Id,
                 tokens.RefreshToken,
-                Result.New(new TokensResponse()).Error("Failed to update token")
+                Result.New(new TokensResponse()).Error("Failed to update token"),
+                TestContext.Current.CancellationToken
             )
-            .GetData();
+            .GetDataAsync();
 
         // assert
         response.AccessToken.IsNotDefault().IsNotEqual(tokens.AccessToken);
@@ -144,12 +166,13 @@ public class LoginControllerTest : IntegrationTestBase
         var login = Faker.Internet.UserName();
         var email = Faker.Internet.Email();
         var password = Faker.Internet.Password();
-        var token = await Id().RegisterLogUserIn(login, email, password);
-        var app = await Id(token).App.Register();
-        token = await Id(token).LogUserIn(app.Id, login, password);
+        var token = await Id().RegisterLogUserInAsync(login, email, password);
+        var app = await Id(token).App.RegisterAsync();
+        token = await Id(token).LogUserInAsync(app.Id, login, password);
 
         // act
-        var response = await Id(token).Login.LogOut(app.Id, Result.New().Error("Failed to log out"));
+        var response = await Id(token)
+            .Login.LogOutAsync(app.Id, Result.New().Error("Failed to log out"), TestContext.Current.CancellationToken);
 
         // assert
         response.StatusCode.Is(HttpStatusCode.OK);

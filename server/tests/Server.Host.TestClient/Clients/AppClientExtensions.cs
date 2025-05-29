@@ -9,14 +9,14 @@ namespace Server.Host.TestClient.Clients;
 
 public static class AppClientExtensions
 {
-    public static async Task<AppResponse> Register(this AppClient client, string? name = null)
+    public static async Task<AppResponse> RegisterAsync(this AppClient client, string? name = null)
     {
-        var createResponse = await client.CreateApp(
+        var createResponse = await client.CreateAppAsync(
             new CreateAppRequest { Name = name ?? Faker.Random.String2(10) },
             Result.New(Guid.Empty).Error("Failed to create app")
         );
 
-        var getResponse = await client.GetApp(
+        var getResponse = await client.GetAppAsync(
             createResponse.Data.Data,
             Result.New(new AppResponse()).Error("Failed to load app")
         );

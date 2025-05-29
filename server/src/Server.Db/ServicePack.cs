@@ -2,9 +2,10 @@ using System;
 using System.IO;
 using Annium.Configuration.Abstractions;
 using Annium.Core.DependencyInjection;
+using Annium.DbUp.Core;
+using Annium.DbUp.PostgreSql;
 using Annium.linq2db.PostgreSql;
 using Server.Db.Internal;
-using Xdb;
 
 namespace Server.Db;
 

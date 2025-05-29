@@ -18,7 +18,7 @@ public class CompanyClient
         _request = request;
     }
 
-    public async Task<IHttpResponse<IResult<Guid>>> RegisterCompany(
+    public async Task<IHttpResponse<IResult<Guid>>> RegisterCompanyAsync(
         RegisterCompanyRequest body,
         IResult<Guid> defaultValue,
         CancellationToken ct = default
@@ -27,7 +27,7 @@ public class CompanyClient
         return await _request.Post("companies").JsonContent(body).AsResponseAsync(defaultValue, ct);
     }
 
-    public async Task<IHttpResponse<IResult<CompanyResponse[]>>> FindCompanies(
+    public async Task<IHttpResponse<IResult<CompanyResponse[]>>> FindCompaniesAsync(
         string query,
         IResult<CompanyResponse[]> defaultValue,
         CancellationToken ct = default
@@ -36,7 +36,7 @@ public class CompanyClient
         return await _request.Get("companies").Param("query", query).AsResponseAsync(defaultValue, ct);
     }
 
-    public async Task<IHttpResponse<IResult<CompanyResponse[]>>> ListMyCompanies(
+    public async Task<IHttpResponse<IResult<CompanyResponse[]>>> ListMyCompaniesAsync(
         IResult<CompanyResponse[]> defaultValue,
         CancellationToken ct = default
     )
@@ -44,7 +44,7 @@ public class CompanyClient
         return await _request.Get("companies/my").AsResponseAsync(defaultValue, ct);
     }
 
-    public async Task<IHttpResponse<IResult<CompanyResponse>>> GetCompany(
+    public async Task<IHttpResponse<IResult<CompanyResponse>>> GetCompanyAsync(
         Guid companyId,
         IResult<CompanyResponse> defaultValue,
         CancellationToken ct = default
@@ -53,7 +53,7 @@ public class CompanyClient
         return await _request.Get($"companies/{companyId}").AsResponseAsync(defaultValue, ct);
     }
 
-    public async Task<IHttpResponse<IResult<UserResponse[]>>> GetCompanyUsers(
+    public async Task<IHttpResponse<IResult<UserResponse[]>>> GetCompanyUsersAsync(
         Guid companyId,
         IResult<UserResponse[]> defaultValue,
         CancellationToken ct = default
@@ -62,7 +62,7 @@ public class CompanyClient
         return await _request.Get($"companies/{companyId}/users").AsResponseAsync(defaultValue, ct);
     }
 
-    public async Task<IHttpResponse<IResult>> UpdateCompany(
+    public async Task<IHttpResponse<IResult>> UpdateCompanyAsync(
         Guid companyId,
         UpdateCompanyRequestBody body,
         IResult defaultValue,
@@ -72,7 +72,7 @@ public class CompanyClient
         return await _request.Put($"companies/{companyId}").JsonContent(body).AsResponseAsync(defaultValue, ct);
     }
 
-    public async Task<IHttpResponse<IResult>> SetCompanyOwner(
+    public async Task<IHttpResponse<IResult>> SetCompanyOwnerAsync(
         Guid companyId,
         Guid userId,
         IResult defaultValue,
@@ -82,7 +82,7 @@ public class CompanyClient
         return await _request.Put($"companies/{companyId}/owner/{userId}").AsResponseAsync(defaultValue, ct);
     }
 
-    public async Task<IHttpResponse<IResult>> UnregisterCompany(
+    public async Task<IHttpResponse<IResult>> UnregisterCompanyAsync(
         Guid companyId,
         IResult defaultValue,
         CancellationToken ct = default

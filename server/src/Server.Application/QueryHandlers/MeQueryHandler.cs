@@ -32,7 +32,7 @@ internal class MeQueryHandler : IQueryHandler<GetMeQuery, User>, IQueryHandler<G
         CancellationToken ct
     )
     {
-        var token = await _tokenGenerator.GenerateToken(request.Login);
+        var token = await _tokenGenerator.GenerateTokenAsync(request.Login);
 
         return Result.Status(OperationStatus.Ok, token);
     }

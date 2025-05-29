@@ -17,7 +17,7 @@ public class AppClient
         _request = request;
     }
 
-    public async Task<IResult<Guid>> CreateApp(
+    public async Task<IResult<Guid>> CreateAppAsync(
         CreateAppRequest body,
         IResult<Guid> defaultValue,
         CancellationToken ct = default
@@ -26,7 +26,7 @@ public class AppClient
         return await _request.Post("apps").JsonContent(body).AsAsync(defaultValue, ct);
     }
 
-    public async Task<IResult<AppResponse[]>> FindApps(
+    public async Task<IResult<AppResponse[]>> FindAppsAsync(
         string query,
         IResult<AppResponse[]> defaultValue,
         CancellationToken ct = default
@@ -35,7 +35,7 @@ public class AppClient
         return await _request.Get("apps").Param("query", query).AsAsync(defaultValue, ct);
     }
 
-    public async Task<IResult<AppResponse[]>> ListMyApps(
+    public async Task<IResult<AppResponse[]>> ListMyAppsAsync(
         IResult<AppResponse[]> defaultValue,
         CancellationToken ct = default
     )
@@ -43,7 +43,7 @@ public class AppClient
         return await _request.Get("apps/my").AsAsync(defaultValue, ct);
     }
 
-    public async Task<IResult<AppResponse>> GetApp(
+    public async Task<IResult<AppResponse>> GetAppAsync(
         Guid appId,
         IResult<AppResponse> defaultValue,
         CancellationToken ct = default
@@ -52,7 +52,7 @@ public class AppClient
         return await _request.Get($"apps/{appId}").AsAsync(defaultValue, ct);
     }
 
-    public async Task<IResult<Guid>> GetAppApiToken(
+    public async Task<IResult<Guid>> GetAppApiTokenAsync(
         Guid appId,
         IResult<Guid> defaultValue,
         CancellationToken ct = default
@@ -61,7 +61,7 @@ public class AppClient
         return await _request.Get($"apps/{appId}/token").AsAsync(defaultValue, ct);
     }
 
-    public async Task<IResult> UpdateApp(
+    public async Task<IResult> UpdateAppAsync(
         Guid appId,
         UpdateAppRequestBody body,
         IResult defaultValue,
@@ -71,7 +71,7 @@ public class AppClient
         return await _request.Put($"apps/{appId}").JsonContent(body).AsAsync(defaultValue, ct);
     }
 
-    public async Task<IResult> SetAppOwner(
+    public async Task<IResult> SetAppOwnerAsync(
         Guid appId,
         Guid newOwnerId,
         IResult defaultValue,
@@ -81,7 +81,7 @@ public class AppClient
         return await _request.Put($"apps/{appId}/owner/{newOwnerId}").AsAsync(defaultValue, ct);
     }
 
-    public async Task<IResult<Guid>> UpdateAppApiToken(
+    public async Task<IResult<Guid>> UpdateAppApiTokenAsync(
         Guid appId,
         IResult<Guid> defaultValue,
         CancellationToken ct = default
@@ -90,7 +90,7 @@ public class AppClient
         return await _request.Put($"apps/{appId}/token").AsAsync(defaultValue, ct);
     }
 
-    public async Task<IResult> DeleteApp(Guid appId, IResult defaultValue, CancellationToken ct = default)
+    public async Task<IResult> DeleteAppAsync(Guid appId, IResult defaultValue, CancellationToken ct = default)
     {
         return await _request.Delete($"apps/{appId}").AsAsync(defaultValue, ct);
     }

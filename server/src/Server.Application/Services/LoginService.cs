@@ -48,7 +48,7 @@ internal class LoginService : ILoginService
         await _userLoginRepository.DeleteExpiredByUserIdAsync(user.Id, instant);
         await _userLoginRepository.CreateAsync(login);
 
-        var token = await _tokenGenerator.GenerateTokenString(login);
+        var token = await _tokenGenerator.GenerateTokenStringAsync(login);
 
         return new Tokens(token, login.RefreshToken, login.RefreshTokenExpires);
     }

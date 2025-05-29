@@ -18,7 +18,7 @@ namespace Server.Host.TestClient.Clients;
 
 public static class ExtendedClientExtensions
 {
-    public static Task<string> RegisterLogUserIn(
+    public static Task<string> RegisterLogUserInAsync(
         this ExtendedClient client,
         string? login = null,
         string? email = null,
@@ -26,7 +26,7 @@ public static class ExtendedClientExtensions
         Guid? referralId = null
     )
     {
-        return client.RegisterLogUserInInternal(
+        return client.RegisterLogUserInInternalAsync(
             Constants.IdAppId,
             login ?? Faker.Internet.UserName(),
             email ?? Faker.Internet.Email(),
@@ -35,10 +35,15 @@ public static class ExtendedClientExtensions
         );
     }
 
-    public static async Task<string> LogUserIn(this ExtendedClient client, Guid appId, string login, string password)
+    public static async Task<string> LogUserInAsync(
+        this ExtendedClient client,
+        Guid appId,
+        string login,
+        string password
+    )
     {
         // perform regular login
-        var tokens = await client.Login.LogIn(
+        var tokens = await client.Login.LogInAsync(
             appId,
             new LogInRequestBody { Login = login, Password = password },
             Result.New(new TokensResponse()).Error("Failed to load tokens")
@@ -47,7 +52,7 @@ public static class ExtendedClientExtensions
         return tokens.Data.Data.AccessToken;
     }
 
-    public static async Task<MeResponse> RegisterLogInGetUser(
+    public static async Task<MeResponse> RegisterLogInGetUserAsync(
         this ExtendedClient client,
         string? login = null,
         string? email = null,
@@ -58,16 +63,16 @@ public static class ExtendedClientExtensions
         login ??= Faker.Random.String2(30, 40);
         email ??= Faker.Internet.Email();
         password ??= Faker.Internet.Password();
-        var token = await client.RegisterLogUserInInternal(Constants.IdAppId, login, email, password, referralId);
+        var token = await client.RegisterLogUserInInternalAsync(Constants.IdAppId, login, email, password, referralId);
 
         var me = await client
             .WithToken(token)
-            .Me.GetMe(Result.New(new MeResponse()).Error("Failed to load personal info"));
+            .Me.GetMeAsync(Result.New(new MeResponse()).Error("Failed to load personal info"));
 
         return me.Data.Data;
     }
 
-    private static async Task<string> RegisterLogUserInInternal(
+    private static async Task<string> RegisterLogUserInInternalAsync(
         this ExtendedClient client,
         Guid appId,
         string login,
@@ -77,13 +82,13 @@ public static class ExtendedClientExtensions
     )
     {
         // register
-        var registerResponse = await client.Me.RegisterMe(
+        var registerResponse = await client.Me.RegisterMeAsync(
             new RegisterMeRequest
             {
                 Server = "http://localhost/",
                 Login = login,
                 Email = email,
-                ReferralId = referralId
+                ReferralId = referralId,
             },
             Result.New().Error("Failed to register")
         );
@@ -97,7 +102,7 @@ public static class ExtendedClientExtensions
         var userId = ((ConfirmEmailData)client.EmailService.Emails.Last().Data).Id;
 
         // confirm email
-        var tokensResponse = await client.Me.ConfirmMyEmail(
+        var tokensResponse = await client.Me.ConfirmMyEmailAsync(
             appId,
             new ConfirmMyEmailRequestBody { Id = userId },
             Result.New(new TokensResponse()).Error("Failed to confirm email")
@@ -109,13 +114,13 @@ public static class ExtendedClientExtensions
         // set password
         await client
             .WithToken(token)
-            .Me.UpdateMyPassword(
+            .Me.UpdateMyPasswordAsync(
                 new UpdateMyPasswordRequest { Password = password },
                 Result.New().Error("Failed to update password")
             );
 
         // perform regular login
-        var tokens = await client.Login.LogIn(
+        var tokens = await client.Login.LogInAsync(
             appId,
             new LogInRequestBody { Login = login, Password = password },
             Result.New(new TokensResponse()).Error("Failed to log in")

@@ -13,7 +13,7 @@ internal class CompanyUserRoleConfiguration : IEntityConfiguration<CompanyUserRo
         {
             x.CompanyId,
             x.UserId,
-            x.RoleId
+            x.RoleId,
         });
         builder.Association(x => x.Company, x => x.CompanyId, x => x.Id, false);
         builder.Association(x => x.User, x => x.UserId, x => x.Id, false);

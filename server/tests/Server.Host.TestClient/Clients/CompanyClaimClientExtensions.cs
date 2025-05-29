@@ -10,7 +10,7 @@ namespace Server.Host.TestClient.Clients;
 
 public static class CompanyClaimClientExtensions
 {
-    public static async Task<CompanyClaimResponse> Register(
+    public static async Task<CompanyClaimResponse> RegisterAsync(
         this CompanyClaimClient client,
         Guid appId,
         string? key = null,
@@ -21,14 +21,17 @@ public static class CompanyClaimClientExtensions
         {
             AppId = appId,
             Key = key ?? Faker.Random.String2(5),
-            Name = name ?? Faker.Random.String2(10)
+            Name = name ?? Faker.Random.String2(10),
         };
         var claimId = await client
-            .CreateCompanyClaim(request, Result.New(Guid.Empty).Error("Failed to create claim"))
-            .GetData();
+            .CreateCompanyClaimAsync(request, Result.New(Guid.Empty).Error("Failed to create claim"))
+            .GetDataAsync();
         var claims = await client
-            .ListCompanyClaims(appId, Result.New(Array.Empty<CompanyClaimResponse>()).Error("Failed to list claims"))
-            .GetData();
+            .ListCompanyClaimsAsync(
+                appId,
+                Result.New(Array.Empty<CompanyClaimResponse>()).Error("Failed to list claims")
+            )
+            .GetDataAsync();
 
         return claims.Single(x => x.Id == claimId);
     }

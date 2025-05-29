@@ -17,7 +17,7 @@ public class CompanyUserController : ServerController
 
     [HttpPost]
     [Authorize]
-    public Task<IResult> AddUserToCompany(Guid companyId, Guid userId)
+    public Task<IResult> AddUserToCompanyAsync(Guid companyId, Guid userId)
     {
         var request = new AddUserToCompanyRequest { CompanyId = companyId, UserId = userId };
 
@@ -26,13 +26,13 @@ public class CompanyUserController : ServerController
 
     [HttpPost("roles/{roleId:guid}")]
     [Authorize]
-    public Task<IResult> AddCompanyRoleToCompanyUser(Guid companyId, Guid userId, Guid roleId)
+    public Task<IResult> AddCompanyRoleToCompanyUserAsync(Guid companyId, Guid userId, Guid roleId)
     {
         var request = new AddCompanyRoleToCompanyUserRequest
         {
             CompanyId = companyId,
             UserId = userId,
-            RoleId = roleId
+            RoleId = roleId,
         };
 
         return HandleAsync(request);
@@ -40,13 +40,13 @@ public class CompanyUserController : ServerController
 
     [HttpDelete("roles/{roleId:guid}")]
     [Authorize]
-    public Task<IResult> DeleteCompanyRoleFromCompanyUser(Guid companyId, Guid userId, Guid roleId)
+    public Task<IResult> DeleteCompanyRoleFromCompanyUserAsync(Guid companyId, Guid userId, Guid roleId)
     {
         var request = new DeleteCompanyRoleFromCompanyUserRequest
         {
             CompanyId = companyId,
             UserId = userId,
-            RoleId = roleId
+            RoleId = roleId,
         };
 
         return HandleAsync(request);
@@ -54,7 +54,7 @@ public class CompanyUserController : ServerController
 
     [HttpPost("claims/{claimId:guid}")]
     [Authorize]
-    public Task<IResult> AddCompanyClaimToCompanyUser(
+    public Task<IResult> AddCompanyClaimToCompanyUserAsync(
         Guid companyId,
         Guid userId,
         Guid claimId,
@@ -66,7 +66,7 @@ public class CompanyUserController : ServerController
             CompanyId = companyId,
             UserId = userId,
             ClaimId = claimId,
-            Value = requestBody.Value
+            Value = requestBody.Value,
         };
 
         return HandleAsync(request);
@@ -74,13 +74,13 @@ public class CompanyUserController : ServerController
 
     [HttpDelete("claims/{claimId:guid}")]
     [Authorize]
-    public Task<IResult> DeleteCompanyClaimFromCompanyUser(Guid companyId, Guid userId, Guid claimId)
+    public Task<IResult> DeleteCompanyClaimFromCompanyUserAsync(Guid companyId, Guid userId, Guid claimId)
     {
         var request = new DeleteCompanyClaimFromCompanyUserRequest
         {
             CompanyId = companyId,
             UserId = userId,
-            ClaimId = claimId
+            ClaimId = claimId,
         };
 
         return HandleAsync(request);
@@ -88,7 +88,7 @@ public class CompanyUserController : ServerController
 
     [HttpDelete]
     [Authorize]
-    public Task<IResult> DeleteUserFromCompany(Guid companyId, Guid userId)
+    public Task<IResult> DeleteUserFromCompanyAsync(Guid companyId, Guid userId)
     {
         var request = new DeleteUserFromCompanyRequest { CompanyId = companyId, UserId = userId };
 

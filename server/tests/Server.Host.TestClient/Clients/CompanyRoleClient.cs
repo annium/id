@@ -17,7 +17,7 @@ public class CompanyRoleClient
         _request = request;
     }
 
-    public async Task<IHttpResponse<IResult<Guid>>> CreateRole(
+    public async Task<IHttpResponse<IResult<Guid>>> CreateRoleAsync(
         CreateCompanyRoleRequest body,
         IResult<Guid> defaultValue,
         CancellationToken ct = default
@@ -26,7 +26,7 @@ public class CompanyRoleClient
         return await _request.Post("companies/roles").JsonContent(body).AsResponseAsync(defaultValue, ct);
     }
 
-    public async Task<IHttpResponse<IResult<CompanyRoleResponse[]>>> ListRoles(
+    public async Task<IHttpResponse<IResult<CompanyRoleResponse[]>>> ListRolesAsync(
         Guid appId,
         IResult<CompanyRoleResponse[]> defaultValue,
         CancellationToken ct = default
@@ -35,7 +35,7 @@ public class CompanyRoleClient
         return await _request.Get("companies/roles").Param("appId", appId).AsResponseAsync(defaultValue, ct);
     }
 
-    public async Task<IHttpResponse<IResult>> UpdateRole(
+    public async Task<IHttpResponse<IResult>> UpdateRoleAsync(
         Guid roleId,
         UpdateCompanyRoleRequestBody body,
         IResult defaultValue,
@@ -45,7 +45,7 @@ public class CompanyRoleClient
         return await _request.Put($"companies/roles/{roleId}").JsonContent(body).AsResponseAsync(defaultValue, ct);
     }
 
-    public async Task<IHttpResponse<IResult>> AddClaimToRole(
+    public async Task<IHttpResponse<IResult>> AddClaimToRoleAsync(
         Guid roleId,
         Guid claimId,
         AddCompanyClaimToCompanyRoleRequestBody body,
@@ -59,7 +59,7 @@ public class CompanyRoleClient
             .AsResponseAsync(defaultValue, ct);
     }
 
-    public async Task<IHttpResponse<IResult>> DeleteClaimFromRole(
+    public async Task<IHttpResponse<IResult>> DeleteClaimFromRoleAsync(
         Guid roleId,
         Guid claimId,
         IResult defaultValue,
@@ -69,7 +69,7 @@ public class CompanyRoleClient
         return await _request.Delete($"companies/roles/{roleId}/claims/{claimId}").AsResponseAsync(defaultValue, ct);
     }
 
-    public async Task<IHttpResponse<IResult>> DeleteRole(
+    public async Task<IHttpResponse<IResult>> DeleteRoleAsync(
         Guid roleId,
         IResult defaultValue,
         CancellationToken ct = default

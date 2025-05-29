@@ -18,13 +18,13 @@ public class UserController : ServerController
         : base(mediator, sp) { }
 
     [HttpGet]
-    public Task<IResult<IEnumerable<UserResponse>>> FindUsers([FromQuery] FindUsersRequest request)
+    public Task<IResult<IEnumerable<UserResponse>>> FindUsersAsync([FromQuery] FindUsersRequest request)
     {
         return HandleAsync<FindUsersRequest, IEnumerable<UserResponse>>(request);
     }
 
     [HttpGet("{userId:guid}")]
-    public Task<IResult<UserResponse>> GetUser(Guid userId)
+    public Task<IResult<UserResponse>> GetUserAsync(Guid userId)
     {
         var request = new GetUserRequest { UserId = userId };
 
@@ -33,7 +33,7 @@ public class UserController : ServerController
 
     [HttpPost("{userId:guid}/roles/{roleId:guid}")]
     [Authorize]
-    public Task<IResult> AddRoleToUser(Guid userId, Guid roleId)
+    public Task<IResult> AddRoleToUserAsync(Guid userId, Guid roleId)
     {
         var request = new AddRoleToUserRequest { UserId = userId, RoleId = roleId };
 
@@ -42,7 +42,7 @@ public class UserController : ServerController
 
     [HttpDelete("{userId:guid}/roles/{roleId:guid}")]
     [Authorize]
-    public Task<IResult> DeleteRoleFromUser(Guid userId, Guid roleId)
+    public Task<IResult> DeleteRoleFromUserAsync(Guid userId, Guid roleId)
     {
         var request = new DeleteRoleFromUserRequest { UserId = userId, RoleId = roleId };
 
@@ -51,13 +51,17 @@ public class UserController : ServerController
 
     [HttpPost("{userId:guid}/claims/{claimId:guid}")]
     [Authorize]
-    public Task<IResult> AddClaimToUser(Guid userId, Guid claimId, [FromBody] AddClaimToUserRequestBody requestBody)
+    public Task<IResult> AddClaimToUserAsync(
+        Guid userId,
+        Guid claimId,
+        [FromBody] AddClaimToUserRequestBody requestBody
+    )
     {
         var request = new AddClaimToUserRequest
         {
             UserId = userId,
             ClaimId = claimId,
-            Value = requestBody.Value
+            Value = requestBody.Value,
         };
 
         return HandleAsync(request);
@@ -65,7 +69,7 @@ public class UserController : ServerController
 
     [HttpDelete("{userId:guid}/claims/{claimId:guid}")]
     [Authorize]
-    public Task<IResult> DeleteClaimFromUser(Guid userId, Guid claimId)
+    public Task<IResult> DeleteClaimFromUserAsync(Guid userId, Guid claimId)
     {
         var request = new DeleteClaimFromUserRequest { UserId = userId, ClaimId = claimId };
 
