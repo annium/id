@@ -21,12 +21,13 @@ services:
       - './run/server/keys:/app/keys'
   db:
     <<: *base
-    image: registry.annium.com/postgres:15
+    image: annium/postgres:17-alpine
     container_name: id_db
     ports:
       - '9591:5432'
     volumes:
       - 'db:/var/lib/postgresql/data'
+      - 'tls:/etc/postgresql/tls'
     env_file: ./run/db/db.env
   site:
     <<: *base
@@ -39,3 +40,4 @@ services:
       - '9500:80'
 volumes:
   db:
+  tls:
