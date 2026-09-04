@@ -32,7 +32,7 @@ public static class Database
             .WithPassword(Config.Password)
             .Build();
         // Db = new ContainerBuilder<PostgreSqlTestcontainer>()
-        //     .WithDatabase(new PostgreSqlTestcontainerConfiguration("registry.annium.com/postgres:17")
+        //     .WithDatabase(new PostgreSqlTestcontainerConfiguration("annium/postgres:17-alpine")
         //     {
         //         Database = Config.Database,
         //         Username = Config.User,
