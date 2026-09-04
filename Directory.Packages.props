@@ -42,7 +42,7 @@
     <PackageVersion Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.12.19" />
     <PackageVersion Include="SimpleBase" Version="5.6.4" />
     <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.22.0" />
-    <PackageVersion Include="Testcontainers.PostgreSql" Version="4.7.0" />
+    <PackageVersion Include="Testcontainers.PostgreSql" Version="4.14.0" />
     <PackageVersion Include="Annium.XRest.Sources.AspNetCore" Version="1.2.0" />
     <PackageVersion Include="xunit.v3" Version="4.0.0" />
   </ItemGroup>
