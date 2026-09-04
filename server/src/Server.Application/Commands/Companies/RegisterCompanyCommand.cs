@@ -10,7 +10,6 @@ internal class RegisterCompanyCommandValidator : Validator<RegisterCompanyComman
 {
     public RegisterCompanyCommandValidator()
     {
-        Field(c => c.ParentId).Required();
         Field(c => c.Name).Required().Length(3, 100);
     }
 }

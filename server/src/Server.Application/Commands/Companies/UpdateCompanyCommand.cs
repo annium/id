@@ -11,7 +11,6 @@ internal class UpdateCompanyCommandValidator : Validator<UpdateCompanyCommand>
     public UpdateCompanyCommandValidator()
     {
         Field(c => c.CompanyId).Required();
-        Field(c => c.ParentId).Required();
         Field(c => c.Name).Required().Length(3, 100);
     }
 }

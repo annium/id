@@ -4,9 +4,13 @@ using System.Threading.Tasks;
 using Annium.AspNetCore.IntegrationTesting;
 using Annium.Configuration.Abstractions;
 using Annium.Core.DependencyInjection;
+using Annium.Data.Operations.Serialization.Json;
 using Annium.Infrastructure.Hosting;
 using Annium.Net.Http;
 using Annium.Net.Mail.Testing;
+using Annium.NodaTime.Serialization.Json;
+using Annium.Serialization.Abstractions;
+using Annium.Serialization.Json;
 using Annium.Testing;
 using Bogus;
 using Microsoft.Extensions.DependencyInjection;
@@ -59,6 +63,15 @@ public class IntegrationTestBase : TestBase
         {
             container.AddHttpRequestFactory("id", (_, _) => _idHost.Server.CreateClient(), isDefault: true);
             container.AddHttpRequestFactory("demo", (_, _) => _demoHost!.Server.CreateClient());
+
+            // the factories now live in the test container rather than the app's, so the serializers
+            // they use for request and response bodies have to be registered here too - shaped exactly
+            // like the server's, or the two ends disagree on the wire format, and under each factory's
+            // own key, which is what Annium.Net.Http resolves them by
+            foreach (var key in new[] { "id", "demo" })
+                container
+                    .AddSerializers(key)
+                    .WithJson(opts => opts.ConfigureForOperations().ConfigureForNodaTime(), isDefault: true);
         });
     }
 
