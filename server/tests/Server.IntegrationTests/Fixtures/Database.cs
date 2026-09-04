@@ -26,7 +26,7 @@ public static class Database
 
     static Database()
     {
-        _db = new PostgreSqlBuilder("postgres:18-alpine")
+        _db = new PostgreSqlBuilder("annium/postgres:17-alpine")
             .WithDatabase(Config.Database)
             .WithUsername(Config.User)
             .WithPassword(Config.Password)
