@@ -68,7 +68,7 @@ internal class MeStore : StateBase, IMeStore
         if (_tokenStore.Get() is null)
         {
             Console.WriteLine("MeStore.Load: no tokens");
-            State.Fail(Result.New().Error("Tokens missing"));
+            State.Fail(Result.Create().Error("Tokens missing"));
             HasLoadedOnce.Set(true);
 
             return;

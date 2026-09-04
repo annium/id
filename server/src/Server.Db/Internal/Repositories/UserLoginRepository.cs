@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Annium.linq2db.Extensions;
 using LinqToDB;
+using LinqToDB.Async;
 using NodaTime;
 using Server.Db.Repositories;
 using Server.Domain.Models;

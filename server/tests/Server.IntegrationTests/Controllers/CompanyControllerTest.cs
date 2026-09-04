@@ -30,7 +30,7 @@ public class CompanyControllerTest : IntegrationTestBase
         var response = await Id(token)
             .Company.RegisterCompanyAsync(
                 request,
-                Result.New(Guid.Empty).Error("Failed to register company"),
+                Result.Create(Guid.Empty).Error("Failed to register company"),
                 TestContext.Current.CancellationToken
             );
 
@@ -49,7 +49,7 @@ public class CompanyControllerTest : IntegrationTestBase
         var response = await Id(token)
             .Company.RegisterCompanyAsync(
                 request,
-                Result.New(Guid.Empty).Error("Failed to register company"),
+                Result.Create(Guid.Empty).Error("Failed to register company"),
                 TestContext.Current.CancellationToken
             );
 
@@ -70,7 +70,7 @@ public class CompanyControllerTest : IntegrationTestBase
         var response = await Id(token)
             .Company.RegisterCompanyAsync(
                 request,
-                Result.New(Guid.Empty).Error("Failed to register company"),
+                Result.Create(Guid.Empty).Error("Failed to register company"),
                 TestContext.Current.CancellationToken
             );
 
@@ -104,7 +104,7 @@ public class CompanyControllerTest : IntegrationTestBase
         var res = await Id(token)
             .Company.FindCompaniesAsync(
                 string.Empty,
-                Result.New(Array.Empty<CompanyResponse>()).Error("Failed to find companies"),
+                Result.Create(Array.Empty<CompanyResponse>()).Error("Failed to find companies"),
                 TestContext.Current.CancellationToken
             );
         var response = res.Data.Data.ToArray();
@@ -124,7 +124,7 @@ public class CompanyControllerTest : IntegrationTestBase
         var response = await Id(token)
             .Company.FindCompaniesAsync(
                 company.Name,
-                Result.New(Array.Empty<CompanyResponse>()).Error("Failed to find companies"),
+                Result.Create(Array.Empty<CompanyResponse>()).Error("Failed to find companies"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -143,7 +143,7 @@ public class CompanyControllerTest : IntegrationTestBase
         // act
         var response = await Id(token)
             .Company.ListMyCompaniesAsync(
-                Result.New(Array.Empty<CompanyResponse>()).Error("Failed to list my companies"),
+                Result.Create(Array.Empty<CompanyResponse>()).Error("Failed to list my companies"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -163,7 +163,7 @@ public class CompanyControllerTest : IntegrationTestBase
         var response = await Id(token)
             .Company.GetCompanyAsync(
                 company.Id,
-                Result.New(new CompanyResponse()).Error("Failed to load company info"),
+                Result.Create(new CompanyResponse()).Error("Failed to load company info"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -182,7 +182,7 @@ public class CompanyControllerTest : IntegrationTestBase
         var response = await Id(token)
             .Company.GetCompanyAsync(
                 Guid.NewGuid(),
-                Result.New(new CompanyResponse()).Error("Failed to load company info"),
+                Result.Create(new CompanyResponse()).Error("Failed to load company info"),
                 TestContext.Current.CancellationToken
             );
 
@@ -201,7 +201,7 @@ public class CompanyControllerTest : IntegrationTestBase
         var response = await Id(token)
             .Company.GetCompanyAsync(
                 company.Id,
-                Result.New(new CompanyResponse()).Error("Failed to load company info"),
+                Result.Create(new CompanyResponse()).Error("Failed to load company info"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -221,7 +221,7 @@ public class CompanyControllerTest : IntegrationTestBase
         var response = await Id(token)
             .Company.GetCompanyUsersAsync(
                 Guid.NewGuid(),
-                Result.New(Array.Empty<UserResponse>()).Error("Failed to list company users"),
+                Result.Create(Array.Empty<UserResponse>()).Error("Failed to list company users"),
                 TestContext.Current.CancellationToken
             );
 
@@ -236,7 +236,7 @@ public class CompanyControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserInAsync();
         var user = await Id(token)
             .Me.GetMeAsync(
-                Result.New(new MeResponse()).Error("Failed to load personal information"),
+                Result.Create(new MeResponse()).Error("Failed to load personal information"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -247,7 +247,7 @@ public class CompanyControllerTest : IntegrationTestBase
         var response = await Id(token)
             .Company.GetCompanyUsersAsync(
                 company.Id,
-                Result.New(Array.Empty<UserResponse>()).Error("Failed to list company users"),
+                Result.Create(Array.Empty<UserResponse>()).Error("Failed to list company users"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -271,7 +271,7 @@ public class CompanyControllerTest : IntegrationTestBase
             .Company.UpdateCompanyAsync(
                 company.Id,
                 request,
-                Result.New().Error("Failed to update company"),
+                Result.Create().Error("Failed to update company"),
                 TestContext.Current.CancellationToken
             );
 
@@ -291,7 +291,7 @@ public class CompanyControllerTest : IntegrationTestBase
             .Company.UpdateCompanyAsync(
                 Guid.NewGuid(),
                 request,
-                Result.New().Error("Failed to update company"),
+                Result.Create().Error("Failed to update company"),
                 TestContext.Current.CancellationToken
             );
 
@@ -313,7 +313,7 @@ public class CompanyControllerTest : IntegrationTestBase
             .Company.UpdateCompanyAsync(
                 company.Id,
                 request,
-                Result.New().Error("Failed to update company"),
+                Result.Create().Error("Failed to update company"),
                 TestContext.Current.CancellationToken
             );
 
@@ -334,7 +334,7 @@ public class CompanyControllerTest : IntegrationTestBase
             .Company.UpdateCompanyAsync(
                 company.Id,
                 request,
-                Result.New().Error("Failed to update company"),
+                Result.Create().Error("Failed to update company"),
                 TestContext.Current.CancellationToken
             );
 
@@ -357,7 +357,7 @@ public class CompanyControllerTest : IntegrationTestBase
             .Company.UpdateCompanyAsync(
                 company.Id,
                 request,
-                Result.New().Error("Failed to update company"),
+                Result.Create().Error("Failed to update company"),
                 TestContext.Current.CancellationToken
             );
 
@@ -378,7 +378,7 @@ public class CompanyControllerTest : IntegrationTestBase
             .Company.UpdateCompanyAsync(
                 company.Id,
                 request,
-                Result.New().Error("Failed to update company"),
+                Result.Create().Error("Failed to update company"),
                 TestContext.Current.CancellationToken
             );
 
@@ -397,7 +397,7 @@ public class CompanyControllerTest : IntegrationTestBase
             .Company.SetCompanyOwnerAsync(
                 Guid.NewGuid(),
                 Guid.NewGuid(),
-                Result.New().Error("Failed to set company owner"),
+                Result.Create().Error("Failed to set company owner"),
                 TestContext.Current.CancellationToken
             );
 
@@ -414,7 +414,7 @@ public class CompanyControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserInAsync();
         var user = await Id(token)
             .Me.GetMeAsync(
-                Result.New(new MeResponse()).Error("Failed to load personal information"),
+                Result.Create(new MeResponse()).Error("Failed to load personal information"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -424,7 +424,7 @@ public class CompanyControllerTest : IntegrationTestBase
             .Company.SetCompanyOwnerAsync(
                 company.Id,
                 user.Id,
-                Result.New().Error("Failed to set company owner"),
+                Result.Create().Error("Failed to set company owner"),
                 TestContext.Current.CancellationToken
             );
 
@@ -444,7 +444,7 @@ public class CompanyControllerTest : IntegrationTestBase
             .Company.SetCompanyOwnerAsync(
                 company.Id,
                 Guid.NewGuid(),
-                Result.New().Error("Failed to set company owner"),
+                Result.Create().Error("Failed to set company owner"),
                 TestContext.Current.CancellationToken
             );
 
@@ -461,7 +461,7 @@ public class CompanyControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserInAsync();
         var user = await Id(token)
             .Me.GetMeAsync(
-                Result.New(new MeResponse()).Error("Failed to load personal information"),
+                Result.Create(new MeResponse()).Error("Failed to load personal information"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -471,7 +471,7 @@ public class CompanyControllerTest : IntegrationTestBase
             .Company.SetCompanyOwnerAsync(
                 company.Id,
                 user.Id,
-                Result.New().Error("Failed to set company owner"),
+                Result.Create().Error("Failed to set company owner"),
                 TestContext.Current.CancellationToken
             );
 
@@ -489,7 +489,7 @@ public class CompanyControllerTest : IntegrationTestBase
         var response = await Id(token)
             .Company.UnregisterCompanyAsync(
                 Guid.NewGuid(),
-                Result.New().Error("Failed to unregister company"),
+                Result.Create().Error("Failed to unregister company"),
                 TestContext.Current.CancellationToken
             );
 
@@ -509,7 +509,7 @@ public class CompanyControllerTest : IntegrationTestBase
         var response = await Id(token)
             .Company.UnregisterCompanyAsync(
                 company.Id,
-                Result.New().Error("Failed to unregister company"),
+                Result.Create().Error("Failed to unregister company"),
                 TestContext.Current.CancellationToken
             );
 
@@ -528,7 +528,7 @@ public class CompanyControllerTest : IntegrationTestBase
         var response = await Id(token)
             .Company.UnregisterCompanyAsync(
                 company.Id,
-                Result.New().Error("Failed to unregister company"),
+                Result.Create().Error("Failed to unregister company"),
                 TestContext.Current.CancellationToken
             );
 

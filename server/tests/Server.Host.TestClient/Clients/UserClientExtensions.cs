@@ -20,7 +20,7 @@ public static class UserClientExtensions
             userId,
             claimId,
             new AddClaimToUserRequestBody { Value = value ?? Faker.Random.String2(10) },
-            Result.New().Error("Failed to add claim")
+            Result.Create().Error("Failed to add claim")
         );
 
         return response;

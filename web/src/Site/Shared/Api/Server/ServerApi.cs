@@ -61,18 +61,18 @@ internal class ServerApi : IServerApi
 
         var tokens = _tokenStore.Get();
         if (tokens is null)
-            return GetAuthFailureResponse("No user token available to perform token update");
+            return GetAuthFailureResponse(response.Uri, "No user token available to perform token update");
 
         // if unauthorized - try refresh token and retry
         if (tokens.RefreshTokenExpires < _timeProvider.Now)
-            return GetAuthFailureResponse("Refresh token is expired. Need to login");
+            return GetAuthFailureResponse(response.Uri, "Refresh token is expired. Need to login");
 
         var updateTokenResult = await Private
             .Client()
             .Login.UpdateTokenAsync(
                 _config.AppId,
                 tokens.RefreshToken,
-                Result.New(new TokensResponse()).Error("Failed to update token")
+                Result.Create(new TokensResponse()).Error("Failed to update token")
             );
         if (updateTokenResult.HasErrors)
             return response;
@@ -80,12 +80,29 @@ internal class ServerApi : IServerApi
         return await next();
     }
 
-    private IHttpResponse GetAuthFailureResponse(string failure)
+    /// <summary>
+    /// Builds the 401 handed back when the middleware gives up before reaching the server.
+    /// </summary>
+    /// <remarks>
+    /// This response is synthesized locally, so it carries the URI of the call that failed rather than
+    /// one of its own - <see cref="HttpResponse.Result"/> is the factory for a real (non-network,
+    /// non-aborted) unsuccessful response, which is what a refused auth retry is.
+    /// </remarks>
+    /// <param name="uri">The URI of the request that came back unauthorized.</param>
+    /// <param name="failure">Why the token could not be refreshed.</param>
+    /// <returns>An unsuccessful response carrying the failure as an operation result.</returns>
+    private IHttpResponse GetAuthFailureResponse(Uri uri, string failure)
     {
-        var message = new HttpResponseMessage(HttpStatusCode.Unauthorized);
-        message.Content = new StringContent(_serializer.Serialize(Result.New().Error(failure)), Encoding.UTF8);
+        var content = new StringContent(_serializer.Serialize(Result.Create().Error(failure)), Encoding.UTF8);
 
-        return new HttpResponse(message.RequestMessage.NotNull().RequestUri.NotNull(), message);
+        return HttpResponse.Result(
+            isSuccess: false,
+            uri,
+            HttpStatusCode.Unauthorized,
+            nameof(HttpStatusCode.Unauthorized),
+            HttpResponse.EmptyHeaders,
+            content
+        );
     }
 }
 

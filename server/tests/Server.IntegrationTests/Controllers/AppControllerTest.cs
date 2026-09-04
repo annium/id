@@ -30,7 +30,7 @@ public class AppControllerTest : IntegrationTestBase
         var response = await Id(token)
             .App.CreateAppAsync(
                 request,
-                Result.New(Guid.Empty).Error("Failed to create app"),
+                Result.Create(Guid.Empty).Error("Failed to create app"),
                 TestContext.Current.CancellationToken
             );
 
@@ -50,7 +50,7 @@ public class AppControllerTest : IntegrationTestBase
         var apps = await Id(token)
             .App.FindAppsAsync(
                 appName,
-                Result.New(Array.Empty<AppResponse>()).Error("Failed to find apps"),
+                Result.Create(Array.Empty<AppResponse>()).Error("Failed to find apps"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -71,7 +71,7 @@ public class AppControllerTest : IntegrationTestBase
         var response = await Id(token)
             .App.GetAppApiTokenAsync(
                 Guid.NewGuid(),
-                Result.New(Guid.Empty).Error("Failed to get app API token"),
+                Result.Create(Guid.Empty).Error("Failed to get app API token"),
                 TestContext.Current.CancellationToken
             );
 
@@ -91,7 +91,7 @@ public class AppControllerTest : IntegrationTestBase
         var response = await Id(token)
             .App.GetAppApiTokenAsync(
                 app.Id,
-                Result.New(Guid.Empty).Error("Failed to get app API token"),
+                Result.Create(Guid.Empty).Error("Failed to get app API token"),
                 TestContext.Current.CancellationToken
             );
 
@@ -110,7 +110,7 @@ public class AppControllerTest : IntegrationTestBase
         var response = await Id(token)
             .App.GetAppApiTokenAsync(
                 app.Id,
-                Result.New(Guid.Empty).Error("Failed to get app API token"),
+                Result.Create(Guid.Empty).Error("Failed to get app API token"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -129,7 +129,7 @@ public class AppControllerTest : IntegrationTestBase
         var response = await Id(token)
             .App.UpdateAppApiTokenAsync(
                 Guid.NewGuid(),
-                Result.New(Guid.Empty).Error("Failed to update app API token"),
+                Result.Create(Guid.Empty).Error("Failed to update app API token"),
                 TestContext.Current.CancellationToken
             );
 
@@ -149,7 +149,7 @@ public class AppControllerTest : IntegrationTestBase
         var response = await Id(token)
             .App.UpdateAppApiTokenAsync(
                 app.Id,
-                Result.New(Guid.Empty).Error("Failed to update app API token"),
+                Result.Create(Guid.Empty).Error("Failed to update app API token"),
                 TestContext.Current.CancellationToken
             );
 
@@ -168,7 +168,7 @@ public class AppControllerTest : IntegrationTestBase
         var response = await Id(token)
             .App.UpdateAppApiTokenAsync(
                 app.Id,
-                Result.New(Guid.Empty).Error("Failed to update app API token"),
+                Result.Create(Guid.Empty).Error("Failed to update app API token"),
                 TestContext.Current.CancellationToken
             );
 
@@ -186,7 +186,7 @@ public class AppControllerTest : IntegrationTestBase
         var response = await Id(token)
             .App.FindAppsAsync(
                 string.Empty,
-                Result.New(Array.Empty<AppResponse>()).Error("Failed to find apps"),
+                Result.Create(Array.Empty<AppResponse>()).Error("Failed to find apps"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -207,7 +207,7 @@ public class AppControllerTest : IntegrationTestBase
         var response = await Id(token)
             .App.FindAppsAsync(
                 app.Name,
-                Result.New(Array.Empty<AppResponse>()).Error("Failed to find apps"),
+                Result.Create(Array.Empty<AppResponse>()).Error("Failed to find apps"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -226,7 +226,7 @@ public class AppControllerTest : IntegrationTestBase
         // act
         var response = await Id(token)
             .App.ListMyAppsAsync(
-                Result.New(Array.Empty<AppResponse>()).Error("Failed to list my apps"),
+                Result.Create(Array.Empty<AppResponse>()).Error("Failed to list my apps"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -246,7 +246,7 @@ public class AppControllerTest : IntegrationTestBase
         var response = await Id(token)
             .App.GetAppAsync(
                 app.Id,
-                Result.New(new AppResponse()).Error("Failed to get app"),
+                Result.Create(new AppResponse()).Error("Failed to get app"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -268,7 +268,7 @@ public class AppControllerTest : IntegrationTestBase
             .App.UpdateAppAsync(
                 app.Id,
                 request,
-                Result.New().Error("Failed to update app"),
+                Result.Create().Error("Failed to update app"),
                 TestContext.Current.CancellationToken
             );
 
@@ -288,7 +288,7 @@ public class AppControllerTest : IntegrationTestBase
             .App.UpdateAppAsync(
                 Guid.NewGuid(),
                 request,
-                Result.New().Error("Failed to update app"),
+                Result.Create().Error("Failed to update app"),
                 TestContext.Current.CancellationToken
             );
 
@@ -310,7 +310,7 @@ public class AppControllerTest : IntegrationTestBase
             .App.UpdateAppAsync(
                 app.Id,
                 request,
-                Result.New().Error("Failed to update app"),
+                Result.Create().Error("Failed to update app"),
                 TestContext.Current.CancellationToken
             );
 
@@ -331,13 +331,13 @@ public class AppControllerTest : IntegrationTestBase
             .App.UpdateAppAsync(
                 app.Id,
                 request,
-                Result.New().Error("Failed to update app"),
+                Result.Create().Error("Failed to update app"),
                 TestContext.Current.CancellationToken
             );
         var result = await Id(token)
             .App.GetAppAsync(
                 app.Id,
-                Result.New(new AppResponse()).Error("Failed to get app"),
+                Result.Create(new AppResponse()).Error("Failed to get app"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -359,7 +359,7 @@ public class AppControllerTest : IntegrationTestBase
             .App.SetAppOwnerAsync(
                 Guid.NewGuid(),
                 Guid.NewGuid(),
-                Result.New().Error("Failed to set app owner"),
+                Result.Create().Error("Failed to set app owner"),
                 TestContext.Current.CancellationToken
             );
 
@@ -376,7 +376,7 @@ public class AppControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserInAsync();
         var me = await Id(token)
             .Me.GetMeAsync(
-                Result.New(new MeResponse()).Error("Failed to load personal information"),
+                Result.Create(new MeResponse()).Error("Failed to load personal information"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -386,7 +386,7 @@ public class AppControllerTest : IntegrationTestBase
             .App.SetAppOwnerAsync(
                 app.Id,
                 me.Id,
-                Result.New().Error("Failed to set app owner"),
+                Result.Create().Error("Failed to set app owner"),
                 TestContext.Current.CancellationToken
             );
 
@@ -406,7 +406,7 @@ public class AppControllerTest : IntegrationTestBase
             .App.SetAppOwnerAsync(
                 app.Id,
                 Guid.NewGuid(),
-                Result.New().Error("Failed to set app owner"),
+                Result.Create().Error("Failed to set app owner"),
                 TestContext.Current.CancellationToken
             );
 
@@ -423,7 +423,7 @@ public class AppControllerTest : IntegrationTestBase
         var otherToken = await Id().RegisterLogUserInAsync();
         var user = await Id(otherToken)
             .Me.GetMeAsync(
-                Result.New(new MeResponse()).Error("Failed to load personal information"),
+                Result.Create(new MeResponse()).Error("Failed to load personal information"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -433,13 +433,13 @@ public class AppControllerTest : IntegrationTestBase
             .App.SetAppOwnerAsync(
                 app.Id,
                 user.Id,
-                Result.New().Error("Failed to set app owner"),
+                Result.Create().Error("Failed to set app owner"),
                 TestContext.Current.CancellationToken
             );
         var appTokenResult = await Id(otherToken)
             .App.GetAppApiTokenAsync(
                 app.Id,
-                Result.New(Guid.Empty).Error("Failed to get app API token"),
+                Result.Create(Guid.Empty).Error("Failed to get app API token"),
                 TestContext.Current.CancellationToken
             )
             .GetResultAsync();
@@ -460,7 +460,7 @@ public class AppControllerTest : IntegrationTestBase
         var response = await Id(token)
             .App.DeleteAppAsync(
                 Guid.NewGuid(),
-                Result.New().Error("Failed to delete app"),
+                Result.Create().Error("Failed to delete app"),
                 TestContext.Current.CancellationToken
             );
 
@@ -480,7 +480,7 @@ public class AppControllerTest : IntegrationTestBase
         var response = await Id(token)
             .App.DeleteAppAsync(
                 app.Id,
-                Result.New().Error("Failed to delete app"),
+                Result.Create().Error("Failed to delete app"),
                 TestContext.Current.CancellationToken
             );
 
@@ -499,7 +499,7 @@ public class AppControllerTest : IntegrationTestBase
         var response = await Id(token)
             .App.DeleteAppAsync(
                 app.Id,
-                Result.New().Error("Failed to delete app"),
+                Result.Create().Error("Failed to delete app"),
                 TestContext.Current.CancellationToken
             );
 

@@ -1,7 +1,12 @@
 using System;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Annium.Configuration.Abstractions;
+using Annium.Configuration.CommandLine;
 using Annium.Core.DependencyInjection;
+using Annium.Logging.Console;
+using Annium.Logging.Shared;
 using Annium.Net.Types;
 
 namespace Server.Host;
@@ -16,17 +21,19 @@ public class ServicePack : ServicePackBase
         Add<Email.ServicePack>();
     }
 
-    public override void Configure(IServiceContainer container)
+    public override async Task ConfigureAsync(IServiceContainer container, CancellationToken ct)
     {
-        container.AddConfiguration<Configuration>(x => x.AddCommandLineArgs());
+        await container.AddConfigurationAsync<Configuration>(x => x.AddCommandLineArgs(), ct);
     }
 
-    public override void Register(IServiceContainer container, IServiceProvider provider)
+    public override Task RegisterAsync(IServiceContainer container, IServiceProvider provider, CancellationToken ct)
     {
         container.AddLogging();
+
+        return Task.CompletedTask;
     }
 
-    public override void Setup(IServiceProvider provider)
+    public override Task SetupAsync(IServiceProvider provider, CancellationToken ct)
     {
         var ignored = new[] { "ChainBuilder", "PipeHandler" };
         provider.UseLogging(route =>
@@ -36,6 +43,8 @@ public class ServicePack : ServicePackBase
                 .UseConsole()
         );
         SetupNetTypes(provider.Resolve<IMapperConfig>());
+
+        return Task.CompletedTask;
     }
 
     private void SetupNetTypes(IMapperConfig config)

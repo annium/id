@@ -28,7 +28,7 @@ public class LoginControllerTest : IntegrationTestBase
             .Login.LogInAsync(
                 app.Id,
                 request,
-                Result.New(new TokensResponse()).Error("Failed to log in"),
+                Result.Create(new TokensResponse()).Error("Failed to log in"),
                 TestContext.Current.CancellationToken
             );
 
@@ -49,7 +49,7 @@ public class LoginControllerTest : IntegrationTestBase
             .Login.LogInAsync(
                 app.Id,
                 request,
-                Result.New(new TokensResponse()).Error("Failed to log in"),
+                Result.Create(new TokensResponse()).Error("Failed to log in"),
                 TestContext.Current.CancellationToken
             );
 
@@ -71,7 +71,7 @@ public class LoginControllerTest : IntegrationTestBase
             .Login.LogInAsync(
                 app.Id,
                 request,
-                Result.New(new TokensResponse()).Error("Failed to log in"),
+                Result.Create(new TokensResponse()).Error("Failed to log in"),
                 TestContext.Current.CancellationToken
             );
 
@@ -94,7 +94,7 @@ public class LoginControllerTest : IntegrationTestBase
             .Login.LogInAsync(
                 app.Id,
                 request,
-                Result.New(new TokensResponse()).Error("Failed to log in"),
+                Result.Create(new TokensResponse()).Error("Failed to log in"),
                 TestContext.Current.CancellationToken
             );
 
@@ -118,7 +118,7 @@ public class LoginControllerTest : IntegrationTestBase
             .Login.UpdateTokenAsync(
                 app.Id,
                 Guid.NewGuid(),
-                Result.New(new TokensResponse()).Error("Failed to update token"),
+                Result.Create(new TokensResponse()).Error("Failed to update token"),
                 TestContext.Current.CancellationToken
             );
 
@@ -139,7 +139,7 @@ public class LoginControllerTest : IntegrationTestBase
             .Login.LogInAsync(
                 app.Id,
                 new LogInRequestBody { Login = login, Password = password },
-                Result.New(new TokensResponse()).Error("Failed to log in"),
+                Result.Create(new TokensResponse()).Error("Failed to log in"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -149,7 +149,7 @@ public class LoginControllerTest : IntegrationTestBase
             .Login.UpdateTokenAsync(
                 app.Id,
                 tokens.RefreshToken,
-                Result.New(new TokensResponse()).Error("Failed to update token"),
+                Result.Create(new TokensResponse()).Error("Failed to update token"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -172,7 +172,11 @@ public class LoginControllerTest : IntegrationTestBase
 
         // act
         var response = await Id(token)
-            .Login.LogOutAsync(app.Id, Result.New().Error("Failed to log out"), TestContext.Current.CancellationToken);
+            .Login.LogOutAsync(
+                app.Id,
+                Result.Create().Error("Failed to log out"),
+                TestContext.Current.CancellationToken
+            );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.OK);

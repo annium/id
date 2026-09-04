@@ -1,5 +1,8 @@
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using Annium.Configuration.Abstractions;
+using Annium.Configuration.Yaml;
 using Annium.Core.DependencyInjection;
 
 namespace Server.Application;
@@ -11,10 +14,11 @@ public class ServicePack : ServicePackBase
         Add<BaseServicePack>();
     }
 
-    public override void Configure(IServiceContainer container)
+    public override async Task ConfigureAsync(IServiceContainer container, CancellationToken ct)
     {
-        container.AddConfiguration<Configuration>(builder =>
-            builder.AddYamlFile(Path.Combine("configuration", "application.yml"))
+        await container.AddConfigurationAsync<Configuration>(
+            builder => builder.AddYamlFile(Path.Combine("configuration", "application.yml")),
+            ct
         );
     }
 }

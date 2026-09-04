@@ -1,6 +1,11 @@
 using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Annium.Configuration.Abstractions;
 using Annium.Core.DependencyInjection;
 using Annium.Logging;
+using Annium.Logging.Console;
+using Annium.Logging.Shared;
 
 namespace Server.Host;
 
@@ -14,17 +19,21 @@ public class TestServicePack : ServicePackBase
         Add<Email.TestServicePack>();
     }
 
-    public override void Configure(IServiceContainer container)
+    public override Task ConfigureAsync(IServiceContainer container, CancellationToken ct)
     {
         container.AddConfiguration(new Configuration());
+
+        return Task.CompletedTask;
     }
 
-    public override void Register(IServiceContainer container, IServiceProvider provider)
+    public override Task RegisterAsync(IServiceContainer container, IServiceProvider provider, CancellationToken ct)
     {
         container.AddLogging();
+
+        return Task.CompletedTask;
     }
 
-    public override void Setup(IServiceProvider provider)
+    public override Task SetupAsync(IServiceProvider provider, CancellationToken ct)
     {
         var ignored = new[] { "ChainBuilder", "PipeHandler" };
         provider.UseLogging(route =>
@@ -39,5 +48,7 @@ public class TestServicePack : ServicePackBase
                 )
                 .UseConsole()
         );
+
+        return Task.CompletedTask;
     }
 }

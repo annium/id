@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Annium.DbUp.Core;
@@ -51,13 +52,23 @@ public static class Database
             return;
         }
 
-        await _db.StartAsync();
-        Config.Host = _db.Hostname;
-        Config.Port = _db.GetMappedPublicPort(PostgreSqlBuilder.PostgreSqlPort);
-        Migrator
-            .Instance.ForPostgresql(Config.ConnectionString, Constants.Schema)
-            .WithScriptsFromAssembly(typeof(TestServicePack).Assembly)
-            .Execute();
-        _initTcs.SetResult();
+        // every other test waits on this one completing, so a failure has to be published rather than
+        // left to hang the whole run - the first test then reports the real cause and the rest fail fast
+        try
+        {
+            await _db.StartAsync();
+            Config.Host = _db.Hostname;
+            Config.Port = _db.GetMappedPublicPort(PostgreSqlBuilder.PostgreSqlPort);
+            Migrator
+                .Instance.ForPostgresql(Config.ConnectionString, Constants.Schema)
+                .WithScriptsFromAssembly(typeof(TestServicePack).Assembly)
+                .Execute();
+            _initTcs.SetResult();
+        }
+        catch (Exception e)
+        {
+            _initTcs.SetException(e);
+            throw;
+        }
     }
 }

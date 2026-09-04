@@ -1,5 +1,6 @@
 using Annium.Net.Http;
 using Annium.Net.Mail;
+using Annium.Net.Mail.Testing;
 
 namespace Server.Host.TestClient.Clients;
 

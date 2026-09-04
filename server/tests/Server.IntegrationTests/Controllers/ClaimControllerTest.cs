@@ -26,7 +26,7 @@ public class ClaimControllerTest : IntegrationTestBase
         var response = await Id(token)
             .Claim.CreateClaimAsync(
                 request,
-                Result.New(Guid.Empty).Error("Failed to create claim"),
+                Result.Create(Guid.Empty).Error("Failed to create claim"),
                 TestContext.Current.CancellationToken
             );
 
@@ -50,7 +50,7 @@ public class ClaimControllerTest : IntegrationTestBase
         var response = await Id(token)
             .Claim.CreateClaimAsync(
                 request,
-                Result.New(Guid.Empty).Error("Failed to create claim"),
+                Result.Create(Guid.Empty).Error("Failed to create claim"),
                 TestContext.Current.CancellationToken
             );
 
@@ -76,7 +76,7 @@ public class ClaimControllerTest : IntegrationTestBase
         var response = await Id(token)
             .Claim.CreateClaimAsync(
                 request,
-                Result.New(Guid.Empty).Error("Failed to create claim"),
+                Result.Create(Guid.Empty).Error("Failed to create claim"),
                 TestContext.Current.CancellationToken
             );
 
@@ -100,7 +100,7 @@ public class ClaimControllerTest : IntegrationTestBase
         await Id(token)
             .Claim.CreateClaimAsync(
                 request,
-                Result.New(Guid.Empty).Error("Failed to create claim"),
+                Result.Create(Guid.Empty).Error("Failed to create claim"),
                 TestContext.Current.CancellationToken
             );
 
@@ -108,7 +108,7 @@ public class ClaimControllerTest : IntegrationTestBase
         var response = await Id(token)
             .Claim.CreateClaimAsync(
                 request,
-                Result.New(Guid.Empty).Error("Failed to create claim"),
+                Result.Create(Guid.Empty).Error("Failed to create claim"),
                 TestContext.Current.CancellationToken
             );
 
@@ -145,7 +145,7 @@ public class ClaimControllerTest : IntegrationTestBase
         var response = await Id(token)
             .Claim.ListClaimsAsync(
                 Guid.NewGuid(),
-                Result.New(Array.Empty<ClaimResponse>()).Error("Failed to list claims"),
+                Result.Create(Array.Empty<ClaimResponse>()).Error("Failed to list claims"),
                 TestContext.Current.CancellationToken
             );
 
@@ -165,7 +165,7 @@ public class ClaimControllerTest : IntegrationTestBase
         var claims = await Id(token)
             .Claim.ListClaimsAsync(
                 app.Id,
-                Result.New(Array.Empty<ClaimResponse>()).Error("Failed to list claims"),
+                Result.Create(Array.Empty<ClaimResponse>()).Error("Failed to list claims"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -189,7 +189,7 @@ public class ClaimControllerTest : IntegrationTestBase
             .Claim.UpdateClaimAsync(
                 claim.Id,
                 request,
-                Result.New().Error("Failed to update claim"),
+                Result.Create().Error("Failed to update claim"),
                 TestContext.Current.CancellationToken
             );
 
@@ -212,7 +212,7 @@ public class ClaimControllerTest : IntegrationTestBase
             .Claim.UpdateClaimAsync(
                 claim.Id,
                 request,
-                Result.New().Error("Failed to update claim"),
+                Result.Create().Error("Failed to update claim"),
                 TestContext.Current.CancellationToken
             );
 
@@ -232,7 +232,7 @@ public class ClaimControllerTest : IntegrationTestBase
             .Claim.UpdateClaimAsync(
                 Guid.NewGuid(),
                 request,
-                Result.New().Error("Failed to update claim"),
+                Result.Create().Error("Failed to update claim"),
                 TestContext.Current.CancellationToken
             );
 
@@ -255,7 +255,7 @@ public class ClaimControllerTest : IntegrationTestBase
             .Claim.UpdateClaimAsync(
                 claim.Id,
                 request,
-                Result.New().Error("Failed to update claim"),
+                Result.Create().Error("Failed to update claim"),
                 TestContext.Current.CancellationToken
             );
 
@@ -277,7 +277,7 @@ public class ClaimControllerTest : IntegrationTestBase
             .Claim.UpdateClaimAsync(
                 claim.Id,
                 request,
-                Result.New().Error("Failed to update claim"),
+                Result.Create().Error("Failed to update claim"),
                 TestContext.Current.CancellationToken
             );
 
@@ -298,7 +298,7 @@ public class ClaimControllerTest : IntegrationTestBase
         var response = await Id(token)
             .Claim.DeleteClaimAsync(
                 claim.Id,
-                Result.New().Error("Failed to delete claim"),
+                Result.Create().Error("Failed to delete claim"),
                 TestContext.Current.CancellationToken
             );
 
@@ -316,7 +316,7 @@ public class ClaimControllerTest : IntegrationTestBase
         var response = await Id(token)
             .Claim.DeleteClaimAsync(
                 Guid.NewGuid(),
-                Result.New().Error("Failed to delete claim"),
+                Result.Create().Error("Failed to delete claim"),
                 TestContext.Current.CancellationToken
             );
 
@@ -336,7 +336,7 @@ public class ClaimControllerTest : IntegrationTestBase
         var response = await Id(token)
             .Claim.DeleteClaimAsync(
                 claim.Id,
-                Result.New().Error("Failed to delete claim"),
+                Result.Create().Error("Failed to delete claim"),
                 TestContext.Current.CancellationToken
             );
 

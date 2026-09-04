@@ -1,11 +1,29 @@
 using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Annium.Blazor.Ant;
+using Annium.Blazor.Css;
+using Annium.Blazor.Net;
+using Annium.Blazor.State;
 using Annium.Core.DependencyInjection;
+using Annium.Core.Mapper;
+using Annium.Core.Runtime;
+using Annium.Data.Operations.Serialization.Json;
+using Annium.Extensions.Validation;
+using Annium.Localization.Abstractions;
+using Annium.Localization.InMemory;
+using Annium.Logging.Console;
+using Annium.Logging.Shared;
+using Annium.Net.Http;
+using Annium.NodaTime.Serialization.Json;
+using Annium.Serialization.Abstractions;
+using Annium.Serialization.Json;
 
 namespace Site;
 
 public class ServicePack : ServicePackBase
 {
-    public override void Register(IServiceContainer container, IServiceProvider provider)
+    public override Task RegisterAsync(IServiceContainer container, IServiceProvider provider, CancellationToken ct)
     {
         // core
         container.AddTime().WithRealTime().SetDefault();
@@ -26,5 +44,7 @@ public class ServicePack : ServicePackBase
         container.Add<Theme>().AsSelf().Singleton();
         container.AddStates();
         container.AddApiServices();
+
+        return Task.CompletedTask;
     }
 }

@@ -36,7 +36,7 @@ build buildNumber="0":
 
 test:
     @echo "=== $0 ==="
-    dotnet test -c Release --no-build --nologo -v q
+    dotnet test --solution Id.slnx -c Release --no-build
 
 pack:
     @echo "=== $0 ==="

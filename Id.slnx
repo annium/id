@@ -1,0 +1,29 @@
+<Solution>
+  <Folder Name="/lib/" />
+  <Folder Name="/lib/src/">
+    <Project Path="lib/src/Annium.Id.AspNetCore/Annium.Id.AspNetCore.csproj" />
+    <Project Path="lib/src/Annium.Id.Core/Annium.Id.Core.csproj" />
+  </Folder>
+  <Folder Name="/lib/tests/">
+    <Project Path="lib/tests/Annium.Id.Core.Tests/Annium.Id.Core.Tests.csproj" />
+  </Folder>
+  <Folder Name="/server/" />
+  <Folder Name="/server/src/">
+    <Project Path="server/src/Server.Application/Server.Application.csproj" />
+    <Project Path="server/src/Server.Db/Server.Db.csproj" />
+    <Project Path="server/src/Server.Domain/Server.Domain.csproj" />
+    <Project Path="server/src/Server.Email/Server.Email.csproj" />
+    <Project Path="server/src/Server.Host/Server.Host.csproj" />
+    <Project Path="server/src/Server.ViewModels/Server.ViewModels.csproj" />
+  </Folder>
+  <Folder Name="/server/tests/">
+    <Project Path="server/tests/Server.DemoHost.TestClient/Server.DemoHost.TestClient.csproj" />
+    <Project Path="server/tests/Server.DemoHost/Server.DemoHost.csproj" />
+    <Project Path="server/tests/Server.Host.TestClient/Server.Host.TestClient.csproj" />
+    <Project Path="server/tests/Server.IntegrationTests/Server.IntegrationTests.csproj" />
+  </Folder>
+  <Folder Name="/web/" />
+  <Folder Name="/web/src/">
+    <Project Path="web/src/Site/Site.csproj" />
+  </Folder>
+</Solution>

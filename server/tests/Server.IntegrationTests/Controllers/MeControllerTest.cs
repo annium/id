@@ -28,7 +28,7 @@ public class MeControllerTest : IntegrationTestBase
         var response = await Id()
             .Me.RegisterMeAsync(
                 request,
-                Result.New().Error("Failed to register me"),
+                Result.Create().Error("Failed to register me"),
                 TestContext.Current.CancellationToken
             );
 
@@ -52,7 +52,7 @@ public class MeControllerTest : IntegrationTestBase
         var response = await Id()
             .Me.RegisterMeAsync(
                 request,
-                Result.New().Error("Failed to register me"),
+                Result.Create().Error("Failed to register me"),
                 TestContext.Current.CancellationToken
             );
 
@@ -76,7 +76,7 @@ public class MeControllerTest : IntegrationTestBase
         var response = await Id()
             .Me.RegisterMeAsync(
                 request,
-                Result.New().Error("Failed to register me"),
+                Result.Create().Error("Failed to register me"),
                 TestContext.Current.CancellationToken
             );
 
@@ -100,7 +100,7 @@ public class MeControllerTest : IntegrationTestBase
         var response = await Id()
             .Me.RegisterMeAsync(
                 request,
-                Result.New().Error("Failed to register me"),
+                Result.Create().Error("Failed to register me"),
                 TestContext.Current.CancellationToken
             );
 
@@ -134,7 +134,7 @@ public class MeControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserInAsync();
         var user = await Id(token)
             .Me.GetMeAsync(
-                Result.New(new MeResponse()).Error("Failed to load personal information"),
+                Result.Create(new MeResponse()).Error("Failed to load personal information"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -145,13 +145,13 @@ public class MeControllerTest : IntegrationTestBase
             .Me.RestoreMyAccessAsync(
                 Constants.IdAppId,
                 request,
-                Result.New().Error("Failed to run access restore"),
+                Result.Create().Error("Failed to run access restore"),
                 TestContext.Current.CancellationToken
             );
         token = EmailService.Emails.Last().Data.As<RestoreAccessData>().Tokens.AccessToken;
         var response = await Id(token)
             .Me.GetMeAsync(
-                Result.New(new MeResponse()).Error("Failed to load personal information"),
+                Result.Create(new MeResponse()).Error("Failed to load personal information"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -169,7 +169,7 @@ public class MeControllerTest : IntegrationTestBase
         // act
         var response = await Id(token)
             .Me.GetMeAsync(
-                Result.New(new MeResponse()).Error("Failed to load personal information"),
+                Result.Create(new MeResponse()).Error("Failed to load personal information"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -188,7 +188,7 @@ public class MeControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserInAsync(login, email, password);
         var me = await Id(token)
             .Me.GetMeAsync(
-                Result.New(new MeResponse()).Error("Failed to load personal information"),
+                Result.Create(new MeResponse()).Error("Failed to load personal information"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -198,7 +198,7 @@ public class MeControllerTest : IntegrationTestBase
         // act
         var response = await Id(token)
             .Me.GetMyTokenAsync(
-                Result.New(new IdTokenResponse()).Error("Failed to load access tokens"),
+                Result.Create(new IdTokenResponse()).Error("Failed to load access tokens"),
                 TestContext.Current.CancellationToken
             );
         var idToken = response.Data.Data;
@@ -221,7 +221,7 @@ public class MeControllerTest : IntegrationTestBase
         var response = await Id(token)
             .Me.UpdateMyProfileAsync(
                 request,
-                Result.New().Error("Failed to update profile"),
+                Result.Create().Error("Failed to update profile"),
                 TestContext.Current.CancellationToken
             );
 
@@ -241,7 +241,7 @@ public class MeControllerTest : IntegrationTestBase
         var response = await Id(token)
             .Me.UpdateMyProfileAsync(
                 request,
-                Result.New().Error("Failed to update profile"),
+                Result.Create().Error("Failed to update profile"),
                 TestContext.Current.CancellationToken
             );
 
@@ -261,7 +261,7 @@ public class MeControllerTest : IntegrationTestBase
         var response = await Id(token)
             .Me.UpdateMyProfileAsync(
                 request,
-                Result.New().Error("Failed to update profile"),
+                Result.Create().Error("Failed to update profile"),
                 TestContext.Current.CancellationToken
             );
 
@@ -280,7 +280,7 @@ public class MeControllerTest : IntegrationTestBase
         var response = await Id(token)
             .Me.UpdateMyProfileAsync(
                 request,
-                Result.New().Error("Failed to update profile"),
+                Result.Create().Error("Failed to update profile"),
                 TestContext.Current.CancellationToken
             );
 
@@ -299,7 +299,7 @@ public class MeControllerTest : IntegrationTestBase
         var response = await Id(token)
             .Me.UpdateMyPasswordAsync(
                 request,
-                Result.New().Error("Failed to update password"),
+                Result.Create().Error("Failed to update password"),
                 TestContext.Current.CancellationToken
             );
 
@@ -318,7 +318,7 @@ public class MeControllerTest : IntegrationTestBase
         var response = await Id(token)
             .Me.UpdateMyPasswordAsync(
                 request,
-                Result.New().Error("Failed to update password"),
+                Result.Create().Error("Failed to update password"),
                 TestContext.Current.CancellationToken
             );
 
@@ -334,7 +334,7 @@ public class MeControllerTest : IntegrationTestBase
 
         // act
         var response = await Id(token)
-            .Me.UnregisterMeAsync(Result.New().Error("Failed to unregister"), TestContext.Current.CancellationToken);
+            .Me.UnregisterMeAsync(Result.Create().Error("Failed to unregister"), TestContext.Current.CancellationToken);
 
         // assert
         response.StatusCode.Is(HttpStatusCode.OK);

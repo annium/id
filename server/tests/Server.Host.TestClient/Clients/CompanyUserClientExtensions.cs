@@ -18,7 +18,7 @@ public static class CompanyUserClientExtensions
         var response = await client.AddUserToCompanyAsync(
             companyId,
             userId,
-            Result.New().Error("Failed to add user to company")
+            Result.Create().Error("Failed to add user to company")
         );
 
         return response;
@@ -35,7 +35,7 @@ public static class CompanyUserClientExtensions
             companyId,
             userId,
             roleId,
-            Result.New().Error("Failed to add role to user")
+            Result.Create().Error("Failed to add role to user")
         );
 
         return response;
@@ -54,7 +54,7 @@ public static class CompanyUserClientExtensions
             userId,
             claimId,
             new AddCompanyClaimToCompanyUserRequestBody { Value = value ?? Faker.Random.String2(10) },
-            Result.New().Error("Failed to add claim to user")
+            Result.Create().Error("Failed to add claim to user")
         );
 
         return response;

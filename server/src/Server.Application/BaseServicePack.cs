@@ -1,12 +1,15 @@
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Annium.Core.DependencyInjection;
+using Annium.Core.Runtime;
 using Server.Application.Tools;
 
 namespace Server.Application;
 
 internal class BaseServicePack : ServicePackBase
 {
-    public override void Register(IServiceContainer container, IServiceProvider provider)
+    public override Task RegisterAsync(IServiceContainer container, IServiceProvider provider, CancellationToken ct)
     {
         // tools
         container.Add<ISecurityManager, SecurityManager>().Singleton();
@@ -18,5 +21,7 @@ internal class BaseServicePack : ServicePackBase
             .Where(x => x.IsClass && x.Name.EndsWith("Service"))
             .AsInterfaces()
             .Scoped();
+
+        return Task.CompletedTask;
     }
 }

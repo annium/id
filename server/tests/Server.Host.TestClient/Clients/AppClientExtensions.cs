@@ -13,12 +13,12 @@ public static class AppClientExtensions
     {
         var createResponse = await client.CreateAppAsync(
             new CreateAppRequest { Name = name ?? Faker.Random.String2(10) },
-            Result.New(Guid.Empty).Error("Failed to create app")
+            Result.Create(Guid.Empty).Error("Failed to create app")
         );
 
         var getResponse = await client.GetAppAsync(
             createResponse.Data.Data,
-            Result.New(new AppResponse()).Error("Failed to load app")
+            Result.Create(new AppResponse()).Error("Failed to load app")
         );
 
         return getResponse.Data.Data;

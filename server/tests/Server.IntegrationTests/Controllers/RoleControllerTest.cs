@@ -26,7 +26,7 @@ public class RoleControllerTest : IntegrationTestBase
         var response = await Id(token)
             .Role.CreateRoleAsync(
                 request,
-                Result.New(Guid.Empty).Error("Failed to create role"),
+                Result.Create(Guid.Empty).Error("Failed to create role"),
                 TestContext.Current.CancellationToken
             );
 
@@ -50,7 +50,7 @@ public class RoleControllerTest : IntegrationTestBase
         var response = await Id(token)
             .Role.CreateRoleAsync(
                 request,
-                Result.New(Guid.Empty).Error("Failed to create role"),
+                Result.Create(Guid.Empty).Error("Failed to create role"),
                 TestContext.Current.CancellationToken
             );
 
@@ -76,7 +76,7 @@ public class RoleControllerTest : IntegrationTestBase
         var response = await Id(token)
             .Role.CreateRoleAsync(
                 request,
-                Result.New(Guid.Empty).Error("Failed to create role"),
+                Result.Create(Guid.Empty).Error("Failed to create role"),
                 TestContext.Current.CancellationToken
             );
 
@@ -104,7 +104,7 @@ public class RoleControllerTest : IntegrationTestBase
         var response = await Id(token)
             .Role.CreateRoleAsync(
                 request,
-                Result.New(Guid.Empty).Error("Failed to create role"),
+                Result.Create(Guid.Empty).Error("Failed to create role"),
                 TestContext.Current.CancellationToken
             );
 
@@ -141,7 +141,7 @@ public class RoleControllerTest : IntegrationTestBase
         var response = await Id(token)
             .Role.ListRolesAsync(
                 Guid.NewGuid(),
-                Result.New(Array.Empty<RoleResponse>()).Error("Failed to list roles"),
+                Result.Create(Array.Empty<RoleResponse>()).Error("Failed to list roles"),
                 TestContext.Current.CancellationToken
             );
 
@@ -163,7 +163,7 @@ public class RoleControllerTest : IntegrationTestBase
         var roles = await Id(token)
             .Role.ListRolesAsync(
                 app.Id,
-                Result.New(Array.Empty<RoleResponse>()).Error("Failed to list roles"),
+                Result.Create(Array.Empty<RoleResponse>()).Error("Failed to list roles"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -191,7 +191,7 @@ public class RoleControllerTest : IntegrationTestBase
             .Role.UpdateRoleAsync(
                 role.Id,
                 request,
-                Result.New().Error("Failed to update role"),
+                Result.Create().Error("Failed to update role"),
                 TestContext.Current.CancellationToken
             );
 
@@ -211,7 +211,7 @@ public class RoleControllerTest : IntegrationTestBase
             .Role.UpdateRoleAsync(
                 Guid.NewGuid(),
                 request,
-                Result.New().Error("Failed to update role"),
+                Result.Create().Error("Failed to update role"),
                 TestContext.Current.CancellationToken
             );
 
@@ -234,7 +234,7 @@ public class RoleControllerTest : IntegrationTestBase
             .Role.UpdateRoleAsync(
                 role.Id,
                 request,
-                Result.New().Error("Failed to update role"),
+                Result.Create().Error("Failed to update role"),
                 TestContext.Current.CancellationToken
             );
 
@@ -257,7 +257,7 @@ public class RoleControllerTest : IntegrationTestBase
             .Role.UpdateRoleAsync(
                 role.Id,
                 request,
-                Result.New().Error("Failed to update role"),
+                Result.Create().Error("Failed to update role"),
                 TestContext.Current.CancellationToken
             );
 
@@ -279,7 +279,7 @@ public class RoleControllerTest : IntegrationTestBase
             .Role.UpdateRoleAsync(
                 role.Id,
                 request,
-                Result.New().Error("Failed to update role"),
+                Result.Create().Error("Failed to update role"),
                 TestContext.Current.CancellationToken
             );
 
@@ -303,7 +303,7 @@ public class RoleControllerTest : IntegrationTestBase
                 role.Id,
                 claim.Id,
                 request,
-                Result.New().Error("Failed to add claim to role"),
+                Result.Create().Error("Failed to add claim to role"),
                 TestContext.Current.CancellationToken
             );
 
@@ -324,7 +324,7 @@ public class RoleControllerTest : IntegrationTestBase
                 Guid.NewGuid(),
                 Guid.NewGuid(),
                 request,
-                Result.New().Error("Failed to add claim to role"),
+                Result.Create().Error("Failed to add claim to role"),
                 TestContext.Current.CancellationToken
             );
 
@@ -347,7 +347,7 @@ public class RoleControllerTest : IntegrationTestBase
                 role.Id,
                 Guid.NewGuid(),
                 request,
-                Result.New().Error("Failed to add claim to role"),
+                Result.Create().Error("Failed to add claim to role"),
                 TestContext.Current.CancellationToken
             );
 
@@ -372,7 +372,7 @@ public class RoleControllerTest : IntegrationTestBase
                 role.Id,
                 claim.Id,
                 request,
-                Result.New().Error("Failed to add claim to role"),
+                Result.Create().Error("Failed to add claim to role"),
                 TestContext.Current.CancellationToken
             );
 
@@ -397,7 +397,7 @@ public class RoleControllerTest : IntegrationTestBase
                 role.Id,
                 claim.Id,
                 request,
-                Result.New().Error("Failed to add claim to role"),
+                Result.Create().Error("Failed to add claim to role"),
                 TestContext.Current.CancellationToken
             );
 
@@ -420,7 +420,7 @@ public class RoleControllerTest : IntegrationTestBase
         var roles = await Id(token)
             .Role.ListRolesAsync(
                 app.Id,
-                Result.New(Array.Empty<RoleResponse>()).Error("Failed to list roles"),
+                Result.Create(Array.Empty<RoleResponse>()).Error("Failed to list roles"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -450,7 +450,7 @@ public class RoleControllerTest : IntegrationTestBase
             .Role.DeleteClaimFromRoleAsync(
                 Guid.NewGuid(),
                 Guid.NewGuid(),
-                Result.New().Error("Failed to delete claim from role"),
+                Result.Create().Error("Failed to delete claim from role"),
                 TestContext.Current.CancellationToken
             );
 
@@ -471,7 +471,7 @@ public class RoleControllerTest : IntegrationTestBase
             .Role.DeleteClaimFromRoleAsync(
                 role.Id,
                 Guid.NewGuid(),
-                Result.New().Error("Failed to delete claim from role"),
+                Result.Create().Error("Failed to delete claim from role"),
                 TestContext.Current.CancellationToken
             );
 
@@ -494,7 +494,7 @@ public class RoleControllerTest : IntegrationTestBase
             .Role.DeleteClaimFromRoleAsync(
                 role.Id,
                 claim.Id,
-                Result.New().Error("Failed to delete claim from role"),
+                Result.Create().Error("Failed to delete claim from role"),
                 TestContext.Current.CancellationToken
             );
 
@@ -517,7 +517,7 @@ public class RoleControllerTest : IntegrationTestBase
             .Role.DeleteClaimFromRoleAsync(
                 role.Id,
                 claim.Id,
-                Result.New().Error("Failed to delete claim from role"),
+                Result.Create().Error("Failed to delete claim from role"),
                 TestContext.Current.CancellationToken
             );
 
@@ -539,7 +539,7 @@ public class RoleControllerTest : IntegrationTestBase
             .Role.DeleteClaimFromRoleAsync(
                 role.Id,
                 claim.Id,
-                Result.New().Error("Failed to delete claim from role"),
+                Result.Create().Error("Failed to delete claim from role"),
                 TestContext.Current.CancellationToken
             );
 
@@ -557,7 +557,7 @@ public class RoleControllerTest : IntegrationTestBase
         var response = await Id(token)
             .Role.DeleteRoleAsync(
                 Guid.NewGuid(),
-                Result.New().Error("Failed to delete role"),
+                Result.Create().Error("Failed to delete role"),
                 TestContext.Current.CancellationToken
             );
 
@@ -578,7 +578,7 @@ public class RoleControllerTest : IntegrationTestBase
         var response = await Id(token)
             .Role.DeleteRoleAsync(
                 role.Id,
-                Result.New().Error("Failed to delete role"),
+                Result.Create().Error("Failed to delete role"),
                 TestContext.Current.CancellationToken
             );
 
@@ -598,7 +598,7 @@ public class RoleControllerTest : IntegrationTestBase
         var response = await Id(token)
             .Role.DeleteRoleAsync(
                 role.Id,
-                Result.New().Error("Failed to delete role"),
+                Result.Create().Error("Failed to delete role"),
                 TestContext.Current.CancellationToken
             );
 

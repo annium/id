@@ -8,6 +8,7 @@
     <ProjectReference Include="../../src/Server.Host/Server.Host.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Annium.Net.Mail.Testing" />
     <PackageReference Include="Annium.Testing" />
     <PackageReference Include="Bogus" />
   </ItemGroup>

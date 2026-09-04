@@ -1,4 +1,6 @@
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using Annium.Core.DependencyInjection;
 
 namespace Server.Application;
@@ -10,7 +12,7 @@ public class TestServicePack : ServicePackBase
         Add<BaseServicePack>();
     }
 
-    public override void Configure(IServiceContainer container)
+    public override Task ConfigureAsync(IServiceContainer container, CancellationToken ct)
     {
         container
             .Add(
@@ -22,5 +24,7 @@ public class TestServicePack : ServicePackBase
             )
             .AsSelf()
             .Singleton();
+
+        return Task.CompletedTask;
     }
 }

@@ -1,20 +1,36 @@
 using System;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Annium.AspNetCore.Extensions;
+using Annium.Configuration.Abstractions;
 using Annium.Core.DependencyInjection;
+using Annium.Core.Mapper;
+using Annium.Core.Runtime;
+using Annium.Data.Operations.Serialization.Json;
+using Annium.Logging.Console;
+using Annium.Logging.Shared;
+using Annium.Net.Http;
 using Annium.Net.Types;
+using Annium.NodaTime.Serialization.Json;
+using Annium.Serialization.Abstractions;
+using Annium.Serialization.Json;
+using Annium.XRest.Sources.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Server.DemoHost;
 
 public class ServicePack : ServicePackBase
 {
-    public override void Configure(IServiceContainer container)
+    public override Task ConfigureAsync(IServiceContainer container, CancellationToken ct)
     {
         container.AddRuntime(GetType().Assembly);
         container.AddConfiguration(new WebHostConfiguration());
+
+        return Task.CompletedTask;
     }
 
-    public override void Register(IServiceContainer container, IServiceProvider provider)
+    public override Task RegisterAsync(IServiceContainer container, IServiceProvider provider, CancellationToken ct)
     {
         container.AddTime().WithRealTime().SetDefault();
         container.AddMapper();
@@ -48,12 +64,16 @@ public class ServicePack : ServicePackBase
         // host
         container.Collection.AddCors();
         container.Collection.AddControllers().AddDefaultJsonOptions();
+
+        return Task.CompletedTask;
     }
 
-    public override void Setup(IServiceProvider provider)
+    public override Task SetupAsync(IServiceProvider provider, CancellationToken ct)
     {
         provider.UseLogging(route => route.UseConsole());
         SetupNetTypes(provider.Resolve<IMapperConfig>());
+
+        return Task.CompletedTask;
     }
 
     private void SetupNetTypes(IMapperConfig config)

@@ -1,3 +1,4 @@
+using Annium.AspNetCore.Extensions;
 using Annium.Core.DependencyInjection;
 
 namespace Server.Host;

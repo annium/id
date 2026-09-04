@@ -17,10 +17,13 @@ public static class CompanyClientExtensions
     {
         var request = new RegisterCompanyRequest { ParentId = parentId, Name = name ?? Faker.Random.String2(10) };
         var companyId = await client
-            .RegisterCompanyAsync(request, Result.New(Guid.Empty).Error("Failed to register company"))
+            .RegisterCompanyAsync(request, Result.Create(Guid.Empty).Error("Failed to register company"))
             .GetDataAsync();
         var company = await client
-            .GetCompanyAsync(companyId, Result.New(new CompanyResponse()).Error("Failed to load company information"))
+            .GetCompanyAsync(
+                companyId,
+                Result.Create(new CompanyResponse()).Error("Failed to load company information")
+            )
             .GetDataAsync();
 
         return company;

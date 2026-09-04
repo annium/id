@@ -24,12 +24,12 @@ public static class CompanyClaimClientExtensions
             Name = name ?? Faker.Random.String2(10),
         };
         var claimId = await client
-            .CreateCompanyClaimAsync(request, Result.New(Guid.Empty).Error("Failed to create claim"))
+            .CreateCompanyClaimAsync(request, Result.Create(Guid.Empty).Error("Failed to create claim"))
             .GetDataAsync();
         var claims = await client
             .ListCompanyClaimsAsync(
                 appId,
-                Result.New(Array.Empty<CompanyClaimResponse>()).Error("Failed to list claims")
+                Result.Create(Array.Empty<CompanyClaimResponse>()).Error("Failed to list claims")
             )
             .GetDataAsync();
 

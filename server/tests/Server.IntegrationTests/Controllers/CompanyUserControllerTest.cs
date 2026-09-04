@@ -37,7 +37,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserInAsync();
         var user = await Id(token)
             .Me.GetMeAsync(
-                Result.New(new MeResponse()).Error("Failed to load personal information"),
+                Result.Create(new MeResponse()).Error("Failed to load personal information"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -72,7 +72,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserInAsync();
         var user = await Id(token)
             .Me.GetMeAsync(
-                Result.New(new MeResponse()).Error("Failed to load personal information"),
+                Result.Create(new MeResponse()).Error("Failed to load personal information"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -82,7 +82,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var members = await Id(token)
             .Company.GetCompanyUsersAsync(
                 company.Id,
-                Result.New(Array.Empty<UserResponse>()).Error("Failed to list company users"),
+                Result.Create(Array.Empty<UserResponse>()).Error("Failed to list company users"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -118,7 +118,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserInAsync();
         var user = await Id(token)
             .Me.GetMeAsync(
-                Result.New(new MeResponse()).Error("Failed to load personal information"),
+                Result.Create(new MeResponse()).Error("Failed to load personal information"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -155,7 +155,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserInAsync();
         var user = await Id(token)
             .Me.GetMeAsync(
-                Result.New(new MeResponse()).Error("Failed to load personal information"),
+                Result.Create(new MeResponse()).Error("Failed to load personal information"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -176,7 +176,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserInAsync();
         var user = await Id(token)
             .Me.GetMeAsync(
-                Result.New(new MeResponse()).Error("Failed to load personal information"),
+                Result.Create(new MeResponse()).Error("Failed to load personal information"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -199,7 +199,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserInAsync();
         var user = await Id(token)
             .Me.GetMeAsync(
-                Result.New(new MeResponse()).Error("Failed to load personal information"),
+                Result.Create(new MeResponse()).Error("Failed to load personal information"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -224,7 +224,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
                 Guid.NewGuid(),
                 Guid.NewGuid(),
                 Guid.NewGuid(),
-                Result.New().Error("Failed to delete role from user"),
+                Result.Create().Error("Failed to delete role from user"),
                 TestContext.Current.CancellationToken
             );
 
@@ -243,7 +243,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserInAsync();
         var user = await Id(token)
             .Me.GetMeAsync(
-                Result.New(new MeResponse()).Error("Failed to load personal information"),
+                Result.Create(new MeResponse()).Error("Failed to load personal information"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -254,7 +254,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
                 company.Id,
                 user.Id,
                 role.Id,
-                Result.New().Error("Failed to delete role from user"),
+                Result.Create().Error("Failed to delete role from user"),
                 TestContext.Current.CancellationToken
             );
 
@@ -275,7 +275,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
                 company.Id,
                 Guid.NewGuid(),
                 Guid.NewGuid(),
-                Result.New().Error("Failed to delete role from user"),
+                Result.Create().Error("Failed to delete role from user"),
                 TestContext.Current.CancellationToken
             );
 
@@ -294,7 +294,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserInAsync();
         var user = await Id(token)
             .Me.GetMeAsync(
-                Result.New(new MeResponse()).Error("Failed to load personal information"),
+                Result.Create(new MeResponse()).Error("Failed to load personal information"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -305,7 +305,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
                 company.Id,
                 user.Id,
                 role.Id,
-                Result.New().Error("Failed to delete role from user"),
+                Result.Create().Error("Failed to delete role from user"),
                 TestContext.Current.CancellationToken
             );
 
@@ -322,7 +322,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserInAsync();
         var user = await Id(token)
             .Me.GetMeAsync(
-                Result.New(new MeResponse()).Error("Failed to load personal information"),
+                Result.Create(new MeResponse()).Error("Failed to load personal information"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -334,7 +334,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
                 company.Id,
                 user.Id,
                 Guid.NewGuid(),
-                Result.New().Error("Failed to delete role from user"),
+                Result.Create().Error("Failed to delete role from user"),
                 TestContext.Current.CancellationToken
             );
 
@@ -353,7 +353,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserInAsync();
         var user = await Id(token)
             .Me.GetMeAsync(
-                Result.New(new MeResponse()).Error("Failed to load personal information"),
+                Result.Create(new MeResponse()).Error("Failed to load personal information"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -366,7 +366,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
                 company.Id,
                 user.Id,
                 role.Id,
-                Result.New().Error("Failed to delete role from user"),
+                Result.Create().Error("Failed to delete role from user"),
                 TestContext.Current.CancellationToken
             );
 
@@ -412,7 +412,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserInAsync();
         var user = await Id(token)
             .Me.GetMeAsync(
-                Result.New(new MeResponse()).Error("Failed to load personal information"),
+                Result.Create(new MeResponse()).Error("Failed to load personal information"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -449,7 +449,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserInAsync();
         var user = await Id(token)
             .Me.GetMeAsync(
-                Result.New(new MeResponse()).Error("Failed to load personal information"),
+                Result.Create(new MeResponse()).Error("Failed to load personal information"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -470,7 +470,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserInAsync();
         var user = await Id(token)
             .Me.GetMeAsync(
-                Result.New(new MeResponse()).Error("Failed to load personal information"),
+                Result.Create(new MeResponse()).Error("Failed to load personal information"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -494,7 +494,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserInAsync();
         var user = await Id(token)
             .Me.GetMeAsync(
-                Result.New(new MeResponse()).Error("Failed to load personal information"),
+                Result.Create(new MeResponse()).Error("Failed to load personal information"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -531,7 +531,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserInAsync();
         var user = await Id(token)
             .Me.GetMeAsync(
-                Result.New(new MeResponse()).Error("Failed to load personal information"),
+                Result.Create(new MeResponse()).Error("Failed to load personal information"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -542,7 +542,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
                 company.Id,
                 user.Id,
                 claim.Id,
-                Result.New().Error("Failed to delete claim from user"),
+                Result.Create().Error("Failed to delete claim from user"),
                 TestContext.Current.CancellationToken
             );
 
@@ -563,7 +563,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
                 company.Id,
                 Guid.NewGuid(),
                 Guid.NewGuid(),
-                Result.New().Error("Failed to delete claim from user"),
+                Result.Create().Error("Failed to delete claim from user"),
                 TestContext.Current.CancellationToken
             );
 
@@ -582,7 +582,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserInAsync();
         var user = await Id(token)
             .Me.GetMeAsync(
-                Result.New(new MeResponse()).Error("Failed to load personal information"),
+                Result.Create(new MeResponse()).Error("Failed to load personal information"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -593,7 +593,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
                 company.Id,
                 user.Id,
                 claim.Id,
-                Result.New().Error("Failed to delete claim from user"),
+                Result.Create().Error("Failed to delete claim from user"),
                 TestContext.Current.CancellationToken
             );
 
@@ -610,7 +610,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserInAsync();
         var user = await Id(token)
             .Me.GetMeAsync(
-                Result.New(new MeResponse()).Error("Failed to load personal information"),
+                Result.Create(new MeResponse()).Error("Failed to load personal information"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -622,7 +622,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
                 company.Id,
                 user.Id,
                 Guid.NewGuid(),
-                Result.New().Error("Failed to delete claim from user"),
+                Result.Create().Error("Failed to delete claim from user"),
                 TestContext.Current.CancellationToken
             );
 
@@ -641,7 +641,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserInAsync();
         var user = await Id(token)
             .Me.GetMeAsync(
-                Result.New(new MeResponse()).Error("Failed to load personal information"),
+                Result.Create(new MeResponse()).Error("Failed to load personal information"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -654,7 +654,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
                 company.Id,
                 user.Id,
                 claim.Id,
-                Result.New().Error("Failed to delete claim from user"),
+                Result.Create().Error("Failed to delete claim from user"),
                 TestContext.Current.CancellationToken
             );
 
@@ -673,7 +673,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
             .CompanyUser.DeleteUserFromCompanyAsync(
                 Guid.NewGuid(),
                 Guid.NewGuid(),
-                Result.New().Error("Failed to delete user from company"),
+                Result.Create().Error("Failed to delete user from company"),
                 TestContext.Current.CancellationToken
             );
 
@@ -690,7 +690,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserInAsync();
         var user = await Id(token)
             .Me.GetMeAsync(
-                Result.New(new MeResponse()).Error("Failed to load personal information"),
+                Result.Create(new MeResponse()).Error("Failed to load personal information"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -700,7 +700,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
             .CompanyUser.DeleteUserFromCompanyAsync(
                 company.Id,
                 user.Id,
-                Result.New().Error("Failed to delete user from company"),
+                Result.Create().Error("Failed to delete user from company"),
                 TestContext.Current.CancellationToken
             );
 
@@ -720,7 +720,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
             .CompanyUser.DeleteUserFromCompanyAsync(
                 company.Id,
                 Guid.NewGuid(),
-                Result.New().Error("Failed to delete user from company"),
+                Result.Create().Error("Failed to delete user from company"),
                 TestContext.Current.CancellationToken
             );
 
@@ -737,7 +737,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserInAsync();
         var user = await Id(token)
             .Me.GetMeAsync(
-                Result.New(new MeResponse()).Error("Failed to load personal information"),
+                Result.Create(new MeResponse()).Error("Failed to load personal information"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -747,7 +747,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
             .CompanyUser.DeleteUserFromCompanyAsync(
                 company.Id,
                 user.Id,
-                Result.New().Error("Failed to delete user from company"),
+                Result.Create().Error("Failed to delete user from company"),
                 TestContext.Current.CancellationToken
             );
 
@@ -764,7 +764,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserInAsync();
         var user = await Id(token)
             .Me.GetMeAsync(
-                Result.New(new MeResponse()).Error("Failed to load personal information"),
+                Result.Create(new MeResponse()).Error("Failed to load personal information"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -775,7 +775,7 @@ public class CompanyUserControllerTest : IntegrationTestBase
             .CompanyUser.DeleteUserFromCompanyAsync(
                 company.Id,
                 user.Id,
-                Result.New().Error("Failed to delete user from company"),
+                Result.Create().Error("Failed to delete user from company"),
                 TestContext.Current.CancellationToken
             );
 

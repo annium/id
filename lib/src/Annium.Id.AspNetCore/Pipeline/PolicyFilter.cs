@@ -68,7 +68,7 @@ internal class PolicyFilter : IActionFilter
 
     private IActionResult GetFailure(string error)
     {
-        return new ObjectResult(Result.New(OperationStatus.Forbidden).Error(error))
+        return new ObjectResult(Result.Create(OperationStatus.Forbidden).Error(error))
         {
             StatusCode = (int)HttpStatusCode.Forbidden,
         };

@@ -1,5 +1,6 @@
 using Annium.Id.AspNetCore.Tools;
 using Annium.Id.Core;
+using Annium.Identity.Tokens;
 using Annium.Identity.Tokens.Jwt;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -42,9 +43,11 @@ internal class AuthorizationFilter : IAuthorizationFilter
             ValidateExpiration = _options.ValidateExpiration,
         };
         var readResult = _tokenReader.ReadToken(tokenString, tokenReadOptions);
-        if (readResult.Status == JwtReadStatus.BadSource)
+        // Malformed is the one that is the caller's mistake rather than a rejected credential: the string
+        // is not a JWT at all, which is a bad request. Everything else is a token we read and refused
+        if (readResult.Status is TokenReadStatus.Malformed)
             return new BadRequestObjectResult(readResult);
-        if (readResult.Status == JwtReadStatus.Failed)
+        if (readResult.Status is not TokenReadStatus.Ok)
             return new UnauthorizedObjectResult(readResult);
 
         context.HttpContext.Items[Constants.IdTokenProperty] = readResult.Data;

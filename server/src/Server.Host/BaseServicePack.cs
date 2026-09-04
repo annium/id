@@ -1,8 +1,27 @@
 using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Annium.Architecture.CQRS;
+using Annium.Architecture.Http;
+using Annium.Architecture.Mediator;
+using Annium.Architecture.ViewModel;
+using Annium.AspNetCore.Extensions;
 using Annium.Core.DependencyInjection;
+using Annium.Core.Mapper;
 using Annium.Core.Mediator;
+using Annium.Core.Runtime;
 using Annium.Core.Runtime.Types;
+using Annium.Data.Operations.Serialization.Json;
+using Annium.Extensions.Composition;
+using Annium.Extensions.Validation;
 using Annium.Id.Core;
+using Annium.Localization.Abstractions;
+using Annium.Localization.Yaml;
+using Annium.Net.Http;
+using Annium.NodaTime.Serialization.Json;
+using Annium.Serialization.Abstractions;
+using Annium.Serialization.Json;
+using Annium.XRest.Sources.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
 using Server.Application.Tools;
@@ -12,12 +31,14 @@ namespace Server.Host;
 
 internal class BaseServicePack : ServicePackBase
 {
-    public override void Configure(IServiceContainer container)
+    public override Task ConfigureAsync(IServiceContainer container, CancellationToken ct)
     {
         container.AddRuntime(GetType().Assembly);
+
+        return Task.CompletedTask;
     }
 
-    public override void Register(IServiceContainer container, IServiceProvider provider)
+    public override Task RegisterAsync(IServiceContainer container, IServiceProvider provider, CancellationToken ct)
     {
         container.AddTime().WithRealTime().SetDefault();
         container.AddHttpRequestFactory(true);
@@ -37,7 +58,7 @@ internal class BaseServicePack : ServicePackBase
             (sp, opts) =>
             {
                 var cfg = sp.Resolve<Application.Configuration>();
-                opts.Audience = Constants.IdAppId;
+                opts.Audience = Annium.Id.Core.Constants.IdAppId;
                 opts.PublicKeyFile = cfg.PublicKeyFile;
                 opts.PrivateKeyFile = cfg.PrivateKeyFile;
                 opts.AccessTokenLifeTime = Duration.FromMinutes(30);
@@ -53,6 +74,8 @@ internal class BaseServicePack : ServicePackBase
         // host
         container.Collection.AddCors();
         container.Collection.AddControllers().AddDefaultJsonOptions();
+
+        return Task.CompletedTask;
     }
 
     private void ConfigureMediator(MediatorConfiguration cfg, ITypeManager typeManager)

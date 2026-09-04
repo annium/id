@@ -46,7 +46,7 @@ public static class ExtendedClientExtensions
         var tokens = await client.Login.LogInAsync(
             appId,
             new LogInRequestBody { Login = login, Password = password },
-            Result.New(new TokensResponse()).Error("Failed to load tokens")
+            Result.Create(new TokensResponse()).Error("Failed to load tokens")
         );
 
         return tokens.Data.Data.AccessToken;
@@ -67,7 +67,7 @@ public static class ExtendedClientExtensions
 
         var me = await client
             .WithToken(token)
-            .Me.GetMeAsync(Result.New(new MeResponse()).Error("Failed to load personal info"));
+            .Me.GetMeAsync(Result.Create(new MeResponse()).Error("Failed to load personal info"));
 
         return me.Data.Data;
     }
@@ -90,7 +90,7 @@ public static class ExtendedClientExtensions
                 Email = email,
                 ReferralId = referralId,
             },
-            Result.New().Error("Failed to register")
+            Result.Create().Error("Failed to register")
         );
         if (registerResponse.StatusCode != HttpStatusCode.OK)
             Console.WriteLine(
@@ -105,7 +105,7 @@ public static class ExtendedClientExtensions
         var tokensResponse = await client.Me.ConfirmMyEmailAsync(
             appId,
             new ConfirmMyEmailRequestBody { Id = userId },
-            Result.New(new TokensResponse()).Error("Failed to confirm email")
+            Result.Create(new TokensResponse()).Error("Failed to confirm email")
         );
         tokensResponse.StatusCode.Is(HttpStatusCode.OK);
 
@@ -116,14 +116,14 @@ public static class ExtendedClientExtensions
             .WithToken(token)
             .Me.UpdateMyPasswordAsync(
                 new UpdateMyPasswordRequest { Password = password },
-                Result.New().Error("Failed to update password")
+                Result.Create().Error("Failed to update password")
             );
 
         // perform regular login
         var tokens = await client.Login.LogInAsync(
             appId,
             new LogInRequestBody { Login = login, Password = password },
-            Result.New(new TokensResponse()).Error("Failed to log in")
+            Result.Create(new TokensResponse()).Error("Failed to log in")
         );
 
         return tokens.Data.Data.AccessToken;

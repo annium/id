@@ -4,9 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using Annium.Core.DependencyInjection;
+using Annium.Core.Runtime;
 using Annium.Core.Runtime.Time;
 using Annium.Data.Operations;
-using Annium.Identity.Tokens.Jwt;
+using Annium.Data.Operations.Serialization.Json;
+using Annium.Identity.Tokens;
+using Annium.Logging.Console;
+using Annium.Logging.Shared;
 using Annium.Testing;
 using NodaTime;
 using Xunit;
@@ -16,7 +20,7 @@ namespace Annium.Id.Core.Tests;
 public class TokenReaderWriterTest
 {
     [Fact]
-    public void Read_InvalidJWT_ReturnsBadSource()
+    public void Read_InvalidJWT_ReturnsMalformed()
     {
         // arrange
         var token = "badtoken";
@@ -25,11 +29,11 @@ public class TokenReaderWriterTest
         var (status, _) = ReadToken(token, Guid.NewGuid());
 
         // assert
-        status.Is(JwtReadStatus.BadSource);
+        status.Is(TokenReadStatus.Malformed);
     }
 
     [Fact]
-    public void Read_Expired_ReturnsFailure()
+    public void Read_Expired_ReturnsExpired()
     {
         // arrange
         var appId = Guid.NewGuid();
@@ -40,12 +44,12 @@ public class TokenReaderWriterTest
         var result = ReadToken(token, appId);
 
         // assert
-        result.Status.Is(JwtReadStatus.Failed);
+        result.Status.Is(TokenReadStatus.Expired);
         result.PlainErrors.Any(x => x.Contains("expired")).IsTrue();
     }
 
     [Fact]
-    public void Read_InvalidAudience_ReturnsFailure()
+    public void Read_InvalidAudience_ReturnsInvalidClaims()
     {
         // arrange
         var appId = Guid.NewGuid();
@@ -56,7 +60,7 @@ public class TokenReaderWriterTest
         var result = ReadToken(token, Guid.NewGuid());
 
         // assert
-        result.Status.Is(JwtReadStatus.Failed);
+        result.Status.Is(TokenReadStatus.InvalidClaims);
         result.PlainErrors.Any(x => x.Contains("audience")).IsTrue();
     }
 
@@ -72,7 +76,7 @@ public class TokenReaderWriterTest
         var (status, result) = ReadToken(token, appId);
 
         // assert
-        status.Is(JwtReadStatus.Ok);
+        status.Is(TokenReadStatus.Ok);
         Serialize(result).Is(Serialize(source));
     }
 
@@ -95,7 +99,7 @@ public class TokenReaderWriterTest
         return writer.WriteToken(token);
     }
 
-    private IStatusResult<JwtReadStatus, IdToken> ReadToken(string token, Guid appId)
+    private IStatusResult<TokenReadStatus, IdToken> ReadToken(string token, Guid appId)
     {
         var container = new ServiceContainer();
         container.AddIdAuthorizationCoreServices(Configure(appId));

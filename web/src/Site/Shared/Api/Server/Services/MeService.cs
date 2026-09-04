@@ -18,7 +18,7 @@ internal class MeService : IMeService
     public Task<IResult<MeResponse>> GetMeAsync() =>
         _serverApi
             .Private.Client()
-            .Me.GetMeAsync(Result.New(new MeResponse()).Error("Failed to load personal information"));
+            .Me.GetMeAsync(Result.Create(new MeResponse()).Error("Failed to load personal information"));
 }
 
 public interface IMeService : IApiService

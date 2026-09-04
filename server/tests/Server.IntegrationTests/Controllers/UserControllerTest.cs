@@ -27,7 +27,7 @@ public class UserControllerTest : IntegrationTestBase
             .User.FindUsersAsync(
                 me.Login,
                 1,
-                Result.New(Array.Empty<UserResponse>()).Error("Failed to find users"),
+                Result.Create(Array.Empty<UserResponse>()).Error("Failed to find users"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -51,7 +51,7 @@ public class UserControllerTest : IntegrationTestBase
         var response = await Id()
             .User.GetUserAsync(
                 me.Id,
-                Result.New(new UserResponse()).Error("Failed to load user"),
+                Result.Create(new UserResponse()).Error("Failed to load user"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -71,7 +71,7 @@ public class UserControllerTest : IntegrationTestBase
             .User.AddRoleToUserAsync(
                 Guid.NewGuid(),
                 Guid.NewGuid(),
-                Result.New().Error("Failed to add role to user"),
+                Result.Create().Error("Failed to add role to user"),
                 TestContext.Current.CancellationToken
             );
 
@@ -90,7 +90,7 @@ public class UserControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserInAsync();
         var user = await Id(token)
             .Me.GetMeAsync(
-                Result.New(new MeResponse()).Error("Failed to load personal information"),
+                Result.Create(new MeResponse()).Error("Failed to load personal information"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -100,7 +100,7 @@ public class UserControllerTest : IntegrationTestBase
             .User.AddRoleToUserAsync(
                 user.Id,
                 role.Id,
-                Result.New().Error("Failed to add role to user"),
+                Result.Create().Error("Failed to add role to user"),
                 TestContext.Current.CancellationToken
             );
 
@@ -119,7 +119,7 @@ public class UserControllerTest : IntegrationTestBase
             .User.AddRoleToUserAsync(
                 Guid.NewGuid(),
                 Guid.NewGuid(),
-                Result.New().Error("Failed to add role to user"),
+                Result.Create().Error("Failed to add role to user"),
                 TestContext.Current.CancellationToken
             );
 
@@ -139,7 +139,7 @@ public class UserControllerTest : IntegrationTestBase
             .User.AddRoleToUserAsync(
                 other.Id,
                 Guid.NewGuid(),
-                Result.New().Error("Failed to add role to user"),
+                Result.Create().Error("Failed to add role to user"),
                 TestContext.Current.CancellationToken
             );
 
@@ -161,7 +161,7 @@ public class UserControllerTest : IntegrationTestBase
             .User.AddRoleToUserAsync(
                 other.Id,
                 role.Id,
-                Result.New().Error("Failed to add role to user"),
+                Result.Create().Error("Failed to add role to user"),
                 TestContext.Current.CancellationToken
             );
 
@@ -180,7 +180,7 @@ public class UserControllerTest : IntegrationTestBase
             .User.DeleteRoleFromUserAsync(
                 Guid.NewGuid(),
                 Guid.NewGuid(),
-                Result.New().Error("Failed to delete role from user"),
+                Result.Create().Error("Failed to delete role from user"),
                 TestContext.Current.CancellationToken
             );
 
@@ -195,7 +195,7 @@ public class UserControllerTest : IntegrationTestBase
         var otherToken = await Id().RegisterLogUserInAsync();
         var owner = await Id(otherToken)
             .Me.GetMeAsync(
-                Result.New(new MeResponse()).Error("Failed to load personal information"),
+                Result.Create(new MeResponse()).Error("Failed to load personal information"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -208,7 +208,7 @@ public class UserControllerTest : IntegrationTestBase
             .User.DeleteRoleFromUserAsync(
                 owner.Id,
                 role.Id,
-                Result.New().Error("Failed to delete role from user"),
+                Result.Create().Error("Failed to delete role from user"),
                 TestContext.Current.CancellationToken
             );
 
@@ -227,7 +227,7 @@ public class UserControllerTest : IntegrationTestBase
             .User.DeleteRoleFromUserAsync(
                 Guid.NewGuid(),
                 Guid.NewGuid(),
-                Result.New().Error("Failed to delete role from user"),
+                Result.Create().Error("Failed to delete role from user"),
                 TestContext.Current.CancellationToken
             );
 
@@ -247,7 +247,7 @@ public class UserControllerTest : IntegrationTestBase
             .User.DeleteRoleFromUserAsync(
                 other.Id,
                 Guid.NewGuid(),
-                Result.New().Error("Failed to delete role from user"),
+                Result.Create().Error("Failed to delete role from user"),
                 TestContext.Current.CancellationToken
             );
 
@@ -269,7 +269,7 @@ public class UserControllerTest : IntegrationTestBase
             .User.DeleteRoleFromUserAsync(
                 other.Id,
                 role.Id,
-                Result.New().Error("Failed to delete role from user"),
+                Result.Create().Error("Failed to delete role from user"),
                 TestContext.Current.CancellationToken
             );
 
@@ -303,7 +303,7 @@ public class UserControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserInAsync();
         var user = await Id(token)
             .Me.GetMeAsync(
-                Result.New(new MeResponse()).Error("Failed to load personal information"),
+                Result.Create(new MeResponse()).Error("Failed to load personal information"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -369,7 +369,7 @@ public class UserControllerTest : IntegrationTestBase
             .User.DeleteClaimFromUserAsync(
                 Guid.NewGuid(),
                 Guid.NewGuid(),
-                Result.New().Error("Failed to delete claim from user"),
+                Result.Create().Error("Failed to delete claim from user"),
                 TestContext.Current.CancellationToken
             );
 
@@ -384,7 +384,7 @@ public class UserControllerTest : IntegrationTestBase
         var otherToken = await Id().RegisterLogUserInAsync();
         var owner = await Id(otherToken)
             .Me.GetMeAsync(
-                Result.New(new MeResponse()).Error("Failed to load personal information"),
+                Result.Create(new MeResponse()).Error("Failed to load personal information"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -397,7 +397,7 @@ public class UserControllerTest : IntegrationTestBase
             .User.DeleteClaimFromUserAsync(
                 owner.Id,
                 claim.Id,
-                Result.New().Error("Failed to delete claim from user"),
+                Result.Create().Error("Failed to delete claim from user"),
                 TestContext.Current.CancellationToken
             );
 
@@ -416,7 +416,7 @@ public class UserControllerTest : IntegrationTestBase
             .User.DeleteClaimFromUserAsync(
                 Guid.NewGuid(),
                 Guid.NewGuid(),
-                Result.New().Error("Failed to delete claim from user"),
+                Result.Create().Error("Failed to delete claim from user"),
                 TestContext.Current.CancellationToken
             );
 
@@ -436,7 +436,7 @@ public class UserControllerTest : IntegrationTestBase
             .User.DeleteClaimFromUserAsync(
                 other.Id,
                 Guid.NewGuid(),
-                Result.New().Error("Failed to delete claim from user"),
+                Result.Create().Error("Failed to delete claim from user"),
                 TestContext.Current.CancellationToken
             );
 
@@ -458,7 +458,7 @@ public class UserControllerTest : IntegrationTestBase
             .User.DeleteClaimFromUserAsync(
                 other.Id,
                 claim.Id,
-                Result.New().Error("Failed to delete claim from user"),
+                Result.Create().Error("Failed to delete claim from user"),
                 TestContext.Current.CancellationToken
             );
 

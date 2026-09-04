@@ -29,7 +29,7 @@ internal class LoginService : ILoginService
             .Login.LogInAsync(
                 _config.AppId,
                 new LogInRequestBody { Login = login, Password = password },
-                Result.New(new TokensResponse()).Error("Failed to log in")
+                Result.Create(new TokensResponse()).Error("Failed to log in")
             );
 
         if (response.IsOk)
@@ -41,7 +41,7 @@ internal class LoginService : ILoginService
     }
 
     public Task<IResult> LogOutAsync() =>
-        _serverApi.Private.Client().Login.LogOutAsync(_config.AppId, Result.New().Error("Failed to log out"));
+        _serverApi.Private.Client().Login.LogOutAsync(_config.AppId, Result.Create().Error("Failed to log out"));
 
     public async Task<IResult<TokensResponse>> UpdateTokenAsync(Guid refreshToken)
     {
@@ -50,7 +50,7 @@ internal class LoginService : ILoginService
             .Login.UpdateTokenAsync(
                 _config.AppId,
                 refreshToken,
-                Result.New(new TokensResponse()).Error("Failed to update token")
+                Result.Create(new TokensResponse()).Error("Failed to update token")
             );
 
         if (response.IsOk)

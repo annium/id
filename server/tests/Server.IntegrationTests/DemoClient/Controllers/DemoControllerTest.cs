@@ -19,8 +19,8 @@ public class DemoControllerTest : IntegrationTestBase
     public async Task IdAuthorization_Unauthorized_ReturnsUnauthorized()
     {
         // act
-        var response = await Demo(Guid.NewGuid())
-            .Index.BaseAsync(new IdTokenResponse(), TestContext.Current.CancellationToken);
+        var demo = await DemoAsync(Guid.NewGuid());
+        var response = await demo.Index.BaseAsync(new IdTokenResponse(), TestContext.Current.CancellationToken);
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Unauthorized);
@@ -38,13 +38,13 @@ public class DemoControllerTest : IntegrationTestBase
         token = await Id().LogUserInAsync(app.Id, login, password);
 
         // act
-        var response = await Demo(app.Id, token)
-            .Index.BaseAsync(new IdTokenResponse(), TestContext.Current.CancellationToken);
+        var demo = await DemoAsync(app.Id, token);
+        var response = await demo.Index.BaseAsync(new IdTokenResponse(), TestContext.Current.CancellationToken);
 
         // assert
         response.StatusCode.Is(HttpStatusCode.OK);
         // FIXME: use, when System.Text.Json supports Deserialize with non-default constructor
-        // var token = await Demo(app.Id).Get("/base").BearerAuthorization(appTokens.AccessToken).AsAsync<IdToken>();
+        // var token = await (await DemoAsync(app.Id)).Get("/base").BearerAuthorization(appTokens.AccessToken).AsAsync<IdToken>();
 
         // // assert
         // token.IsNotDefault();
@@ -56,8 +56,8 @@ public class DemoControllerTest : IntegrationTestBase
     public async Task IdAuthorization_CheckRole_Unauthorized_ReturnsUnauthorized()
     {
         // act
-        var response = await Demo(Guid.NewGuid())
-            .Index.IsAdminAsync(new IdTokenResponse(), TestContext.Current.CancellationToken);
+        var demo = await DemoAsync(Guid.NewGuid());
+        var response = await demo.Index.IsAdminAsync(new IdTokenResponse(), TestContext.Current.CancellationToken);
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Unauthorized);
@@ -75,8 +75,8 @@ public class DemoControllerTest : IntegrationTestBase
         token = await Id().LogUserInAsync(app.Id, login, password);
 
         // act
-        var response = await Demo(app.Id, token)
-            .Index.IsAdminAsync(new IdTokenResponse(), TestContext.Current.CancellationToken);
+        var demo = await DemoAsync(app.Id, token);
+        var response = await demo.Index.IsAdminAsync(new IdTokenResponse(), TestContext.Current.CancellationToken);
 
         // assert
         response.StatusCode.Is(HttpStatusCode.Forbidden);
@@ -92,7 +92,7 @@ public class DemoControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserInAsync(login, email, password);
         var user = await Id(token)
             .Me.GetMeAsync(
-                Result.New(new MeResponse()).Error("Failed to load personal information"),
+                Result.Create(new MeResponse()).Error("Failed to load personal information"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -102,14 +102,14 @@ public class DemoControllerTest : IntegrationTestBase
             .User.AddRoleToUserAsync(
                 user.Id,
                 role.Id,
-                Result.New().Error("Failed to add role to user"),
+                Result.Create().Error("Failed to add role to user"),
                 TestContext.Current.CancellationToken
             );
         token = await Id().LogUserInAsync(app.Id, login, password);
 
         // act
-        var response = await Demo(app.Id, token)
-            .Index.IsAdminAsync(new IdTokenResponse(), TestContext.Current.CancellationToken);
+        var demo = await DemoAsync(app.Id, token);
+        var response = await demo.Index.IsAdminAsync(new IdTokenResponse(), TestContext.Current.CancellationToken);
 
         // assert
         response.StatusCode.Is(HttpStatusCode.OK);
@@ -125,7 +125,7 @@ public class DemoControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserInAsync(login, email, password);
         var user = await Id(token)
             .Me.GetMeAsync(
-                Result.New(new MeResponse()).Error("Failed to load personal information"),
+                Result.Create(new MeResponse()).Error("Failed to load personal information"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -135,7 +135,7 @@ public class DemoControllerTest : IntegrationTestBase
             .User.AddRoleToUserAsync(
                 user.Id,
                 role.Id,
-                Result.New().Error("Failed to add role to user"),
+                Result.Create().Error("Failed to add role to user"),
                 TestContext.Current.CancellationToken
             );
         var claim = await Id(token).Claim.RegisterAsync(app.Id, "paymentsAccess", "Payments Access");
@@ -143,8 +143,11 @@ public class DemoControllerTest : IntegrationTestBase
         token = await Id().LogUserInAsync(app.Id, login, password);
 
         // act
-        var response = await Demo(app.Id, token)
-            .Index.HasPaymentsAccessAsync(new IdTokenResponse(), TestContext.Current.CancellationToken);
+        var demo = await DemoAsync(app.Id, token);
+        var response = await demo.Index.HasPaymentsAccessAsync(
+            new IdTokenResponse(),
+            TestContext.Current.CancellationToken
+        );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.OK);
@@ -160,7 +163,7 @@ public class DemoControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserInAsync(login, email, password);
         var user = await Id(token)
             .Me.GetMeAsync(
-                Result.New(new MeResponse()).Error("Failed to load personal information"),
+                Result.Create(new MeResponse()).Error("Failed to load personal information"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -170,8 +173,11 @@ public class DemoControllerTest : IntegrationTestBase
         token = await Id().LogUserInAsync(app.Id, login, password);
 
         // act
-        var response = await Demo(app.Id, token)
-            .Index.HasPaymentsAccessAsync(new IdTokenResponse(), TestContext.Current.CancellationToken);
+        var demo = await DemoAsync(app.Id, token);
+        var response = await demo.Index.HasPaymentsAccessAsync(
+            new IdTokenResponse(),
+            TestContext.Current.CancellationToken
+        );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.OK);
@@ -187,7 +193,7 @@ public class DemoControllerTest : IntegrationTestBase
         var token = await Id().RegisterLogUserInAsync(login, email, password);
         var user = await Id(token)
             .Me.GetMeAsync(
-                Result.New(new MeResponse()).Error("Failed to load personal information"),
+                Result.Create(new MeResponse()).Error("Failed to load personal information"),
                 TestContext.Current.CancellationToken
             )
             .GetDataAsync();
@@ -199,8 +205,11 @@ public class DemoControllerTest : IntegrationTestBase
         token = await Id().LogUserInAsync(app.Id, login, password);
 
         // act
-        var response = await Demo(app.Id, token)
-            .Index.HasPaymentsAccessAsync(new IdTokenResponse(), TestContext.Current.CancellationToken);
+        var demo = await DemoAsync(app.Id, token);
+        var response = await demo.Index.HasPaymentsAccessAsync(
+            new IdTokenResponse(),
+            TestContext.Current.CancellationToken
+        );
 
         // assert
         response.StatusCode.Is(HttpStatusCode.OK);
