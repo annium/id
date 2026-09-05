@@ -26,13 +26,13 @@ public static class Database
 
     static Database()
     {
-        _db = new PostgreSqlBuilder("annium/postgres:17-alpine")
+        _db = new PostgreSqlBuilder("annium/postgres:18-alpine")
             .WithDatabase(Config.Database)
             .WithUsername(Config.User)
             .WithPassword(Config.Password)
             .Build();
         // Db = new ContainerBuilder<PostgreSqlTestcontainer>()
-        //     .WithDatabase(new PostgreSqlTestcontainerConfiguration("annium/postgres:17-alpine")
+        //     .WithDatabase(new PostgreSqlTestcontainerConfiguration("annium/postgres:18-alpine")
         //     {
         //         Database = Config.Database,
         //         Username = Config.User,
